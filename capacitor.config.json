@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "MTApp",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

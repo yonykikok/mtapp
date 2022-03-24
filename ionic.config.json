@@ -1,0 +1,7 @@
+{
+  "name": "MTApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
