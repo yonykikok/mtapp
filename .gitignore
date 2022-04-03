@@ -30,3 +30,10 @@ npm-debug.log*
 /platforms
 /plugins
 /www
+/src/environments/environment.ts
+/src/environments/environment.prod.ts
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build

@@ -24,3 +24,22 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+@font-face {
+    font-family: "Audiowide";
+    src: url("/assets/fonts/Audiowide/Audiowide-Regular.ttf");
+}
+@font-face {
+    font-family: "Surfer";
+    src: url("/assets/fonts/Surfer/OriginalSurfer-Regular.ttf");
+}
+
+:root{
+    --main-bg-color: #455a64;
+    --main-color: white;
+    --accent-bg-color:#B91372;
+
+
+
+    
+}

@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar class="ion-padding title">
+
+    <h1 class="ion-text-center text1 ion-padding-top" style="font-size: 300%;">Multitask</h1> <!-- //TODO: main contante-->
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding ion-margin-top">
+  <h1 class="ion-text-center text2 ion-padding-top">Bienvenido</h1>
+  <h6 class="text3 ion-text-center ion-padding-bottom">Por favor ingrese su documento</h6>
+
+  <form [formGroup]="formUser" (ngSubmit)="preLogin()" class="ion-margin-top ion-padding-top">
+    <ion-item>
+      <ion-label position="floating" class="text1" style="font-weight: bold;">DNI</ion-label>
+      <ion-input type="number" formControlName="dni"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" class="ion-margin-top" [disabled]="!formUser.valid">Continuar</ion-button>
+    <p class="ion-text-center">Ayuda</p>
+  </form>
+</ion-content>
+<!-- <source src="../../../assets/fonts/nexa/NexaBold.otf"> -->

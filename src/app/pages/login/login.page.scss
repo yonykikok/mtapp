@@ -1,0 +1,44 @@
+@font-face {
+    font-family: "Audiowide";
+    src: url("../../../assets/fonts/Audiowide/Audiowide-Regular.ttf");
+}
+@font-face {
+    font-family: "Surfer";
+    src: url("../../../assets/fonts/Surfer/OriginalSurfer-Regular.ttf");
+}
+
+.text1 {
+    font-family: Audiowide;
+    color: white;
+}
+.text2 {
+    font-family: Surfer;
+    color: white;
+}
+
+.text3 {
+    color: white;
+}
+.title {
+    --background: var(--main-bg-color);
+    box-shadow: 0 0 0em 0.7rem var(--accent-bg-color);
+}
+
+ion-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    * {
+        color: black;
+    }
+    ion-button {
+        color: white;
+        height: 3rem;
+        font-weight: bold;
+        --border-radius: 10px;
+    }
+    p {
+        font-weight: bold;
+        color: var(--main-bg-color);
+    }
+}

@@ -1,0 +1,105 @@
+img {
+  width: 900px;
+  position: absolute;
+  max-width: 90%;
+  transition: 0.3s;
+}
+
+#contenedor {
+  background: linear-gradient(217deg, rgb(250 145 145 / 80%), rgba(255, 0, 0, 0) 70.71%),
+    linear-gradient(127deg, rgb(141 248 141 / 80%), rgba(0, 255, 0, 0) 70.71%),
+    linear-gradient(336deg, rgb(137 137 253 / 80%), rgba(0, 0, 255, 0) 70.71%);
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden !important;
+  max-height: 100vh !important;
+  max-width: 100% !important;
+  position: absolute;
+}
+
+.contenedor::-webkit-scrollbar {
+  display: none;
+}
+
+.svgBateria {
+  transform: scale(0.5) translate(-1%, -20%);
+  z-index: 4;
+}
+
+.svgCamPincipal {
+  transform: scale(0.08) translate(-421%, -195%);
+  z-index: 3;
+}
+
+.svgCamSecundaria {
+  transform: scale(0.05) translate(-571%, -219%);
+  z-index: 3;
+}
+
+.svgFlexCarga {
+  transform: scale(0.457) translate(48%,42%);
+  z-index: 3;
+}
+
+.svgMicroSd {
+  transform: scale(0.11) translate(-174%,28%);
+  z-index: 3;
+}
+
+.svgPortaSim {
+  transform: scale(0.2) translate(-89%,4%);
+  z-index: 3;
+}
+
+.svgTapa {
+  z-index: 5;
+}
+
+.svgMarco {
+  z-index: 3;
+}
+
+.svgCubreLente {
+  transform: scale(0.15) translate(-210%, -114%);
+  z-index: 6;
+}
+
+.svgMidTapa {
+  z-index: 2;
+}
+
+.svgPantalla {
+  z-index: 1;
+}
+
+.svgSombra {
+  transform: translate(0, 5%);
+  z-index: 0;
+}
+
+.texto {
+  position: absolute;
+  z-index: 10;
+  font-family: cursive;
+  font-weight: 700;
+  margin: 0;
+}
+
+.title {
+  top: 2rem;
+  font-size: 10vw;
+  color: black;
+  font-family: Audiowide;
+}
+
+.subTitle {
+  font-size: 6vw;
+  bottom: 2rem;
+  font-family: Surfer;
+}
