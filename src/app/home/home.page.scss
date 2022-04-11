@@ -1,8 +1,12 @@
 .header {
   --background: var(--main-bg-color);
-  --color: var(--main-color);
+  --color: var(--main-light-color);
 }
 
 .my-custom-menu {
   --width: 500px;
+}
+ion-title{
+  font-family: Audiowide ;
+  
 }

@@ -1,5 +1,8 @@
 ion-grid{
     
   background: var(--main-bg-color);
-  --color: var(--main-color);
+  --color: var(--main-light-color);
+}
+ion-text{
+    font-family: Surfer ;
 }

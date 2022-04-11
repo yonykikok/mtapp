@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
+import { IsActiveGuard } from './guards/is-active.guard';
 
 const routes: Routes = [
   {
@@ -13,15 +15,20 @@ const routes: Routes = [
   },
   {
     path: 'mis-reparaciones',
-    loadChildren: () => import('./pages/mis-reparaciones/mis-reparaciones.module').then( m => m.MisReparacionesPageModule)
+    loadChildren: () => import('./pages/mis-reparaciones/mis-reparaciones.module').then( m => m.MisReparacionesPageModule),
+    canActivate:[AuthGuard,IsActiveGuard]
+
   },
   {
     path: 'mi-cuenta',
-    loadChildren: () => import('./pages/mi-cuenta/mi-cuenta.module').then( m => m.MiCuentaPageModule)
+    loadChildren: () => import('./pages/mi-cuenta/mi-cuenta.module').then( m => m.MiCuentaPageModule),
+    // canActivate:[AuthGuard]
   },
   {
     path: 'notificaciones',
-    loadChildren: () => import('./pages/notificaciones/notificaciones.module').then( m => m.NotificacionesPageModule)
+    loadChildren: () => import('./pages/notificaciones/notificaciones.module').then( m => m.NotificacionesPageModule),
+    canActivate:[AuthGuard,IsActiveGuard]
+
   },
   {
     path: 'ayuda',
@@ -38,6 +45,10 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'tienda',
+    loadChildren: () => import('./pages/tienda/tienda.module').then( m => m.TiendaPageModule)
   },
 ];
 

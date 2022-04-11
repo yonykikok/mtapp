@@ -1,0 +1,24 @@
+.item-avatar {
+    img {
+        border-radius: 100%;
+    }
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 70px !important; //any size
+    max-height: 70px !important; //any size
+    border-radius: 100%;
+}
+
+p {
+    font-family: Surfer ;
+}
+ion-title{
+    font-family: Audiowide ;
+    
+}
+
+ion-searchbar{
+    --border-radius: 10px;
+    width: 90%;
+    margin-left: 5%;
+}

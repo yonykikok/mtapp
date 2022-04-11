@@ -1,0 +1,20 @@
+h5
+{
+    color: var(--main-bg-color);
+}
+.displayBlock{
+    color: var(--main-dark-color);
+}
+.cambiarClave{
+    display: flex;
+    justify-content: center;
+    width: 70%;
+    margin-left: 15%;
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
+    border-radius: 50px;
+}
+.profileImg{
+    width: 65px;
+    margin: 15px;
+}

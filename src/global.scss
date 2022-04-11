@@ -16,7 +16,7 @@
 @import "~@ionic/angular/css/normalize.css";
 @import "~@ionic/angular/css/structure.css";
 @import "~@ionic/angular/css/typography.css";
-@import '~@ionic/angular/css/display.css';
+@import "~@ionic/angular/css/display.css";
 
 /* Optional CSS utils that can be commented out */
 @import "~@ionic/angular/css/padding.css";
@@ -33,13 +33,21 @@
     font-family: "Surfer";
     src: url("/assets/fonts/Surfer/OriginalSurfer-Regular.ttf");
 }
-
-:root{
-    --main-bg-color: #455a64;
-    --main-color: white;
-    --accent-bg-color:#B91372;
-
-
-
-    
+.bold {
+    font-weight: bold;    
+}
+.displayBlock{
+    display: block;
+}
+.secondary{
+    --color: gray;
+}
+:root {
+    --main-bg-color: #79a6bb;
+    --main-light-color: white;
+    --main-dark-color: black;
+    --accent-color: #b91372;
+}
+ion-chip{
+    height: auto;
 }

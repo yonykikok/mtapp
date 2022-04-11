@@ -3,7 +3,7 @@
     <ion-header>
       <ion-toolbar color="secondary">
         <!-- TODO: constante color -->
-        <ion-grid class="ion-padding"  >
+        <ion-grid class="ion-padding">
           <ion-row>
 
             <ion-col size="3" style="display: flex; align-items: center;">
@@ -14,7 +14,8 @@
               <ion-title class="ion-no-padding ion-margin-start">Multitask</ion-title><!-- //TODO:constante mainname -->
               <ion-text style="display: block;" class="ion-margin-start">Hola Usuario!</ion-text>
               <ion-menu-toggle auto-hide="true">
-                <ion-button size="small" class="ion-margin-start" [routerLink]="['/login']" routerLinkActive="router-link-active" >
+                <ion-button size="small" class="ion-margin-start" [routerLink]="['/login']"
+                  routerLinkActive="router-link-active">
                   <ion-icon slot="start" icon="log-out-outline"> </ion-icon>
                   Salir
                 </ion-button>
@@ -61,6 +62,11 @@
           <ion-item [routerLink]="['/mis-reparaciones']" routerLinkActive="router-link-active">
             <ion-icon name="file-tray-full"></ion-icon>
             <ion-text class="ion-margin-start ion-text-capitalize"> <b> Mis reparaciones</b></ion-text>
+            <ion-icon slot="end" name="arrow-forward"></ion-icon>
+          </ion-item>
+          <ion-item [routerLink]="['/tienda']" routerLinkActive="router-link-active">
+            <ion-icon name="storefront-outline"></ion-icon>
+            <ion-text class="ion-margin-start ion-text-capitalize"> <b> Tienda</b></ion-text>
             <ion-icon slot="end" name="arrow-forward"></ion-icon>
           </ion-item>
         </ion-menu-toggle>

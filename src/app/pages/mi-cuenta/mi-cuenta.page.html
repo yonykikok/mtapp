@@ -1,7 +1,97 @@
 <ion-header>
- <app-clasic-toolbar [title]="'Mi cuenta'"></app-clasic-toolbar>
+    <app-clasic-toolbar [title]="'Mi cuenta'"></app-clasic-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="user">
+    <ion-item class="">
+        <!-- <ion-icon style="font-size: 500%;" name="person-circle-outline" class="ion-padding-top ion-padding-bottom">
+        </ion-icon> -->
+        <img class="profileImg" style="border-radius: 100%;"
+            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png" />
+        <ion-label class="ion-padding-start ion-padding-bottom">
+            <ion-text class="bold">{{(user.apellido && user.nombre)
+                ?user.apellido+" "+user.nombre
+                :'Mi nombre'}}</ion-text>
+            <p>Mi rol</p>
+            <ion-chip class="ion-no-margin" style="height: 25px;" color="success" outline
+                (click)="mostrarScannerComponent()">
+                <ion-icon name="create-outline"></ion-icon>
+                <ion-label>{{user.activo?'Cambiar información':'Completar información'}}</ion-label>
+            </ion-chip>
+        </ion-label>
+    </ion-item>
+
+    <ion-item class="">
+        <ion-text>
+            <h5 class="bold">Informacion basica</h5>
+
+            <p class="bold" style="color: gray;">
+                <ion-icon name="person-circle-outline" slot="start" color="grey"></ion-icon> DNI
+                <ion-text class="displayBlock ion-padding-start">{{user.dni?user.dni:'00000000'}}</ion-text>
+            </p>
+
+            <p class="bold" style="color: gray;">
+                <ion-icon name="time-outline" slot="start"></ion-icon> Fecha de Nacimiento
+                <ion-text class="displayBlock ion-padding-start">
+                    {{user.fecha?user.fecha:'00-00-0000'}}
+                </ion-text>
+            </p>
+
+        </ion-text>
+    </ion-item>
+
+    <ion-item class="">
+        <ion-text>
+            <h5 class="bold">Contacto</h5>
+
+            <p class="bold" style="color: gray;">
+                <ion-icon name="person-circle-outline" slot="start" color="grey"></ion-icon> Email
+                <ion-text class="displayBlock ion-padding-start">{{user.correo?user.correo:'micorreo@gmail.com'}}
+                </ion-text>
+            </p>
+
+            <p class="bold" style="color: gray;">
+                <ion-icon name="time-outline" slot="start"></ion-icon> Celular
+                <ion-text class="displayBlock ion-padding-start">
+                    {{user.telefono?user.telefono:'1100000000'}}
+                </ion-text>
+            </p>
+
+        </ion-text>
+    </ion-item>
+
+
+    <ion-item class="ion-padding-top ion-padding-bottom" lines="none">
+
+        <ion-chip class="cambiarClave" color="success" outline *ngIf="user.activo; else genPassword">
+            <ion-icon name="key-outline"></ion-icon>
+            <ion-label>Cambiar clave</ion-label>
+        </ion-chip>
+
+        <ng-template #genPassword>
+            <ion-chip class="cambiarClave" color="success" outline (click)="generarClave()">
+                <ion-icon name="keypad-outline"></ion-icon>
+                <ion-label>Generar clave</ion-label>
+            </ion-chip>
+        </ng-template>
+
+    </ion-item>
 
 </ion-content>
+
+<!-- <ion-content *ngIf="user ">
+    <ion-item>
+        <ion-thumbnail slot="start">
+            <ion-skeleton-text></ion-skeleton-text>
+        </ion-thumbnail>
+        <ion-label class="ion-padding-start ion-padding-bottom">
+            <ion-text class="bold">
+                <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+            </ion-text>
+            <p>
+                <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+            </p>
+            <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+        </ion-label>
+    </ion-item>
+</ion-content> -->

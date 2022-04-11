@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 
 @Component({
@@ -11,10 +12,12 @@ import { DataBaseService } from 'src/app/services/database.service';
 export class LoginPage implements OnInit {
 
   formUser = new FormGroup({
-    dni: new FormControl('', [Validators.required, this.validDniNumber]),
+    dni: new FormControl('27462786', [Validators.required, this.validDniNumber]),
   });
   constructor(private router: Router,
-    private database: DataBaseService) { }
+    private database: DataBaseService,
+    private authService: AuthService
+  ) { }
 
   ngOnInit() {
   }
@@ -30,6 +33,7 @@ export class LoginPage implements OnInit {
           let res = await this.database.crearConCustomId('users', user.dni.toString(), this.formUser.value);
           console.log("se creo el nuevo usuario")
         }
+        this.authService.currentUser = user;
         this.router.navigate(['/home']);
         suscripcion.unsubscribe();
       });
