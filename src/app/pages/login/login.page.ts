@@ -3,7 +3,6 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -76,14 +75,14 @@ export class LoginPage implements OnInit {
       if (!res.payload.exists) {
         return;
       }
-
-      if (auxUser.password.toString().toLowerCase() === formUser.password.toString().toLowerCase()) {
+      // if (auxUser.password.toString().toLowerCase() === formUser.password.toString().toLowerCase()) {
+      if (this.authService.compararPassword(formUser.password.toString())) {
         this.router.navigate(['/home']);
         this.authService.setCurrentUser(formUser);
       } else {
         alert("Password incorrecto te queda 3 intentos.");
       }
-      this.mostrarInputClave=false;
+      this.mostrarInputClave = false;
       suscripcion.unsubscribe();
     });
   }

@@ -191,7 +191,8 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
         if (!result.data || !result.role) return;
         switch (result.role) {
           case 'create':
-            this.user['password'] = result.data;
+            console.log(result.data);
+            this.user['password'] = this.authService.generarHashPassword(result.data.toString());
             console.log(this.user);
             this.actualizarUsuario();
 
@@ -250,7 +251,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
         ]
       })
       alert.present();
-    }else{
+    } else {
       this.mostrarPopupGenerarClave();
     }
   }

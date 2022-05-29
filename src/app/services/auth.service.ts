@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Md5 } from 'ts-md5';
 import { DataBaseService } from './database.service';
 
 @Injectable({
@@ -14,5 +15,20 @@ export class AuthService {
       this.currentUser = userRef.payload.data();
     });
 
+  }
+
+
+  compararPassword(password) {
+    let hashPassword = Md5.hashStr(password);
+    console.log(hashPassword + " " + this.currentUser.password);
+    if (hashPassword === this.currentUser.password) {
+      return true;
+    }
+
+    return false;
+  }
+
+  generarHashPassword(password: string) {
+    return Md5.hashStr(password);
   }
 }
