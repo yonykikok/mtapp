@@ -10,9 +10,10 @@ import { DataBaseService } from 'src/app/services/database.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-
+  mostrarInputClave = false;
   formUser = new FormGroup({
-    dni: new FormControl('27462786', [Validators.required, this.validDniNumber]),
+    dni: new FormControl('3775513', [Validators.required, this.validDniNumber]),
+    password: new FormControl('', []),
   });
   constructor(private router: Router,
     private database: DataBaseService,
@@ -27,15 +28,24 @@ export class LoginPage implements OnInit {
     let user = this.formUser.value;
     try {
 
-      var suscripcion = this.database.obtenerPorId('users', user.dni.toString()).subscribe(async (res) => {
-        if (!res.payload.exists) {
+      var suscripcion = this.database.obtenerPorId('users', user.dni.toString()).subscribe(async (res: any) => {
+        const auxUser = res.payload.data();
+
+        if (!res.payload.exists) {//si no existe lo creamos.
           user['activo'] = false;
           let res = await this.database.crearConCustomId('users', user.dni.toString(), this.formUser.value);
           console.log("se creo el nuevo usuario")
         }
+
         this.authService.setCurrentUser(user)
-        this.router.navigate(['/home']);
-        suscripcion.unsubscribe();
+
+        if (auxUser.password) {
+          this.mostrarInputClave = true;
+        } else {
+          this.router.navigate(['/home']);
+          suscripcion.unsubscribe();
+        }
+
       });
 
     } catch (err) {
@@ -45,7 +55,6 @@ export class LoginPage implements OnInit {
       // this.router.navigate(['/home']);
     }, 1000);
   }
-
   validDniNumber(control: AbstractControl) {
     if (
       !Number.isInteger(control.value) ||
@@ -59,5 +68,24 @@ export class LoginPage implements OnInit {
     }
   }
 
+  ingresar() {
+    let formUser = this.formUser.value;
+    var suscripcion = this.database.obtenerPorId('users', formUser.dni.toString()).subscribe((res: any) => {
+      const auxUser = res.payload.data();
+
+      if (!res.payload.exists) {
+        return;
+      }
+
+      if (auxUser.password.toString().toLowerCase() === formUser.password.toString().toLowerCase()) {
+        this.router.navigate(['/home']);
+        this.authService.setCurrentUser(formUser);
+      } else {
+        alert("Password incorrecto te queda 3 intentos.");
+      }
+      this.mostrarInputClave=false;
+      suscripcion.unsubscribe();
+    });
+  }
 
 }

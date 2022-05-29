@@ -17,7 +17,6 @@ const routes: Routes = [
     path: 'mis-reparaciones',
     loadChildren: () => import('./pages/mis-reparaciones/mis-reparaciones.module').then( m => m.MisReparacionesPageModule),
     canActivate:[AuthGuard,IsActiveGuard]
-
   },
   {
     path: 'mi-cuenta',
@@ -28,7 +27,6 @@ const routes: Routes = [
     path: 'notificaciones',
     loadChildren: () => import('./pages/notificaciones/notificaciones.module').then( m => m.NotificacionesPageModule),
     canActivate:[AuthGuard,IsActiveGuard]
-
   },
   {
     path: 'ayuda',

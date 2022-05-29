@@ -15,7 +15,7 @@
               <ion-text style="display: block;" class="ion-margin-start">Hola Usuario!</ion-text>
               <ion-menu-toggle auto-hide="true">
                 <ion-button size="small" class="ion-margin-start" [routerLink]="['/login']"
-                  routerLinkActive="router-link-active">
+                  routerLinkActive="router-link-active" (click)="salir()">
                   <ion-icon slot="start" icon="log-out-outline"> </ion-icon>
                   Salir
                 </ion-button>
