@@ -22,7 +22,7 @@ const routes: Routes = [
   {
     path: 'mi-cuenta',
     loadChildren: () => import('./pages/mi-cuenta/mi-cuenta.module').then( m => m.MiCuentaPageModule),
-    // canActivate:[AuthGuard]
+    canActivate:[AuthGuard]
   },
   {
     path: 'notificaciones',

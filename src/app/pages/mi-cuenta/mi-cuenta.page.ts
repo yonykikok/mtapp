@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AlertController, ModalController, ViewDidEnter } from '@ionic/angular';
 import { BarcodeScannerComponent } from 'src/app/components/barcode-scanner/barcode-scanner.component';
 import { CargarCorreoComponent } from 'src/app/components/cargar-correo/cargar-correo.component';
 import { CargarTelefonoComponent } from 'src/app/components/cargar-telefono/cargar-telefono.component';
+import { GenerarClaveComponent } from 'src/app/components/generar-clave/generar-clave.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 
@@ -12,27 +14,34 @@ import { DataBaseService } from 'src/app/services/database.service';
   styleUrls: ['./mi-cuenta.page.scss'],
 })
 export class MiCuentaPage implements OnInit, ViewDidEnter {
-  user:any={};
+  user: any = this.authService.currentUser;
   constructor(private modalController: ModalController,
     private database: DataBaseService,
     private authService: AuthService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private router: Router
   ) { }
 
   ngOnInit() {
+    console.log(this.user)
+    this.verSiTieneLaInfoCompleta()
     // console.log(typeof this.authService.currentUser.dni, this.authService.currentUser.dni)
-    this.mostrarPopupCorreo();
+    // this.mostrarPopupCorreo();
+    // this.mostrarPopupNumeroTelefonico();
 
   }
+
+  verSiTieneLaInfoCompleta() {
+    console.log(this.user)
+    if (!this.user.correo) {
+      this.mostrarPopupCorreo();
+    }
+    if (!this.user.telefono) {
+      this.mostrarPopupNumeroTelefonico();
+    }
+  }
   ionViewDidEnter(): void {
-    // this.database.obtenerPorId('users', String(this.authService.currentUser.dni)).subscribe(res => {
-    //   // this.user = res.payload.data()
-    //   this.user = {
-    //     dni: 37755134,
-    //     activo: false
-    //   }
-    //   console.log(this.user)
-    // })
+    console.log(this.authService.currentUser)
   }
 
   async mostrarScannerComponent() {
@@ -61,7 +70,11 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
               this.user['dni'] = info.dni;
               this.user['fecha'] = info.fNacimiento;
               this.user['sexo'] = info.sexo;
-              this.mostrarPopupCorreo();
+              this.actualizarUsuario();
+
+              if (!this.user.correo) {
+                this.mostrarPopupCorreo();
+              }
             } else {
               //notificar que el dni de ingreso no coincide con el escaneado.
             }
@@ -91,7 +104,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       const modal = await this.modalController.create({
         component: CargarCorreoComponent,
         componentProps: {
-          correo: "Jonathan@gmail.com"
+          correo: "jonathan.n.haedo@gmail.com"
           // correo: this.user?.email
         },
       })
@@ -102,7 +115,11 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
         switch (result.role) {
           case 'create':
             this.user['correo'] = result.data;
-            // this.mostrarPopupNumeroTelefonico();
+            this.actualizarUsuario();
+            console.log(this.user);
+            if (!this.user.telefono) {
+              this.mostrarPopupNumeroTelefonico();
+            }
             break;
           case 'update':
 
@@ -116,13 +133,23 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
     }
 
   }
+  actualizarUsuario() {
+    if (
+      this.user.correo &&
+      this.user.telefono &&
+      this.user.nombre
+    ) {
+      this.user.activo = true;
+    }
+    this.database.actualizar('users', this.user, this.user.dni.toString());
+  }
 
   async mostrarPopupNumeroTelefonico() {
     try {
       const modal = await this.modalController.create({
         component: CargarTelefonoComponent,
         componentProps: {
-          telefono: "1140401210"
+          telefono: "1140875900"
         },
       })
 
@@ -131,8 +158,11 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
         if (!result.data || !result.role) return;
         switch (result.role) {
           case 'create':
+            console.log(this.user);
             this.user['telefono'] = result.data;
-            this.mostrarPopupNumeroTelefonico();
+            this.actualizarUsuario();
+
+
             break;
           case 'update':
 
@@ -146,6 +176,37 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
     }
   }
 
+
+  async mostrarPopupGenerarClave() {
+    try {
+      const modal = await this.modalController.create({
+        component: GenerarClaveComponent,
+        componentProps: {
+          password: ""
+        },
+      })
+
+      modal.onDidDismiss().then((result: any) => {
+        console.log(result)
+        if (!result.data || !result.role) return;
+        switch (result.role) {
+          case 'create':
+            this.user['password'] = result.data;
+            console.log(this.user);
+            this.actualizarUsuario();
+
+            break;
+          case 'update':
+
+            break;
+        }
+
+      })
+      return await modal.present();
+    } catch (err) {
+      alert(JSON.stringify(err));
+    }
+  }
   obtenerInfoDni(texto: string) {
 
     let campos = texto.split('@');
@@ -189,6 +250,8 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
         ]
       })
       alert.present();
+    }else{
+      this.mostrarPopupGenerarClave();
     }
   }
 }

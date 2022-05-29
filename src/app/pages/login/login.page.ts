@@ -33,7 +33,7 @@ export class LoginPage implements OnInit {
           let res = await this.database.crearConCustomId('users', user.dni.toString(), this.formUser.value);
           console.log("se creo el nuevo usuario")
         }
-        this.authService.currentUser = user;
+        this.authService.setCurrentUser(user)
         this.router.navigate(['/home']);
         suscripcion.unsubscribe();
       });

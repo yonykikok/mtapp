@@ -1,10 +1,11 @@
 <ion-toolbar class="header">
-  <ion-icon [routerLink]="['/home']" routerLinkActive="router-link-active" slot="start" name="arrow-back-outline"
-    style="font-size: 150%;" class="ion-margin-start"></ion-icon>
-    <!-- <ion-buttons slot="start">
+  <ion-icon [routerLink]="[ruta]" routerLinkActive="router-link-active" routerLinkActive="router-link-active"
+    slot="start" name="arrow-back-outline" style="font-size: 150%;" class="ion-margin-start"
+    (click)="modalController.dismiss()"></ion-icon>
+  <!-- <ion-buttons slot="start">
       <ion-back-button defaultHref="/" [routerLink]="['/home']"></ion-back-button>
     </ion-buttons> -->
-    <ion-title class="ion-text-center">
+  <ion-title class="ion-text-center">
     <b> {{title}} </b> <!-- //TODO:  -->
 
   </ion-title>

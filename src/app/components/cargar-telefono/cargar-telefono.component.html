@@ -1,3 +1,36 @@
-<p>
-  cargar-telefono works!
-</p>
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/mi-cuenta'" [title]="'Cargar telefono'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-chip style="text-align: center;" color="success" class="ion-margin">
+    Tener el número de teléfono actualizado es necesario para tener una comunicación fácil y rápida con nuestros
+    clientes.
+  </ion-chip>
+
+  <ion-card>
+
+    <div class="ion-text-center">
+
+      <ion-chip class="ion-margin" color="primary" *ngIf="formTelefono.controls.telefono.value?.toString().length>=8"
+        style="flex-direction: column;">
+        Nos comunicaremos por medio de este numero: <br>
+        <b> {{formTelefono.controls.telefono.value}}</b>
+      </ion-chip>
+    </div>
+    <ion-card-content>
+      <form [formGroup]="formTelefono" (ngSubmit)="guardar()">
+
+        <ion-item>
+          <ion-label position="floating" class="text1 bold">Telefono</ion-label>
+          <ion-input type="number" formControlName="telefono" placeholder="ingrese su telefono"></ion-input>
+        </ion-item>
+
+        <ion-button expand="block" class="ion-margin-top" [disabled]="!formTelefono.valid" type="submit">Guardar
+          telefono
+        </ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

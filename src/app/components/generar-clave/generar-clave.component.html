@@ -1,0 +1,34 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/mi-cuenta'" [title]="'Cargar password'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-chip style="text-align: center;" color="success" class="ion-margin">
+    Crea tu propia clave de acceso a la app, para poder usar todas las caracteristicas sin limitaciones.
+  </ion-chip>
+
+  <ion-card>
+
+    <div class="ion-text-center">
+
+      <ion-chip class="ion-margin" color="danger" *ngIf="formPassword.controls.password.value?.toString().length>=8"
+        style="flex-direction: column;">
+        NO compartas tu clave con nadie! <br>
+      </ion-chip>
+    </div>
+    <ion-card-content>
+      <form [formGroup]="formPassword" (ngSubmit)="guardar()">
+
+        <ion-item>
+          <ion-label position="floating" class="text1 bold">Password</ion-label>
+          <ion-input type="number" formControlName="password" placeholder="ingrese su password"></ion-input>
+        </ion-item>
+
+        <ion-button expand="block" class="ion-margin-top" [disabled]="!formPassword.valid" type="submit">Guardar
+          password
+        </ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

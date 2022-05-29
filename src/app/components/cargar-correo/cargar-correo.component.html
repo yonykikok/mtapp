@@ -1,9 +1,9 @@
 <ion-header>
-  <app-clasic-toolbar [title]="'Cargar correo'"></app-clasic-toolbar>
+  <app-clasic-toolbar [ruta]="'/home'" [title]="'Ingresar correo'"></app-clasic-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-chip  style="text-align: center;" color="success" class="ion-margin">
+  <ion-chip style="text-align: center;" color="success" class="ion-margin">
     Tener el correo electronico actualizado es necesario para poder recibir notificaciones del estado de las
     reparaciones y otras novedades.
   </ion-chip>
@@ -12,8 +12,7 @@
 
     <div class="ion-text-center">
 
-      <ion-chip class="ion-margin" color="primary"
-        *ngIf="formCorreo.controls.correo.value?.includes('@')">
+      <ion-chip class="ion-margin" color="primary" *ngIf="formCorreo.controls.correo.value?.includes('@')">
         Las notificaciones seran enviadas a <br>
         {{formCorreo.controls.correo.value}}
       </ion-chip>

@@ -1,5 +1,5 @@
 <ion-header>
-  <app-clasic-toolbar [title]="'Tienda'"></app-clasic-toolbar>
+  <app-clasic-toolbar [ruta]="'/home'" [title]="'Tienda'"></app-clasic-toolbar>
 </ion-header>
 
 <ion-content>
@@ -8,8 +8,9 @@
 
 
 
-<!-- Searchbar with a cancel button and custom cancel button text -->
-<ion-searchbar show-cancel-button="focus" cancel-button-text="Custom Cancel" placeholder="Buscador" [(ngModel)]="textoABuscar"></ion-searchbar>
+  <!-- Searchbar with a cancel button and custom cancel button text -->
+  <ion-searchbar show-cancel-button="focus" cancel-button-text="Custom Cancel" placeholder="Buscador"
+    [(ngModel)]="textoABuscar"></ion-searchbar>
 
 
 
@@ -18,116 +19,121 @@
 
   <ion-list>
 
-  <ion-item>
-    <ion-avatar slot="start" class="item-avatar">
-      <img src="https://http2.mlstatic.com/D_NQ_NP_970700-MLA44940777575_022021-O.jpg" />
-    </ion-avatar>
-    <ion-label>
-      <h3>Cargador inova 5.1mAh</h3>
-      <p>{{1500|currency}}</p>
-      <p>Cargador de carga rapida de primera calidad</p>
-    </ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-avatar slot="start" class="item-avatar">
-      <img src="https://http2.mlstatic.com/D_NQ_NP_970700-MLA44940777575_022021-O.jpg" />
-    </ion-avatar>
-    <ion-label>
-      <h3>Cargador inova 5.1mAh</h3>
-      <p>{{1500|currency}}</p>
-      <p>Cargador de carga rapida de primera calidad</p>
-    </ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-avatar slot="start" class="item-avatar">
-      <img src="https://http2.mlstatic.com/D_NQ_NP_970700-MLA44940777575_022021-O.jpg" />
-    </ion-avatar>
-    <ion-label>
-      <h3>Cargador inova 5.1mAh</h3>
-      <p>{{1500|currency}}</p>
-      <p>Cargador de carga rapida de primera calidad</p>
-    </ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-avatar slot="start" class="item-avatar">
-      <img src="https://d3ugyf2ht6aenh.cloudfront.net/stores/001/245/767/products/cargador-inova-3-1-a-carga-rapida-tipo-c-car-20331-34cedfcd23521d203e16245406112400-480-0.jpg" />
-    </ion-avatar>
-    <ion-label>
-      <h3>Cargador inova 5.1mAh</h3>
-      <p>{{1500|currency}}</p>
-      <p>Cargador de carga rapida de primera calidad</p>
-    </ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-avatar slot="start" class="item-avatar">
-      <img src="https://http2.mlstatic.com/D_NQ_NP_970700-MLA44940777575_022021-O.jpg" />
-    </ion-avatar>
-    <ion-label>
-      <h3>Cargador inova 5.1mAh</h3>
-      <p>{{1500|currency}}</p>
-      <p>Cargador de carga rapida de primera calidad</p>
-    </ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-avatar slot="start" class="item-avatar">
-      <img src="https://www.soscomputacion.com.ar/16177-thickbox_default/cargador-rapido-inova-31a-type-c-2-puertos-usb-car-2028.jpg" />
-    </ion-avatar>
-    <ion-label>
-      <h3>Cargador inova 5.1mAh</h3>
-      <p>{{1500|currency}}</p>
-      <p>Cargador de carga rapida de primera calidad</p>
-    </ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-avatar slot="start" class="item-avatar">
-      <img src="https://http2.mlstatic.com/D_NQ_NP_970700-MLA44940777575_022021-O.jpg" />
-    </ion-avatar>
-    <ion-label>
-      <h3>Cargador inova 5.1mAh</h3>
-      <p>{{1500|currency}}</p>
-      <p>Cargador de carga rapida de primera calidad</p>
-    </ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-avatar slot="start" class="item-avatar">
-      <img src="https://www.soscomputacion.com.ar/16177-thickbox_default/cargador-rapido-inova-31a-type-c-2-puertos-usb-car-2028.jpg" />
-    </ion-avatar>
-    <ion-label>
-      <h3>Cargador inova 5.1mAh</h3>
-      <p>{{1500|currency}}</p>
-      <p>Cargador de carga rapida de primera calidad</p>
-    </ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-avatar slot="start" class="item-avatar">
-      <img src="https://http2.mlstatic.com/D_NQ_NP_970700-MLA44940777575_022021-O.jpg" />
-    </ion-avatar>
-    <ion-label>
-      <h3>Cargador inova 5.1mAh</h3>
-      <p>{{1500|currency}}</p>
-      <p>Cargador de carga rapida de primera calidad</p>
-    </ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-avatar slot="start" class="item-avatar">
-      <img src="https://www.soscomputacion.com.ar/16177-thickbox_default/cargador-rapido-inova-31a-type-c-2-puertos-usb-car-2028.jpg" />
-    </ion-avatar>
-    <ion-label>
-      <h3>Cargador inova 5.1mAh</h3>
-      <p>{{1500|currency}}</p>
-      <p>Cargador de carga rapida de primera calidad</p>
-    </ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-avatar slot="start" class="item-avatar">
-      <img src="https://d3ugyf2ht6aenh.cloudfront.net/stores/001/245/767/products/cargador-inova-3-1-a-carga-rapida-tipo-c-car-20331-34cedfcd23521d203e16245406112400-480-0.jpg" />
-    </ion-avatar>
-    <ion-label>
-      <h3>Cargador inova 5.1mAh</h3>
-      <p>{{1500|currency}}</p>
-      <p>Cargador de carga rapida de primera calidad</p>
-    </ion-label>
-  </ion-item>
-</ion-list>
+    <ion-item>
+      <ion-avatar slot="start" class="item-avatar">
+        <img src="https://http2.mlstatic.com/D_NQ_NP_970700-MLA44940777575_022021-O.jpg" />
+      </ion-avatar>
+      <ion-label>
+        <h3>Cargador inova 5.1mAh</h3>
+        <p>{{1500|currency}}</p>
+        <p>Cargador de carga rapida de primera calidad</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-avatar slot="start" class="item-avatar">
+        <img src="https://http2.mlstatic.com/D_NQ_NP_970700-MLA44940777575_022021-O.jpg" />
+      </ion-avatar>
+      <ion-label>
+        <h3>Cargador inova 5.1mAh</h3>
+        <p>{{1500|currency}}</p>
+        <p>Cargador de carga rapida de primera calidad</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-avatar slot="start" class="item-avatar">
+        <img src="https://http2.mlstatic.com/D_NQ_NP_970700-MLA44940777575_022021-O.jpg" />
+      </ion-avatar>
+      <ion-label>
+        <h3>Cargador inova 5.1mAh</h3>
+        <p>{{1500|currency}}</p>
+        <p>Cargador de carga rapida de primera calidad</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-avatar slot="start" class="item-avatar">
+        <img
+          src="https://d3ugyf2ht6aenh.cloudfront.net/stores/001/245/767/products/cargador-inova-3-1-a-carga-rapida-tipo-c-car-20331-34cedfcd23521d203e16245406112400-480-0.jpg" />
+      </ion-avatar>
+      <ion-label>
+        <h3>Cargador inova 5.1mAh</h3>
+        <p>{{1500|currency}}</p>
+        <p>Cargador de carga rapida de primera calidad</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-avatar slot="start" class="item-avatar">
+        <img src="https://http2.mlstatic.com/D_NQ_NP_970700-MLA44940777575_022021-O.jpg" />
+      </ion-avatar>
+      <ion-label>
+        <h3>Cargador inova 5.1mAh</h3>
+        <p>{{1500|currency}}</p>
+        <p>Cargador de carga rapida de primera calidad</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-avatar slot="start" class="item-avatar">
+        <img
+          src="https://www.soscomputacion.com.ar/16177-thickbox_default/cargador-rapido-inova-31a-type-c-2-puertos-usb-car-2028.jpg" />
+      </ion-avatar>
+      <ion-label>
+        <h3>Cargador inova 5.1mAh</h3>
+        <p>{{1500|currency}}</p>
+        <p>Cargador de carga rapida de primera calidad</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-avatar slot="start" class="item-avatar">
+        <img src="https://http2.mlstatic.com/D_NQ_NP_970700-MLA44940777575_022021-O.jpg" />
+      </ion-avatar>
+      <ion-label>
+        <h3>Cargador inova 5.1mAh</h3>
+        <p>{{1500|currency}}</p>
+        <p>Cargador de carga rapida de primera calidad</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-avatar slot="start" class="item-avatar">
+        <img
+          src="https://www.soscomputacion.com.ar/16177-thickbox_default/cargador-rapido-inova-31a-type-c-2-puertos-usb-car-2028.jpg" />
+      </ion-avatar>
+      <ion-label>
+        <h3>Cargador inova 5.1mAh</h3>
+        <p>{{1500|currency}}</p>
+        <p>Cargador de carga rapida de primera calidad</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-avatar slot="start" class="item-avatar">
+        <img src="https://http2.mlstatic.com/D_NQ_NP_970700-MLA44940777575_022021-O.jpg" />
+      </ion-avatar>
+      <ion-label>
+        <h3>Cargador inova 5.1mAh</h3>
+        <p>{{1500|currency}}</p>
+        <p>Cargador de carga rapida de primera calidad</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-avatar slot="start" class="item-avatar">
+        <img
+          src="https://www.soscomputacion.com.ar/16177-thickbox_default/cargador-rapido-inova-31a-type-c-2-puertos-usb-car-2028.jpg" />
+      </ion-avatar>
+      <ion-label>
+        <h3>Cargador inova 5.1mAh</h3>
+        <p>{{1500|currency}}</p>
+        <p>Cargador de carga rapida de primera calidad</p>
+      </ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-avatar slot="start" class="item-avatar">
+        <img
+          src="https://d3ugyf2ht6aenh.cloudfront.net/stores/001/245/767/products/cargador-inova-3-1-a-carga-rapida-tipo-c-car-20331-34cedfcd23521d203e16245406112400-480-0.jpg" />
+      </ion-avatar>
+      <ion-label>
+        <h3>Cargador inova 5.1mAh</h3>
+        <p>{{1500|currency}}</p>
+        <p>Cargador de carga rapida de primera calidad</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 
 </ion-content>
