@@ -16,7 +16,7 @@
     </ion-item>
     <ion-item *ngIf="mostrarInputClave">
       <ion-label position="floating" class="text1" style="font-weight: bold;">Clave</ion-label>
-      <ion-input type="number" formControlName="password"></ion-input>
+      <ion-input type="password" formControlName="password"></ion-input>
     </ion-item>
 
     <ion-button expand="block" type="submit" class="ion-margin-top" [disabled]="!formUser.valid">{{mostrarInputClave?'Ingresar':'Continuar'}}</ion-button>

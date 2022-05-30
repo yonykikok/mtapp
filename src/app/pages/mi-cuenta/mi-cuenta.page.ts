@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { AlertController, ModalController, ViewDidEnter } from '@ionic/angular';
 import { BarcodeScannerComponent } from 'src/app/components/barcode-scanner/barcode-scanner.component';
 import { CargarCorreoComponent } from 'src/app/components/cargar-correo/cargar-correo.component';
@@ -7,6 +6,7 @@ import { CargarTelefonoComponent } from 'src/app/components/cargar-telefono/carg
 import { GenerarClaveComponent } from 'src/app/components/generar-clave/generar-clave.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
+import { ToastColor, ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-mi-cuenta',
@@ -19,16 +19,11 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
     private database: DataBaseService,
     private authService: AuthService,
     private alertController: AlertController,
-    private router: Router
+    private toastService: ToastService
   ) { }
 
   ngOnInit() {
-    console.log(this.user)
     this.verSiTieneLaInfoCompleta()
-    // console.log(typeof this.authService.currentUser.dni, this.authService.currentUser.dni)
-    // this.mostrarPopupCorreo();
-    // this.mostrarPopupNumeroTelefonico();
-
   }
 
   verSiTieneLaInfoCompleta() {
@@ -56,39 +51,33 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       modal.onDidDismiss().then((result: any) => {
         if (!result.data) return;
         let barcodeData = result.data;
-        // this.customAlert("Test QR Scanner", JSON.stringify(barcodeData));
-        console.log("--------", barcodeData)
+
         if (barcodeData.text.includes('@')) {
           let info = this.obtenerInfoDni(barcodeData.text);
-          console.log("--------", JSON.stringify(info));
+
           if (info) {
             if (String(info.dni) == String(this.authService.currentUser.dni)) {
-              // this.eventsService.toastPublish("Se cargo la informacion del documento.", { duration: 4000, color: 'success', position: 'bottom' })
-              // this.customAlert("Test QR Scanner", JSON.stringify(info));
               this.user['nombre'] = info.nombre;
               this.user['apellido'] = info.apellido;
               this.user['dni'] = info.dni;
               this.user['fecha'] = info.fNacimiento;
               this.user['sexo'] = info.sexo;
+              this.toastService.simpleMessage("Escaneo exitoso", "Se cargó la información del documento a su cuenta.", ToastColor.success);
               this.actualizarUsuario();
 
               if (!this.user.correo) {
                 this.mostrarPopupCorreo();
               }
             } else {
-              //notificar que el dni de ingreso no coincide con el escaneado.
+              this.toastService.simpleMessage("No Coincide", "El documento escaneado no coincide con el de ingreso.", ToastColor.danger);
             }
-
-
           } else {
-            // this.customAlert("QR Ilegible", "No se pudo encontrar la informacion del codigo.")
-            // this.eventsService.toastPublish("QR Ilegible, No se encontro la informacion del codigo.", { duration: 4000, color: 'danger', position: 'bottom' })
+            this.toastService.simpleMessage("QR Ilegible", "No se pudo encontrar la información del código.", ToastColor.danger);
           }
 
         } else {
           if (!barcodeData.cancelled) {
-            // this.eventsService.toastPublish("QR Equivocado. El codigo escaneado no tiene las caracteristicas de un DNI", { duration: 4000, color: 'danger', position: 'bottom' })
-            // this.customAlert("QR Equivocado", "El codigo escaneado no tiene las caracteristicas de un DNI" + JSON.stringify(barcodeData))
+            this.toastService.simpleMessage("QR Equivocado", "El código escaneado no tiene las características de un DNI", ToastColor.warning);
           }
         }
       })
@@ -104,8 +93,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       const modal = await this.modalController.create({
         component: CargarCorreoComponent,
         componentProps: {
-          correo: "jonathan.n.haedo@gmail.com"
-          // correo: this.user?.email
+          correo: this.user?.email
         },
       })
 
@@ -116,6 +104,8 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
           case 'create':
             this.user['correo'] = result.data;
             this.actualizarUsuario();
+            this.toastService.simpleMessage("Correo guardado", "Se cargó el correo a su cuenta.", ToastColor.success);
+
             console.log(this.user);
             if (!this.user.telefono) {
               this.mostrarPopupNumeroTelefonico();
@@ -140,6 +130,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       this.user.nombre
     ) {
       this.user.activo = true;
+      this.toastService.simpleMessage("Cuenta activada", "Se activó con éxito su cuenta, ya puede comenzar a utilizar la App", ToastColor.success);
     }
     this.database.actualizar('users', this.user, this.user.dni.toString());
   }
@@ -149,7 +140,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       const modal = await this.modalController.create({
         component: CargarTelefonoComponent,
         componentProps: {
-          telefono: "1140875900"
+          telefono: this.user?.telefono
         },
       })
 
@@ -161,6 +152,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
             console.log(this.user);
             this.user['telefono'] = result.data;
             this.actualizarUsuario();
+            this.toastService.simpleMessage("Teléfono guardado", "Se cargó el número de teléfono a su cuenta.", ToastColor.success);
 
 
             break;

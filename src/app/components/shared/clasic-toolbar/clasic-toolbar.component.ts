@@ -9,8 +9,14 @@ import { ModalController } from '@ionic/angular';
 export class ClasicToolbarComponent implements OnInit {
   @Input() title;
   @Input() ruta;
-  constructor(private modalController:ModalController) { }
+  constructor(private modalController: ModalController) { }
 
   ngOnInit() { }
-
+  async emitirDismissEvent() {
+    let modal = await this.modalController.getTop();
+    console.log(modal);
+    if (modal) {
+      modal.dismiss();
+    }
+  }
 }

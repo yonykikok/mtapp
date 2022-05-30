@@ -32,6 +32,7 @@ export class LoginPage implements OnInit {
 
         if (!res.payload.exists) {//si no existe lo creamos.
           user['activo'] = false;
+          user['fechaCreacion']=new Date();
           let res = await this.database.crearConCustomId('users', user.dni.toString(), this.formUser.value);
           console.log("se creo el nuevo usuario")
         }

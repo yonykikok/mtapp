@@ -1,7 +1,7 @@
 <ion-toolbar class="header">
-  <ion-icon [routerLink]="[ruta]" routerLinkActive="router-link-active" routerLinkActive="router-link-active"
+  <ion-icon (click)="emitirDismissEvent()" [routerLink]="[ruta]" routerLinkActive="router-link-active" routerLinkActive="router-link-active"
     slot="start" name="arrow-back-outline" style="font-size: 150%;" class="ion-margin-start"
-    (click)="modalController.dismiss()"></ion-icon>
+    ></ion-icon>
   <!-- <ion-buttons slot="start">
       <ion-back-button defaultHref="/" [routerLink]="['/home']"></ion-back-button>
     </ion-buttons> -->
