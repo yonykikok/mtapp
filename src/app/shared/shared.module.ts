@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
-
 @NgModule({
   declarations: [
     ClasicToolbarComponent,
@@ -17,11 +16,13 @@ import { IonicModule } from '@ionic/angular';
     FormsModule,
     IonicModule
   ],
-  exports:[
+  exports: [
     ClasicToolbarComponent,
     RouterModule,
     ReactiveFormsModule,
     IonicModule
   ]
 })
-export class SharedModule { }
+export class SharedModule {
+ 
+}

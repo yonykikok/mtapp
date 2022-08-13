@@ -3,7 +3,7 @@
   align-items: center; 
   position: fixed; 
   left: 0; top: 0; 
-  z-index: 199999; width: 100vw; height: 100vh;
+  z-index: 199999; width: 100%; height: 100%;
    background-color: rgb(217, 217, 255);">
 
   <div style="text-align: center;">
@@ -18,8 +18,9 @@
     <div class="focusScanner"> </div>
   </div>
 
-  <div class="ion-text-center" >
-    <ion-button style="display: block;" fill="outline" size="small" class="ion-margin-top" color="success" (click)="abrirScanner()">
+  <div class="ion-text-center">
+    <ion-button style="display: block;" fill="outline" size="small" class="ion-margin-top" color="success"
+      (click)="abrirScanner()">
       ESCANEAR AHORA
     </ion-button>
     <ion-button fill="outline" size="small" class="ion-margin-top" color="secondary" (click)="cerrarScanner()">

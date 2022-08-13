@@ -7,7 +7,10 @@ import { AuthService } from './services/auth.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  constructor(private authService: AuthService) { }
+  userLogged;
+  constructor(private authService: AuthService) { 
+    this.userLogged=this.authService.currentUser;
+  }
 
   salir() {
     this.authService.currentUser = null;

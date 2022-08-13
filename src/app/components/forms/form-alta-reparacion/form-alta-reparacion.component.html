@@ -1,0 +1,37 @@
+<ion-card>
+  <ion-card-header>
+    <ion-card-title class="ion-text-center">Alta reparacion</ion-card-title>
+  </ion-card-header>
+
+  <ion-card-content>
+
+    <div class="ion-text-center">
+      <ion-chip color="success" outline class="ion-text-center ion-margin"> Tomé una foto a la boleta completa
+      </ion-chip>
+      <ion-button color="secondary" expand="block" class="ion-margin-bottom" (click)="takePicture()">
+        <ion-icon name="camera-outline" style="font-size: 2rem;"></ion-icon>
+      </ion-button>
+      <div style="display: flex; justify-content: center;">
+        <ion-img style="width: 100px; max-height: 100px;" *ngIf="imgVistaPrevia" [src]="imgVistaPrevia"></ion-img>
+      </div>
+    </div>
+
+    <ion-item class="ion-activated">
+      <ion-icon name="card-outline" class="ion-margin-end"></ion-icon>
+      <ion-input type="number" placeholder="DNI cliente" [(ngModel)]="dni"></ion-input>
+    </ion-item>
+
+    <ion-item class="ion-activated">
+      <ion-icon name="document-outline" class="ion-margin-end"></ion-icon>
+      <ion-input type="number" placeholder="Ingrese numero de boleta" [(ngModel)]="nro_boleta"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" class="ion-margin-top" (click)="mostrarConfirmacion()"
+      [disabled]="!imgVistaPrevia|| !dni || !nro_boleta">
+      Generar reparacion
+    </ion-button>
+
+
+  </ion-card-content>
+
+</ion-card>

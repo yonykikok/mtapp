@@ -10,23 +10,23 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'intro',
+    redirectTo: 'home',//intro
     pathMatch: 'full'
   },
   {
     path: 'mis-reparaciones',
     loadChildren: () => import('./pages/mis-reparaciones/mis-reparaciones.module').then( m => m.MisReparacionesPageModule),
-    canActivate:[AuthGuard,IsActiveGuard]
+    // canActivate:[AuthGuard,IsActiveGuard]
   },
   {
     path: 'mi-cuenta',
     loadChildren: () => import('./pages/mi-cuenta/mi-cuenta.module').then( m => m.MiCuentaPageModule),
-    canActivate:[AuthGuard]
+    // canActivate:[AuthGuard]
   },
   {
     path: 'notificaciones',
     loadChildren: () => import('./pages/notificaciones/notificaciones.module').then( m => m.NotificacionesPageModule),
-    canActivate:[AuthGuard,IsActiveGuard]
+    // canActivate:[AuthGuard,IsActiveGuard]
   },
   {
     path: 'ayuda',

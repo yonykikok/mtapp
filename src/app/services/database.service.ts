@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from "@angular/fire/compat/firestore";
+import { boleta_estados } from 'src/app/services/info-compartida.service';
 
 
 @Injectable({
@@ -15,7 +16,7 @@ export class DataBaseService {
   public crear(collection: string, data: any) {
     return this.firestore.collection(collection).add(data);
   }
-  
+
   public crearConCustomId(collection: string, id: string, data: any) {
     return this.firestore.collection(collection).doc(id).set(data);
   }
@@ -30,17 +31,22 @@ export class DataBaseService {
   }
 
   public actualizar(coleccion: string, data: any, id: string) {
-    return this.firestore.collection(coleccion).doc(id).set(data);
+    try {
+      return this.firestore.collection(coleccion).doc(id).set(data);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   public eliminar(collection: string, id: string) {
     return this.firestore.collection(collection).doc(id).delete();
   }
 
-  async getPedidosPendientes() {
-    let collectionRef = this.firestore.collection('pedidos').ref;
+  async getBoletasPorDni(dni) {
+    let collectionRef = this.firestore.collection('boletas').ref;
     try {
-      const respuesta = await collectionRef.where('conseguido', '==', false).get();
+
+      const respuesta = await collectionRef.where('dni', '==', dni).get();
 
       if (respuesta.empty) return;
 

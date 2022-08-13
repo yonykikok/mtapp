@@ -32,30 +32,10 @@
 
       <ion-list>
         <ion-menu-toggle auto-hide="true">
-          <ion-item-divider class="ion-no-padding ion-padding-bottom ion-padding-top" [routerLink]="['/home']"
-            routerLinkActive="router-link-active">
-            <ion-item lines="none" style="width: 100%; ">
-              <ion-icon name="home"></ion-icon>
-              <ion-text class="ion-margin-start ion-text-capitalize"> <b> Inicio</b></ion-text>
-            </ion-item>
-          </ion-item-divider>
 
           <ion-item [routerLink]="['/mi-cuenta']" routerLinkActive="router-link-active">
             <ion-icon name="person-circle"></ion-icon>
             <ion-text class="ion-margin-start ion-text-capitalize"> <b> Mi cuenta</b></ion-text>
-            <ion-icon slot="end" name="arrow-forward"></ion-icon>
-          </ion-item>
-
-          <ion-item [routerLink]="['/notificaciones']" routerLinkActive="router-link-active">
-            <ion-icon name="notifications"></ion-icon>
-            <ion-text class="ion-margin-start ion-text-capitalize"> <b> Notificaciones</b></ion-text>
-            <ion-badge color="danger" slot="end">5</ion-badge>
-            <ion-icon slot="end" name="arrow-forward"></ion-icon>
-          </ion-item>
-
-          <ion-item [routerLink]="['/ayuda']" routerLinkActive="router-link-active">
-            <ion-icon name="help-circle"></ion-icon>
-            <ion-text class="ion-margin-start ion-text-capitalize"> <b> Ayuda</b></ion-text>
             <ion-icon slot="end" name="arrow-forward"></ion-icon>
           </ion-item>
 
@@ -64,11 +44,20 @@
             <ion-text class="ion-margin-start ion-text-capitalize"> <b> Mis reparaciones</b></ion-text>
             <ion-icon slot="end" name="arrow-forward"></ion-icon>
           </ion-item>
+
           <ion-item [routerLink]="['/tienda']" routerLinkActive="router-link-active">
             <ion-icon name="storefront-outline"></ion-icon>
             <ion-text class="ion-margin-start ion-text-capitalize"> <b> Tienda</b></ion-text>
             <ion-icon slot="end" name="arrow-forward"></ion-icon>
           </ion-item>
+
+          <ion-item [routerLink]="['/ayuda']" routerLinkActive="router-link-active">
+            <ion-icon name="help-circle"></ion-icon>
+            <ion-text class="ion-margin-start ion-text-capitalize"> <b> Ayuda</b></ion-text>
+            <ion-icon slot="end" name="arrow-forward"></ion-icon>
+          </ion-item>
+      
+
         </ion-menu-toggle>
       </ion-list>
     </ion-content>

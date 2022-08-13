@@ -23,6 +23,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
   ) { }
 
   ngOnInit() {
+    console.log(this.user)
     this.verSiTieneLaInfoCompleta()
   }
 
@@ -83,7 +84,6 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       })
       return await modal.present();
     } catch (err) {
-      alert(JSON.stringify(err));
     }
 
   }
@@ -119,7 +119,6 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       })
       return await modal.present();
     } catch (err) {
-      alert(JSON.stringify(err));
     }
 
   }
@@ -127,7 +126,8 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
     if (
       this.user.correo &&
       this.user.telefono &&
-      this.user.nombre
+      this.user.nombre &&
+      this.user.password
     ) {
       this.user.activo = true;
       this.toastService.simpleMessage("Cuenta activada", "Se activó con éxito su cuenta, ya puede comenzar a utilizar la App", ToastColor.success);
@@ -164,7 +164,6 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       })
       return await modal.present();
     } catch (err) {
-      alert(JSON.stringify(err));
     }
   }
 
@@ -197,7 +196,6 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       })
       return await modal.present();
     } catch (err) {
-      alert(JSON.stringify(err));
     }
   }
   obtenerInfoDni(texto: string) {

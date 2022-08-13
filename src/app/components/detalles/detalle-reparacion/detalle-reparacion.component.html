@@ -1,0 +1,33 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/mis-reparaciones'" [title]="'Detalle reparacion'"></app-clasic-toolbar>
+</ion-header>
+<ion-content>
+
+  <ion-card>
+
+    <ion-card-header [appEstadoReparacionBgcolor]="reparacion.estado">
+      <ion-card-title class="ion-text-center">
+        <label style="display: block; display: flex; align-items: center; justify-content: center; color: white;">
+          <ion-icon slot="start" [name]="getIconName()" style="font-size: 2rem;  margin-right: 0.5rem;">
+          </ion-icon>
+          {{reparacion.estado| estadoReparacion:'short'}}
+        </label>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="ion-text-center">
+      <ion-chip class="ion-margin"> Boleta: ({{reparacion.nro_boleta}})</ion-chip>
+      <ion-chip [appEstadoReparacionColor]="reparacion.estado" [appEstadoReparacionBorderColor]="reparacion.estado"
+        style="width: 100%; display: flex; justify-content: center;"
+        class="ion-no-margin ion-text-center ion-margin-bottom" outline>
+        {{reparacion.estado | estadoReparacion}}</ion-chip>
+
+      <ion-button color="primary" mode="ios" class="ion-padding"
+        (click)="mostrarImgBoleta? mostrarImgBoleta=false:mostrarImgBoleta=true">
+        <ion-icon slot="start" name="image-outline"></ion-icon>
+        {{mostrarImgBoleta?'Ocultar imagen de boleta':'Ver boleta'}}
+      </ion-button>
+
+      <ion-img class="ion-margin" *ngIf="mostrarImgBoleta" [src]="reparacion.imgUrl"></ion-img>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
