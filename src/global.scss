@@ -34,12 +34,12 @@
     src: url("/assets/fonts/Surfer/OriginalSurfer-Regular.ttf");
 }
 .bold {
-    font-weight: bold;    
+    font-weight: bold;
 }
-.displayBlock{
+.displayBlock {
     display: block;
 }
-.secondary{
+.secondary {
     --color: gray;
 }
 :root {
@@ -48,10 +48,18 @@
     --main-dark-color: black;
     --accent-color: #b91372;
 }
-ion-chip{
+ion-toolbar {
+    --background: var(--main-bg-color);
+    color: var(--main-light-color);
+}
+.flexCenterCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+ion-chip {
     height: auto;
 }
-
 
 // /*
 //  * Dark Colors

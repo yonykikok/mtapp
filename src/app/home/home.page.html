@@ -12,62 +12,21 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content  >
-  <div class="container">
+<ion-content>
+  <!-- *ngIf="puedeAcceder(modulo)" -->
+  <div style="display: flex; flex-wrap: wrap; justify-content: center;">
 
-    <ion-card>
+    <ion-card *ngFor='let modulo of modulos' class="ion-activatable ripple-parent flexCenterCenter"
+      [routerLink]="modulo.ruta" routerLinkActive="router-link-active" [ngStyle]="{'background-color': modulo.color}">
+      <ion-ripple-effect></ion-ripple-effect>
       <ion-card-header>
-      <ion-card-title class="ion-text-center">Modulos</ion-card-title>
-    </ion-card-header>
+        <ion-card-title class="ion-text-center" style="color: white;">{{modulo.titulo}}</ion-card-title>
+      </ion-card-header>
+
+    </ion-card>
+
     
-    <ion-card-content>
-    </ion-card-content>
-  </ion-card>
-  
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title class="ion-text-center">Modulos</ion-card-title>
-    </ion-card-header>
-    
-    <ion-card-content>
-    </ion-card-content>
-  </ion-card>
-  
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title class="ion-text-center">Modulos</ion-card-title>
-    </ion-card-header>
-    
-    <ion-card-content>
-    </ion-card-content>
-  </ion-card>
-  
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title class="ion-text-center">Modulos</ion-card-title>
-    </ion-card-header>
-    
-    <ion-card-content>
-    </ion-card-content>
-  </ion-card>
-  
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title class="ion-text-center">Modulos</ion-card-title>
-    </ion-card-header>
-    
-    <ion-card-content>
-    </ion-card-content>
-  </ion-card>
-  
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title class="ion-text-center">Modulos</ion-card-title>
-    </ion-card-header>
-    
-    <ion-card-content>
-    </ion-card-content>
-  </ion-card>
-  
-</div>
+
+  </div>
+
 </ion-content>

@@ -9,7 +9,6 @@ import { MisReparacionesPageRoutingModule } from './mis-reparaciones-routing.mod
 import { MisReparacionesPage } from './mis-reparaciones.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { FormAltaReparacionComponent } from 'src/app/components/forms/form-alta-reparacion/form-alta-reparacion.component';
-import { CustomIonSlidingComponent } from 'src/app/components/custom-ion-sliding/custom-ion-sliding.component';
 import { DetalleReparacionComponent } from 'src/app/components/detalles/detalle-reparacion/detalle-reparacion.component';
 import { EstadoReparacionPipe } from 'src/app/pipes/estado-reparacion.pipe';
 import { EstadoReparacionColorDirective } from 'src/app/directives/estado-reparacion-color.directive';
@@ -26,9 +25,6 @@ import { EstadoReparacionBorderColorDirective } from 'src/app/directives/estado-
   ],
   declarations: [MisReparacionesPage,
     FormAltaReparacionComponent,
-    CustomIonSlidingComponent,
-    DetalleReparacionComponent,
-    EstadoReparacionPipe,
-    EstadoReparacionColorDirective, EstadoReparacionBgcolorDirective, EstadoReparacionBorderColorDirective]
+    DetalleReparacionComponent]
 })
 export class MisReparacionesPageModule { }

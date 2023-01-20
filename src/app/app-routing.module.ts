@@ -48,6 +48,21 @@ const routes: Routes = [
     path: 'tienda',
     loadChildren: () => import('./pages/tienda/tienda.module').then( m => m.TiendaPageModule)
   },
+  {
+    path: 'deudores',
+    loadChildren: () => import('./pages/deudores/deudores.module').then( m => m.DeudoresPageModule)
+  },
+  {
+    path: 'proveedores',
+    loadChildren: () => import('./pages/proveedores/proveedores.module').then( m => m.ProveedoresPageModule)
+  },  {
+    path: 'dashboard',
+    loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardPageModule)
+  },
+
+ 
+
+
 ];
 
 @NgModule({

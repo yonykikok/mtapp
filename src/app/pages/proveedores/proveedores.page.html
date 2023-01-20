@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-title>{{'proveedores'| titlecase}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<ion-searchbar class="ion-margin-top" show-cancel-button="focus" cancel-button-text="Custom Cancel"
+    placeholder="Ingrese numero de boleta" [(ngModel)]="textoABuscar" (ionChange)="buscarBoleta()"></ion-searchbar>
+
+  <div *ngIf="productosAMostrar && productosAMostrar.length>0; else listarProveedores">
+    <ion-item *ngFor="let prod of productosAMostrar" class="ion-margin">
+      {{prod.marca}} {{prod.modelo}} ( {{prod.calidad}} )<br>
+      {{prod.precioVenta*precioDolar|currency}} <br>
+      {{prod.proveedor}} <br>
+      <br>
+    </ion-item>
+  </div>
+
+  <ng-template #listarProveedores>
+
+    <ion-card *ngFor="let proveedor of proveedores">
+      <ion-card-header>
+
+        {{proveedor.nombre}} <br>
+        {{proveedor.ultimaActualizacion|date}} <br>
+        Productos: <br>
+      </ion-card-header>
+      <ion-item *ngFor="let prod of proveedor.productos" class="ion-margin">
+        {{prod.marca}} {{prod.modelo}} ( {{prod.calidad}} )<br>
+        {{prod.precioVenta*precioDolar|currency}} <br>
+        <br>
+      </ion-item>
+
+    </ion-card>
+  </ng-template>
+</ion-content>

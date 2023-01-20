@@ -34,9 +34,12 @@ export enum reparacionIconName {
   sin_reparar = 'thumbs-down-outline',
   diagnosticado = 'alert-circle-outline'
 }
-
-
-
+export enum roles {
+  ADMIN = 'admin',
+  CLIENTE = 'cliente',
+  EMPLEADO = 'empleado',
+  ST = 'st',
+}
 
 
 @Injectable({

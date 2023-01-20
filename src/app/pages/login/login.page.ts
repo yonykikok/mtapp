@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
+import { roles } from 'src/app/services/info-compartida.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -35,12 +36,12 @@ export class LoginPage implements OnInit {
         if (!res.payload.exists) {//si no existe lo creamos.
           user['activo'] = false;
           user['fechaCreacion'] = new Date();
+          user['role'] = roles.CLIENTE;
           await this.database.crearConCustomId('users', user.dni.toString(), this.formUser.value);
 
-          this.alertService.alertSinAccion('Bienvenido!!', 
-          'Gracias por sumarte a nuestra comunidad, una ves finalizada el registro podras acceder a todos los sectores de la App.', 
-          'Ok');
-          console.log("se creo el nuevo usuario")
+          this.alertService.alertSinAccion('Bienvenido!!',
+            'Gracias por sumarte a nuestra comunidad, una ves finalizada el registro podras acceder a todos los sectores de la App.',
+            'Ok');
         }
 
         this.authService.setCurrentUser(user)

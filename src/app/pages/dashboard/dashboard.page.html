@@ -1,0 +1,17 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/home'" [title]="'Dashboard'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+ 
+  
+  <app-custom-ion-sliding *ngFor="let reparacion of reparacionesAMostrar" [reparacion]="reparacion"
+    (mostrarDetalleEvent)="mostrarDetalle($event)"></app-custom-ion-sliding>
+    
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="mostrarModalFormAltaReparacion()">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

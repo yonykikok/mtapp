@@ -6,6 +6,9 @@ import 'firebase/compat/storage';
 import { environment } from 'src/environments/environment';
 import { DataBaseService } from 'src/app/services/database.service';
 import { boleta_estados } from 'src/app/services/info-compartida.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
+import { ToastColor, ToastService } from 'src/app/services/toast.service';
+import { ModalController } from '@ionic/angular';
 firebase.initializeApp(environment.firebaseConfig);
 
 
@@ -21,7 +24,10 @@ export class FormAltaReparacionComponent implements OnInit {
   dni: number;
   nro_boleta: number;
   constructor(private alertService: AlertService,
-    private database: DataBaseService) { }
+    private database: DataBaseService,
+    private spinnerService: SpinnerService,
+    private toastService: ToastService,
+    private modalController: ModalController) { }
 
   ngOnInit() { }
 
@@ -50,6 +56,7 @@ export class FormAltaReparacionComponent implements OnInit {
       ${this.imgVistaPrevia ? `<ion-img src=${this.imgVistaPrevia} alt="Boleta">` : ''}</ion-img>`,
       'Confirmar',
       () => {
+        this.spinnerService.showLoading("Generando la boleta digital...")
 
         this.storageRef.child("boletas/" + 'FotoName').putString(this.imgVistaPrevia, 'data_url').then(async (respuesta) => {
           this.photo = await respuesta.ref.getDownloadURL();
@@ -61,11 +68,18 @@ export class FormAltaReparacionComponent implements OnInit {
             estado: boleta_estados.pendiente
           }
 
+
           this.database.crear('boletas', boleta).then(res => {
-            console.log("se dio de alta!", res);
+            this.toastService.simpleMessage("Exito!", "Se genero la boleta correctamente", ToastColor.success);
+          this.spinnerService.stopLoading();
+          this.modalController.dismiss();
           });
 
-        }).catch(err => { console.log(err) });
+        }).catch(err => {
+          this.spinnerService.stopLoading();
+        })
+
+
 
       }
     )
