@@ -1,0 +1,25 @@
+<ion-card class="ion-text-center"
+  *ngIf="loggedUser && funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser); else otroPerfil">
+  <ion-card-header>
+    <ion-card-title>{{ "Precio del dolar: " + (precioDolarBlue|currency) }}
+
+      <ion-icon name="create-outline" (click)="editarPrecio=!editarPrecio"></ion-icon>
+    </ion-card-title>
+  </ion-card-header>
+  <ion-card-content *ngIf="editarPrecio" class="ion-text-center">
+    <ion-item  class="flexCenterCenter" fill="outline">
+      <ion-label position="floating">Nuevo Precio del dolar</ion-label>
+      <ion-input type="number" matInput [(ngModel)]="precioDolarBlueIngresado"
+        placeholder="Ingrese precio de personalizado"></ion-input>
+    </ion-item>
+    <ion-item-divider *ngIf="editarPrecio">
+      <ion-button color="warning" (click)="restablecerPrecioDolarBlue()">Restablecer</ion-button>
+      <ion-button color="primary" (click)="aplicarCambio()">Aplicar cambio</ion-button>
+    </ion-item-divider>
+  </ion-card-content>
+</ion-card>
+<ng-template #otroPerfil>
+  <div class="ion-margin">
+    <b>{{"Todos los precios incluyen colocacion." }}</b>
+  </div>
+</ng-template>

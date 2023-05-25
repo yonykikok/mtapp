@@ -59,6 +59,42 @@ const routes: Routes = [
     path: 'dashboard',
     loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardPageModule)
   },
+  {
+    path: 'lista-modulos',
+    loadChildren: () => import('./pages/lista-modulos/lista-modulos.module').then( m => m.ListaModulosPageModule)
+  },
+  {
+    path: 'lista-tactiles',
+    loadChildren: () => import('./pages/lista-tactiles/lista-tactiles.module').then( m => m.ListaTactilesPageModule)
+  },
+  {
+    path: 'lista-baterias',
+    loadChildren: () => import('./pages/lista-baterias/lista-baterias.module').then( m => m.ListaBateriasPageModule)
+  },
+  {
+    path: 'lista-displays',
+    loadChildren: () => import('./pages/lista-displays/lista-displays.module').then( m => m.ListaDisplaysPageModule)
+  },
+  {
+    path: 'lista-flex-de-carga',
+    loadChildren: () => import('./pages/lista-flex-de-carga/lista-flex-de-carga.module').then( m => m.ListaFlexDeCargaPageModule)
+  },
+  {
+    path: 'lista-pedidos',
+    loadChildren: () => import('./pages/lista-pedidos/lista-pedidos.module').then( m => m.ListaPedidosPageModule)
+  },
+  {
+    path: 'equipos-vendidos',
+    loadChildren: () => import('./pages/equipos-vendidos/equipos-vendidos.module').then( m => m.EquiposVendidosPageModule)
+  },
+  {
+    path: 'libro-diario',
+    loadChildren: () => import('./pages/libro-diario/libro-diario.module').then( m => m.LibroDiarioPageModule)
+  },
+  {
+    path: 'historial-caja',
+    loadChildren: () => import('./pages/historial-caja/historial-caja.module').then( m => m.HistorialCajaPageModule)
+  },
 
  
 

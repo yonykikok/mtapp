@@ -1,25 +1,51 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
 
 export const environment = {
   production: false,
   firebaseConfig: {
-    apiKey: "AIzaSyA3D-RLKp1S1CQ4Hd4ePqtS00HEZpDQLCI",
-    authDomain: "mtapp-d4e48.firebaseapp.com",
-    projectId: "mtapp-d4e48",
-    storageBucket: "mtapp-d4e48.appspot.com",
-    messagingSenderId: "98197999876",
-    appId: "1:98197999876:web:bde066809877e9c9364051",
-    measurementId: "G-SV4DDQ3HB3"
+    apiKey: "AIzaSyDaY1a8pb6kbgO6apkUVqnQjZAt87F0uRQ",
+    authDomain: "multitask-web.firebaseapp.com",
+    databaseURL: "https://multitask-web.firebaseio.com",
+    projectId: "multitask-web",
+    storageBucket: "multitask-web.appspot.com",
+    messagingSenderId: "1091635374212",
+    appId: "1:1091635374212:web:64d0ba31668236c0ccfad1",
+    measurementId: "G-Y87CBVERHZ"
+  },
+  TABLAS: {
+    baterias: 'baterias',
+    categorias: 'categorias',
+    consultas: 'consultas',
+    cotizacion_dolar: 'cotizacion_dolar',
+    deudores: 'deudores',
+    displays: 'displays',
+    equipos_vendidos: 'equipos_vendidos',
+    flexs: 'flexs',
+    ingresosBrutos: 'ingresosBrutos',
+    modulos: 'modulos',
+    otrosRepuestos: 'otrosRepuestos',
+    pedidos: 'pedidos',
+    productos: 'productos',
+    stockModulos: 'stockModulos',
+    tactiles: 'tactiles',
+    users: 'users',
+    tareasEmpleados: 'tareasEmpleados',
+    categoriasProductos: 'categoriasProductos',
+    celulares: 'celulares',
+    backUps: 'backUps',
+    equipos_tercerizado: 'equipos_tercerizado',
+    boletasReparacion: 'boletasReparacion',
+  },
+  ESTADO_BOLETAS: {
+    pendiente:'pendiente',
+    cancelado:'cancelado',
+    en_recision:'en_recision',
+    en_reparacion:'en_reparacion',
+    reparado:'reparado',
+    no_reparado:'no_reparado',
+    para_notificar:'para_notificar',
+    esperado_respuesta:'esperado_respuesta',
+    para_entregar:'para_entregar',
+    pausado:'pausado',
+    retirado:'retirado',
   }
 };
-
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.

@@ -23,14 +23,19 @@
         </div>
       </div>
 
-      <ion-item class="ion-activated">
+      <ion-item class="ion-activated" fill="outline">
         <ion-icon name="card-outline" class="ion-margin-end"></ion-icon>
         <ion-input type="number" placeholder="DNI cliente" [(ngModel)]="dni"></ion-input>
       </ion-item>
 
-      <ion-item class="ion-activated">
+      <ion-item class="ion-activated" fill="outline">
         <ion-icon name="document-outline" class="ion-margin-end"></ion-icon>
-        <ion-input type="number" placeholder="Ingrese numero de boleta" [(ngModel)]="nro_boleta"></ion-input>
+        <ion-input type="number" placeholder="Numero de boleta" [(ngModel)]="nro_boleta"></ion-input>
+      </ion-item>
+
+      <ion-item class="ion-activated" fill="outline">
+        <ion-icon name="logo-whatsapp" class="ion-margin-end"> </ion-icon>
+        <ion-input type="number" placeholder="Telefono del cliente" [(ngModel)]="telefono_cliente"></ion-input>
       </ion-item>
 
       <ion-button expand="block" class="ion-margin-top" (click)="mostrarConfirmacion()"

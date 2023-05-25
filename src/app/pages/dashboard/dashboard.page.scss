@@ -1,0 +1,18 @@
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px; /* Espacio entre los chips */
+  }
+  
+  ion-chip {
+    /* Estilos adicionales para tus chips */
+    height: 3rem;
+  }
+  
+  iframe{
+    width: 90vw;
+    height: 30vh;
+    border-radius: 10px;
+    margin: 5%;
+  }

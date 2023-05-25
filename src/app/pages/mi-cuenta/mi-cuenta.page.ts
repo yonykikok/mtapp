@@ -28,6 +28,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
   }
 
   verSiTieneLaInfoCompleta() {
+    if(!this.user) return;
     console.log(this.user)
     if (!this.user.correo) {
       this.mostrarPopupCorreo();

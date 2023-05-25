@@ -1,0 +1,27 @@
+<ion-card style="    width: 90vw;
+margin: 1rem;">
+  <ion-card-header>
+    <ion-card-title class="ion-text-center">Consultas online</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    <form [formGroup]="formConsulta">
+      <ion-item>
+        <ion-label position="floating" class="text1" style="font-weight: bold;">NOMBRE</ion-label>
+        <ion-input type="text" formControlName="nombre"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating" class="text1" style="font-weight: bold;">APELLIDO</ion-label>
+        <ion-input type="text" formControlName="apellido"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating" class="text1" style="font-weight: bold;">TELEFONO</ion-label>
+        <ion-input type="text" formControlName="telefono"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating" class="text1" style="font-weight: bold;">CONSULTA</ion-label>
+        <ion-textarea formControlName="consulta"></ion-textarea>
+      </ion-item>
+      <ion-button expand="block" color="primary"> Enviar consulta</ion-button>
+    </form>
+  </ion-card-content>
+</ion-card>

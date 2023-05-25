@@ -14,19 +14,21 @@
 
 <ion-content>
   <!-- *ngIf="puedeAcceder(modulo)" -->
-  <div style="display: flex; flex-wrap: wrap; justify-content: center;">
 
-    <ion-card *ngFor='let modulo of modulos' class="ion-activatable ripple-parent flexCenterCenter"
-      [routerLink]="modulo.ruta" routerLinkActive="router-link-active" [ngStyle]="{'background-color': modulo.color}">
-      <ion-ripple-effect></ion-ripple-effect>
-      <ion-card-header>
-        <ion-card-title class="ion-text-center" style="color: white;">{{modulo.titulo}}</ion-card-title>
-      </ion-card-header>
+  <app-story-wrap id="appStoryWrapper"></app-story-wrap>
 
-    </ion-card>
+  <ion-item-divider style="flex-direction: column;" class="ion-text-center ion-no-padding" color="light">
 
-    
+    <div style="width: 100%; ">
+      <iframe class="w-100 h-100"
+        src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d52482.19346851796!2d-58.42513600000001!3d-34.701722000000004!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x451fc62bb31a6590!2sMultitask!5e0!3m2!1ses!2sar!4v1659273201500!5m2!1ses!2sar"
+        loading="lazy">
+      </iframe>
+    </div>
+  </ion-item-divider>
 
-  </div>
+  <ion-item-divider style="flex-direction: column;" class="ion-text-center ion-no-padding" color="light">
 
+    <app-form-consulta></app-form-consulta>
+  </ion-item-divider>
 </ion-content>

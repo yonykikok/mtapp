@@ -40,13 +40,59 @@ export enum roles {
   EMPLEADO = 'empleado',
   ST = 'st',
 }
-
+export interface Modulo {
+  marca: string;
+  modelo: string;
+  precio: number;
+  color: string;
+  tipo: string;
+  calidad: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class InfoCompartidaService {
 
-  constructor() { }
+
+  categoriasProductos = [];
+  subCategoriasParlantes = ['3"', ''];
+
+  subCatAuriculares = {
+    subCatConexion: ['Con cable', 'Bluetooth'],
+    subCatAgarre: ['Comunes', 'Con vincha'],
+    subCatFunciones: ['Comunes', 'Manos libres'],
+  }
+
+  subCatCargadores = {
+    subCatTipo: ['Celulares', 'Notebooks', 'Baterias', 'Otros'],
+    subCatPotencia: ['Comunes', 'Carga rapida'],
+    subCatConexion: ['Comunes', 'Tipo C', 'Iphone'],
+  }
+
+
+  marcasTrabajadas = ['Samsung', 'LG', 'Motorola', 'Huawei', 'Apple', 'Alcatel', 'Xiaomi', 'Sony', 'otro'];
+
+  marcasModulos = ['Samsung', 'LG', 'Motorola', 'Huawei', 'Apple', 'Alcatel', 'Xiaomi', 'Sony'];
+  calidadesModulos = ['AAA', 'GenMedCalidad', 'GenBueno', 'Estandar', 'Original Oled', 'Original Certificado'];
+  coloresModulos = ['Blanco', 'Negro', 'Gris', 'Dorado', 'Celeste'];
+  tiposModulos = ['Simple', 'C/M'];
+
+  marcasTactiles = ['Samsung', 'LG', 'Otro'];
+  coloresTactiles = ['Blanco', 'Negro', 'Gris', 'Plateado', 'Dorado', 'Celeste', 'Rosa'];
+  tiposTactiles = ['Tablet', 'Celular'];
+
+  marcasDisplay = ['Samsung', 'LG', 'Otro'];
+  tiposDisplay = ['Tablet', 'Celular'];
+
+  marcasBaterias = ['Samsung', 'LG', 'Motorola', 'Huawei', 'Apple', 'Alcatel', 'Xiaomi', 'Sony', 'otro'];
+  calidadesBaterias = ['AAA', 'GenMedCalidad', 'GenBueno', 'Estandar', 'Original'];
+  tiposBaterias = ['Tablet', 'Celular'];
+
+  calidadesFlexDeCarga = ['AAA', 'Estandar', 'Original'];
+
+  constructor(private database: DataBaseService) {
+   
+  }
 
 }

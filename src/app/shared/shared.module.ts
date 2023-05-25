@@ -9,6 +9,8 @@ import { EstadoReparacionBorderColorDirective } from '../directives/estado-repar
 import { EstadoReparacionBgcolorDirective } from '../directives/estado-reparacion-bgcolor.directive';
 import { EstadoReparacionColorDirective } from '../directives/estado-reparacion-color.directive';
 import { EstadoReparacionPipe } from '../pipes/estado-reparacion.pipe';
+import { PrecioDolarComponent } from '../components/precio-dolar/precio-dolar.component';
+import { ColoresPipe } from '../pipes/colores.pipe';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,9 @@ import { EstadoReparacionPipe } from '../pipes/estado-reparacion.pipe';
     EstadoReparacionPipe,
     EstadoReparacionColorDirective, 
     EstadoReparacionBgcolorDirective, 
-    EstadoReparacionBorderColorDirective
+    EstadoReparacionBorderColorDirective,
+    PrecioDolarComponent,
+    ColoresPipe
   ],
   imports: [
     CommonModule,
@@ -35,7 +39,10 @@ import { EstadoReparacionPipe } from '../pipes/estado-reparacion.pipe';
     EstadoReparacionPipe,
     EstadoReparacionColorDirective, 
     EstadoReparacionBgcolorDirective, 
-    EstadoReparacionBorderColorDirective
+    EstadoReparacionBorderColorDirective,
+    PrecioDolarComponent,
+    ColoresPipe
+
 
   ]
 })

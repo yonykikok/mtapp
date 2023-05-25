@@ -1,13 +1,18 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/home'" [title]="'Dashboard'"></app-clasic-toolbar>
+  <app-clasic-toolbar [ruta]="'/home'" [title]="'Panel de control'"></app-clasic-toolbar>
 </ion-header>
 
 <ion-content>
- 
-  
-  <app-custom-ion-sliding *ngFor="let reparacion of reparacionesAMostrar" [reparacion]="reparacion"
-    (mostrarDetalleEvent)="mostrarDetalle($event)"></app-custom-ion-sliding>
-    
+
+
+  <!-- <app-custom-ion-sliding *ngFor="let reparacion of reparacionesAMostrar" [reparacion]="reparacion"
+    (mostrarDetalleEvent)="mostrarDetalle($event)"></app-custom-ion-sliding> -->
+  <div class="container">
+    <ion-chip *ngFor='let modulo of modulos' class=" flexCenterCenter" [routerLink]="modulo.ruta"
+      routerLinkActive="router-link-active" [ngStyle]="{'background-color': modulo.color}">
+      <ion-text class="ion-text-center" style="color: white;"><b>{{modulo.titulo}}</b></ion-text>
+    </ion-chip>
+  </div>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="mostrarModalFormAltaReparacion()">
     <ion-fab-button>

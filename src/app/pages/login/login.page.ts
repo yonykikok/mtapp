@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { User } from 'src/app/clases/user';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
@@ -92,6 +93,31 @@ export class LoginPage implements OnInit {
       this.mostrarInputClave = false;
       suscripcion.unsubscribe();
     });
+  }
+
+
+  async onGoogleLogin() {
+    try {
+      const user = await this.authService.loginWithGoogle();
+      if (user) {
+        this.checkUserIsVerified(user);
+      }
+    } catch (err) {
+      // this.snackBar.open('Error, No se pudo iniciar sesion con Google', 'Cerrar', { duration: 5000, panelClass: ['dangerSnackBar'] });
+    }
+  }
+
+  private checkUserIsVerified(user: User): boolean {
+    if (user && !user.emailVerified) {
+      this.router.navigate(['/verification-email']);
+      return false;
+    }
+    else if (user && user.emailVerified) {
+      this.router.navigate(['']);
+      return true;
+    } else {
+      return false;
+    }
   }
 
 }
