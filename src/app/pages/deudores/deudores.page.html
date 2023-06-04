@@ -1,18 +1,33 @@
 <ion-header>
-  <ion-toolbar class="ion-text-center">
-  
-  </ion-toolbar>
+  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Deudores'"></app-clasic-toolbar>
 </ion-header>
 
-<ion-content>
-  
 
-  <!-- <ion-list>
-    <ion-item *ngFor="let deudor of deudores">
-      <ion-label>
-        <ion-text class="ion-no-padding">{{deudor.apellido| titlecase}} {{deudor.nombre| titlecase}}</ion-text>
-        <p>DNI: {{deudor.dni}}</p>
-      </ion-label>
-    </ion-item>
-  </ion-list> -->
+<ion-content>
+
+  <!-- <app-navbar-admin [loggedUser]="loggedUser"></app-navbar-admin> -->
+
+  <ion-searchbar show-clear-button="focus" placeholder="Alfredo martinez" (ionInput)="filtrarPorTexto($event.target['value'])" [(ngModel)]='textoABuscar'> </ion-searchbar>
+
+
+
+  <div *ngIf="loggedUser;">
+    <p *ngIf="listaDudores" class="ion-text-center">
+      <label style="padding: 1rem; text-align: center; width: 100%;">Total fiado:
+        <b>{{totalFiado|currency:'USD':'symbol':'1.0-0'}}</b></label>
+        
+      <app-deuda-cliente [loggedUser]="loggedUser" *ngFor="let deudor of listaDeudoresAMostrar" [deudor]="deudor">
+      </app-deuda-cliente>
+    </p>
+  
+  </div>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" (click)="openDialog()">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+
+  </ion-fab>
+
+
 </ion-content>

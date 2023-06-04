@@ -1,0 +1,48 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/historial-caja'" [title]="'Ventas del dia'"></app-clasic-toolbar>
+</ion-header>
+
+
+<ion-content *ngIf="libroDiario">
+  <ion-card>
+
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">
+        Cierre de caja
+      </ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <table style="width: 100%;">
+        <tbody>
+          <tr>
+            <th>Monto inicial</th>
+            <td>{{libroDiario.montoInicial|currency}}</td>
+          </tr>
+          <tr>
+            <th>Efectivo</th>
+            <td>{{libroDiario.montoTotalEfectivo|currency}}</td>
+          </tr>
+          <tr>
+            <th>TOTAL:</th>
+            <td>{{libroDiario.montoTotalEfectivo+
+              libroDiario.montoInicial|currency}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </ion-card-content>
+  </ion-card>
+
+
+  <div *ngIf="libroDiario && libroDiario.ventas">
+
+    <ion-chip *ngFor="let item of libroDiario.ventas" style="justify-content: space-between;"
+      [ngStyle]="{'background-color': item.boleta ? 'rgb(168 231 232)' : '' , 'border': item.medioDePago!='efectivo' ? '2px solid orange' : 'none' }">
+
+      <label [ngStyle]="{'color': item.precio<0 ? 'red' : '' }" style="margin: 0;">{{item.precio|currency}}</label>
+      <b>{{item.descripcion|maxLength:25}} </b>
+
+      <label style="margin: 0;"> {{item.boleta?'('+item.boleta+')':''}}</label>
+    </ion-chip>
+  </div>
+</ion-content>

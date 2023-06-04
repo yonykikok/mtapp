@@ -1,0 +1,42 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/deudores'" [title]="'Codigo de seguridad'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="ion-margin ion-padding" color="light">
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">Crea tu codigo</ion-card-title>
+      <ion-card-subtitle class="ion-text-center"> {{
+        (!newCode || (newCode && !newSecurityCode.firstSecurityCode ))
+        ?'Ingrese tu codigo personal'
+        :'Repite tu codigo personal'
+        }}</ion-card-subtitle>
+    </ion-card-header>
+    <div>
+
+      <div class="grid-container-code">
+        <ion-card class="flexCenterCenter ion-no-margin" style="height: 2.5rem; width: 2.5rem;" *ngFor="let digito of securityCode"
+          [color]="codigoIncorrecto?'danger':''">
+          <ion-icon color="secondary" style="font-size: 2rem;" *ngIf="digito" name="radio-button-on-outline"></ion-icon>
+        </ion-card>
+        <!-- [ngStyle]="{'border':codigoIncorrecto?'2px solid red':'2px solid black', 'color':codigoIncorrecto?'red':'white'}">{{digito?'*':''}} -->
+      </div>
+
+      <div class="grid-container ion-text-center">
+        <ion-chip class="grid-item flexCenterCenter" style="height: 3rem; font-size: 2rem;"
+          *ngFor="let tecla of teclas; let index = index" (click)="agregarDigito(tecla,index)">
+          <b>{{tecla}}</b>
+        </ion-chip>
+        <ion-chip class="grid-item flexCenterCenter" style="height: 3rem;" color="danger" (click)="borrarTodo()">
+          <ion-icon name="trash-outline" style=" font-size: 2rem;"></ion-icon>
+        </ion-chip>
+        <ion-chip class="grid-item flexCenterCenter" style="height: 3rem; font-size: 2rem;" (click)="agregarDigito('0',7)"><b>0</b></ion-chip>
+        <ion-chip class="grid-item flexCenterCenter" style="height: 3rem;" color="warning" (click)="borrarDigito()">
+          <ion-icon name="backspace-outline" style=" font-size: 2rem;"></ion-icon>
+        </ion-chip>
+      </div>
+
+    </div>
+
+  </ion-card>
+</ion-content>

@@ -11,7 +11,7 @@
   <div *ngIf="productosAMostrar && productosAMostrar.length>0; else listarProveedores">
     <ion-item *ngFor="let prod of productosAMostrar" class="ion-margin">
       {{prod.marca}} {{prod.modelo}} ( {{prod.calidad}} )<br>
-      {{prod.precioVenta*precioDolar|currency}} <br>
+      {{prod.precioVenta*precioDolar|currency:'USD':'symbol':'1.0-0'}} <br>
       {{prod.proveedor}} <br>
       <br>
     </ion-item>
@@ -28,7 +28,7 @@
       </ion-card-header>
       <ion-item *ngFor="let prod of proveedor.productos" class="ion-margin">
         {{prod.marca}} {{prod.modelo}} ( {{prod.calidad}} )<br>
-        {{prod.precioVenta*precioDolar|currency}} <br>
+        {{prod.precioVenta*precioDolar|currency:'USD':'symbol':'1.0-0'}} <br>
         <br>
       </ion-item>
 

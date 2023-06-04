@@ -1,9 +1,54 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>listaPedidos</ion-title>
-  </ion-toolbar>
+  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Lista de pedidos'"></app-clasic-toolbar>
 </ion-header>
 
-<ion-content>
 
+<ion-content>
+  <ion-searchbar show-clear-button="focus" placeholder="J7 prime" [(ngModel)]="textoABuscar"
+    (ionInput)="filtrarPorTexto($event.target['value'])"></ion-searchbar>
+
+  <ion-grid class="ion-text-center" style="margin-bottom: 5rem;">
+    <ion-row>
+      <ion-col><b>Repuesto</b></ion-col>
+      <ion-col><b>Modelo</b></ion-col>
+      <ion-col><b>Conseguido</b></ion-col>
+    </ion-row>
+    <ion-row *ngFor="let pedido of pedidosAMostrar" [appPrioridadPedido]="pedido" (click)="mostrarDetalle(pedido)">
+      <ion-col>{{pedido.tipo|titlecase}}</ion-col>
+      <ion-col>{{pedido.modelo|titlecase}}</ion-col>
+      <ion-col><ion-checkbox [(ngModel)]="pedido.conseguido" (click)="pedido.conseguido
+        ?confirmarDesmarcado(pedido,'conseguido',$event)
+        :confirmarMarcado(pedido,'conseguido',$event)">Conseguido</ion-checkbox></ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="mostrarFormularioDeAltaPedido()">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
+
+<ion-footer [translucent]="true">
+  <ion-toolbar>
+    <ion-tabs>
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button (click)="cargarListaDePedidos('pendientes')">
+          <ion-icon color="primary" name="time-outline"></ion-icon>
+          Pendientes
+        </ion-tab-button>
+
+        <ion-tab-button (click)="cargarListaDePedidos('conseguidos')">
+          <ion-icon color="secondary" name="checkmark-outline"></ion-icon>
+          Conseguidos
+        </ion-tab-button>
+
+        <ion-tab-button (click)="cargarListaDePedidos('notificados')">
+          <ion-icon color="success" name="checkmark-done-outline"></ion-icon>
+          Notificados
+        </ion-tab-button>
+
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-toolbar>
+</ion-footer>

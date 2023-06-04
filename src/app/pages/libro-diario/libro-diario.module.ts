@@ -7,14 +7,17 @@ import { IonicModule } from '@ionic/angular';
 import { LibroDiarioPageRoutingModule } from './libro-diario-routing.module';
 
 import { LibroDiarioPage } from './libro-diario.page';
+import { FormDetalleVentaComponent } from 'src/app/components/forms/form-detalle-venta/form-detalle-venta.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    LibroDiarioPageRoutingModule
+    LibroDiarioPageRoutingModule,
+    SharedModule
   ],
-  declarations: [LibroDiarioPage]
+  declarations: [LibroDiarioPage,FormDetalleVentaComponent]
 })
 export class LibroDiarioPageModule {}

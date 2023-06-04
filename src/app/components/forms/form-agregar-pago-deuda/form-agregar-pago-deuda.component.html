@@ -1,0 +1,46 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/deudores'" [title]="'Historial de pagos'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">Historial de pagos</ion-card-title>
+
+    </ion-card-header>
+    <form [formGroup]="formGroupPago">
+
+      <ion-item fill="outline" class="ion-margin">
+        <ion-select aria-label="fruit" placeholder="Tipo de pago" [(ngModel)]="tipoDePagoSeleccionado" [ngModelOptions]="{standalone: true}" (ionChange)="cargarTipoDePago($event)">
+          <ion-select-option *ngFor="let tipoDePago of ['efectivo','transferencia','otro']" [value]="tipoDePago">{{tipoDePago}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item class="ion-margin" *ngIf="tipoDePagoSeleccionado=='otro'">
+        <ion-label position="floating" style="font-weight: bold;">Tipo de pago</ion-label>
+        <ion-input type="text" formControlName="concepto"></ion-input>
+      </ion-item>
+
+      <ion-item class="ion-margin">
+        <ion-label position="floating" style="font-weight: bold;">Monto</ion-label>
+        <ion-input type="number" formControlName="monto"></ion-input>
+      </ion-item>
+
+      <ion-item-divider class="ion-no-padding">
+        <ion-button class="ion-margin" expand="block" slot="start" color="secondary" [disabled]="!formGroupPago.valid"
+          (click)="agregarPago()">agregar</ion-button>
+        <ion-button class="ion-margin" expand="block" slot="end" color="primary" (click)="confirmarGuardadoDePagos()">Guardar pagos</ion-button>
+        <!-- [ion-dialog-close]="pagos" -->
+      </ion-item-divider>
+      <div>
+        <ul>
+          <li *ngFor="let item of pagos">
+            {{item.concepto}}: <b>{{item.monto |currency:'USD':'symbol':'1.0-0'}}</b>
+            <ion-chip outline="true" color="danger"> <ion-icon color="danger" name="trash-outline" (click)="showDeletePaymentDialog(item)"
+                *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',user)"></ion-icon></ion-chip>
+          </li>
+        </ul>
+      </div>
+    </form>
+  </ion-card>
+</ion-content>

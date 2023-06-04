@@ -1,9 +1,53 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>listaBaterias</ion-title>
-  </ion-toolbar>
+  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Lista de baterias'"></app-clasic-toolbar>
 </ion-header>
 
-<ion-content>
+
+<ion-content *ngIf="baterias">
+  <app-precio-dolar [loggedUser]="loggedUser"
+    *ngIf="loggedUser && funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)"></app-precio-dolar>
+
+  <div class="ion-text-center">
+    <ion-chip color="success" outline="true" class=" ion-margin"
+      *ngIf="loggedUser && (funcionesUtiles.tieneUnRoleInferior('OWNER',loggedUser));">
+      <b> Todos los precios incluyen colocacion.</b>
+    </ion-chip>
+  </div>
+
+  <ion-item>
+    <ion-select aria-label="Fruit" placeholder="Selecciona los campos que quieres ver" [multiple]="true"
+      [(ngModel)]="camposSeleccionados">
+      <ion-select-option value="marca">Marca</ion-select-option>
+      <ion-select-option value="modelo">Modelo</ion-select-option>
+      <ion-select-option value="precio">Precio</ion-select-option>
+      <ion-select-option value="calidad">Calidad</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-searchbar show-clear-button="focus" placeholder="A20s" (ionInput)="handleInput($event)"></ion-searchbar>
+
+  <ion-grid class="ion-text-center">
+    <ion-row>
+      <ion-col *ngIf="camposSeleccionados.includes('marca')"><b>Marca</b></ion-col>
+      <ion-col *ngIf="camposSeleccionados.includes('modelo')"><b>Modelo</b></ion-col>
+      <ion-col *ngIf="camposSeleccionados.includes('precio')"><b>Precio</b></ion-col>
+      <ion-col *ngIf="camposSeleccionados.includes('calidad')"><b>Calidad</b></ion-col>
+    </ion-row>
+    <ion-row *ngFor="let bateria of bateriasAMostrar" (click)="seleccionar(bateria)">
+      <ion-col *ngIf="camposSeleccionados.includes('marca')">{{bateria.marca|titlecase}}</ion-col>
+      <ion-col *ngIf="camposSeleccionados.includes('modelo')">{{bateria.modelo|titlecase}}</ion-col>
+      <ion-col *ngIf="camposSeleccionados.includes('precio')">{{bateria.precio*488|currency:'USD':'symbol':'1.0-0'
+        }}</ion-col>
+      <ion-col *ngIf="camposSeleccionados.includes('calidad')">{{bateria.calidad}}</ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" (click)="abrirFormModulo()">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+
+  </ion-fab>
 
 </ion-content>

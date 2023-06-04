@@ -1,0 +1,43 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/deudores'" [title]="'Historial de compras'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">Agregar compra</ion-card-title>
+    </ion-card-header>
+
+
+    <form [formGroup]="formGroupCompra">
+      <ion-item class="ion-margin" fill="outline">
+        <ion-label position="floating" style="font-weight: bold;">Producto</ion-label>
+        <ion-input type="text" formControlName="producto"></ion-input>
+      </ion-item>
+
+      <ion-item class="ion-margin" fill="outline">
+        <ion-label position="floating" style="font-weight: bold;">Monto</ion-label>
+        <ion-input type="number" formControlName="precio"></ion-input>
+      </ion-item>
+
+      <ion-item-divider class="ion-no-padding">
+        <ion-button class="ion-margin" expand="block" slot="start" color="secondary" [disabled]="!formGroupCompra.valid"
+          (click)="agregarItem()">agregar</ion-button>
+        <ion-button class="ion-margin" expand="block" slot="end" color="primary"
+          (click)="confirmarGuardadoDeCompras()">Guardar compras</ion-button>
+      </ion-item-divider>
+
+      <div>
+        <ul>
+          <li *ngFor="let item of items">
+            {{item.producto}}: <b>{{item.precio |currency:'USD':'symbol':'1.0-0'}}</b>
+            <ion-chip outline="true" color="danger"> <ion-icon color="danger" name="trash-outline"
+                (click)="showDeleteItemDialog(item)"
+                *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',user)"></ion-icon></ion-chip>
+          </li>
+        </ul>
+      </div>
+    </form>
+  </ion-card>
+
+</ion-content>

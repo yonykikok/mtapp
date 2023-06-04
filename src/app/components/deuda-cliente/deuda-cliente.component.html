@@ -1,0 +1,99 @@
+<ion-item-divider class="ion-no-padding ion-margin-bottom">
+
+  <ion-accordion-group style="width: 100%;">
+    <ion-accordion value="cliente">
+      <ion-item slot="header" color="light">
+        <ion-text [ngStyle]="{color: calcularRestante()==0?'lightgreen':''}">
+          {{deudor.nombre}} {{deudor.apellido}} <br>
+          DNI {{deudor.dni}}
+        </ion-text>
+        <!-- header -->
+      </ion-item>
+
+
+      <ion-card slot="content">
+        <ion-accordion-group>
+          <!-- datos del cliente -->
+          <ion-accordion value="datosClientes">
+            <ion-item slot="header" color="tertiary">
+              <ion-text> Datos del Cliente </ion-text>
+            </ion-item>
+            <div slot="content" class="ion-text-start">
+              <ul>
+                <li>Nombre: <b>{{deudor?.nombre}}</b></li>
+                <li>Apellido: <b>{{deudor?.apellido}}</b></li>
+                <li>Dni: <b>{{deudor?.dni}}</b></li>
+                <li>Direccion: <b>{{deudor?.direccion}}</b></li>
+                <li>Telefono: <b>{{deudor?.telefono}}</b></li>
+              </ul>
+            </div>
+          </ion-accordion>
+          <!-- fin datos del cliente -->
+
+          <!-- datos de la deuda -->
+          <ion-accordion value="datosDeuda">
+            <ion-item slot="header" color="medium" >
+              <ion-text> Datos de la deuda </ion-text>
+            </ion-item>
+            <div slot="content" class="ion-text-start">
+              <ul>
+                <li *ngFor="let item of deudor.items">
+                  <p>{{item.producto}}: <b>{{item.precio |currency:'USD':'symbol':'1.0-0'}}</b></p>
+                </li>
+              </ul>
+              <hr>
+              <p class="ion-text-center">
+                Total fiado: <b class="ml-2">{{calcularDeuda()|currency:'USD':'symbol':'1.0-0'}}</b>
+              </p>
+            </div>
+          </ion-accordion>
+          <!-- fin datos de la deuda -->
+
+          <!-- pagos realizados -->
+          <ion-accordion value="pagosRealizados">
+            <ion-item slot="header" color="success">
+              <ion-text> Pagos realizados </ion-text>
+            </ion-item>
+
+            <div slot="content" *ngIf="deudor.pagos.length>0; else SinPagosRealizados" class="ion-text-start">
+              <ul>
+                <li *ngFor="let item of deudor.pagos">
+                  <p>{{item.concepto}}: <b>{{item.monto |currency:'USD':'symbol':'1.0-0'}}</b>
+                    <br>Fecha: {{item.fecha|date}}
+                  </p>
+                </li>
+              </ul>
+              <hr>
+              <p class="ion-text-center">
+                Total pagado: <b class="ml-2">{{calcularPagos()|currency:'USD':'symbol':'1.0-0'}}</b>
+              </p>
+            </div>
+            <ng-template #SinPagosRealizados>
+              <h4 slot="content" style="color: rgb(247, 89, 89);">Aun no a realizado pagos.</h4>
+            </ng-template>
+          </ion-accordion>
+          <!-- fin pagos realizados -->
+        </ion-accordion-group>
+        <ion-item-divider style="flex-direction: column;" class="ion-no-padding ion-margin-top ion-margin-bottom">
+          <p class="ion-text-center">
+            Resta pagar: <b class="ml-2">{{calcularRestante()|currency:'USD':'symbol':'1.0-0'}}</b>
+          </p>
+          <div>
+            <ion-button slot="start" expand="block" class="ion-margin" color="primary" (click)="openDialog()">Agregar
+              pago
+              <ion-icon slot="end" name="cash-outline"></ion-icon>
+            </ion-button>
+            <ion-button slot="end" expand="block" class="ion-margin" color="warning"
+              (click)="openDialogAgregarCompra()">Agregar compra
+              <ion-icon slot="end" name="cart-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-item-divider>
+      </ion-card>
+
+
+    </ion-accordion>
+
+  </ion-accordion-group>
+
+</ion-item-divider>

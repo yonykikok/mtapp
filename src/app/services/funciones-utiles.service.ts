@@ -3,7 +3,7 @@ import { environment } from 'src/environments/environment';
 import { DataBaseService } from './database.service';
 import { Observable, Subject } from 'rxjs';
 import { ImportanciaRoles, Roles, User } from '../clases/user';
-import { MediosDePago } from '../components/form-detalle-venta/form-detalle-venta.component';
+import { MediosDePago } from '../components/forms/form-detalle-venta/form-detalle-venta.component';
 
 @Injectable({
   providedIn: 'root'
@@ -75,8 +75,6 @@ export class FuncionesUtilesService {
   }
 
   roleMinimoNecesario(role: Roles, loggedUser: User) {
-    console.log(role)
-    console.log(loggedUser)
     if (ImportanciaRoles[role] <= ImportanciaRoles[loggedUser.role]) {
       return true;
     }

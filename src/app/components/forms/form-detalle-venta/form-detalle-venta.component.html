@@ -1,0 +1,122 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/libro-diario'" [title]="'Agregar venta'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-card class="ion-padding">
+
+    <div *ngIf=" item && item.precio && item.precio<0">
+      <ion-chip color="danger">
+        'Saldo negativo'<br> Estas haciendo un retiro de dinero
+      </ion-chip>
+    </div>
+    <form *ngIf="step==1">
+      <div class="input-container">
+        <ion-item fill="outline">
+          <ion-label position="floating">Precio</ion-label>
+          <ion-input type="number" placeholder="Ej: 1500" [(ngModel)]="item.precio"
+            [ngModelOptions]="{standalone: true}"></ion-input>
+        </ion-item>
+
+        <ion-item fill="outline">
+          <ion-label position="floating">Numero de boleta</ion-label>
+          <ion-input type="number" placeholder="Ej: 2955" [(ngModel)]="item.boleta"
+            [ngModelOptions]="{standalone: true}"></ion-input>
+        </ion-item>
+      </div>
+
+      <ion-item fill="outline">
+        <ion-label position="floating">Descripción</ion-label>
+        <ion-textarea placeholder="Cargador 5.1 Innova tipo C" [(ngModel)]="item.descripcion"
+          [ngModelOptions]="{standalone: true}"></ion-textarea>
+      </ion-item>
+
+      <div>
+        <ion-button expand="block" color="primary" (click)="agregarItem()"
+          [disabled]="!item.precio||!item.descripcion">Agregar</ion-button>
+
+        <ion-button expand="block" color="secondary" [disabled]="!items || items.length<=0"
+          (click)="step=2">Siguiente</ion-button>
+      </div>
+    </form>
+    <ion-item-divider class="ion-no-padding" *ngIf="items" style="flex-direction: column;">
+      <ion-chip class="flexBetweenCenter" style="width: 95%;" *ngFor="let item of items">
+        <label>{{item.precio|currency}}</label>
+        <b>{{item.descripcion}} </b>
+        <label class="flexCenterCenter" *ngIf="item.boleta">({{item.boleta}})
+          <ion-icon color="danger" (click)="eliminarItem(item)" name="trash-outline"></ion-icon>
+        </label>
+      </ion-chip>
+    </ion-item-divider>
+
+    <div *ngIf="items && items.length>0 && step==2">
+
+      <ion-item-divider class="ion-no-padding  ion-margin-bottom ">
+        <div class="flexCenterCenter ion-margin-bottom" style="width: 100%; flex-direction: column;">
+          <ion-fab-button slot="" size="small" (click)="step=1">
+            <ion-icon name="arrow-up-outline"></ion-icon>
+          </ion-fab-button>
+          <ion-text><b>Subir</b></ion-text>
+        </div>
+      </ion-item-divider>
+
+      <ion-radio-group aria-label="Medio de pago" [(ngModel)]="medioDePago"
+        *ngIf="(montoTotal+((montoTotal/100)*porcentajeDeRecargo))>0; else descuento">
+
+        <ion-text class="textRadio">
+          Efectivo<ion-radio value="efectivo" (click)="porcentajeDeRecargo=0">Efectivo</ion-radio>
+        </ion-text><br>
+
+        <ion-text class="textRadio">
+          Transferencia<ion-radio value="transferencia" (click)="porcentajeDeRecargo=8">Transferencia (+8%)</ion-radio>
+        </ion-text><br>
+
+        <ion-text class="textRadio">
+          Mercado<ion-radio value="mercadopago" (click)="porcentajeDeRecargo=12">Mercado pago (+12%)</ion-radio>
+        </ion-text>
+
+      </ion-radio-group>
+
+      <ng-template #descuento>
+        <ion-radio-group aria-label="Medio de pago" [(ngModel)]="medioDePago">
+          <ion-radio value="efectivo" (click)="porcentajeDeRecargo=0">Efectivo</ion-radio><br>
+          <ion-radio value="transferencia" (click)="porcentajeDeRecargo=0">Transferencia</ion-radio><br>
+          <ion-radio value="mercadopago" (click)="porcentajeDeRecargo=0">Mercado pago</ion-radio>
+        </ion-radio-group>
+      </ng-template>
+
+      <h3 class="ion-text-center">
+        Total a cobrar: <b> {{montoTotal+((montoTotal/100)*porcentajeDeRecargo)|currency}}</b>
+      </h3>
+
+
+      <ion-item fill="outline" *ngIf="medioDePago=='efectivo';else pagoDigital">
+        <ion-label position="floating">Paga con:</ion-label>
+        <ion-input type="number" placeholder="Ingrese con cuanto paga" [(ngModel)]="montoAbonado"
+          [ngModelOptions]="{standalone: true}"></ion-input>
+      </ion-item>
+
+      <ng-template #pagoDigital>
+        <ion-item fill="outline">
+          <ion-label position="floating">Alias de la cuenta</ion-label>
+          <ion-input type="text" placeholder="Ej: Disco.choza.escudo" [(ngModel)]="titularDeCuenta"
+            [ngModelOptions]="{standalone: true}"></ion-input>
+        </ion-item>
+      </ng-template>
+
+
+      <h3 *ngIf="montoAbonado>montoTotal" class="ion-text-center"> <b>Vuelto a dar: {{montoAbonado-montoTotal|currency}}</b></h3>
+
+      <ion-button *ngIf="medioDePago=='efectivo';else otroMedioDePago" style="width: 100%;" color="secondary"
+        [disabled]="!items || items.length<=0" (click)="showConfirmDialog()">Finalizar</ion-button>
+
+      <ng-template #otroMedioDePago>
+        <ion-button style="width: 100%;" color="secondary"
+          [disabled]="!items || items.length<=0|| (!titularDeCuenta&& montoTotal+((montoTotal/100)*porcentajeDeRecargo)>0)"
+          (click)="showConfirmDialog()">Finalizar</ion-button>
+      </ng-template>
+    </div>
+  </ion-card>
+
+</ion-content>

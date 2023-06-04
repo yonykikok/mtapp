@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { FormDetalleVentaComponent } from './form-detalle-venta.component';
+import { BusquedaPorTextoComponent } from './busqueda-por-texto.component';
 
-describe('FormDetalleVentaComponent', () => {
-  let component: FormDetalleVentaComponent;
-  let fixture: ComponentFixture<FormDetalleVentaComponent>;
+describe('BusquedaPorTextoComponent', () => {
+  let component: BusquedaPorTextoComponent;
+  let fixture: ComponentFixture<BusquedaPorTextoComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ FormDetalleVentaComponent ],
+      declarations: [ BusquedaPorTextoComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(FormDetalleVentaComponent);
+    fixture = TestBed.createComponent(BusquedaPorTextoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

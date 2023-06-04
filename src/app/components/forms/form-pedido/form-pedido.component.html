@@ -1,0 +1,61 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/lista-pedidos'" [title]="'Agregar pedido'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="mt-3">
+    <form class="example-form" [formGroup]="formgroupPedido">
+
+      <ion-item fill="outline" class="ion-margin">
+        <ion-label position="floating">Tipo de Repuesto</ion-label>
+        <ion-input type="text" placeholder="Bateria, Modulo, Tactil, etc." formControlName="tipo">
+        </ion-input>
+      </ion-item>
+
+      <ion-item fill="outline" class="ion-margin">
+        <ion-label position="floating">Modelo</ion-label>
+        <ion-input type="text" placeholder="J7 prime" formControlName="modelo">
+        </ion-input>
+      </ion-item>
+
+      <ion-item fill="outline" class="ion-margin">
+        <ion-label position="floating">Cantidad a traer</ion-label>
+        <ion-input type="text" placeholder="20" formControlName="cantidad">
+        </ion-input>
+      </ion-item>
+
+      <ion-item fill="outline" class="ion-margin">
+        <ion-label position="floating">Detalle del pedido</ion-label>
+        <ion-input type="text" placeholder="J7 prime original oled blanco" formControlName="detalle">
+        </ion-input>
+      </ion-item>
+
+
+      <ion-item fill="outline" class="ion-margin">
+        <ion-select aria-label="fruit" placeholder="Seleccione la prioridad" formControlName="prioridad">>
+          <ion-select-option *ngFor="let prioridad of listaDePrioridades"
+            [value]="prioridad">{{prioridad}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+
+      <div class="flexCenterCenter">
+        <b>¿Solicitado por cliente?</b><ion-toggle aria-label="Danger toggle" color="danger"
+          [(ngModel)]="pedidoPorCliente" [ngModelOptions]="{standalone: true}"></ion-toggle>
+
+        <ion-chip outline="true"
+          [color]="pedidoPorCliente?'success':'secondary'"><b>{{pedidoPorCliente?'SI':'NO'}}</b></ion-chip>
+      </div>
+
+      <ion-item *ngIf="pedidoPorCliente" fill="outline" class="ion-margin">
+        <ion-label position="floating">Informacion del cliente</ion-label>
+        <ion-textarea placeholder="Jorge: 1151256116, precio maximo $1500" formControlName="cliente"></ion-textarea>
+      </ion-item>
+
+      <ion-button expand="block" color="primary" class="ion-margin" (click)="showConfirmDialog()"
+        [disabled]="!formgroupPedido.valid">Agregar</ion-button>
+
+
+    </form>
+  </ion-card>
+</ion-content>

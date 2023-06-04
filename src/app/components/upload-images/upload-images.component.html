@@ -1,0 +1,32 @@
+<ion-card class="grid-container ion-padding ion-no-margin" *ngIf="imagenes && imagenes.length>0">
+  <div class="column1">
+    <img height="100px" style="padding: 2px; border: 1px solid blue;" *ngIf="imagenes[0]" src="{{imagenes[0]}}" alt=""
+      (click)="selectedImg=imagenes[0]">
+    <img height="100px" style="padding: 2px; border: 1px solid blue;" *ngIf="imagenes[1]" src="{{imagenes[1]}}" alt=""
+      (click)="selectedImg=imagenes[1]">
+    <img height="100px" style="padding: 2px; border: 1px solid blue;" *ngIf="imagenes[2]" src="{{imagenes[2]}}" alt=""
+      (click)="selectedImg=imagenes[2]">
+    <img height="100px" style="padding: 2px; border: 1px solid blue;" *ngIf="imagenes[3]" src="{{imagenes[3]}}" alt=""
+      (click)="selectedImg=imagenes[3]">
+    <label *ngIf="!imagenes[3]" for="uploadImagesComponent">
+      <ion-icon class="addImg">add</ion-icon>
+    </label>
+  </div>
+  <div class="column2">
+    <ion-fab style="position: absolute; right: 0.2rem; top: 0.2rem;" *ngIf="selectedImg || imagenes[3]"
+      (click)="removerImg()">
+      <ion-fab-button size="small" color="danger">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+
+    <img *ngIf="selectedImg || imagenes[3]"
+      style="width: 250px; height: 250px; padding: 0.5rem; max-width: 97%;margin: 1.5;"
+      src="{{selectedImg?selectedImg:imagenes[3]}}" alt="">
+  </div>
+</ion-card>
+<div class="flexCenterCenter">
+  <ion-button *ngIf="imagenes.length<=3" class="ion-margin" (click)="compressFile()" id="uploadImagesComponent">
+    Agregar imagen <ion-icon slot="end" name="image-outline"></ion-icon>
+  </ion-button>
+</div>

@@ -57,6 +57,16 @@ ion-toolbar {
     justify-content: center;
     align-items: center;
 }
+.flexAroundCenter {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.flexBetweenCenter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 ion-chip {
     height: auto;
 }

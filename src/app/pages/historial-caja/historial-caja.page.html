@@ -1,9 +1,132 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>historialCaja</ion-title>
-  </ion-toolbar>
+  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Historial de caja'"></app-clasic-toolbar>
 </ion-header>
 
-<ion-content>
 
+<ion-content>
+  <div *ngIf="loggedUser">
+
+    <div>
+      <ion-card style="width: 350px; max-width: 400px;">
+        <ion-datetime presentation="date" [(ngModel)]="fechaSeleccionadaDate"
+          (ionChange)="updateCalcs($event)"></ion-datetime>
+
+      </ion-card>
+    </div>
+
+    <div style="display: flex; flex-direction: column;" *ngIf="mostrarAcciones">
+
+      <ion-button color="warning" (click)="mostrarMesCompleto(true)"
+        (click)="scrollToElement($event,'#filtroBusquedaHistorial')">
+        Busqueda por texto
+      </ion-button>
+
+      <ion-button color="secondary" (click)="mostrarHistorial()"
+        *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)">
+        Mostrar día seleccionado
+      </ion-button>
+
+      <ion-button color="primary" (click)="mostrarMesCompleto(false)"
+        *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)">
+        Mostrar mes completo
+      </ion-button>
+
+
+    </div>
+
+    <!-- <div style="text-align: center; width: 100vw;" *ngIf="mostrarBuscador && mesSeleccionado">
+      <ion-item>
+        <ion-label>Buscar</ion-label>
+        <ion-searchbar animated="true" (ionChange)="applyFilter()" placeholder="Buscador"
+          [(ngModel)]='textoABuscar'></ion-searchbar>
+      </ion-item>
+
+      <div>
+        <ion-button color="warning" (click)="mostrarBuscador=false" (click)="mesSeleccionado=null">Cerrar
+          buscador</ion-button>
+      </div>
+      <div style="display: flex; flex-direction: column; width: 100%; margin: 1rem;">
+        <ion-chip *ngFor="let item of itemsFiltrados" style="justify-content: space-between;"
+          (click)="itemSeleccionado=item">
+          <label>{{item.descripcion}}</label>
+          <label *ngIf="item.boleta; else mostrarFecha">{{item.boleta}}</label>
+          <ng-template #mostrarFecha>
+            <label>{{item.fecha|date}}</label>
+          </ng-template>
+        </ion-chip>
+      </div>
+
+      <div *ngIf="itemSeleccionado">
+
+        <ion-card>
+          <ion-card-content style="text-align: start;">
+            <p> <b>Fecha:</b> {{itemSeleccionado.fecha| date: 'dd/MM/yyyy'}}</p>
+            <p *ngIf="itemSeleccionado.boleta"> <b>Boleta: </b>({{itemSeleccionado.boleta}}) </p>
+            <p> <b>Precio: </b>{{itemSeleccionado.precio|currency}} </p>
+            <p> <b>Descripcion: </b>{{itemSeleccionado.descripcion}} </p>
+            <div>
+              <ion-button color="warning" (click)="itemSeleccionado=null">Cerrar</ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+    </div> -->
+
+
+
+    <ion-card *ngIf="mesSeleccionado && mesSeleccionado.dias && !libroDiario && !mostrarBuscador">
+      <ion-card-header>
+        <ion-card-title style="text-align: center; width: 100%; margin-top: 1rem;">Ingresos
+          {{mesSeleccionado.id}}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-card *ngIf="loggedUser.role=='OWNER'" class="ion-text-center">
+
+          <table style="width: 100%; text-align: start;">
+            <tbody>
+              <tr *ngIf="mesSeleccionado.montoTotalMensualEfectivo>0">
+                <th>Efectivo</th>
+                <td>{{mesSeleccionado.montoTotalMensualEfectivo|currency}}</td>
+              </tr>
+
+              <tr *ngIf="mesSeleccionado.montoTotalMensualTransferencia>0">
+                <th>Transferencia</th>
+                <td>{{mesSeleccionado.montoTotalMensualTransferencia|currency}}</td>
+              </tr>
+
+              <tr *ngIf="mesSeleccionado.montoTotalMensualMercadoPago>0">
+                <th>Mercado pago</th>
+                <td>{{mesSeleccionado.montoTotalMensualMercadoPago|currency}}</td>
+              </tr>
+              <tr *ngIf="mesSeleccionado.montoNegativoTotalMensualEfectivo<0">
+                <th>Retiros de dinero</th>
+                <td><ion-text color="danger">{{mesSeleccionado.montoNegativoTotalMensualEfectivo|currency}}</ion-text>
+                </td>
+              </tr>
+              <tr>
+                <th>TOTAL:</th>
+                <td><ion-text color="success">{{mesSeleccionado.montoTotalMensualEfectivo+
+                    mesSeleccionado.montoTotalMensualTransferencia+
+                    mesSeleccionado.montoTotalMensualMercadoPago|currency}}</ion-text></td>
+              </tr>
+            </tbody>
+          </table>
+        </ion-card>
+      </ion-card-content>
+
+      <h2 style="text-align: center; width: 100%;">({{mesSeleccionado.dias.length}}) dias trabajados</h2>
+
+      <ion-chip style="width: 100%; justify-content: space-between;" (click)="mostrarDialogLibroDiario(libroDiario)"
+        *ngFor="let libroDiario of mesSeleccionado.dias">
+        <label>{{libroDiario.fecha|date}}</label>
+        <label>{{libroDiario.montoTotalEfectivo|currency}}</label>
+      </ion-chip>
+    </ion-card>
+
+    <!-- <app-detalle-ventas-del-dia (cerrarDetalleEvent)="dataLibroDiarioDialog=false;" *ngIf="dataLibroDiarioDialog"
+      [libroDiario]="dataLibroDiarioDialog"></app-detalle-ventas-del-dia> -->
+
+  </div>
 </ion-content>

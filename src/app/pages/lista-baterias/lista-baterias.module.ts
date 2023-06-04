@@ -7,14 +7,17 @@ import { IonicModule } from '@ionic/angular';
 import { ListaBateriasPageRoutingModule } from './lista-baterias-routing.module';
 
 import { ListaBateriasPage } from './lista-baterias.page';
+import { FormBateriaComponent } from 'src/app/components/forms/form-bateria/form-bateria.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ListaBateriasPageRoutingModule
+    ListaBateriasPageRoutingModule,
+    SharedModule
   ],
-  declarations: [ListaBateriasPage]
+  declarations: [ListaBateriasPage, FormBateriaComponent]
 })
-export class ListaBateriasPageModule {}
+export class ListaBateriasPageModule { }

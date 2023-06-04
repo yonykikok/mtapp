@@ -34,6 +34,7 @@
     "@ionic/angular-server": "6.0.14",
     "cordova-plugin-camera": "6.0.0",
     "firebase": "^9.6.10",
+    "ngx-image-compress": "^15.1.5",
     "phonegap-plugin-barcodescanner": "8.1.0",
     "rxjs": "~6.6.0",
     "ts-md5": "^1.2.11",

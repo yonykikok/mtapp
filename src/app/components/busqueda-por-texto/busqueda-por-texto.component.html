@@ -1,0 +1,39 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/historial-caja'" [title]="'Busqueda por texto'"></app-clasic-toolbar>
+</ion-header>
+
+
+<ion-content *ngIf="mesSeleccionado">
+  <ion-item>
+    <ion-label>Buscar</ion-label>
+    <ion-searchbar animated="true" (ionChange)="applyFilter()" placeholder="Buscador"
+      [(ngModel)]='textoABuscar'></ion-searchbar>
+  </ion-item>
+
+
+  <ion-chip *ngFor="let item of itemsFiltrados" style="justify-content: space-between; width: 90%; margin-left: 5%; "
+    (click)="itemSeleccionado=item" >
+    <label>{{item.descripcion}}</label>
+    <label *ngIf="item.boleta; else mostrarFecha">{{item.boleta}}</label>
+    <ng-template #mostrarFecha>
+      <label>{{item.fecha|date}}</label>
+    </ng-template>
+  </ion-chip>
+
+  <div *ngIf="itemSeleccionado"
+    style="display: flex; justify-content: center;align-items: center; left: 0; top: 0; width: 100vw; height: 100vh; position: fixed; z-index: 999998; background-color: rgba(128, 128, 128, 0.788);">
+
+    <ion-card>
+      <ion-card-content>
+        <p> <b>Fecha:</b> {{itemSeleccionado.fecha| date: 'dd/MM/yyyy'}}</p>
+        <p *ngIf="itemSeleccionado.boleta"> <b>Boleta: </b>({{itemSeleccionado.boleta}}) </p>
+        <p> <b>Precio: </b>{{itemSeleccionado.precio|currency}} </p>
+        <p> <b>Descripcion: </b>{{itemSeleccionado.descripcion}} </p>
+        <div>
+          <ion-button color="warning" (click)="itemSeleccionado=null">Cerrar</ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+</ion-content>

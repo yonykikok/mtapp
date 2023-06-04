@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { AlertService } from 'src/app/services/alert.service';
 export enum MediosDePago {
   'Efectivo' = 'efectivo',
   'Transferencia' = 'transferencia',
@@ -19,7 +21,8 @@ export interface MedioDePago {
   styleUrls: ['./form-detalle-venta.component.scss'],
 })
 export class FormDetalleVentaComponent implements OnInit {
-step = 1;
+
+  step = 1;
   medioDePago: string = MediosDePago.Efectivo;
   titularDeCuenta;
   montoAbonado;
@@ -32,9 +35,9 @@ step = 1;
   }
   porcentajeDeRecargo: RecargoPorMediosDePago = RecargoPorMediosDePago.Efectivo;
   constructor(
-    // private confirmDialog: ConfirmDialogService,
-    // public dialogRef: MatDialogRef<FormDetalleVentaComponent>,
-    ) { }
+    private alertService: AlertService,
+    private modalController: ModalController
+  ) { }
 
   ngOnInit(): void {
 
@@ -59,13 +62,9 @@ step = 1;
     });
   }
   showConfirmDialog() {
-    // let dialog: Dialog = {
-    //   title: "Finalizar venta",
-    //   state: true,
-    //   confirmMethod: this.agregarVenta.bind(this)
-    // }
-    // this.confirmDialog.setDialog(dialog);
-    // this.confirmDialog.showDialog();
+
+    this.alertService.alertConfirmacion('Finalizar Venta', 'Confirma que todos los datos estan correctos?', 'Si, confirmo', this.agregarVenta.bind(this));
+
   }
 
   agregarVenta() {
@@ -81,7 +80,7 @@ step = 1;
     });
     console.log({ ...items })
 
-    // this.dialogRef.close(items);
+    this.modalController.dismiss(items,'guardarItems');
     this.items = [];
   }
   eliminarItem(selectedItem) {
@@ -89,3 +88,5 @@ step = 1;
     this.calcularMontoTotal();
   }
 }
+
+

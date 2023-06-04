@@ -11,17 +11,21 @@ import { EstadoReparacionColorDirective } from '../directives/estado-reparacion-
 import { EstadoReparacionPipe } from '../pipes/estado-reparacion.pipe';
 import { PrecioDolarComponent } from '../components/precio-dolar/precio-dolar.component';
 import { ColoresPipe } from '../pipes/colores.pipe';
+import { UploadImagesComponent } from '../components/upload-images/upload-images.component';
+import { MaxLengthPipe } from '../pipes/max-length.pipe';
 
 @NgModule({
   declarations: [
     ClasicToolbarComponent,
     CustomIonSlidingComponent,
     EstadoReparacionPipe,
-    EstadoReparacionColorDirective, 
-    EstadoReparacionBgcolorDirective, 
+    EstadoReparacionColorDirective,
+    EstadoReparacionBgcolorDirective,
     EstadoReparacionBorderColorDirective,
     PrecioDolarComponent,
-    ColoresPipe
+    ColoresPipe,
+    UploadImagesComponent,
+    MaxLengthPipe
   ],
   imports: [
     CommonModule,
@@ -35,17 +39,17 @@ import { ColoresPipe } from '../pipes/colores.pipe';
     RouterModule,
     ReactiveFormsModule,
     IonicModule,
-    CustomIonSlidingComponent,    
+    CustomIonSlidingComponent,
     EstadoReparacionPipe,
-    EstadoReparacionColorDirective, 
-    EstadoReparacionBgcolorDirective, 
+    EstadoReparacionColorDirective,
+    EstadoReparacionBgcolorDirective,
     EstadoReparacionBorderColorDirective,
     PrecioDolarComponent,
-    ColoresPipe
-
-
+    UploadImagesComponent,
+    MaxLengthPipe,
+    ColoresPipe,
   ]
 })
 export class SharedModule {
- 
+
 }

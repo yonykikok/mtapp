@@ -16,28 +16,19 @@
 
       <form class="card p-3 m-3 col-lg-6" [formGroup]="formModulo">
 
-
-
-
-        <!-- <div class="form-group  text-center m-1">
-          <input type="text" class="form-control" placeholder="Escriba el modelo" aria-label="Modulo" matInput
-              formControlName="modelo" [matAutocomplete]="auto">
-          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-              <mat-option *ngFor="let modulo of modulosFiltrados | async" [value]="modulo">
-                  {{modulo}}
-              </mat-option>
-          </mat-autocomplete>
-      </div> -->
-
+        <ion-item fill="outline"  class="ion-margin">
+          <ion-input type="text" placeholder="Escriba el modelo" aria-label="Modulo" formControlName="modelo">
+          </ion-input>
+        </ion-item>
 
         <ion-item fill="outline" class="ion-margin">
           <ion-input type="number" placeholder="precio en dolares" formControlName="precio"></ion-input>
-          <ion-chip>{{formModulo.controls.precio.value*492|currency}}</ion-chip>
+          <ion-chip>{{formModulo.controls.precio.value*492|currency:'USD':'symbol':'1.0-0'}}</ion-chip>
         </ion-item>
 
 
         <ion-item fill="outline" class="ion-margin">
-          <ion-select aria-label="fruit" placeholder="Select fruit" formControlName="marca">>
+          <ion-select  placeholder="Seleccione la marca" formControlName="marca">>
             <ion-select-option *ngFor="let marca of marcas" [value]="marca">{{marca}}</ion-select-option>
           </ion-select>
         </ion-item>
