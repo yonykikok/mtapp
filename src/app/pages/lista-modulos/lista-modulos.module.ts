@@ -17,7 +17,7 @@ import { FormModuloComponent } from 'src/app/components/forms/form-modulo/form-m
     FormsModule,
     IonicModule,
     ListaModulosPageRoutingModule,
-    SharedModule
+    SharedModule,
   ],
   declarations: [ListaModulosPage,DetalleModuloComponent,FormModuloComponent]
 })

@@ -1,0 +1,109 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Stock de modulos'"  (click)="showStockDialog=null"></app-clasic-toolbar>
+</ion-header>
+
+
+<ion-content *ngIf="loggedUser;">
+
+
+
+
+
+  <ion-item>
+    <ion-select aria-label="Fruit" placeholder="Selecciona los campos que quieres ver" [multiple]="true"
+      [formControl]="displayedColumnKeys">
+      <ion-select-option *ngFor="let atributo of listaDeAtributos" [value]="atributo">{{atributo}}</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-searchbar show-clear-button="focus" placeholder="J7 prime" (ionInput)="handleInput($event)"></ion-searchbar>
+
+  <!-- TABLA -->
+  <ion-grid class="ion-text-center">
+    <ion-row>
+      <ion-col *ngFor='let atributo of displayedColumnKeys.value'><b>{{atributo|titlecase}}</b></ion-col>
+    </ion-row>
+
+    <ion-row (click)="(loggedUser && funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser))?seleccionar(modulo):null"
+      *ngFor="let modulo of listaDeModulosAMostrar">
+      <ion-col *ngFor='let atributo of displayedColumnKeys.value'>
+        <ion-text *ngIf="atributo!='c/m' && atributo!='s/m';else formatoStock">
+          {{modulo[atributo]|titlecase}}
+        </ion-text>
+
+        <ng-template #formatoStock>
+          <div *ngIf="atributo=='c/m'; else sinMarco">
+            <div *ngFor="let auxStock of modulo.stock.conMarco">
+              <ion-chip outline="true" *ngIf="auxStock.color=='Blanco'"
+                [ngStyle]="{'background-color':auxStock.color|colores}"
+                (click)="seleccionarColorYTipo($event,auxStock,modulo,'conMarco')">{{auxStock.cantidad}}C/M
+              </ion-chip>
+
+              <ion-chip outline="true" *ngIf="auxStock.color!='Blanco'" style="color: white;"
+                [ngStyle]="{'background-color':auxStock.color|colores}"
+                (click)="seleccionarColorYTipo($event,auxStock,modulo,'conMarco')">
+                {{auxStock.cantidad}} C/M
+              </ion-chip>
+            </div>
+
+          </div>
+
+          <ng-template #sinMarco>
+            <div *ngFor="let auxStock of modulo.stock.sinMarco">
+              <ion-chip outline="true" *ngIf="auxStock.color=='Blanco'"
+                [ngStyle]="{'background-color':auxStock.color|colores}"
+                (click)="seleccionarColorYTipo($event,auxStock,modulo,'sinMarco')">{{auxStock.cantidad}} S/M
+              </ion-chip>
+
+              <ion-chip outline="true" *ngIf="auxStock.color!='Blanco'" style="color: white;"
+                [ngStyle]="{'background-color':auxStock.color|colores}"
+                (click)="seleccionarColorYTipo($event,auxStock,modulo,'sinMarco')">{{auxStock.cantidad}} S/M
+              </ion-chip>
+            </div>
+          </ng-template>
+        </ng-template>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <!-- FIN TABLA -->
+
+  <!-- FORM MODIFICAR STOCK RAPIDO -->
+  <div *ngIf="showStockDialog" (click)="this.showStockDialog = null;" class="flexCenterCenter customModal">
+    <ion-card (click)="$event.stopPropagation();">
+      <ion-card-header>
+
+        <ion-item-divider class="ion-padding">
+          <ion-chip class="ion-text-center" slot="start" color="danger" outline="true"
+            (click)="cambiarCantidad('disminuir')">
+            <ion-icon class="ion-no-margin" name="remove-outline"></ion-icon>
+          </ion-chip>
+
+          <ion-card class="ion-padding"
+            [ngStyle]="{'background-color':this.stockSeleccionadoEditable.color|colores,'color':this.stockSeleccionadoEditable.color=='Blanco'?'black':'white'}">
+            {{this.stockSeleccionadoEditable.cantidad}} S/M
+          </ion-card>
+
+          <ion-chip class="ion-text-center" slot="end" color="success" outline="true"
+            (click)="cambiarCantidad('aumentar')">
+            <ion-icon class="ion-no-margin" name="add-outline"></ion-icon>
+          </ion-chip>
+        </ion-item-divider>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-button expand="block" class="ion-margin" color="primary" (click)="guardarCambios()">Guardar
+          cambios</ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <!-- FIN FORM MODIFICAR STOCK RAPIDO -->
+
+  <!-- FAB AGREGAR NUEVO -->
+  <ion-fab slot="fixed" horizontal="end" vertical="bottom" color="secondary" (click)="openDialog()"
+    *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <!-- FIN FAB AGREGAR NUEVO -->
+
+</ion-content>

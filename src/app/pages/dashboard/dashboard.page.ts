@@ -23,6 +23,7 @@ export class DashboardPage implements OnInit {
     { titulo: 'Ventas', color: '#7fbdc7', ruta: "/equipos-vendidos", role: 'ADMIN' },
     { titulo: 'Libro diario', color: '#dc70fd', ruta: "/libro-diario", role: 'ADMIN' },
     { titulo: 'Historial', color: 'rgb(113 112 253)', ruta: "/historial-caja", role: 'ADMIN' },
+    { titulo: 'Stock Modulos', color: 'black', ruta: "/stock-modulos", role: 'ADMIN' },
     { titulo: 'Mis reparaciones', color: '#d34fb2', ruta: "/mis-reparaciones", role: 'CLIENTE' },
   ]
   constructor(private modalController: ModalController,

@@ -95,6 +95,10 @@ const routes: Routes = [
     path: 'historial-caja',
     loadChildren: () => import('./pages/historial-caja/historial-caja.module').then( m => m.HistorialCajaPageModule)
   },
+  {
+    path: 'stock-modulos',
+    loadChildren: () => import('./pages/stock-modulos/stock-modulos.module').then( m => m.StockModulosPageModule)
+  },
 
  
 

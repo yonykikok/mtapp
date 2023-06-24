@@ -1,0 +1,129 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/stock-modulos'" [title]="'Stock de modulos'"></app-clasic-toolbar>
+</ion-header>
+
+
+<ion-content *ngIf="repuesto;">
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        <ion-text>{{repuesto.modelo}} </ion-text>
+        <ion-text> ({{repuesto.calidad}})</ion-text>
+      </ion-card-title>
+      <ion-card-subtitle>Cantidad disponible ({{repuesto.cantidadTotal}})</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-icon class="eliminarModulo" (click)="confirmarEliminacion()">delete_forever</ion-icon>
+    <ion-fab slot="fixed" horizontal="end" vertical="top">
+      <ion-fab-button color="danger">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+
+
+    <ion-accordion-group *ngIf="repuesto.stock.conMarco.length>0">
+      <ion-accordion value="conMarco" >
+        <ion-item slot="header" color="light">
+          <ion-label>Con marco</ion-label>
+        </ion-item>
+
+        <ion-card style="display: flex; justify-content: space-between;" class="ion-padding" slot="content"
+          *ngFor="let stock of repuesto.stock.conMarco; index as index">
+
+          <ion-chip outline="true" [ngStyle]="{'background-color':stock.color|colores}" style="flex-direction: column;">
+            <b [ngStyle]="{ 'color':stock.color=='Blanco'?'black':'white'}">{{stock.cantidad}}</b>
+            <b [ngStyle]="{ 'color':stock.color=='Blanco'?'black':'white'}">{{stock.color}}</b>
+          </ion-chip>
+
+          <div>
+            <ion-chip color="danger" (click)="cambiarCantidad(stock,'disminuir',index)">
+              <ion-icon class="ion-no-margin" name="remove-outline"></ion-icon>
+            </ion-chip>
+
+            <ion-chip color="success" (click)="cambiarCantidad(stock,'aumentar',index)">
+              <ion-icon class="ion-no-margin" name="add-outline"></ion-icon>
+            </ion-chip>
+          </div>
+        </ion-card>
+      </ion-accordion>
+    </ion-accordion-group>
+
+
+    <ion-accordion-group *ngIf="repuesto.stock.sinMarco.length>0">
+      <ion-accordion value="sinMarco" >
+        <ion-item slot="header" color="light">
+          <ion-label>Sin marco</ion-label>
+        </ion-item>
+        <ion-card style="display: flex; justify-content: space-between;" class="ion-padding" slot="content"
+          *ngFor="let stock of repuesto.stock.sinMarco; index as index">
+
+          <ion-chip outline="true" [ngStyle]="{'background-color':stock.color|colores}" style="flex-direction: column;">
+            <b [ngStyle]="{ 'color':stock.color=='Blanco'?'black':'white'}">{{stock.cantidad}}</b>
+            <b [ngStyle]="{ 'color':stock.color=='Blanco'?'black':'white'}">{{stock.color}}</b>
+          </ion-chip>
+
+          <div>
+            <ion-chip color="danger" (click)="cambiarCantidad(stock,'disminuir',index)">
+              <ion-icon class="ion-no-margin" name="remove-outline"></ion-icon>
+            </ion-chip>
+
+            <ion-chip color="success" (click)="cambiarCantidad(stock,'aumentar',index)">
+              <ion-icon class="ion-no-margin" name="add-outline"></ion-icon>
+            </ion-chip>
+          </div>
+        </ion-card>
+      </ion-accordion>
+    </ion-accordion-group>
+
+    <ion-item-divider class="ion-no-padding">
+      <ion-button slot="end" color="secondary" (click)="agregarColor=!agregarColor">
+        {{agregarColor?'Cancelar':'Agregar stock'}}
+      </ion-button>
+    </ion-item-divider>
+  </ion-card>
+
+  <!-- EDITAR STOCK -->
+  <ion-card *ngIf="agregarColor">
+
+    <ion-card-header>
+      <ion-card-title>Agregar un nuevo color</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-item fill="outline">
+              <ion-label position="floating">Color del modulo</ion-label>
+              <ion-select placeholder="Seleccione el color" [(ngModel)]="color">>
+                <ion-select-option *ngFor="let color of colores" [value]="color">{{color}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item fill="outline">
+              <ion-label position="floating">Cantidad</ion-label>
+              <ion-select placeholder="Seleccione la cantidad" [(ngModel)]="cantidad">>
+                <ion-select-option *ngFor="let cantidad of cantidades"
+                  [value]="cantidad">{{cantidad}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-item fill="outline" class="ion-margin">
+        <ion-label position="floating">Tipo de modulo</ion-label>
+        <ion-select placeholder="Seleccione el tipo" [(ngModel)]="tipo">>
+          <ion-select-option *ngFor="let tipo of tipos" [value]="tipo">{{tipo}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-button expand="block" color="primary" class="ion-margin" (click)="agregarNuevoColor()">Agregar</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- FIN EDITAR STOCK -->
+
+</ion-content>

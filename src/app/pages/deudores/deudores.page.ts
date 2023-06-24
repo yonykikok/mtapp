@@ -27,7 +27,7 @@ export class DeudoresPage implements OnInit {
     this.getCurrentUser();
   }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.database.obtenerTodos(environment.TABLAS.deudores).subscribe(deudoresListRef => {
       this.listaDudores = deudoresListRef.map(deudorRef => {
         let deudor = deudorRef.payload.doc.data();
@@ -35,6 +35,7 @@ export class DeudoresPage implements OnInit {
         return deudor;
       });
       this.listaDeudoresAMostrar = [...this.listaDudores];
+      this.ordenarLista(this.listaDeudoresAMostrar);
 
       this.totalFiado = this.listaDudores.reduce((suma, deudor) => {
         return suma + (deudor.items.reduce((suma, item) => suma + item.precio, 0) - deudor.pagos.reduce((suma, pago) => suma + pago.monto, 0));
@@ -53,6 +54,8 @@ export class DeudoresPage implements OnInit {
       d.nombre.toLowerCase().indexOf(query) > -1 ||
       d.telefono.toLowerCase().indexOf(query) > -1
     );
+    this.ordenarLista([...this.listaDeudoresAMostrar]);
+
   }
 
   getCurrentUser() {
@@ -87,7 +90,7 @@ export class DeudoresPage implements OnInit {
         if (!result.data || !result.role) return;
 
         if (result.role == 'guardarCambios') {
-        
+
         }
 
       })
@@ -102,5 +105,35 @@ export class DeudoresPage implements OnInit {
     // dialogRef.afterClosed().subscribe(result => {
     //   // this.animal = result;
     // });
+  }
+
+
+  ordenarLista(lista: any[]) {
+    this.listaDeudoresAMostrar = lista.sort((a: any, b: any) => {
+      console.log(this.calcularDeuda(a))
+      if (this.calcularRestante(a) > this.calcularRestante(b)) {
+        return -1;
+      }
+      else if (this.calcularRestante(a) == this.calcularRestante(b)) {
+        return 1;
+      }
+      else {
+        return 0;
+      }
+    })
+  }
+
+  calcularRestante(deudor) {
+    return this.calcularDeuda(deudor) - this.calcularPagos(deudor);
+  }
+
+  calcularDeuda(deudor) {
+    if (!deudor.items) return;
+    return Array.isArray(deudor.items) ? deudor.items.reduce((suma, item) => suma + item.precio, 0) : 0;
+  }
+  calcularPagos(deudor) {
+    if (!deudor.pagos) return;
+    return Array.isArray(deudor.items) ? deudor.pagos.reduce((suma, pago) => suma + pago.monto, 0) : 0;
+
   }
 }

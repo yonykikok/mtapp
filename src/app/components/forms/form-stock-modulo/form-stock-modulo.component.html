@@ -1,0 +1,51 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Stock de modulos'"></app-clasic-toolbar>
+</ion-header>
+
+
+<ion-content *ngIf="modulos">
+  <ion-card>
+
+    <form [formGroup]="formModulo">
+      <ion-card-header>
+        <ion-card-title class="ion-text-center">
+          Agregar Modelo
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+
+
+        <ion-item fill="outline" class="ion-margin">
+          <ion-input type="text" placeholder="Escriba el modelo" aria-label="Modulo" formControlName="modelo">
+          </ion-input>
+        </ion-item>
+        <!-- <div>
+      <input type="text" placeholder="Escriba el modelo" aria-label="Modulo" formControlName="modelo"
+        [matAutocomplete]="auto">
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option *ngFor="let modulo of modulosFiltrados | async" [value]="modulo">
+          {{modulo}}
+        </mat-option>
+      </mat-autocomplete>
+    </div> -->
+
+        <ion-item fill="outline" class="ion-margin">
+          <ion-select placeholder="Seleccione la marca" formControlName="marca">>
+            <ion-select-option *ngFor="let marca of marcas" [value]="marca">{{marca}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+
+
+        <ion-item fill="outline" class="ion-margin">
+          <ion-select aria-label="fruit" placeholder="Select fruit" formControlName="calidad">>
+            <ion-select-option *ngFor="let calidad of calidades" [value]="calidad">{{calidad}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-button color="primary" expand="block" class="ion-margin" type="submit" [disabled]="!formModulo.valid"
+          (click)="procesarAltaModulo()">Agregar</ion-button>
+      </ion-card-content>
+    </form>
+  </ion-card>
+</ion-content>
