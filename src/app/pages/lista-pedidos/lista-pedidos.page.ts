@@ -2432,14 +2432,13 @@ export class ListaPedidosPage implements OnInit {
       })
 
       modal.onDidDismiss().then((result: any) => {
-        console.log(result)
         if (!result.data || !result.role) return;
 
 
         switch (result.role) {
           case 'cancelarPedido':
-            console.log("LLEGO")
-            this.database.eliminar(environment.TABLAS.pedidos, pedido.id).finally(() => {
+
+          this.database.eliminar(environment.TABLAS.pedidos, pedido.id).finally(() => {
               this.toastService.simpleMessage('', 'Se elimino el pedido, ya no aparecera en los listados', ToastColor.success);
               // this.actualizarLista();
             });

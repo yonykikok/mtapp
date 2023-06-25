@@ -3869,7 +3869,6 @@ export class ListaModulosPage implements OnInit {
     this.modulosAMostrar = [...this.modulos];
   }
   ngOnInit(): void {
-    console.log(this.modulos)
     return;
     if (this.funcionesUtiles.customDolar) {
       this.precioDolarBlue = this.funcionesUtiles.customDolar;
@@ -3886,7 +3885,6 @@ export class ListaModulosPage implements OnInit {
         return auxElement;
       });
       lista = this.ordenarListaPor(lista, 'modelo', 'precio');
-      console.log(lista)
       this.modulos = lista;
       this.modulosAMostrar = [...this.modulos];
     });
@@ -3908,7 +3906,6 @@ export class ListaModulosPage implements OnInit {
       })
 
       modal.onDidDismiss().then((result: any) => {
-        console.log(result)
         if (!result.data || !result.role) return;
 
 
@@ -3952,7 +3949,6 @@ export class ListaModulosPage implements OnInit {
       })
 
       modal.onDidDismiss().then((result: any) => {
-        console.log(result)
         if (!result.data || !result.role) return;
 
 

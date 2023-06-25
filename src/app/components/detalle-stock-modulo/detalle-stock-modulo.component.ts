@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { AlertService } from 'src/app/services/alert.service';
 import { DataBaseService } from 'src/app/services/database.service';
+import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { InfoCompartidaService } from 'src/app/services/info-compartida.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-detalle-stock-modulo',
@@ -12,9 +14,9 @@ import { ToastColor, ToastService } from 'src/app/services/toast.service';
 })
 export class DetalleStockModuloComponent implements OnInit {
 
-
+  editarTitulo = false;
   panelOpenState = false;
-
+  loggedUser;
 
   agregarColor = false;
   colores = this.infoConpatida.coloresModulos;
@@ -27,14 +29,15 @@ export class DetalleStockModuloComponent implements OnInit {
   tipo = ['conMarco', 'sinMarco'][0];
 
   constructor(
+    public funcionesUtiles: FuncionesUtilesService,
     private infoConpatida: InfoCompartidaService,
     private database: DataBaseService,
     private toastService: ToastService,
-    private modalController: ModalController,
-    private alertService: AlertService
+    public modalController: ModalController,
+    private alertService: AlertService,
+
   ) {
     // this.repuesto = data.repuesto;
-    // console.log(this.repuesto)
   }
 
   ngOnInit(): void {
@@ -55,7 +58,6 @@ export class DetalleStockModuloComponent implements OnInit {
 
 
   cambiarCantidad(stock, accion, indice) {
-    console.log(stock)
     if (accion == 'aumentar') {
       stock.cantidad = Number(stock.cantidad) + 1
     } else {
@@ -87,7 +89,7 @@ export class DetalleStockModuloComponent implements OnInit {
     let cantidad = this.cantidad;
     let color = this.color;
     let colorExistente;
-    this.alertService.alertConfirmacion('Confirmación', `¿Quiere agregar <b>${cantidad}</b> del color <b>${color.toLowerCase()} ${this.tipo=='conMarco'?'con marco':'sin marco'}</b>`, 'Si', () => {
+    this.alertService.alertConfirmacion('Confirmación', `¿Quiere agregar <b>${cantidad}</b> del color <b>${color.toLowerCase()} ${this.tipo == 'conMarco' ? 'con marco' : 'sin marco'}</b>`, 'Si', () => {
 
       colorExistente = this.repuesto.stock[this.tipo].find(stock => stock.color == color);
 
@@ -109,5 +111,14 @@ export class DetalleStockModuloComponent implements OnInit {
     this.alertService.alertConfirmacion('Confirmación', '¿Quiere remover este color de la lista?', 'Si, quitar', () => {
       this.modalController.dismiss(this.repuesto, 'eliminar')
     });
+  }
+
+
+  actualizarModelo() {
+
+    this.database.actualizar(environment.TABLAS.stockModulos, { ...this.repuesto }, this.repuesto.id).then(res => {
+      console.log(res)
+      this.modalController.dismiss();
+    })
   }
 }

@@ -78,7 +78,6 @@ export class DataBaseService {
       const respuesta = await collectionRef.orderBy('title', 'asc').limit(interval).get();
 
       if (respuesta.empty) return;
-      //console.log(respuesta.docs)
       return respuesta.docs;
 
     } catch (err) {
@@ -99,7 +98,8 @@ export class DataBaseService {
         get();
 
       if (respuesta.empty) return;
-      //console.log(respuesta.docs)
+
+
       return respuesta.docs;
 
     } catch (err) {

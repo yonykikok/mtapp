@@ -112,7 +112,6 @@ export class FormStockModuloComponent implements OnInit {
 
 
   agregarModulo(nuevoModulo) {
-    console.log(nuevoModulo);
     this.dataBase.crear(environment.TABLAS.stockModulos, nuevoModulo).then(() => {
       this.toastService.simpleMessage('Exito', 'Modulo agregado', ToastColor.success);
       // this.snackBar.open('Modulo agregado', 'Cerrar', { duration: 5000, panelClass: ['successSnackBar'] });

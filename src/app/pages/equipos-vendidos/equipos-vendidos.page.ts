@@ -66,7 +66,6 @@ export class EquiposVendidosPage implements OnInit {
       })
 
       modal.onDidDismiss().then((result: any) => {
-        console.log(result)
         if (!result.data || !result.role) return;
 
 
@@ -87,7 +86,6 @@ export class EquiposVendidosPage implements OnInit {
       })
 
       modal.onDidDismiss().then((result: any) => {
-        console.log(result)
         if (!result.data || !result.role) return;
 
 

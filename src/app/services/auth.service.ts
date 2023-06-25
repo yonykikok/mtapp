@@ -28,7 +28,6 @@ export class AuthService {
 
   compararPassword(password) {
     let hashPassword = Md5.hashStr(password);
-    console.log(hashPassword + " " + this.currentUser.password);
     if (hashPassword === this.currentUser.password) {
       return true;
     }

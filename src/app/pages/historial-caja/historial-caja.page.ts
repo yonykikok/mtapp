@@ -55,7 +55,6 @@ export class HistorialCajaPage implements OnInit {
     let fecha = new Date(this.fechaSeleccionadaDate);
     fecha.setHours(0, 0, 0, 0);
     this.fechaSeleccionada = fecha
-    console.log(new Date(e.target.value).toString())
   }
 
   transformarFecha() {
@@ -80,7 +79,6 @@ export class HistorialCajaPage implements OnInit {
     });
     this.itemsFiltrados = items;
     this.scrollToElement(null, '#filtroBusquedaHistorial');
-    console.log(items)
 
   }
 
@@ -147,7 +145,6 @@ export class HistorialCajaPage implements OnInit {
       })
 
       modal.onDidDismiss().then((result: any) => {
-        console.log(result)
         if (!result.data || !result.role) return;
 
 
@@ -184,7 +181,6 @@ export class HistorialCajaPage implements OnInit {
       this.mesSeleccionado['montoTotalMensualTransferencia'] = this.getMontoTotalMensual(MediosDePago.Transferencia);
       this.mesSeleccionado['montoTotalMensualMercadoPago'] = this.getMontoTotalMensual(MediosDePago.MercadoPago);
       this.mesSeleccionado['montoNegativoTotalMensualEfectivo'] = this.getMontoTotalMensualNegativo();
-      console.log(this.mesSeleccionado)
 
       this.mesSeleccionado.dias = this.mesSeleccionado.dias.sort((diaA, diaB) => {
         if (diaA.fecha > diaB.fecha) {
@@ -210,7 +206,6 @@ export class HistorialCajaPage implements OnInit {
   getMontoTotalMensualNegativo() {
     return this.mesSeleccionado.dias.reduce((monto, dia) => {
       if (dia.montoTotalNegativo <= 0) {
-        console.log(dia)
         return monto += dia.montoTotalNegativo;
       }
 
@@ -225,7 +220,6 @@ export class HistorialCajaPage implements OnInit {
         case MediosDePago.MercadoPago:
           return monto += dia.montoTotalMercadoPago;
         default:
-          console.log(dia);
           if (dia.montoTotalEfectivo > 0) {
             return monto += dia.montoTotalEfectivo;
           }
@@ -267,7 +261,6 @@ export class HistorialCajaPage implements OnInit {
   //         }
   //       });
 
-  //       console.log(dia)
   //       return monto += dia.montoTotal;
   //     }, 0);
 
@@ -306,7 +299,6 @@ export class HistorialCajaPage implements OnInit {
       })
 
       modal.onDidDismiss().then((result: any) => {
-        console.log(result)
         if (!result.data || !result.role) return;
 
 

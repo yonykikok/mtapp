@@ -150,10 +150,8 @@ export class LibroDiarioPage implements OnInit {
       })
 
       modal.onDidDismiss().then((result: any) => {
-        console.log(result)
         if (!result.data || !result.role) return;
 
-        console.log(result)
 
         if (result.role == 'guardarItems') {
 
@@ -199,7 +197,6 @@ export class LibroDiarioPage implements OnInit {
   }
   reiniciarMontoInicialDeCaja() {
     this.libroDiarioHoy.montoInicial = null;
-    console.log(this.libroDiarioHoy)
   }
   obtenerMontoTotalPorNegativo(libroDiarioHoy) {
     let acumuladorNegativo = 0;

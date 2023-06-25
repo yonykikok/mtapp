@@ -1,36 +1,45 @@
 <ion-header>
-  <ion-toolbar>
-      <ion-title>{{'proveedores'| titlecase}}</ion-title>
-  </ion-toolbar>
+  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Proveedores'"></app-clasic-toolbar>
 </ion-header>
 
 <ion-content>
-<ion-searchbar class="ion-margin-top" show-cancel-button="focus" cancel-button-text="Custom Cancel"
-    placeholder="Ingrese numero de boleta" [(ngModel)]="textoABuscar" (ionChange)="buscarBoleta()"></ion-searchbar>
+  <ion-searchbar class="ion-margin-top" placeholder="Ejemplo: J7 prime" [(ngModel)]="textoABuscar"
+    (ionChange)="buscarProducto()"></ion-searchbar>
 
   <div *ngIf="productosAMostrar && productosAMostrar.length>0; else listarProveedores">
-    <ion-item *ngFor="let prod of productosAMostrar" class="ion-margin">
-      {{prod.marca}} {{prod.modelo}} ( {{prod.calidad}} )<br>
-      {{prod.precioVenta*precioDolar|currency:'USD':'symbol':'1.0-0'}} <br>
-      {{prod.proveedor}} <br>
-      <br>
-    </ion-item>
+
+    <ion-item-divider class="ion-no-padding ion-margin-bottom ion-padding-bottom ion-padding-top"
+      *ngFor="let prod of productosAMostrar" style="flex-direction: column;">
+      <div class="flexCenterCenter" style="flex-direction: column;">
+        <ion-text slot="start"> {{prod.marca}} {{prod.modelo}} ( {{prod.calidad}} ) </ion-text>
+        <ion-text slot="end">
+          Precio promedio: {{prod.precioPromedio*precioDolar|currency:'USD':'symbol':'1.0-0'}}
+        </ion-text>
+      </div>
+
+      <div class="flexCenterCenter" style="flex-wrap: wrap;">
+        <ion-chip outline="true" [color]="asignarColor(prod.precios,index)"
+          *ngFor="let precio of prod.precios; let index=index" style="flex-direction: column;">
+          <ion-text>{{precio.precio*precioDolar|currency:'USD':'symbol':'1.0-0'}}</ion-text>
+          <ion-text>{{precio.proveedor}}</ion-text>
+        </ion-chip>
+      </div>
+    </ion-item-divider>
   </div>
 
   <ng-template #listarProveedores>
+    <ion-chip class="ion-text-center" style="width: 80%; left: 10%;" outline="true" color="success">
+      Las busquedas se basaran en la informacion de estos proveedores
+    </ion-chip>
 
     <ion-card *ngFor="let proveedor of proveedores">
       <ion-card-header>
-
-        {{proveedor.nombre}} <br>
-        {{proveedor.ultimaActualizacion|date}} <br>
-        Productos: <br>
+        Proveedor: <b>{{proveedor.nombre}} <br></b>
+        Direccion: <b> {{proveedor.direccion}}</b> <br>
+        Telefono: <b> {{proveedor.telefono}}</b> <br>
+        Telefono privado: <b>{{proveedor.telefonoPrivado?proveedor.telefonoPrivado:'NO'}}</b> <br>
       </ion-card-header>
-      <ion-item *ngFor="let prod of proveedor.productos" class="ion-margin">
-        {{prod.marca}} {{prod.modelo}} ( {{prod.calidad}} )<br>
-        {{prod.precioVenta*precioDolar|currency:'USD':'symbol':'1.0-0'}} <br>
-        <br>
-      </ion-item>
+
 
     </ion-card>
   </ng-template>

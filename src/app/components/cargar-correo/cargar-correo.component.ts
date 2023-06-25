@@ -1,3 +1,4 @@
+
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
@@ -19,7 +20,6 @@ export class CargarCorreoComponent implements OnInit {
 
   ngOnInit() { 
     this.formCorreo.controls.correo.setValue(this.correo);
-    console.log(this.correo);
 
   }
   guardar(){

@@ -21,11 +21,7 @@
         Busqueda por texto
       </ion-button>
 
-      <ion-button color="secondary" (click)="mostrarHistorial()"
-        *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)">
-        Mostrar día seleccionado
-      </ion-button>
-
+    
       <ion-button color="primary" (click)="mostrarMesCompleto(false)"
         *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)">
         Mostrar mes completo

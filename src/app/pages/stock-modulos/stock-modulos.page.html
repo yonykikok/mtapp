@@ -1,14 +1,10 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Stock de modulos'"  (click)="showStockDialog=null"></app-clasic-toolbar>
+  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Stock de modulos'"
+    (click)="showStockDialog=null"></app-clasic-toolbar>
 </ion-header>
 
 
 <ion-content *ngIf="loggedUser;">
-
-
-
-
-
   <ion-item>
     <ion-select aria-label="Fruit" placeholder="Selecciona los campos que quieres ver" [multiple]="true"
       [formControl]="displayedColumnKeys">
@@ -16,7 +12,7 @@
     </ion-select>
   </ion-item>
 
-  <ion-searchbar show-clear-button="focus" placeholder="J7 prime" (ionInput)="handleInput($event)"></ion-searchbar>
+  <ion-searchbar *ngIf="listaSeleccionada=='completa'" show-clear-button="focus" placeholder="J7 prime" (ionInput)="handleInput($event)"></ion-searchbar>
 
   <!-- TABLA -->
   <ion-grid class="ion-text-center">
@@ -24,7 +20,7 @@
       <ion-col *ngFor='let atributo of displayedColumnKeys.value'><b>{{atributo|titlecase}}</b></ion-col>
     </ion-row>
 
-    <ion-row (click)="(loggedUser && funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser))?seleccionar(modulo):null"
+    <ion-row (click)="(loggedUser && funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)&& listaSeleccionada=='completa')?seleccionar(modulo):null"
       *ngFor="let modulo of listaDeModulosAMostrar">
       <ion-col *ngFor='let atributo of displayedColumnKeys.value'>
         <ion-text *ngIf="atributo!='c/m' && atributo!='s/m';else formatoStock">
@@ -107,3 +103,20 @@
   <!-- FIN FAB AGREGAR NUEVO -->
 
 </ion-content>
+<ion-footer [translucent]="true">
+  <ion-toolbar>
+    <ion-tabs>
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button (click)="mostrarLista('completa')">
+          <ion-icon color="primary" name="list-outline"></ion-icon>
+          Lista completa
+        </ion-tab-button>
+
+        <ion-tab-button (click)="mostrarLista('stockBajo')">
+          <ion-icon color="secondary" name="trending-down-outline"></ion-icon>
+          Stock bajo
+        </ion-tab-button>
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-toolbar>
+</ion-footer>

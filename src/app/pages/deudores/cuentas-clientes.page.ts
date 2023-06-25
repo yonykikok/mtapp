@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { FormAcreedorComponent } from 'src/app/components/forms/form-acreedor/form-acreedor.component';
 import { FormDeudorComponent } from 'src/app/components/forms/form-deudor/form-deudor.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
@@ -8,14 +9,22 @@ import { environment } from 'src/environments/environment';
 
 
 @Component({
-  selector: 'app-deudores',
-  templateUrl: './deudores.page.html',
-  styleUrls: ['./deudores.page.scss'],
+  selector: 'app-cuentas-clientes',
+  templateUrl: './cuentas-clientes.page.html',
+  styleUrls: ['./cuentas-clientes.page.scss'],
 })
-export class DeudoresPage implements OnInit {
+export class CuentasClientesPage implements OnInit {
+  moduloSeleccionado = 'deudores';
   totalFiado = 0;
-  listaDudores;
-  listaDeudoresAMostrar;
+  totalAdeudado = 0;
+
+  listaClientes = {
+    acreedores: [],
+    deudores: []
+  }
+
+  listaAMostrar;
+
   loggedUser;
   textoABuscar;
 
@@ -28,33 +37,52 @@ export class DeudoresPage implements OnInit {
   }
 
   ngOnInit(): void {
+    //LISTA DEUDORES
     this.database.obtenerTodos(environment.TABLAS.deudores).subscribe(deudoresListRef => {
-      this.listaDudores = deudoresListRef.map(deudorRef => {
+      this.listaClientes.deudores = deudoresListRef.map(deudorRef => {
         let deudor = deudorRef.payload.doc.data();
         deudor['id'] = deudorRef.payload.doc.id;
         return deudor;
       });
-      this.listaDeudoresAMostrar = [...this.listaDudores];
-      this.ordenarLista(this.listaDeudoresAMostrar);
+      this.listaAMostrar = [...this.listaClientes.deudores];
+      this.ordenarLista(this.listaAMostrar);
 
-      this.totalFiado = this.listaDudores.reduce((suma, deudor) => {
+      this.totalFiado = this.listaClientes.deudores.reduce((suma, deudor) => {
         return suma + (deudor.items.reduce((suma, item) => suma + item.precio, 0) - deudor.pagos.reduce((suma, pago) => suma + pago.monto, 0));
       }, 0);
 
+    });
+
+
+    //LISTA ACREEDORES
+    this.database.obtenerTodos(environment.TABLAS.acreedores).subscribe(acreedoresListRef => {
+      this.listaClientes.acreedores = acreedoresListRef.map(acreedorRef => {
+        let acreedor = acreedorRef.payload.doc.data();
+        acreedor['id'] = acreedorRef.payload.doc.id;
+        return acreedor;
+      });
+
+      this.totalAdeudado = this.listaClientes.acreedores.reduce((suma, acreedor) => {
+        if (!acreedor.saldado) {
+          return suma + (acreedor.pagos.reduce((suma, pago) => suma + pago.monto, 0));
+        }else{
+          return suma;
+        }
+      }, 0);
     });
   }
 
 
   filtrarPorTexto(texto) {
     const query = !texto ? "" : texto.toLowerCase();
-    this.listaDeudoresAMostrar = this.listaDudores.filter((d) =>
-      d.apellido.toLowerCase().indexOf(query) > -1 ||
-      d.direccion.toLowerCase().indexOf(query) > -1 ||
-      d.dni.toLowerCase().indexOf(query) > -1 ||
-      d.nombre.toLowerCase().indexOf(query) > -1 ||
-      d.telefono.toLowerCase().indexOf(query) > -1
+    this.listaAMostrar = this.listaClientes[this.moduloSeleccionado].filter((d) =>
+      d.apellido.toString().toLowerCase().indexOf(query) > -1 ||
+      d.direccion.toString().toLowerCase().indexOf(query) > -1 ||
+      d.dni.toString().toLowerCase().indexOf(query) > -1 ||
+      d.nombre.toString().toLowerCase().indexOf(query) > -1 ||
+      d.telefono.toString().toLowerCase().indexOf(query) > -1
     );
-    this.ordenarLista([...this.listaDeudoresAMostrar]);
+    this.ordenarLista([...this.listaAMostrar]);
 
   }
 
@@ -77,11 +105,17 @@ export class DeudoresPage implements OnInit {
     })
   }
 
-  async openDialog() {
+  async openDialog(moduloSeleccionado) {
+    let componentes = {
+      deudores: FormDeudorComponent,
+      acreedores: FormAcreedorComponent
+    }
+
+    let component = componentes[moduloSeleccionado];
 
     try {
       const modal = await this.modalController.create({
-        component: FormDeudorComponent,
+        component,
         componentProps: {
         },
       })
@@ -109,8 +143,7 @@ export class DeudoresPage implements OnInit {
 
 
   ordenarLista(lista: any[]) {
-    this.listaDeudoresAMostrar = lista.sort((a: any, b: any) => {
-      console.log(this.calcularDeuda(a))
+    this.listaAMostrar = lista.sort((a: any, b: any) => {
       if (this.calcularRestante(a) > this.calcularRestante(b)) {
         return -1;
       }
@@ -135,5 +168,11 @@ export class DeudoresPage implements OnInit {
     if (!deudor.pagos) return;
     return Array.isArray(deudor.items) ? deudor.pagos.reduce((suma, pago) => suma + pago.monto, 0) : 0;
 
+  }
+
+  seleccionarModulo(modulo) {
+    this.moduloSeleccionado = modulo;
+    this.listaAMostrar = this.listaClientes[modulo];
+    this.ordenarLista(this.listaAMostrar);
   }
 }

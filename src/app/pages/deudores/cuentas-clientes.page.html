@@ -1,0 +1,85 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="moduloSeleccionado|titlecase"></app-clasic-toolbar>
+</ion-header>
+
+
+<ion-content 
+>
+
+  <!-- <app-navbar-admin [loggedUser]="loggedUser"></app-navbar-admin> -->
+
+  <ion-searchbar show-clear-button="focus" placeholder="Alfredo martinez"
+    (ionInput)="filtrarPorTexto($event.target['value'])" [(ngModel)]='textoABuscar'> </ion-searchbar>
+
+
+
+  <div *ngIf="loggedUser;">
+    <p *ngIf="listaClientes.acreedores &&  moduloSeleccionado =='deudores'; else acreedores" class="ion-text-center">
+      <label style="padding: 1rem; text-align: center; width: 100%;">Total fiado:
+        <b>{{totalFiado|currency:'USD':'symbol':'1.0-0'}}</b></label>
+
+      <app-deuda-cliente [loggedUser]="loggedUser" *ngFor="let deudor of listaAMostrar" [deudor]="deudor">
+      </app-deuda-cliente>
+    </p>
+
+
+    <ng-template #acreedores>
+      <p class="ion-text-center">
+        <ion-text style="padding: 1rem; text-align: center; width: 100%;" color="red">Total adeudado:
+          <b>{{totalAdeudado|currency:'USD':'symbol':'1.0-0'}}</b></ion-text>
+
+        <app-cliente-acreedor [loggedUser]="loggedUser" *ngFor="let acreedor of listaAMostrar" [acreedor]="acreedor">
+        </app-cliente-acreedor>
+      </p>
+    </ng-template>
+  </div>
+
+
+
+  <!-- <ion-fab slot="fixed" vertical="bottom" horizontal="end" (clic k)="openDialog()">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+
+  </ion-fab> -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top" style="right: 0;">
+
+
+      <ion-chip color="success" outline="true" (click)="openDialog('acreedores')">
+        <ion-icon style="width: 3rem;" src="/assets/svg/icons/acreedores.svg"></ion-icon>
+        <ion-text color="success"> Acreedores </ion-text>
+      </ion-chip>
+
+      <ion-chip color="danger" outline="true" (click)="openDialog('deudores')">
+        <ion-icon style="width: 3rem;" src="/assets/svg/icons/deudores.svg"></ion-icon>
+        <ion-text color="danger"> Deudores </ion-text>
+      </ion-chip>
+
+    </ion-fab-list>
+  </ion-fab>
+
+
+</ion-content>
+<ion-footer [translucent]="true">
+  <ion-toolbar>
+    <ion-tabs>
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button (click)="seleccionarModulo('deudores')">
+          <ion-icon style="width: 3rem;" src="/assets/svg/icons/deudores.svg"></ion-icon>
+          <ion-text color="danger"> Deudores </ion-text>
+        </ion-tab-button>
+
+
+        <ion-tab-button (click)="seleccionarModulo('acreedores')">
+          <ion-icon style="width: 3rem;" src="/assets/svg/icons/acreedores.svg"></ion-icon>
+          <ion-text color="success"> Acreedores </ion-text>
+        </ion-tab-button>
+
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-toolbar>
+</ion-footer>

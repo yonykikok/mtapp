@@ -23,16 +23,13 @@ export class MisReparacionesPage implements OnInit, ViewWillEnter {
   }
   ionViewWillEnter(): void {
     if (!this.authService.currentUser) { this.router.navigate(['/login']); return }
-    console.log(this.authService.currentUser)
     this.obtenerReparaciones();
 
   }
 
   async obtenerReparaciones(e?) {
     try {
-      console.log(this.authService.currentUser)
       let documentListRef: any = await this.database.getBoletasPorDni(this.authService.currentUser.dni);
-      console.log(documentListRef)
       if (!documentListRef) return;
 
       this.reparaciones = documentListRef.map(documentRef => {
@@ -70,9 +67,6 @@ export class MisReparacionesPage implements OnInit, ViewWillEnter {
       })
 
       modal.onDidDismiss().then((result: any) => {
-        console.log(result)
-
-
       })
       return await modal.present();
     } catch (err) {

@@ -19,12 +19,13 @@ export class DashboardPage implements OnInit {
     // { titulo: 'Display', color: '#238386', ruta: "/lista-displays", role: 'CLIENTE' },
     { titulo: 'Flex de carga', color: '#d34fb2', ruta: "/lista-flex-de-carga", role: 'CLIENTE' },
     { titulo: 'Pedidos', color: '#007bff', ruta: "/lista-pedidos", role: 'ADMIN' },
-    { titulo: 'Deudores', color: '#dc3545', ruta: "/deudores", role: 'ADMIN' },
+    { titulo: 'Cuentas clientes', color: '#dc3545', ruta: "/cuentas-clientes", role: 'ADMIN' },
     { titulo: 'Ventas', color: '#7fbdc7', ruta: "/equipos-vendidos", role: 'ADMIN' },
     { titulo: 'Libro diario', color: '#dc70fd', ruta: "/libro-diario", role: 'ADMIN' },
     { titulo: 'Historial', color: 'rgb(113 112 253)', ruta: "/historial-caja", role: 'ADMIN' },
     { titulo: 'Stock Modulos', color: 'black', ruta: "/stock-modulos", role: 'ADMIN' },
-    { titulo: 'Mis reparaciones', color: '#d34fb2', ruta: "/mis-reparaciones", role: 'CLIENTE' },
+    // { titulo: 'Mis reparaciones', color: '#d34fb2', ruta: "/mis-reparaciones", role: 'CLIENTE' },
+    { titulo: 'Proveedores', color: 'rgb(149 57 126)', ruta: "/proveedores", role: 'OWNER' },
   ]
   constructor(private modalController: ModalController,
     private database: DataBaseService) { }
@@ -32,7 +33,6 @@ export class DashboardPage implements OnInit {
   ngOnInit() {
     this.database.obtenerTodos('boletas').subscribe(documentListRef => {
 
-      console.log(documentListRef)
       if (!documentListRef) return;
 
       this.reparaciones = documentListRef.map(documentRef => {

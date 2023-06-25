@@ -33,7 +33,6 @@ export class ListaFlexDeCargaPage implements OnInit {
     this.flexDeCargasAMostrar = [...this.flexDeCargas];
   }
   ngOnInit(): void {
-    console.log(this.flexDeCargas)
     // return;
     if (this.funcionesUtiles.customDolar) {
       this.precioDolarBlue = this.funcionesUtiles.customDolar;
@@ -50,7 +49,6 @@ export class ListaFlexDeCargaPage implements OnInit {
         return auxElement;
       });
       lista = this.ordenarListaPor(lista, 'modelo', 'precio');
-      console.log(lista)
       this.flexDeCargas = lista;
       this.flexDeCargasAMostrar = [...this.flexDeCargas];
     });
@@ -72,7 +70,6 @@ export class ListaFlexDeCargaPage implements OnInit {
     //   })
 
     //   modal.onDidDismiss().then((result: any) => {
-    //     console.log(result)
     //     if (!result.data || !result.role) return;
 
 
@@ -116,7 +113,6 @@ export class ListaFlexDeCargaPage implements OnInit {
       })
 
       modal.onDidDismiss().then((result: any) => {
-        console.log(result)
         if (!result.data || !result.role) return;
 
 

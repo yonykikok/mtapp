@@ -25,11 +25,10 @@ export class CustomIonSlidingComponent implements OnInit {
     pendiente: {
       text: 'Cancelar', bgColor: 'red', click: async (reparacion) => {
         this.alertService.alertConfirmacion('Cancelar Reparacion', 'Estas seguro de querer cancelarla?', "Si", this.cambiarEstadoReparacion.bind(this, reparacion, boleta_estados.cancelado_por_el_usuario));
-        console.log(`actualizado`)
       }
     },
     en_proceso: {
-      text: 'Consultar', bgColor: 'rgb(14, 122, 189)', click: (reparacion) => { console.log("Consultar ", reparacion); }
+      text: 'Consultar', bgColor: 'rgb(14, 122, 189)', click: (reparacion) => { console.log("Consultar "); }
     },
     reparado: {
       text: 'Sin acciones', bgColor: 'gray', click: () => { return }
@@ -40,10 +39,10 @@ export class CustomIonSlidingComponent implements OnInit {
       }
     },
     sin_reparar: {
-      text: 'Archivar', bgColor: 'rgb(14, 122, 189)', click: (reparacion) => { console.log("Archivar ", reparacion); }
+      text: 'Archivar', bgColor: 'rgb(14, 122, 189)', click: (reparacion) => { console.log("Archivar "); }
     },
     diagnosticado: {
-      text: 'Confirmar', bgColor: 'green', click: (reparacion) => { console.log("Confirmar ", reparacion); }
+      text: 'Confirmar', bgColor: 'green', click: (reparacion) => { console.log("Confirmar "); }
     },
   }
   constructor(private modalController: ModalController,
@@ -61,13 +60,11 @@ export class CustomIonSlidingComponent implements OnInit {
 
     this.slidingOptions.push(this.slidingOptionsByState[this.reparacion.estado]);
 
-    console.log({ ...this.reparacion });
 
   }
 
   mostrarDetalle() {
     this.mostrarDetalleEvent.emit(this.reparacion)
-    console.log(this.reparacion)
 
   }
 
@@ -81,6 +78,5 @@ export class CustomIonSlidingComponent implements OnInit {
   async cambiarEstadoReparacion(reparacion, nuevoEstado) {
     reparacion.estado = nuevoEstado;
     await this.databaseService.actualizar('boletas', reparacion, reparacion.id);
-    console.log("se actualizo la boleta")
   }
 }

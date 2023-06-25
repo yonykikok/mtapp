@@ -105,7 +105,6 @@ export class DeudaClienteComponent {
             this.deudor.items = [];
             this.deudor.pagos = [];
           }
-          console.log(this.deudor)
           this.database.actualizar(environment.TABLAS.deudores, this.deudor, this.deudor.id).then(res => {
             this.toastService.simpleMessage('Exito', 'Cambios guardados', ToastColor.success);
           })

@@ -21,6 +21,9 @@ export class ColoresPipe implements PipeTransform {
         return 'lightblue';
       case 'rosa':
         return 'pink';
+        return 'lightblue';
+      case 'azul':
+        return 'blue';
       default:
         return 'blanco'
           ;

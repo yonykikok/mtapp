@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { reparacionIconName } from 'src/app/services/info-compartida.service';
 
@@ -14,7 +15,6 @@ export class DetalleReparacionComponent implements OnInit {
   ngOnInit() {}
 
   getIconName(){
-    console.log(reparacionIconName[this.reparacion.estado])
     return reparacionIconName[this.reparacion.estado];
   }
 }

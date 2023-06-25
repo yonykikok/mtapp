@@ -23,13 +23,11 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
   ) { }
 
   ngOnInit() {
-    console.log(this.user)
     this.verSiTieneLaInfoCompleta()
   }
 
   verSiTieneLaInfoCompleta() {
     if(!this.user) return;
-    console.log(this.user)
     if (!this.user.correo) {
       this.mostrarPopupCorreo();
     }
@@ -38,7 +36,6 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
     }
   }
   ionViewDidEnter(): void {
-    console.log(this.authService.currentUser)
   }
 
   async mostrarScannerComponent() {
@@ -99,7 +96,6 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       })
 
       modal.onDidDismiss().then((result: any) => {
-        console.log(result)
         if (!result.data || !result.role) return;
         switch (result.role) {
           case 'create':
@@ -107,7 +103,6 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
             this.actualizarUsuario();
             this.toastService.simpleMessage("Correo guardado", "Se cargó el correo a su cuenta.", ToastColor.success);
 
-            console.log(this.user);
             if (!this.user.telefono) {
               this.mostrarPopupNumeroTelefonico();
             }
@@ -146,11 +141,9 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       })
 
       modal.onDidDismiss().then((result: any) => {
-        console.log(result)
         if (!result.data || !result.role) return;
         switch (result.role) {
           case 'create':
-            console.log(this.user);
             this.user['telefono'] = result.data;
             this.actualizarUsuario();
             this.toastService.simpleMessage("Teléfono guardado", "Se cargó el número de teléfono a su cuenta.", ToastColor.success);
@@ -179,13 +172,10 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       })
 
       modal.onDidDismiss().then((result: any) => {
-        console.log(result)
         if (!result.data || !result.role) return;
         switch (result.role) {
           case 'create':
-            console.log(result.data);
             this.user['password'] = this.authService.generarHashPassword(result.data.toString());
-            console.log(this.user);
             this.actualizarUsuario();
 
             break;
@@ -221,7 +211,6 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
   }
   async generarClave() {
     if (!this.user.activo) {
-      console.log(this.user.nombre)
       const alert = await this.alertController.create({
         mode: 'ios',
         header: "Completar informacion",
@@ -235,7 +224,6 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
           {
             text: "Completar",
             handler: () => {
-              console.log("Completando.");
               this.mostrarScannerComponent();
             }
           }

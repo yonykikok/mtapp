@@ -1,0 +1,187 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/cuentas-clientes'" [title]="'Agregar cuenta cliente'"></app-clasic-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <div *ngIf="!acreedorEncontrado">
+
+    <!-- STEP 1 datos clientes -->
+
+    <ion-card class="ion-padding" *ngIf="step==1">
+      <ion-card-header>
+        <ion-card-title class="ion-text-center">Datos de contacto</ion-card-title>
+      </ion-card-header>
+      <form [formGroup]="formGroupDatosCliente">
+        <ion-item class="ion-margin-bottom" fill="outline">
+          <ion-label position="floating">Nombre</ion-label>
+          <ion-input type="text" formControlName="nombre" required></ion-input>
+        </ion-item>
+        <ion-item class="ion-margin-bottom" fill="outline">
+          <ion-label position="floating">Apellido</ion-label>
+          <ion-input type="text" formControlName="apellido" required></ion-input>
+        </ion-item>
+        <ion-item class="ion-margin-bottom" fill="outline">
+          <ion-label position="floating">Dni</ion-label>
+          <ion-input type="number" formControlName="dni" required></ion-input>
+        </ion-item>
+        <ion-item class="ion-margin-bottom" fill="outline">
+          <ion-label position="floating">Direccion</ion-label>
+          <ion-input type="text" formControlName="direccion" required></ion-input>
+        </ion-item>
+        <ion-item class="ion-margin-bottom" fill="outline">
+          <ion-label position="floating">Telefono</ion-label>
+          <ion-input type="number" formControlName="telefono" required></ion-input>
+        </ion-item>
+        <ion-item-divider>
+          <ion-button slot="start" (click)="cerrarForm()">Cancelar</ion-button>
+          <ion-button slot="end" [disabled]="!formGroupDatosCliente.valid" color="primary" (click)="buscarAcreedor()"
+            (click)="step=step+1">Siguiente</ion-button>
+        </ion-item-divider>
+      </form>
+    </ion-card>
+    <!-- FIN STEP 1 datos clientes -->
+
+    <!-- STEP 2 detalle items-->
+    <ion-card class="ion-padding" *ngIf="step==2">
+      <ion-card-header>
+        <ion-card-title class="ion-text-center">Detalle del objetivo</ion-card-title>
+      </ion-card-header>
+      <form [formGroup]="formGroupItem">
+        <ion-item class="ion-margin-bottom" fill="outline">
+          <ion-label position="floating">Producto o servicio a pagar</ion-label>
+          <ion-input type="text" formControlName="producto" required></ion-input>
+        </ion-item>       
+        <div>
+          <ion-item-divider>
+            <ion-button slot="start" (click)="step=step-1">Atras</ion-button>
+            <ion-button slot="end" color="secondary" [disabled]="!formGroupItem.valid"
+              (click)="agregarItem()">Agregar</ion-button>
+          </ion-item-divider>
+          <ion-button style="width: 95%; margin-top: 0.5rem; margin-left: 2.5%;" color="primary"
+            [disabled]="items.length<=0" (click)="step=step+1">Siguiente</ion-button>
+        </div>
+        <div>
+          <ul>
+            <li *ngFor="let item of items">
+              {{item.producto}}: <b>{{item.precio |currency:'USD':'symbol':'1.0-0'}}</b>
+              <ion-chip color="danger" outline="true" (click)="eliminarItem(item)">
+                <ion-icon color="danger" name="trash-outline"></ion-icon>
+              </ion-chip>
+            </li>
+          </ul>
+        </div>
+      </form>
+    </ion-card>
+    <!-- FIN STEP 2 detalle items-->
+
+    <!-- STEP 3 detalle pagos-->
+
+
+    <ion-card class="ion-padding" *ngIf="step==3">
+      <ion-card-header>
+        <ion-card-title class="ion-text-center">Agregar pago</ion-card-title>
+      </ion-card-header>
+      <form [formGroup]="formGroupPago">
+        <ion-item class="ion-margin-bottom" fill="outline">
+          <ion-label position="floating">Tipo de pago</ion-label>
+          <ion-input type="text" formControlName="concepto"></ion-input>
+        </ion-item>
+        <ion-item class="ion-margin-bottom" fill="outline">
+          <ion-label position="floating">Monto</ion-label>
+          <ion-input type="number" formControlName="monto"></ion-input>
+        </ion-item>
+        <div>
+          <ion-item-divider>
+            <ion-button slot="start" (click)="step=step-1"> Atras</ion-button>
+            <ion-button slot="end" color="secondary" [disabled]="!formGroupPago.valid"
+              (click)="agregarPago()">agregar</ion-button>
+          </ion-item-divider>
+          <ion-button color="primary" style="width: 95%; left: 2.5%; margin-top: 0.5rem;"
+            (click)="step=step+1">Siguiente</ion-button>
+        </div>
+        <div>
+          <ul>
+            <li *ngFor="let item of pagos">
+              {{item.concepto}}: <b>{{item.monto |currency:'USD':'symbol':'1.0-0'}}</b>
+              <ion-chip color="danger" outline="true" (click)="eliminarItem(item)">
+                <ion-icon color="danger" name="trash-outline" (click)="eliminarPago(item)"></ion-icon>
+              </ion-chip>
+            </li>
+          </ul>
+        </div>
+      </form>
+    </ion-card>
+    <!-- FIN STEP 3 detalle pagos-->
+
+    <!-- STEP 4 Seleccionar fecha limite-->
+    <!-- <ion-card class="ion-padding" *ngIf="step==4">
+      <ion-card-header>
+        <ion-card-title class="ion-text-center">Fecha limite</ion-card-title>
+      </ion-card-header>
+      <form>
+        <div>
+          <ion-datetime displayFormat="DD/MM/YYYY" pickerFormat="DD MMMM YYYY"
+            [formControl]="fechaLimite"></ion-datetime>
+
+          <label>{{nuevoAcreedor.fechaLimite| date}}</label>
+        </div>
+        <ion-item-divider>
+          <ion-button slot="start" (click)="step=step-1">Atras</ion-button>
+          <ion-button slot="end" color="primary" (click)="cargarFecha()" (click)="step=step+1">Siguiente</ion-button>
+        </ion-item-divider>
+      </form>
+    </ion-card> -->
+    <!-- FIN STEP 4 Seleccionar fecha limite-->
+
+    <!-- STEP 5 Confirmacion de datos-->
+    <ion-card class="ion-padding" *ngIf="step==4">
+      <ion-card-header>
+        <ion-card-title class="ion-text-center">Revisa los Datos</ion-card-title>
+      </ion-card-header>
+      <ul>
+        <li>Nombre: <b>{{formGroupDatosCliente.controls.nombre.value}}</b></li>
+        <li>Apellido: <b>{{formGroupDatosCliente.controls.apellido.value}}</b></li>
+        <li>Dni: <b>{{formGroupDatosCliente.controls.dni.value}}</b></li>
+        <li>Direccion: <b>{{formGroupDatosCliente.controls.direccion.value}}</b></li>
+        <li>Telefono: <b>{{formGroupDatosCliente.controls.telefono.value}}</b></li>
+      </ul>
+      <hr>
+      <ion-text>Objetivo</ion-text>
+      <ul>
+        <li *ngFor="let item of items">
+          {{item.producto}}: <b>{{item.precio |currency:'USD':'symbol':'1.0-0'}}</b>
+        </li>
+      </ul>
+      <hr>
+      <ion-text>Pagos realizados</ion-text>
+      <ul>
+        <li *ngFor="let item of pagos">
+          {{item.concepto}}: <b>{{item.monto |currency:'USD':'symbol':'1.0-0'}}</b>
+        </li>
+      </ul>
+      <hr *ngIf="pagos.length>0">
+      <!-- <ul>
+        <li>
+          Fecha limite de pago:
+          <b>{{fechaLimite.value|date}}</b>
+        </li>
+      </ul> -->
+      <ion-item-divider *ngIf="!acreedorEncontrado">
+        <ion-button slot="start" (click)="step=step-1">Atras</ion-button>
+        <ion-button slot="end" color="primary" (click)="confirmar()" [disabled]="dioDeAlta">Confirmar</ion-button>
+      </ion-item-divider>
+
+    </ion-card>
+    <!-- FIN STEP 5 Confirmacion de datos-->
+  </div>
+  <!-- DEUDOR ENCONTRADO -->
+  <div *ngIf="acreedorEncontrado">
+    <div>
+      <label>Cliente existente</label>
+      <!-- <app-deuda-cliente [acreedor]="nuevoAcreedor"></app-deuda-cliente> -->
+    </div>
+  </div>
+  <!-- fin DEUDOR ENCONTRADO -->
+
+</ion-content>

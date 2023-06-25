@@ -69,7 +69,6 @@ export class FormDetalleVentaComponent implements OnInit {
 
   agregarVenta() {
     let items = this.items.map(item => {
-      console.log(this.medioDePago)
       item['medioDePago'] = this.medioDePago;
       item['precio'] = item['precio'] + ((item['precio'] / 100) * this.porcentajeDeRecargo);
       if (this.medioDePago != MediosDePago.Efectivo) {
@@ -78,7 +77,6 @@ export class FormDetalleVentaComponent implements OnInit {
 
       return item;
     });
-    console.log({ ...items })
 
     this.modalController.dismiss(items,'guardarItems');
     this.items = [];

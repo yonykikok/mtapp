@@ -34,8 +34,6 @@ export class ListaBateriasPage implements OnInit {
     this.bateriasAMostrar = [...this.baterias];
   }
   ngOnInit(): void {
-    console.log(this.baterias)
-    // return;
     if (this.funcionesUtiles.customDolar) {
       this.precioDolarBlue = this.funcionesUtiles.customDolar;
     }
@@ -51,7 +49,6 @@ export class ListaBateriasPage implements OnInit {
         return auxElement;
       });
       lista = this.ordenarListaPor(lista, 'modelo', 'precio');
-      console.log(lista)
       this.baterias = lista;
       this.bateriasAMostrar = [...this.baterias];
     });
@@ -73,7 +70,6 @@ export class ListaBateriasPage implements OnInit {
     //   })
 
     //   modal.onDidDismiss().then((result: any) => {
-    //     console.log(result)
     //     if (!result.data || !result.role) return;
 
 
@@ -117,7 +113,6 @@ export class ListaBateriasPage implements OnInit {
       })
 
       modal.onDidDismiss().then((result: any) => {
-        console.log(result)
         if (!result.data || !result.role) return;
 
 

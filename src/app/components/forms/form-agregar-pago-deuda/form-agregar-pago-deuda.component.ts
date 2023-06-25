@@ -37,7 +37,6 @@ export class FormAgregarPagoDeudaComponent implements OnInit {
     } else {
       this.formGroupPago.controls.concepto.setValue('');
     }
-    console.log(e.target.value)
   }
   eliminarPago(selectedItem) {
     this.pagos.splice(this.pagos.findIndex(item => selectedItem === item), 1);

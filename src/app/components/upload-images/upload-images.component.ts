@@ -42,13 +42,12 @@ export class UploadImagesComponent implements OnInit {
       this.imagenes = [];
     }
 
-    const MAX_MEGABYTE = 1.8;
+    const MAX_MEGABYTE = 1;
     this.imageCompress
       .uploadAndGetImageWithMaxSize(MAX_MEGABYTE) // this function can provide debug information using (MAX_MEGABYTE,true) parameters
       .then(
         (result: string) => {
           // imgResult = result;
-          console.log(result);
           this.imagenes.push(result);
           this.imagesListChangedEvent.emit(this.imagenes);
           this.selectedImg=result;
@@ -56,7 +55,6 @@ export class UploadImagesComponent implements OnInit {
         (result: string) => {
           console.error('The compression algorithm didn\'t succed! The best size we can do is', this.imageCompress.byteCount(result), 'bytes')
           // imgResult = result;
-          console.log(result);
           this.imagenes.push(result);
           this.imagesListChangedEvent.emit(this.imagenes);
           this.selectedImg=result;

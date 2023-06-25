@@ -14,7 +14,6 @@ export class ClasicToolbarComponent implements OnInit {
   ngOnInit() { }
   async emitirDismissEvent() {
     let modal = await this.modalController.getTop();
-    console.log(modal);
     if (modal) {
       modal.dismiss();
     }

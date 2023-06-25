@@ -33,9 +33,6 @@ export class DetallePedidoComponent implements OnInit {
       this.modalController.dismiss({}, 'actualizarEstado');
       // });
     })
-
-
-    console.log("cambio", e.value)
   }
 
   cancelarPedido() {

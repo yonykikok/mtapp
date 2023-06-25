@@ -1,0 +1,96 @@
+<ion-item-divider class="ion-no-padding ion-margin-bottom">
+
+  <ion-accordion-group style="width: 100%;">
+    <ion-accordion value="cliente">
+      <ion-item slot="header" color="light">
+        <ion-text [ngStyle]="{color: acreedor.saldado?'lightgreen':''}">
+          {{acreedor.nombre}} {{acreedor.apellido}} <br>
+          DNI {{acreedor.dni}}
+        </ion-text>
+        <!-- header -->
+      </ion-item>
+
+
+      <ion-card slot="content">
+        <ion-accordion-group>
+          <!-- datos del cliente -->
+          <ion-accordion value="datosClientes">
+            <ion-item slot="header" color="tertiary">
+              <ion-text> Datos del Cliente </ion-text>
+            </ion-item>
+            <div slot="content" class="ion-text-start">
+              <ul>
+                <li>Nombre: <b>{{acreedor?.nombre}}</b></li>
+                <li>Apellido: <b>{{acreedor?.apellido}}</b></li>
+                <li>Dni: <b>{{acreedor?.dni}}</b></li>
+                <li>Direccion: <b>{{acreedor?.direccion}}</b></li>
+                <li>Telefono: <b>{{acreedor?.telefono}}</b></li>
+              </ul>
+            </div>
+          </ion-accordion>
+          <!-- fin datos del cliente -->
+
+          <!-- datos de la deuda -->
+          <ion-accordion value="datosDeuda">
+            <ion-item slot="header" color="medium">
+              <ion-text> Objetivo </ion-text>
+            </ion-item>
+            <div slot="content" class="ion-text-start">
+              <ul>
+                <li *ngFor="let item of acreedor.items">
+                  <p>{{item.producto}}: <b>{{item.precio |currency:'USD':'symbol':'1.0-0'}}</b></p>
+                </li>
+              </ul>
+            </div>
+          </ion-accordion>
+          <!-- fin datos de la deuda -->
+
+          <!-- pagos realizados -->
+          <ion-accordion value="pagosRealizados">
+            <ion-item slot="header" color="success">
+              <ion-text> Pagos realizados </ion-text>
+            </ion-item>
+
+            <div slot="content" *ngIf="acreedor.pagos.length>0; else SinPagosRealizados" class="ion-text-start">
+              <ul>
+                <li *ngFor="let item of acreedor.pagos">
+                  <p>{{item.concepto}}: <b>{{item.monto |currency:'USD':'symbol':'1.0-0'}}</b>
+                    <br>Fecha: {{item.fecha|date}}
+                  </p>
+                </li>
+              </ul>
+              <hr>
+              <p class="ion-text-center">
+                Total pagado: <b class="ml-2">{{calcularPagos()|currency:'USD':'symbol':'1.0-0'}}</b>
+              </p>
+            </div>
+            <ng-template #SinPagosRealizados>
+              <h4 slot="content" style="color: rgb(247, 89, 89);">Aun no a realizado pagos.</h4>
+            </ng-template>
+          </ion-accordion>
+          <!-- fin pagos realizados -->
+        </ion-accordion-group>
+        <ion-item-divider style="flex-direction: column;" class="ion-no-padding ion-margin-top ion-margin-bottom">
+          <div *ngIf="!acreedor.saldado; else cuentaSaldada">
+            <ion-button slot="start" expand="block" class="ion-margin" color="primary" (click)="openDialog()">
+              Agregar pago <ion-icon slot="end" name="cash-outline"></ion-icon>
+            </ion-button>
+            <ion-button slot="end" expand="block" class="ion-margin" color="danger"
+              (click)="solicitarConfirmacion()">Marcar como cuenta saldada
+            </ion-button>
+          </div>
+
+          <ng-template #cuentaSaldada>
+            <div>
+              <ion-chip color="success" style="height: 3rem;">CUENTA SALDADA</ion-chip>
+            </div>
+          </ng-template>
+        </ion-item-divider>
+      </ion-card>
+
+
+    </ion-accordion>
+
+  </ion-accordion-group>
+
+</ion-item-divider>
