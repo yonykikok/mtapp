@@ -22,4 +22,10 @@ export class FormActualizarItemLibroDiarioComponent implements OnInit {
       this.modalController.dismiss(this.item, 'confirmarActualizacion');
     })
   }
+
+  eliminarItemVenta() {
+    this.alertService.alertConfirmacion('Confirmación', '¿Seguro que quiere hacer este cambio?', 'Si', () => {
+      this.modalController.dismiss(null, 'eliminarItemVenta');
+    })
+  }
 }

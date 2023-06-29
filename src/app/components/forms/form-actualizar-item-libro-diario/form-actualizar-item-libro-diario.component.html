@@ -13,7 +13,7 @@
             [ngModelOptions]="{standalone: true}"></ion-input>
         </ion-item>
 
-        <ion-item fill="outline">
+        <ion-item fill="outline" class="ion-margin-top ion-margin-bottom">
           <ion-label position="floating">Numero de boleta</ion-label>
           <ion-input type="number" placeholder="Ej: 2955" [(ngModel)]="item.boleta"
             [ngModelOptions]="{standalone: true}"></ion-input>
@@ -27,8 +27,11 @@
       </ion-item>
 
       <div>
-        <ion-button expand="block" color="secondary" [disabled]="!item .precio||!item.descripcion"
-          (click)="mostrarConfirmacion()">Guardar cambios</ion-button>
+        <ion-button class="ion-margin" expand="block" color="secondary" [disabled]="!item .precio||!item.descripcion"
+          (click)="mostrarConfirmacion()"> Guardar cambios</ion-button>
+          
+        <ion-button class="ion-margin" expand="block" color="danger" (click)="eliminarItemVenta()">
+          <ion-icon slot="start" name="trash-outline"></ion-icon>Eliminar venta</ion-button>
       </div>
     </form>
   </ion-card>
