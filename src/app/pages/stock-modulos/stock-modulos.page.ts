@@ -2686,7 +2686,6 @@ export class StockModulosPage implements OnInit {
     // ];
     // this.listaDeModulos = this.ordenarListaPor(lista, 'modelo', 'stock');
     // this.listaDeModulosAMostrar = [...this.listaDeModulos];
-    console.log(this.listaDeModulosAMostrar)
 
 
     this.dataBase.obtenerTodos(environment.TABLAS.stockModulos).subscribe((docsModulosRef) => {

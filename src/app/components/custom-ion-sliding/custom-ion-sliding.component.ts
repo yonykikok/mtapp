@@ -16,35 +16,49 @@ export class CustomIonSlidingComponent implements OnInit {
   @Output() mostrarDetalleEvent = new EventEmitter<any>();
   @Input() reparacion;
   slidingConfig = {
-    iconName: reparacionIconName.pendiente,
-    bgColor: reparacionBgColor.pendiente,
-    stateMessage: reparacionMessage.pendiente
+    iconName: reparacionIconName.PENDIENTE,
+    bgColor: reparacionBgColor.PENDIENTE,
+    stateMessage: reparacionMessage.PENDIENTE
   }
   slidingOptions = [];
   slidingOptionsByState = {
     pendiente: {
-      text: 'Cancelar', bgColor: 'red', click: async (reparacion) => {
-        this.alertService.alertConfirmacion('Cancelar Reparacion', 'Estas seguro de querer cancelarla?', "Si", this.cambiarEstadoReparacion.bind(this, reparacion, boleta_estados.cancelado_por_el_usuario));
+      text: 'Cancelar', bgColor: reparacionBgColor.PENDIENTE, click: async (reparacion) => {
+        this.alertService.alertConfirmacion('Cancelar Reparacion', 'Estas seguro de querer cancelarla?', "Si", this.cambiarEstadoReparacion.bind(this, reparacion, boleta_estados.CANCELADO_POR_EL_USUARIO));
       }
     },
-    en_proceso: {
-      text: 'Consultar', bgColor: 'rgb(14, 122, 189)', click: (reparacion) => { console.log("Consultar "); }
-    },
-    reparado: {
-      text: 'Sin acciones', bgColor: 'gray', click: () => { return }
+    en_revision: {
+      text: 'En revisión', bgColor: reparacionBgColor.EN_REVISION, click: (reparacion) => { console.log("En revisión"); }
     },
     cancelado_por_el_usuario: {
-      text: 'Reactivar', bgColor: 'green', click: (reparacion) => {
-        this.alertService.alertConfirmacion('Reactivar Reparacion', `Estas seguro de querer reactivarla? <br><br> Luego, los tecnicos tendran que aceptar la reparacion.`, "Si", this.cambiarEstadoReparacion.bind(this, reparacion, boleta_estados.pendiente));
-      }
+      text: 'Cancelado por el usuario', bgColor: reparacionBgColor.CANCELADO_POR_EL_USUARIO, click: (reparacion) => { console.log("Cancelado por el usuario"); }
     },
-    sin_reparar: {
-      text: 'Archivar', bgColor: 'rgb(14, 122, 189)', click: (reparacion) => { console.log("Archivar "); }
+    en_proceso: {
+      text: 'En proceso', bgColor: reparacionBgColor.EN_PROCESO, click: (reparacion) => { console.log("En proceso"); }
     },
-    diagnosticado: {
-      text: 'Confirmar', bgColor: 'green', click: (reparacion) => { console.log("Confirmar "); }
+    esperado_respuesta: {
+      text: 'Esperando respuesta', bgColor: reparacionBgColor.ESPERADO_RESPUESTA, click: (reparacion) => { console.log("Esperando respuesta"); }
+    },
+    pausado: {
+      text: 'Pausado', bgColor: reparacionBgColor.PAUSADO, click: (reparacion) => { console.log("Pausado"); }
+    },
+    no_reparado: {
+      text: 'No reparado', bgColor: reparacionBgColor.NO_REPARADO, click: (reparacion) => { console.log("No reparado"); }
+    },
+    reparado: {
+      text: 'Reparado', bgColor: reparacionBgColor.REPARADO, click: (reparacion) => { console.log("Reparado"); }
+    },
+    para_notificar: {
+      text: 'Para notificar', bgColor: reparacionBgColor.PARA_NOTIFICAR, click: (reparacion) => { console.log("Para notificar"); }
+    },
+    para_entregar: {
+      text: 'Para entregar', bgColor: reparacionBgColor.PARA_ENTREGAR, click: (reparacion) => { console.log("Para entregar"); }
+    },
+    retirado: {
+      text: 'Retirado', bgColor: reparacionBgColor.RETIRADO, click: (reparacion) => { console.log("Retirado"); }
     },
   }
+
   constructor(private modalController: ModalController,
     private databaseService: DataBaseService,
     private alertService: AlertService) {
@@ -53,9 +67,9 @@ export class CustomIonSlidingComponent implements OnInit {
   ngOnInit() {
 
     this.slidingConfig = {
-      iconName: reparacionIconName[this.reparacion.estado],
-      bgColor: reparacionBgColor[this.reparacion.estado],
-      stateMessage: reparacionMessage[this.reparacion.estado]
+      iconName: reparacionIconName[this.reparacion.estado.toUpperCase()],
+      bgColor: reparacionBgColor[this.reparacion.estado.toUpperCase()],
+      stateMessage: reparacionMessage[this.reparacion.estado.toUpperCase()]
     }
 
     this.slidingOptions.push(this.slidingOptionsByState[this.reparacion.estado]);

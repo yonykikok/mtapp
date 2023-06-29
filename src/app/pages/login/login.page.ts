@@ -27,7 +27,6 @@ export class LoginPage implements OnInit {
   }
 
   preLogin() {
-    console.log(this.formUser.value)
     let user = this.formUser.value;
     try {
 
@@ -57,7 +56,7 @@ export class LoginPage implements OnInit {
       });
 
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
     setTimeout(() => {
       // this.router.navigate(['/home']);

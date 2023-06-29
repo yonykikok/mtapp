@@ -9,6 +9,7 @@ import { LibroDiarioPageRoutingModule } from './libro-diario-routing.module';
 import { LibroDiarioPage } from './libro-diario.page';
 import { FormDetalleVentaComponent } from 'src/app/components/forms/form-detalle-venta/form-detalle-venta.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { FormActualizarItemLibroDiarioComponent } from 'src/app/components/forms/form-actualizar-item-libro-diario/form-actualizar-item-libro-diario.component';
 
 @NgModule({
   imports: [
@@ -18,6 +19,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
     LibroDiarioPageRoutingModule,
     SharedModule
   ],
-  declarations: [LibroDiarioPage,FormDetalleVentaComponent]
+  declarations: [LibroDiarioPage,FormDetalleVentaComponent,FormActualizarItemLibroDiarioComponent]
 })
 export class LibroDiarioPageModule {}

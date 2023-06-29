@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { DashboardPageRoutingModule } from './dashboard-routing.module';
+import { BoletasPageRoutingModule } from './boletas-routing.module';
 
-import { DashboardPage } from './dashboard.page';
+import { BoletasPage } from './boletas.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
@@ -14,12 +14,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    DashboardPageRoutingModule,
-    SharedModule,
+    BoletasPageRoutingModule,
+    SharedModule
   ],
-  declarations: [DashboardPage,
-  ],
-  providers: [
-  ]
+  declarations: [BoletasPage]
 })
-export class DashboardPageModule { }
+export class BoletasPageModule {}

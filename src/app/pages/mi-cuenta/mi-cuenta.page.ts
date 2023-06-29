@@ -7,6 +7,7 @@ import { GenerarClaveComponent } from 'src/app/components/generar-clave/generar-
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-mi-cuenta',
@@ -14,7 +15,7 @@ import { ToastColor, ToastService } from 'src/app/services/toast.service';
   styleUrls: ['./mi-cuenta.page.scss'],
 })
 export class MiCuentaPage implements OnInit, ViewDidEnter {
-  user: any = this.authService.currentUser;
+  loggedUser;
   constructor(private modalController: ModalController,
     private database: DataBaseService,
     private authService: AuthService,
@@ -23,15 +24,15 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
   ) { }
 
   ngOnInit() {
-    this.verSiTieneLaInfoCompleta()
+    this.getCurrentUser();
   }
 
   verSiTieneLaInfoCompleta() {
-    if(!this.user) return;
-    if (!this.user.correo) {
+    if (!this.loggedUser) return;
+    if (!this.loggedUser.correo) {
       this.mostrarPopupCorreo();
     }
-    if (!this.user.telefono) {
+    if (!this.loggedUser.telefono) {
       this.mostrarPopupNumeroTelefonico();
     }
   }
@@ -56,15 +57,15 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
 
           if (info) {
             if (String(info.dni) == String(this.authService.currentUser.dni)) {
-              this.user['nombre'] = info.nombre;
-              this.user['apellido'] = info.apellido;
-              this.user['dni'] = info.dni;
-              this.user['fecha'] = info.fNacimiento;
-              this.user['sexo'] = info.sexo;
+              this.loggedUser['nombre'] = info.nombre;
+              this.loggedUser['apellido'] = info.apellido;
+              this.loggedUser['dni'] = info.dni;
+              this.loggedUser['fecha'] = info.fNacimiento;
+              this.loggedUser['sexo'] = info.sexo;
               this.toastService.simpleMessage("Escaneo exitoso", "Se cargó la información del documento a su cuenta.", ToastColor.success);
               this.actualizarUsuario();
 
-              if (!this.user.correo) {
+              if (!this.loggedUser.correo) {
                 this.mostrarPopupCorreo();
               }
             } else {
@@ -91,7 +92,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       const modal = await this.modalController.create({
         component: CargarCorreoComponent,
         componentProps: {
-          correo: this.user?.email
+          correo: this.loggedUser?.email
         },
       })
 
@@ -99,11 +100,11 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
         if (!result.data || !result.role) return;
         switch (result.role) {
           case 'create':
-            this.user['correo'] = result.data;
+            this.loggedUser['correo'] = result.data;
             this.actualizarUsuario();
             this.toastService.simpleMessage("Correo guardado", "Se cargó el correo a su cuenta.", ToastColor.success);
 
-            if (!this.user.telefono) {
+            if (!this.loggedUser.telefono) {
               this.mostrarPopupNumeroTelefonico();
             }
             break;
@@ -120,15 +121,15 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
   }
   actualizarUsuario() {
     if (
-      this.user.correo &&
-      this.user.telefono &&
-      this.user.nombre &&
-      this.user.password
+      this.loggedUser.correo &&
+      this.loggedUser.telefono &&
+      this.loggedUser.nombre &&
+      this.loggedUser.password
     ) {
-      this.user.activo = true;
+      this.loggedUser.activo = true;
       this.toastService.simpleMessage("Cuenta activada", "Se activó con éxito su cuenta, ya puede comenzar a utilizar la App", ToastColor.success);
     }
-    this.database.actualizar('users', this.user, this.user.dni.toString());
+    this.database.actualizar('users', this.loggedUser, this.loggedUser.dni.toString());
   }
 
   async mostrarPopupNumeroTelefonico() {
@@ -136,7 +137,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       const modal = await this.modalController.create({
         component: CargarTelefonoComponent,
         componentProps: {
-          telefono: this.user?.telefono
+          telefono: this.loggedUser?.telefono
         },
       })
 
@@ -144,7 +145,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
         if (!result.data || !result.role) return;
         switch (result.role) {
           case 'create':
-            this.user['telefono'] = result.data;
+            this.loggedUser['telefono'] = result.data;
             this.actualizarUsuario();
             this.toastService.simpleMessage("Teléfono guardado", "Se cargó el número de teléfono a su cuenta.", ToastColor.success);
 
@@ -175,7 +176,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
         if (!result.data || !result.role) return;
         switch (result.role) {
           case 'create':
-            this.user['password'] = this.authService.generarHashPassword(result.data.toString());
+            this.loggedUser['password'] = this.authService.generarHashPassword(result.data.toString());
             this.actualizarUsuario();
 
             break;
@@ -210,7 +211,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
     return info;
   }
   async generarClave() {
-    if (!this.user.activo) {
+    if (!this.loggedUser.activo) {
       const alert = await this.alertController.create({
         mode: 'ios',
         header: "Completar informacion",
@@ -233,5 +234,26 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
     } else {
       this.mostrarPopupGenerarClave();
     }
+  }
+  getCurrentUser() {
+    this.authService.getCurrentUser().subscribe(userRef => {
+      this.database.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res) => {
+        let usuario = res.payload.data();
+        usuario['uid'] = res.payload.id;
+
+        this.loggedUser = {
+          uid: usuario['uid'],
+          email: usuario['email'],
+          displayName: usuario['displayName'],
+          emailVerified: usuario['emailVerified'],
+          photoURL: usuario['photoURL'],
+          role: usuario['role'],
+          securityCode: usuario['securityCode'],
+          dni: usuario['dni']
+        };
+        // this.verSiTieneLaInfoCompleta();
+
+      })
+    })
   }
 }

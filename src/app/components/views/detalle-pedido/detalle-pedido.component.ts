@@ -29,7 +29,6 @@ export class DetallePedidoComponent implements OnInit {
     this.alertService.alertConfirmacion('Confirmación', `Esta por pasar de '${this.pedido.prioridad}' a '${e.target.value}'`, 'Si, confirmar', () => {
       this.pedido.prioridad = e.target.value;
       // this.database.actualizar(environment.TABLAS.pedidos', this.pedido, this.pedido.id).then(res => {
-      // console.log("se actualizo", res)
       this.modalController.dismiss({}, 'actualizarEstado');
       // });
     })

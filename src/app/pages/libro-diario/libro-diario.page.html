@@ -43,8 +43,8 @@
     <ion-item-divider class="ion-no-padding" *ngIf="libroDiarioHoy&&libroDiarioHoy.ventas"
       style="flex-direction: column; ;">
 
-      <ion-chip style="width: 90%; justify-content: space-between;" *ngFor="let item of libroDiarioHoy.ventas"
-        [ngStyle]="{'background-color': item.boleta ? 'rgb(168 231 232)' : '' ,
+      <ion-chip (click)="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)?mostrarModalEditarVenta(item):''"
+        style="width: 90%; justify-content: space-between;" *ngFor="let item of libroDiarioHoy.ventas" [ngStyle]="{'background-color': item.boleta ? 'rgb(168 231 232)' : '' ,
             'border': item.medioDePago!='efectivo' ? '2px solid orange' : 'none' }">
         <label [ngStyle]="{'color': item.precio<0 ? 'red' : '' }">{{item.precio|currency}}</label>
 

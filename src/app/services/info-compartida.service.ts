@@ -1,39 +1,87 @@
 import { Injectable } from '@angular/core';
 import { DataBaseService } from '../services/database.service';
+export const listaDeEstadosBoletas = [
+  { variable: 'PENDIENTE', mensaje: 'Pendiente' },
+  { variable: 'EN_REVISION', mensaje: 'En revision' },
+  { variable: 'CANCELADO_POR_EL_USUARIO', mensaje: 'Cancelado por el usuario' },
+  { variable: 'EN_PROCESO', mensaje: 'En proceso' },
+  { variable: 'ESPERADO_RESPUESTA', mensaje: 'Esperado respuesta' },
+  { variable: 'PAUSADO', mensaje: 'Pausado' },
+  { variable: 'NO_REPARADO', mensaje: 'No reparado' },
+  { variable: 'REPARADO', mensaje: 'Reparado' },
+  { variable: 'PARA_NOTIFICAR', mensaje: 'Para notificar' },
+  { variable: 'PARA_ENTREGAR', mensaje: 'Para entregar' },
+  { variable: 'RETIRADO', mensaje: 'Retirado' },
+];
 
 
 export enum boleta_estados {
-  pendiente = 'pendiente',
-  en_proceso = 'en_proceso',
-  cancelado_por_el_usuario = 'cancelado_por_el_usuario',
-  reparado = 'reparado',
-  sin_reparar = 'sin_reparar',
-  diagnosticado = 'diagnosticado'
+  PENDIENTE = 'PENDIENTE', // Recién ingresa.
+  EN_REVISION = 'EN_REVISION', // Se comenzó el diagnóstico.
+  CANCELADO_POR_EL_USUARIO = 'CANCELADO_POR_EL_USUARIO', // El usuario cancela por X motivo.
+  EN_PROCESO = 'EN_PROCESO', // Se comenzó la reparación.
+  ESPERADO_RESPUESTA = 'ESPERADO_RESPUESTA', // Se notificó y esperamos respuesta.
+  PAUSADO = 'PAUSADO', // Se pausó por falta de repuesto o algún motivo.
+  NO_REPARADO = 'NO_REPARADO', // No se pudo reparar o no vamos a repararlo por X motivo.
+  REPARADO = 'REPARADO', // Se finalizó la reparación.
+  PARA_NOTIFICAR = 'PARA_NOTIFICAR', // Se debe notificar al usuario el estado del equipo.
+  PARA_ENTREGAR = 'PARA_ENTREGAR', // Reparado y notificado, estando listo para entregar.
+  RETIRADO = 'RETIRADO', // El usuario ya tiene su dispositivo.
 }
+export enum reparacionShortMessage {
+  PENDIENTE = 'Pendiente',
+  EN_REVISION = 'En revision',
+  CANCELADO_POR_EL_USUARIO = 'Cancelado por el usuario',
+  EN_PROCESO = 'En proceso',
+  ESPERADO_RESPUESTA = 'Esperado respuesta',
+  PAUSADO = 'Pausado',
+  NO_REPARADO = 'No reparado',
+  REPARADO = 'Reparado',
+  PARA_NOTIFICAR = 'Para notificar',
+  PARA_ENTREGAR = 'Para entregar',
+  RETIRADO = 'Retirado',
+}
+
 export enum reparacionMessage {
-  pendiente = 'Pendiente',
-  en_proceso = 'En proceso',
-  cancelado_por_el_usuario = 'Cancelaste la reparacion',
-  reparado = 'Terminada',
-  sin_reparar = 'No se pudo reparar',
-  diagnosticado = 'Diagnostico listo'
+  PENDIENTE = 'Los técnicos aún no han revisado este equipo',
+  EN_REVISION = 'Los técnicos están revisando este equipo',
+  CANCELADO_POR_EL_USUARIO = 'Reparación cancelada por el cliente',
+  EN_PROCESO = 'El equipo está en proceso de reparación',
+  ESPERADO_RESPUESTA = 'Los técnicos están esperando respuesta del cliente',
+  PAUSADO = 'Se tuvo que pausar la reparación',
+  NO_REPARADO = 'El equipo no se pudo reparar',
+  REPARADO = 'El equipo ya está reparado',
+  PARA_NOTIFICAR = 'Reparación lista para notificar al cliente',
+  PARA_ENTREGAR = 'Reparación lista para entregar al cliente',
+  RETIRADO = 'Reparación retirada por el cliente'
 }
 export enum reparacionBgColor {
-  en_proceso = 'blue',
-  pendiente = 'lightskyblue',
-  reparado = 'green',
-  cancelado_por_el_usuario = 'red',
-  sin_reparar = 'red',
-  diagnosticado = 'orange'
+  PENDIENTE = "#FFAA57",
+  EN_REVISION = "#17A2B8",
+  CANCELADO_POR_EL_USUARIO = "#6C757D",
+  EN_PROCESO = "#28A745",
+  ESPERADO_RESPUESTA = "#BA55D3",
+  PAUSADO = "#6C757D",
+  NO_REPARADO = "#DC3545",
+  REPARADO = "#228B22",
+  PARA_NOTIFICAR = "#FF69B4",
+  PARA_ENTREGAR = "#007BFF",
+  RETIRADO = "#343A40",
 }
 export enum reparacionIconName {
-  pendiente = 'stopwatch-outline',
-  en_proceso = 'construct-outline',
-  cancelado_por_el_usuario = 'close-circle-outline',
-  reparado = 'checkmark-done-circle-outline',
-  sin_reparar = 'thumbs-down-outline',
-  diagnosticado = 'alert-circle-outline'
+  PENDIENTE = 'hourglass',
+  EN_REVISION = 'search',
+  CANCELADO_POR_EL_USUARIO = 'close',
+  EN_PROCESO = 'construct',
+  ESPERADO_RESPUESTA = 'chatbubbles',
+  PAUSADO = 'pause',
+  NO_REPARADO = 'warning',
+  REPARADO = 'checkmark',
+  PARA_NOTIFICAR = 'notifications',
+  PARA_ENTREGAR = 'cube',
+  RETIRADO = 'exit',
 }
+
 export enum roles {
   ADMIN = 'admin',
   CLIENTE = 'cliente',
@@ -92,7 +140,7 @@ export class InfoCompartidaService {
   calidadesFlexDeCarga = ['AAA', 'Estandar', 'Original'];
 
   constructor(private database: DataBaseService) {
-   
+
   }
 
 }

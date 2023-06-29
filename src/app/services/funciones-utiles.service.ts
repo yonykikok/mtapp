@@ -158,7 +158,6 @@ export class FuncionesUtilesService {
         mes.dias.push(diaMalUbicado);
 
       });
-      console.log("reubicado",mes)
       this.database.actualizar(environment.TABLAS.ingresosBrutos, mes, mes.id);// queda borrar a mano los duplicados
       suscript.unsubscribe();
     });
@@ -177,7 +176,6 @@ export class FuncionesUtilesService {
    */
   reajustar() {
     let subs = this.database.obtenerTodos(environment.TABLAS.ingresosBrutos).subscribe(ListDocRef => {
-      console.log(ListDocRef);
       let meses = ListDocRef.map(docRef => {
         let mes = docRef.payload.doc.data();
         mes['id'] = docRef.payload.doc.id;
@@ -197,7 +195,6 @@ export class FuncionesUtilesService {
 
           libroDiarioHoy.ventas.forEach((venta) => {
             if (!venta.medioDePago) {
-              console.log("No tiene medio de pago")
               venta.medioDePago = MediosDePago.Efectivo;
             }
             if (venta.precio > 0) {
@@ -219,26 +216,21 @@ export class FuncionesUtilesService {
           libroDiarioHoy.montoTotalMercadoPago = acumuladorMercadoPago;
 
         });
-        console.log(mes);
         // this.database.actualizar(environment.TABLAS.ingresosBrutos, mes, mes.id);
       });
       subs.unsubscribe();
-      console.log(meses)
     });
   }
 
   eliminarDiasSinIngresos() {
     let subs = this.database.obtenerTodos(environment.TABLAS.ingresosBrutos).subscribe(ListDocRef => {
-      // console.log(ListDocRef);
       let meses = ListDocRef.map(docRef => {
         let mes = docRef.payload.doc.data();
         mes['id'] = docRef.payload.doc.id;
         return mes;
       });
-      console.log(new Array(meses));
       meses.forEach((mes: any) => {
         mes.dias = mes.dias.filter(libroDiarioHoy => (libroDiarioHoy.ventas && libroDiarioHoy.ventas.length > 0));
-        console.log(mes);
         // this.database.actualizar(environment.TABLAS.ingresosBrutos, mes, mes.id);
       });
       subs.unsubscribe();
@@ -251,7 +243,6 @@ export class FuncionesUtilesService {
   hacerBackUp() {
 
     let subs = this.database.obtenerTodos(environment.TABLAS.ingresosBrutos).subscribe(ListDocRef => {
-      // console.log(ListDocRef);
       let meses = ListDocRef.map(docRef => {
         let mes = docRef.payload.doc.data();
         mes['id'] = docRef.payload.doc.id;

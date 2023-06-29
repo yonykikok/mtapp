@@ -9,6 +9,7 @@ import { boleta_estados } from 'src/app/services/info-compartida.service';
 import { SpinnerService } from 'src/app/services/spinner.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { ModalController } from '@ionic/angular';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 firebase.initializeApp(environment.firebaseConfig);
 
 
@@ -18,11 +19,17 @@ firebase.initializeApp(environment.firebaseConfig);
   styleUrls: ['./form-alta-reparacion.component.scss'],
 })
 export class FormAltaReparacionComponent implements OnInit {
+  ruta;
   storageRef = firebase.app().storage().ref();
   imgVistaPrevia;
-  photo;
-  dni: number;
-  nro_boleta: number;
+
+
+  formAltaReparacion = new FormGroup({
+    dniCliente: new FormControl('', [Validators.required]),
+    nroBoleta: new FormControl('', [Validators.required]),
+    telefono: new FormControl('', [Validators.required]),
+  })
+
   constructor(private alertService: AlertService,
     private database: DataBaseService,
     private spinnerService: SpinnerService,
@@ -42,37 +49,45 @@ export class FormAltaReparacionComponent implements OnInit {
 
       this.imgVistaPrevia = 'data:image/jpeg;base64,' + capturedPhoto.base64String;
     } catch {
-      console.log("error al capturar la imagen.")
+      console.error("error al capturar la imagen.")
     }
   };
 
 
   mostrarConfirmacion() {
+    let { dniCliente, nroBoleta, telefono } = this.formAltaReparacion.value;
+    let hoy = new Date(Date.now());
+
+    const months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+    let month = months[hoy.getMonth()];
+    let year = hoy.getFullYear();
+
     this.alertService.alertConfirmacion(
       'Confirma los datos',
-      `
-      Boleta:<b> ${this.nro_boleta}</b><br> 
-      DNI: <b>${this.dni}</b> <br><br>
+      `Boleta:<b> ${nroBoleta}</b><br> 
+      DNI: <b>${dniCliente}</b> <br>  
+      Telefono: <b>${telefono}</b> <br><br>
       ${this.imgVistaPrevia ? `<ion-img src=${this.imgVistaPrevia} alt="Boleta">` : ''}</ion-img>`,
       'Confirmar',
       () => {
         this.spinnerService.showLoading("Generando la boleta digital...")
 
         this.storageRef.child("boletas/" + 'FotoName').putString(this.imgVistaPrevia, 'data_url').then(async (respuesta) => {
-          this.photo = await respuesta.ref.getDownloadURL();
+          let photo = await respuesta.ref.getDownloadURL();
           let boleta = {
-            imgUrl: this.photo,
-            dni: this.dni,
-            nro_boleta: this.nro_boleta,
-            fecha: new Date().getTime(),
-            estado: boleta_estados.pendiente
+            completa: false,
+            images: [photo],
+            dniCliente:dniCliente.toString(),
+            nroBoleta:nroBoleta.toString(),
+            fechaAlta: new Date().getTime(),
+            estado: boleta_estados.PENDIENTE,
+            telefono:telefono.toString(),
+            fechaId: `${month}${year}`
           }
-
-
-          this.database.crear('boletas', boleta).then(res => {
+          this.database.crear(environment.TABLAS.boletasReparacion, boleta).then(res => {
             this.toastService.simpleMessage("Exito!", "Se genero la boleta correctamente", ToastColor.success);
-          this.spinnerService.stopLoading();
-          this.modalController.dismiss();
+            this.spinnerService.stopLoading();
+            this.modalController.dismiss();
           });
 
         }).catch(err => {

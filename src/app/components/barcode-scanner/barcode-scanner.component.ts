@@ -29,7 +29,7 @@ export class BarcodeScannerComponent implements OnInit {
       // this.scannerResultEvent.emit(barcodeData);
       this.modalRef.dismiss(barcodeData);
     }).catch(err => {
-      console.log('Error', err);
+      console.error('Error', err);
     });
 
   }

@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { LibroDiario } from 'src/app/clases/libro-diario';
 import { User } from 'src/app/clases/user';
+import { FormActualizarItemLibroDiarioComponent } from 'src/app/components/forms/form-actualizar-item-libro-diario/form-actualizar-item-libro-diario.component';
 import { FormDetalleVentaComponent, MediosDePago } from 'src/app/components/forms/form-detalle-venta/form-detalle-venta.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
+import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -43,6 +45,7 @@ export class LibroDiarioPage implements OnInit {
     // private dialog: MatDialog,
     // private confirmDialog: ConfirmDialogService
     private modalController: ModalController,
+    private toastService:ToastService,
     private alertService: AlertService
   ) {
     this.getCurrentUser();
@@ -208,5 +211,35 @@ export class LibroDiarioPage implements OnInit {
     return acumuladorNegativo;
   }
 
+  async mostrarModalEditarVenta(venta) {
+    try {
+      const modal = await this.modalController.create({
+        component: FormActualizarItemLibroDiarioComponent,
+        componentProps: {
+          item: venta
+        },
+      })
 
+      modal.onDidDismiss().then((result: any) => {
+        if (!result.data || !result.role) return;
+
+
+        if (result.role == 'confirmarActualizacion') {
+
+          this.libroDiarioHoy.montoTotalEfectivo = this.obtenerMontoTotalPorMedioDePago(this.libroDiarioHoy, MediosDePago.Efectivo);//total en efectivo
+          this.libroDiarioHoy.montoTotalTransferencia = this.obtenerMontoTotalPorMedioDePago(this.libroDiarioHoy, MediosDePago.Transferencia);//total en efectivo
+          this.libroDiarioHoy.montoTotalMercadoPago = this.obtenerMontoTotalPorMedioDePago(this.libroDiarioHoy, MediosDePago.MercadoPago);//total en efectivo
+          this.libroDiarioHoy.montoTotalNegativo = this.obtenerMontoTotalPorNegativo(this.libroDiarioHoy);//total negativo
+
+          this.database.actualizar(environment.TABLAS.ingresosBrutos, this.esteMes, this.esteMes.id).then(res=>{
+            this.toastService.simpleMessage('Exito','Se modifico la venta',ToastColor.success);
+          });
+        }
+
+      })
+      return await modal.present();
+    } catch (err) {
+    }
+
+  }
 }

@@ -73,6 +73,7 @@ export class AuthService {
       return userRef.set(data, { merge: true });
     });
   }
+  
   getCurrentUser() {
     return this.afAuth.authState;
   }

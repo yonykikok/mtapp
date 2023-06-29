@@ -117,7 +117,6 @@ export class DetalleStockModuloComponent implements OnInit {
   actualizarModelo() {
 
     this.database.actualizar(environment.TABLAS.stockModulos, { ...this.repuesto }, this.repuesto.id).then(res => {
-      console.log(res)
       this.modalController.dismiss();
     })
   }

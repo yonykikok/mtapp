@@ -39,7 +39,7 @@ export const environment = {
   ESTADO_BOLETAS: {
     pendiente:'pendiente',
     cancelado:'cancelado',
-    en_recision:'en_recision',
+    en_revision:'en_revision',
     en_reparacion:'en_reparacion',
     reparado:'reparado',
     no_reparado:'no_reparado',

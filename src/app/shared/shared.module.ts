@@ -13,6 +13,7 @@ import { PrecioDolarComponent } from '../components/precio-dolar/precio-dolar.co
 import { ColoresPipe } from '../pipes/colores.pipe';
 import { UploadImagesComponent } from '../components/upload-images/upload-images.component';
 import { MaxLengthPipe } from '../pipes/max-length.pipe';
+import { FormAltaReparacionComponent } from '../components/forms/form-alta-reparacion/form-alta-reparacion.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,9 @@ import { MaxLengthPipe } from '../pipes/max-length.pipe';
     PrecioDolarComponent,
     ColoresPipe,
     UploadImagesComponent,
-    MaxLengthPipe
+    MaxLengthPipe,
+    FormAltaReparacionComponent
+
   ],
   imports: [
     CommonModule,
@@ -48,6 +51,8 @@ import { MaxLengthPipe } from '../pipes/max-length.pipe';
     UploadImagesComponent,
     MaxLengthPipe,
     ColoresPipe,
+    FormAltaReparacionComponent
+
   ]
 })
 export class SharedModule {

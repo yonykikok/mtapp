@@ -52,6 +52,10 @@ ion-toolbar {
     --background: var(--main-bg-color);
     color: var(--main-light-color);
 }
+.flexColumn{
+    display: flex;
+    flex-direction: column;
+}
 .flexCenterCenter {
     display: flex;
     justify-content: center;

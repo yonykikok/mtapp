@@ -24,7 +24,8 @@ export class DashboardPage implements OnInit {
     { titulo: 'Libro diario', color: '#dc70fd', ruta: "/libro-diario", role: 'ADMIN' },
     { titulo: 'Historial', color: 'rgb(113 112 253)', ruta: "/historial-caja", role: 'ADMIN' },
     { titulo: 'Stock Modulos', color: 'black', ruta: "/stock-modulos", role: 'ADMIN' },
-    // { titulo: 'Mis reparaciones', color: '#d34fb2', ruta: "/mis-reparaciones", role: 'CLIENTE' },
+    { titulo: 'Boletas', color: 'rgb(149 157 126)', ruta: "/boletas", role: 'ADMIN' },
+    { titulo: 'Mis reparaciones', color: '#d34fb2', ruta: "/mis-reparaciones", role: 'CLIENTE' },
     { titulo: 'Proveedores', color: 'rgb(149 57 126)', ruta: "/proveedores", role: 'OWNER' },
   ]
   constructor(private modalController: ModalController,
@@ -57,6 +58,9 @@ export class DashboardPage implements OnInit {
   async mostrarModalFormAltaReparacion() {
     let modal = await this.modalController.create({
       component: FormAltaReparacionComponent,
+      componentProps: {
+        ruta:'dashboard'
+      },
       mode: 'ios',
     });
     modal.present();

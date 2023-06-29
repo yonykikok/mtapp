@@ -1,5 +1,5 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Crear boleta'"></app-clasic-toolbar>
+  <app-clasic-toolbar [ruta]="ruta" [title]="'Crear boleta'"></app-clasic-toolbar>
 </ion-header>
 
 <ion-content>
@@ -23,26 +23,27 @@
         </div>
       </div>
 
-      <ion-item class="ion-activated" fill="outline">
-        <ion-icon name="card-outline" class="ion-margin-end"></ion-icon>
-        <ion-input type="number" placeholder="DNI cliente" [(ngModel)]="dni"></ion-input>
-      </ion-item>
+      <form [formGroup]="formAltaReparacion" (ngSubmit)="mostrarConfirmacion()">
+        <ion-item class="ion-activated" fill="outline">
+          <ion-icon name="card-outline" class="ion-margin-end"></ion-icon>
+          <ion-input type="number" placeholder="DNI cliente" formControlName="dniCliente"></ion-input>
+        </ion-item>
 
-      <ion-item class="ion-activated" fill="outline">
-        <ion-icon name="document-outline" class="ion-margin-end"></ion-icon>
-        <ion-input type="number" placeholder="Numero de boleta" [(ngModel)]="nro_boleta"></ion-input>
-      </ion-item>
+        <ion-item class="ion-activated" fill="outline">
+          <ion-icon name="document-outline" class="ion-margin-end"></ion-icon>
+          <ion-input type="number" placeholder="Numero de boleta" formControlName="nroBoleta"></ion-input>
+        </ion-item>
 
-      <ion-item class="ion-activated" fill="outline">
-        <ion-icon name="logo-whatsapp" class="ion-margin-end"> </ion-icon>
-        <ion-input type="number" placeholder="Telefono del cliente" [(ngModel)]="telefono_cliente"></ion-input>
-      </ion-item>
+        <ion-item class="ion-activated" fill="outline">
+          <ion-icon name="logo-whatsapp" class="ion-margin-end"> </ion-icon>
+          <ion-input type="number" placeholder="Telefono del cliente" formControlName="telefono"></ion-input>
+        </ion-item>
 
-      <ion-button expand="block" class="ion-margin-top" (click)="mostrarConfirmacion()"
-        [disabled]="!imgVistaPrevia|| !dni || !nro_boleta">
-        Generar reparacion
-      </ion-button>
-
+        <ion-button expand="block" class="ion-margin-top" type="submit"
+          [disabled]="!formAltaReparacion.valid|| !imgVistaPrevia">
+          Generar reparacion
+        </ion-button>
+      </form>
 
     </ion-card-content>
 

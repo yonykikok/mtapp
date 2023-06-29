@@ -1,0 +1,44 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Boletas'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content *ngIf="loggedUser">
+
+  <ion-searchbar show-clear-button="focus" placeholder="3885 o 40141516" (ionInput)="applyFilter($event)"></ion-searchbar>
+
+  <ion-chip style="width: 80%; left: 10%;" color="secondary" outline="true" class="ion-text-center"
+    *ngIf="sinCoincidencias">No se encontraron boletas con ese numero.</ion-chip>
+  <div *ngIf="loggedUser && boletas">
+
+
+    <ion-grid class="ion-text-center">
+      <ion-row>
+        <ion-col><b>Numero de boleta</b></ion-col>
+        <ion-col><b>Dni cliente</b></ion-col>
+
+      </ion-row>
+      <ion-row
+        (click)="(loggedUser && funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser))?seleccionar(boleta):null"
+        *ngFor="let boleta of boletas">
+        <ion-col>{{boleta.nroBoleta}}</ion-col>
+        <ion-col>{{boleta.dniCliente}}</ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </div>
+
+
+  <ion-fab *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)" vertical="bottom" horizontal="end"
+    slot="fixed" (click)="openDialog()">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>
+
+<ng-template #mostrarSpinner>
+  <ion-content>
+    <ion-title>Cargando...</ion-title>
+  </ion-content>
+</ng-template>

@@ -176,7 +176,6 @@ export class ProveedoresPage implements OnInit {
     });
 
     this.productosAMostrar = productos;
-    console.log(productos)
 
 
   }

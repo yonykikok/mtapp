@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from "@angular/fire/compat/firestore";
 import { boleta_estados } from 'src/app/services/info-compartida.service';
+import { environment } from 'src/environments/environment';
+import { OrderByDireccions } from '../pages/boletas/boletas.page';
 
 
 @Injectable({
@@ -34,7 +36,7 @@ export class DataBaseService {
     try {
       return this.firestore.collection(coleccion).doc(id).set(data);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
@@ -43,22 +45,21 @@ export class DataBaseService {
   }
 
   async getBoletasPorDni(dni) {
-    let collectionRef = this.firestore.collection('boletas').ref;
+    let collectionRef = this.firestore.collection(environment.TABLAS.boletasReparacion).ref;
     try {
 
-      const respuesta = await collectionRef.where('dni', '==', dni).get();
-
+      const respuesta = await collectionRef.where('dniCliente', '==', dni.toString()).get();
       if (respuesta.empty) return;
 
       return respuesta.docs;
 
     } catch (err) {
-      //console.log(err);
+      //console.error(err);
     }
   }
 
   async getPedidosConseguidos() {
-    let collectionRef = this.firestore.collection('pedidos').ref;
+    let collectionRef = this.firestore.collection(environment.TABLAS.pedidos).ref;
     try {
       const respuesta = await collectionRef.where('conseguido', '==', true).get();
 
@@ -67,7 +68,7 @@ export class DataBaseService {
       return respuesta.docs;
 
     } catch (err) {
-      //console.log(err);
+      //console.error(err);
     }
   }
 
@@ -81,49 +82,131 @@ export class DataBaseService {
       return respuesta.docs;
 
     } catch (err) {
-      //console.log(err);
+      //console.error(err);
     }
   }
 
-
-
-  async paginatorNext(collection: string, interval: number, lastDoc) {
+  async paginatorNext(collection: string, interval: number, lastDoc, orderByAtributo: string, orderByDirection: OrderByDireccions) {
     let collectionRef = this.firestore.collection(collection).ref;
     try {
-      //console.log("sin errors")
       const respuesta = await collectionRef.
-        orderBy('title', 'asc').
+        orderBy(orderByAtributo, orderByDirection).
         limit(interval).
         startAfter(lastDoc).
         get();
 
-      if (respuesta.empty) return;
-
-
+      if (respuesta.empty) return null;
       return respuesta.docs;
 
     } catch (err) {
-      //console.log(err);
+      // this.snackBar.open(`Error, al traer la informacion de ${collection} `, 'Cerrar', { duration: 5000, panelClass: ['dangerSnackBar'] });
+      return null;
     }
   }
-
-
-  async paginatorPrevious(collection: string, interval: number, firstDoc) {
+  async paginatorPrevious(collection: string, interval: number, firstDoc, orderByAtributo: string, orderByDirection: OrderByDireccions) {
     let collectionRef = this.firestore.collection(collection).ref;
     try {
       const respuesta = await collectionRef.
-        orderBy('title', 'desc').
+        orderBy(orderByAtributo, orderByDirection).//este debe ser opuesto al paginatorNext y paginatorStart
         limit(interval).
         startAfter(firstDoc).
         get();
 
-      if (respuesta.empty) return;
-      //console.log(respuesta.docs)
+      if (respuesta.empty) return null;
       return respuesta.docs.reverse();
 
     } catch (err) {
-      //console.log(err);
+      // this.snackBar.open(`Error, al traer la informacion de ${collection} `, 'Cerrar', { duration: 5000, panelClass: ['dangerSnackBar'] });
+      return null;
     }
   }
+
+  // async paginatorNext(collection: string, interval: number, lastDoc) {
+  //   let collectionRef = this.firestore.collection(collection).ref;
+  //   try {
+  //     const respuesta = await collectionRef.
+  //       orderBy('title', 'asc').
+  //       limit(interval).
+  //       startAfter(lastDoc).
+  //       get();
+
+  //     if (respuesta.empty) return;
+
+
+  //     return respuesta.docs;
+
+  //   } catch (err) {
+  //     //console.error(err);
+  //   }
+  // }
+
+
+  // async paginatorPrevious(collection: string, interval: number, firstDoc) {
+  //   let collectionRef = this.firestore.collection(collection).ref;
+  //   try {
+  //     const respuesta = await collectionRef.
+  //       orderBy('title', 'desc').
+  //       limit(interval).
+  //       startAfter(firstDoc).
+  //       get();
+
+  //     if (respuesta.empty) return;
+  //     return respuesta.docs.reverse();
+
+  //   } catch (err) {
+  //     //console.error(err);
+  //   }
+  // }
+
+
+  
+  async getBoletasPorIntervaloDeFecha(fechaInicio, fechaFin) {
+    let collectionRef = this.firestore.collection(environment.TABLAS.boletasReparacion).ref;
+    try {
+      const respuesta = await collectionRef
+        .where('fechaAlta', '>', fechaInicio)
+        .where('fechaAlta', '<', fechaFin)
+        .get();
+
+      if (respuesta.empty) return null;
+
+      return respuesta.docs;
+
+    } catch (err) {
+      // this.snackBar.open('Error, al traer los pedidos faltantes', 'Cerrar', { duration: 5000, panelClass: ['dangerSnackBar'] });
+      return null;
+    }
+  }
+
+
+  async obtenerBoletaPorNroBoleta(coleccion, nroBoleta) {
+    let collectionRef = this.firestore.collection(coleccion).ref;
+    try {
+      const respuesta = await collectionRef.where('nroBoleta', '==', nroBoleta).get();
+
+      if (respuesta.empty) return null;
+
+      return respuesta.docs;
+
+    } catch (err) {
+      // this.snackBar.open(`Error, al traer las boletas con numero ${nroBoleta} `, 'Cerrar', { duration: 5000, panelClass: ['dangerSnackBar'] });
+      return null;
+    }
+  }
+  async obtenerBoletaPorDni(coleccion, dniCliente) {
+    let collectionRef = this.firestore.collection(coleccion).ref;
+    try {
+      const respuesta = await collectionRef.where('dniCliente', '==', dniCliente).get();
+
+      if (respuesta.empty) return null;
+
+      return respuesta.docs;
+
+    } catch (err) {
+      // this.snackBar.open(`Error, al traer las boletas con DNI ${dniCliente} `, 'Cerrar', { duration: 5000, panelClass: ['dangerSnackBar'] });
+      return null;
+    }
+  }
+
 
 }

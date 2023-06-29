@@ -1,11 +1,11 @@
-<ion-item-sliding *ngIf="reparacion" (click)="mostrarDet= !mostrarDet" (click)="mostrarDetalle()">
+<ion-item-sliding *ngIf="reparacion"  (click)="mostrarDetalle()">
   <ion-item>
     <ion-icon [name]="slidingConfig.iconName" [appEstadoReparacionColor]="reparacion.estado"></ion-icon>
     <ion-label class="itemSlidding" [appEstadoReparacionBgcolor]="reparacion.estado">
       {{slidingConfig.stateMessage}}
       <small class="smallFecha" style="position: absolute; right: 1.5rem; top: 1rem;">{{reparacion.fecha|date}} </small>
       <small class="smallBoleta"
-        style="position: absolute; right: 1.5rem; bottom: 1rem;">({{reparacion.nro_boleta}})</small>
+        style="position: absolute; right: 1.5rem; bottom: 1rem;">({{reparacion.nroBoleta}})</small>
     </ion-label>
   </ion-item>
   <ion-item-options>

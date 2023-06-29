@@ -1,22 +1,23 @@
 <ion-header>
-    <app-clasic-toolbar [ruta]="'/home'"  [title]="'Mi cuenta'"></app-clasic-toolbar>
+    <app-clasic-toolbar [ruta]="'/home'" [title]="'Mi cuenta'"></app-clasic-toolbar>
 </ion-header>
 
-<ion-content *ngIf="user">
+<ion-content *ngIf="loggedUser">
     <ion-item class="">
-        <!-- <ion-icon style="font-size: 500%;" name="person-circle-outline" class="ion-padding-top ion-padding-bottom">
-        </ion-icon> -->
-        <img class="profileImg" style="border-radius: 100%;"
-            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png" />
+        <img referrerpolicy="no-referrer" class=" profileImg" style="border-radius: 100%;" [src]="loggedUser.photoURL
+            ?loggedUser.photoURL
+            :'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png'" />
+
         <ion-label class="ion-padding-start ion-padding-bottom">
-            <ion-text class="bold">{{(user.apellido && user.nombre)
-                ?user.apellido+" "+user.nombre
+            <ion-text class="bold">{{
+                loggedUser.displayName
+                ?loggedUser.displayName
                 :'Mi nombre'}}</ion-text>
-            <p>Mi rol</p>
+            <p>{{loggedUser.role}}</p>
             <ion-chip class="ion-no-margin" style="height: 25px;" color="success" outline
                 (click)="mostrarScannerComponent()">
                 <ion-icon name="create-outline"></ion-icon>
-                <ion-label>{{user.activo?'Cambiar información':'Completar información'}}</ion-label>
+                <ion-label>{{loggedUser.activo?'Cambiar información':'Completar información'}}</ion-label>
             </ion-chip>
         </ion-label>
     </ion-item>
@@ -26,13 +27,13 @@
 
             <p class="bold" style="color: gray;">
                 <ion-icon name="person-circle-outline" slot="start" color="grey"></ion-icon> DNI
-                <ion-text class="displayBlock ion-padding-start">{{user.dni?user.dni:'00000000'}}</ion-text>
+                <ion-text class="displayBlock ion-padding-start">{{loggedUser.dni?loggedUser.dni:'--'}}</ion-text>
             </p>
 
             <p class="bold" style="color: gray;">
                 <ion-icon name="time-outline" slot="start"></ion-icon> Fecha de Nacimiento
                 <ion-text class="displayBlock ion-padding-start">
-                    {{user.fecha?user.fecha:'00-00-0000'}}
+                    {{loggedUser.fecha?loggedUser.fecha:'--'}}
                 </ion-text>
             </p>
 
@@ -45,14 +46,15 @@
 
             <p class="bold" style="color: gray;">
                 <ion-icon name="person-circle-outline" slot="start" color="grey"></ion-icon> Email
-                <ion-text class="displayBlock ion-padding-start">{{user.correo?user.correo:'micorreo@gmail.com'}}
+                <ion-text
+                    class="displayBlock ion-padding-start">{{loggedUser.email?loggedUser.email:'--'}}
                 </ion-text>
             </p>
 
             <p class="bold" style="color: gray;">
                 <ion-icon name="time-outline" slot="start"></ion-icon> Celular
                 <ion-text class="displayBlock ion-padding-start">
-                    {{user.telefono?user.telefono:'1100000000'}}
+                    {{loggedUser.telefono?loggedUser.telefono:'--'}}
                 </ion-text>
             </p>
 
@@ -62,7 +64,8 @@
 
     <ion-item class="ion-padding-top ion-padding-bottom" lines="none">
 
-        <ion-chip class="cambiarClave" color="success" outline *ngIf="user.activo && user.password; else genPassword">
+        <ion-chip class="cambiarClave" color="success" outline
+            *ngIf="loggedUser.activo && loggedUser.password; else genPassword">
             <ion-icon name="key-outline"></ion-icon>
             <ion-label>Cambiar clave</ion-label>
         </ion-chip>
@@ -78,7 +81,7 @@
 
 </ion-content>
 
-<!-- <ion-content *ngIf="user ">
+<!-- <ion-content *ngIf="loggedUser ">
     <ion-item>
         <ion-thumbnail slot="start">
             <ion-skeleton-text></ion-skeleton-text>

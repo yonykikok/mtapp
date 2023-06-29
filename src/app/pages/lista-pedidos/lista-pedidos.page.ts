@@ -2478,7 +2478,6 @@ export class ListaPedidosPage implements OnInit {
 
   }
   filtrarPorTexto(texto) {
-    console.log(this.pedidosAMostrar)
     const query = !texto ? "" : texto.toLowerCase();
     this.pedidosAMostrar = this.pedidos[this.listaSeleccionada].filter((d) => d.modelo.toLowerCase().indexOf(query) > -1 || d.tipo.toLowerCase().indexOf(query) > -1);
     this.pedidosAMostrar?.sort(this.compare.bind(this))
@@ -2503,7 +2502,6 @@ export class ListaPedidosPage implements OnInit {
       })
 
       modal.onDidDismiss().then((result: any) => {
-        console.log(result)
         if (!result.data || !result.role) return;
       });
       return await modal.present();

@@ -36,7 +36,7 @@ export class StorageService {
       let respuesta = await this.storageRef.child(ruta).putString(imgBase64, 'data_url');
       return await respuesta.ref.getDownloadURL();
     } catch (err) {
-      console.log(err)
+      console.error(err)
       this.toastService.simpleMessage('Error', 'al subir la imagen a firebase  ocurrio un error', ToastColor.danger);
       return null;
     }

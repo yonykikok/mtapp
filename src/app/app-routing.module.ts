@@ -97,7 +97,11 @@ const routes: Routes = [
   {
     path: 'stock-modulos',
     loadChildren: () => import('./pages/stock-modulos/stock-modulos.module').then( m => m.StockModulosPageModule)
+  },  {
+    path: 'boletas',
+    loadChildren: () => import('./pages/boletas/boletas.module').then( m => m.BoletasPageModule)
   },
+
 
  
 

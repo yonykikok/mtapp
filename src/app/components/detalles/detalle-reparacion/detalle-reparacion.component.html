@@ -1,5 +1,5 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/mis-reparaciones'" [title]="'Detalle reparacion'"></app-clasic-toolbar>
+  <app-clasic-toolbar [ruta]="ruta" [title]="'Detalle reparacion'"></app-clasic-toolbar>
 </ion-header>
 <ion-content>
 
@@ -7,27 +7,78 @@
 
     <ion-card-header [appEstadoReparacionBgcolor]="reparacion.estado">
       <ion-card-title class="ion-text-center">
-        <label style="display: block; display: flex; align-items: center; justify-content: center; color: white;">
-          <ion-icon slot="start" [name]="getIconName()" style="font-size: 2rem;  margin-right: 0.5rem;">
-          </ion-icon>
-          {{reparacion.estado| estadoReparacion:'short'}}
+        <label *ngIf="!modoEditar || reparacion.estado=='RETIRADO';else mostrarSelect"
+          style="display: block; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem;">
+          <ion-icon [name]="getIconName()" style=" margin-right: 0.5rem;"> </ion-icon>
+          {{ reparacion.estado | estadoReparacion:'short' }}
+          <ion-icon class="ion-margin-start" name="create-outline" (click)="modoEditar=true"
+            *ngIf="reparacion.estado!='RETIRADO' &&  reparacion.estado!='retirado' && ruta=='boletas'"></ion-icon>
         </label>
+
+        <ng-template #mostrarSelect>
+          <ion-item fill="outline" mode="md">
+            <ion-label position="floating">Estado de la reparación</ion-label>
+            <ion-select placeholder="Seleccione el estado" [(ngModel)]="estadoSeleccionado"
+              (ionChange)="cambiarEstado()">
+              <ion-select-option *ngFor="let estado of estadosPosibles"
+                [value]="estado.variable">{{estado.mensaje}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ng-template>
       </ion-card-title>
     </ion-card-header>
-    <ion-card-content class="ion-text-center">
-      <ion-chip class="ion-margin"> Boleta: ({{reparacion.nro_boleta}})</ion-chip>
-      <ion-chip [appEstadoReparacionColor]="reparacion.estado" [appEstadoReparacionBorderColor]="reparacion.estado"
-        style="width: 100%; display: flex; justify-content: center;"
-        class="ion-no-margin ion-text-center ion-margin-bottom" outline>
-        {{reparacion.estado | estadoReparacion}}</ion-chip>
 
-      <ion-button color="primary" mode="ios" class="ion-padding"
+
+    <ion-card-content class="ion-text-center ion-no-padding">
+      <ion-chip class="ion-margin"> Boleta: ({{reparacion.nroBoleta}})</ion-chip>
+
+      <ion-img class="ion-margin" *ngIf="mostrarImgBoleta" [src]="reparacion.images[0]"></ion-img>
+      <ion-button color="primary" mode="ios" class="ion-margin" expand="block"
         (click)="mostrarImgBoleta? mostrarImgBoleta=false:mostrarImgBoleta=true">
         <ion-icon slot="start" name="image-outline"></ion-icon>
         {{mostrarImgBoleta?'Ocultar imagen de boleta':'Ver boleta'}}
       </ion-button>
 
-      <ion-img class="ion-margin" *ngIf="mostrarImgBoleta" [src]="reparacion.imgUrl"></ion-img>
+      <ion-chip [appEstadoReparacionColor]="reparacion.estado" [appEstadoReparacionBorderColor]="reparacion.estado"
+        style="display: flex; justify-content: center;" class="ion-margin ion-text-center" outline>
+        {{reparacion.estado | estadoReparacion}}</ion-chip>
+
+      <label class="flexColumn flexCenterCenter ion-margin ion-text-center ">Ver historial
+        <ion-toggle [(ngModel)]="mostrarHistorial"></ion-toggle>
+      </label>
+
+
+      <ion-accordion-group [multiple]="true" *ngIf="mostrarHistorial">
+        <ion-accordion [value]="estado.fecha" [appEstadoReparacionBgcolor]="estado.estadoActual"
+          *ngFor="let estado of reparacion.historial">
+          <ion-item slot="header" color="light">
+            <ion-label>{{obtenerMensajeDelEstado(estado.estadoActual)}}</ion-label>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <small style="position: absolute; right: 1rem; top: 3rem;">{{estado.fecha|date:'dd/MM/yyyy hh:mm:ss'
+              }}</small>
+            <ion-chip class="flexCenterCenter" style="background-color: white;">
+              <label style="text-decoration: line-through; color: #ee8d8d; margin-right: 0.5rem;">
+                {{obtenerMensajeDelEstado(estado.estadoAnterior)}}
+              </label>
+              <ion-icon name="arrow-forward-outline"></ion-icon>
+              <b style="color: #8383eb; margin-left: 0.5rem;">
+                {{obtenerMensajeDelEstado(estado.estadoActual)}}
+              </b>
+            </ion-chip>
+            <p class="flexColumn flexCenterCenter " style="margin: 0.7rem;">
+              <b>Cambio realizado por </b>
+              <label> {{estado.modificadoPor.displayName}} </label>
+            </p>
+            <ion-chip style="background-color: white;" outline="true" color="tertiary"
+              class="flexColumn flexCenterCenter">
+              <b>Detalle <ion-icon style="position: absolute; right: 1rem; font-size: 1.2rem;" class="ion-margin-start"
+                  name="create-outline"></ion-icon></b>
+              <p>{{estado.detalle}}</p>
+            </ion-chip>
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
     </ion-card-content>
   </ion-card>
 </ion-content>
