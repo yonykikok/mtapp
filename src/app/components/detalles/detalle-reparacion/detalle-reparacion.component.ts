@@ -1,6 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { ActionSheetController, AlertController } from '@ionic/angular';
+import { AlertService } from 'src/app/services/alert.service';
 import { reparacionShortMessage } from 'src/app/services/info-compartida.service';
 import { boleta_estados, listaDeEstadosBoletas, reparacionIconName } from 'src/app/services/info-compartida.service';
 
@@ -18,9 +19,12 @@ export class DetalleReparacionComponent implements OnInit {
   estadosPosibles;
   estadoSeleccionado;
   loggedUser;
-  constructor(private alertController: AlertController) { }
+  constructor(private alertController: AlertController,
+    private alertService: AlertService,
+    private actionSheetController: ActionSheetController) { }
 
   ngOnInit() {
+    console.log(this.reparacion)
     this.getOpcionesEstadoDisponibles();
     this.reparacion.historial = [
       {
@@ -179,7 +183,7 @@ export class DetalleReparacionComponent implements OnInit {
               },
               detalle: data.descripcion
             }
-        
+
             this.modoEditar = false;
             this.reparacion.estado = this.estadoSeleccionado;
             if (!this.reparacion.historial) { this.reparacion.historial = [] };
@@ -196,5 +200,55 @@ export class DetalleReparacionComponent implements OnInit {
     return reparacionShortMessage[estado.toUpperCase()];
   }
 
+  solicitarConfirmacion(reparacion) {
+    console.log(reparacion)
+    this.alertService.alertConfirmacion('Confirmación', '¿Quiere enviarle un mensaje al cliente en este momento?', 'Si', this.presentActionSheet.bind(this, reparacion));
+  }
 
+  abrirWhatsApp(reparacion: any, mensaje: string) {
+    const url = `https://api.whatsapp.com/send?phone=${reparacion.telefono}&text=${encodeURIComponent(mensaje)}`;
+
+    window.open(url, '_system');
+  }
+
+  async presentActionSheet(reparacion) {
+    let mensaje = `Hola, ¿qué tal?, te escribo por el equipo de la boleta (${reparacion.nroBoleta})`; // Mensaje predeterminado para el cliente;
+    const actionSheet = await this.actionSheetController.create({
+      mode: 'ios',
+      header: 'Elija una opción',
+      buttons: [
+        {
+          text: 'Mensaje normal',
+          handler: () => {
+            this.abrirWhatsApp(reparacion, mensaje)
+          }
+        },
+        // {
+        //   text: 'Informar estado',
+        //   handler: () => {
+        //     mensaje=`Hola, ¿qué tal?, te escribo por el equipo de la boleta (${reparacion.nroBoleta}) `;
+        //     this.abrirWhatsApp(reparacion, mensaje)
+        //   }
+        // },
+        {
+          text: 'Recordatorio de retiro',
+          handler: () => {
+            mensaje=`Hola, ¿qué tal?, te escribo por el equipo de la boleta (${reparacion.nroBoleta}) dejado el dia de la fecha ---, 
+            le informamos nuevamente que el equipo esta listo para ser retirado desde la fecha ---`;
+            this.abrirWhatsApp(reparacion, mensaje)
+          }
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {
+            console.log('Acción cancelada');
+            // Lógica adicional para la acción cancelada
+          }
+        }
+      ]
+    });
+
+    await actionSheet.present();
+  }
 }

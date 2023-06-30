@@ -30,18 +30,30 @@
 
 
     <ion-card-content class="ion-text-center ion-no-padding">
+
       <ion-chip class="ion-margin"> Boleta: ({{reparacion.nroBoleta}})</ion-chip>
 
+      <ion-chip outline="true" class="flexColumn" style="justify-content: center; align-items: start;">
+        <label><b>DNI cliente:</b>{{reparacion.dniCliente}}</label>
+        <label> <b>Telefono: </b>{{reparacion.telefono?reparacion.telefono:'No tiene'}}</label>
+        <ion-icon (click)="solicitarConfirmacion(reparacion)" *ngIf="reparacion.telefono"
+          style="position: absolute; right: 1rem; font-size: 2rem;" color="success" name="logo-whatsapp"></ion-icon>
+      </ion-chip>
+
+      <ion-chip [appEstadoReparacionColor]="reparacion.estado" [appEstadoReparacionBorderColor]="reparacion.estado"
+        style="display: flex; justify-content: center;" class="ion-margin ion-text-center" outline>
+        {{reparacion.estado | estadoReparacion}}
+      </ion-chip>
+
       <ion-img class="ion-margin" *ngIf="mostrarImgBoleta" [src]="reparacion.images[0]"></ion-img>
+
       <ion-button color="primary" mode="ios" class="ion-margin" expand="block"
         (click)="mostrarImgBoleta? mostrarImgBoleta=false:mostrarImgBoleta=true">
         <ion-icon slot="start" name="image-outline"></ion-icon>
         {{mostrarImgBoleta?'Ocultar imagen de boleta':'Ver boleta'}}
       </ion-button>
 
-      <ion-chip [appEstadoReparacionColor]="reparacion.estado" [appEstadoReparacionBorderColor]="reparacion.estado"
-        style="display: flex; justify-content: center;" class="ion-margin ion-text-center" outline>
-        {{reparacion.estado | estadoReparacion}}</ion-chip>
+
 
       <label class="flexColumn flexCenterCenter ion-margin ion-text-center ">Ver historial
         <ion-toggle [(ngModel)]="mostrarHistorial"></ion-toggle>
@@ -81,4 +93,5 @@
       </ion-accordion-group>
     </ion-card-content>
   </ion-card>
+
 </ion-content>
