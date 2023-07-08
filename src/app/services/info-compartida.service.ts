@@ -83,6 +83,7 @@ export enum reparacionIconName {
 }
 
 export enum roles {
+  OWNER = 'owner',
   ADMIN = 'admin',
   CLIENTE = 'cliente',
   EMPLEADO = 'empleado',

@@ -12,6 +12,9 @@
       routerLinkActive="router-link-active" [ngStyle]="{'background-color': modulo.color}">
       <ion-text class="ion-text-center" style="color: white;"><b>{{modulo.titulo}}</b></ion-text>
     </ion-chip>
+    <ion-chip class=" flexCenterCenter" color="success" outline="true" (click)="AgregarBackUpDiario()">
+      <ion-text class="ion-text-center" ><b>Generar Backup</b></ion-text>
+    </ion-chip>
   </div>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="mostrarModalFormAltaReparacion()">
@@ -26,12 +29,16 @@
       <ion-icon name="chevron-up-outline"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="top" style="right: 0;">
-      <ion-chip outline="true"  style="min-width: 12rem; justify-content: space-between; padding: 1rem; background-color: white;">
+      <ion-chip outline="true"
+        style="min-width: 12rem; justify-content: space-between; padding: 1rem; background-color: white;"
+        (click)="abrirScanner()">
         <ion-text> Escanear producto</ion-text>
         <ion-icon name="barcode-outline"></ion-icon>
       </ion-chip>
-      
-      <ion-chip outline="true"  style="min-width: 12rem; justify-content: space-between; padding: 1rem; background-color: white;">
+
+      <ion-chip outline="true"
+        style="min-width: 12rem; justify-content: space-between; padding: 1rem; background-color: white;"
+        (click)="mostrarModalFormAltaReparacion()">
         <ion-text> Crear boleta</ion-text>
         <ion-icon name="document"></ion-icon>
       </ion-chip>

@@ -65,14 +65,14 @@ export class CustomIonSlidingComponent implements OnInit {
   }
 
   ngOnInit() {
-
+console.log(this.reparacion)
     this.slidingConfig = {
       iconName: reparacionIconName[this.reparacion.estado.toUpperCase()],
       bgColor: reparacionBgColor[this.reparacion.estado.toUpperCase()],
       stateMessage: reparacionMessage[this.reparacion.estado.toUpperCase()]
     }
 
-    this.slidingOptions.push(this.slidingOptionsByState[this.reparacion.estado]);
+    this.slidingOptions.push(this.slidingOptionsByState[this.reparacion.estado.toLowerCase()]);
 
 
   }

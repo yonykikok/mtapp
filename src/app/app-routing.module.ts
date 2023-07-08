@@ -101,6 +101,10 @@ const routes: Routes = [
     path: 'boletas',
     loadChildren: () => import('./pages/boletas/boletas.module').then( m => m.BoletasPageModule)
   },
+  {
+    path: 'trabajos-tercerizados',
+    loadChildren: () => import('./pages/trabajos-tercerizados/trabajos-tercerizados.module').then( m => m.TrabajosTercerizadosPageModule)
+  },
 
 
  

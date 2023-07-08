@@ -23,6 +23,7 @@ export class DetallePedidoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log(this.pedido)
   }
 
   mostrarConfirmacion(e) {

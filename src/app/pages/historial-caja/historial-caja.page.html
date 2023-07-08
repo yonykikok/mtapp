@@ -6,7 +6,7 @@
 <ion-content>
   <div *ngIf="loggedUser">
 
-    <div>
+    <div class="ion-text-center flexCenterCenter" >
       <ion-card style="width: 350px; max-width: 400px;">
         <ion-datetime presentation="date" [(ngModel)]="fechaSeleccionadaDate"
           (ionChange)="updateCalcs($event)"></ion-datetime>

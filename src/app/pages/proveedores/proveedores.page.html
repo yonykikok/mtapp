@@ -2,7 +2,7 @@
   <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Proveedores'"></app-clasic-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="loggedUser">
   <ion-searchbar class="ion-margin-top" placeholder="Ejemplo: J7 prime" [(ngModel)]="textoABuscar"
     (ionChange)="buscarProducto()"></ion-searchbar>
 
@@ -32,15 +32,22 @@
       Las busquedas se basaran en la informacion de estos proveedores
     </ion-chip>
 
-    <ion-card *ngFor="let proveedor of proveedores">
+    <ion-card *ngFor="let proveedor of proveedores" (click)="mostrarDetalleProveedor(proveedor)">
       <ion-card-header>
         Proveedor: <b>{{proveedor.nombre}} <br></b>
         Direccion: <b> {{proveedor.direccion}}</b> <br>
         Telefono: <b> {{proveedor.telefono}}</b> <br>
-        Telefono privado: <b>{{proveedor.telefonoPrivado?proveedor.telefonoPrivado:'NO'}}</b> <br>
+        Telefono alternativo: <b>{{proveedor.telefonoAlternativo?proveedor.telefonoAlternativo:'NO'}}</b> <br>
       </ion-card-header>
-
 
     </ion-card>
   </ng-template>
+  <!-- FAB AGREGAR NUEVO -->
+  <ion-fab slot="fixed" horizontal="end" vertical="bottom" color="secondary" (click)="openDialog()"
+    *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <!-- FIN FAB AGREGAR NUEVO -->
 </ion-content>

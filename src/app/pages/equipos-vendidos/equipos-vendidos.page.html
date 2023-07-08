@@ -74,3 +74,23 @@
     </ion-fab-button>
   </ion-fab>
 </ion-content>
+
+<ion-footer [translucent]="true">
+  <ion-toolbar>
+    <ion-tabs>
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button (click)="seleccionarModulo('vendidos')">
+          <ion-icon style="width: 3rem;" src="/assets/svg/icons/deudores.svg"></ion-icon>
+          <ion-text color="danger"> Vendidos </ion-text>
+        </ion-tab-button>
+
+
+        <ion-tab-button (click)="seleccionarModulo('disponibles')">
+          <ion-icon style="width: 3rem;" src="/assets/svg/icons/acreedores.svg"></ion-icon>
+          <ion-text color="success"> Disponibles </ion-text>
+        </ion-tab-button>
+
+      </ion-tab-bar>
+    </ion-tabs>
+  </ion-toolbar>
+</ion-footer>

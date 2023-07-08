@@ -1,0 +1,33 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'trabajos tercerizados'"></app-clasic-toolbar>
+</ion-header>
+
+
+<ion-content *ngIf="loggedUser;">
+
+  <ion-grid class="ion-text-center">
+    <ion-row>
+      <ion-col><b>Modelo</b></ion-col>
+      <ion-col><b>Trabajo</b></ion-col>
+      <ion-col><b>Boleta</b></ion-col>
+    </ion-row>
+    <ion-row *ngFor="let trabajo of trabajosTercerizados" [ngStyle]="{'background':!trabajo.fechaRetiro?'lightgreen':''}">
+      <!-- <ion-col>{{trabajo.fecha|date}}</ion-col> -->
+      <ion-col>{{trabajo.modelo|titlecase}}</ion-col>
+      <ion-col>{{trabajo.trabajo|titlecase}}</ion-col>
+      <ion-col>{{trabajo.boleta}}</ion-col>
+      <!-- <ion-col>{{trabajo.detallesDelEquipo|titlecase}}</ion-col>
+      <ion-col>{{trabajo.fechaRetiro|date}}</ion-col>
+      <ion-col>{{trabajo.costo*488|currency:'USD':'symbol':'1.0-0' }}</ion-col>
+      <ion-col>{{trabajo.precio*488|currency:'USD':'symbol':'1.0-0' }}</ion-col> -->
+    </ion-row>
+  </ion-grid>
+
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" (click)="abrirFormTrabajoTercerizado()">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>

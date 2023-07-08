@@ -8,6 +8,8 @@ import { ProveedoresPageRoutingModule } from './proveedores-routing.module';
 
 import { ProveedoresPage } from './proveedores.page';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { FormAltaProveedorComponent } from 'src/app/components/forms/form-alta-proveedor/form-alta-proveedor.component';
+import { DetalleProveedorComponent } from 'src/app/components/views/detalle-proveedor/detalle-proveedor.component';
 
 @NgModule({
   imports: [
@@ -17,6 +19,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ProveedoresPageRoutingModule,
     SharedModule
   ],
-  declarations: [ProveedoresPage]
+  declarations: [
+    ProveedoresPage,
+    FormAltaProveedorComponent, DetalleProveedorComponent]
 })
-export class ProveedoresPageModule {}
+export class ProveedoresPageModule { }

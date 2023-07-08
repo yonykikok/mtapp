@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./busqueda-por-texto.component.scss'],
 })
 export class BusquedaPorTextoComponent implements OnInit {
-  textoABuscar="";
+  textoABuscar = "";
   mesSeleccionado;
   itemsFiltrados;
   mostrarBuscador;
@@ -24,7 +24,7 @@ export class BusquedaPorTextoComponent implements OnInit {
     this.mesSeleccionado.dias.forEach(dia => {
       dia.ventas.forEach(venta => {
         if (venta.descripcion.toLowerCase().includes(this.textoABuscar.toLowerCase()) ||
-          venta.boleta == this.textoABuscar) {
+          venta?.boleta?.toString()?.includes(this.textoABuscar.toLowerCase())) {
           let auxVenta = { ...venta };
           auxVenta['fecha'] = dia.fecha;
           auxVenta['fechaString'] = dia.fechaString;
@@ -33,6 +33,16 @@ export class BusquedaPorTextoComponent implements OnInit {
         }
       });
     });
-    this.itemsFiltrados = items;
+    console.log(items)
+    this.itemsFiltrados=items.sort((a: any, b: any) => {
+      if (a.fecha > b.fecha) {
+        return 1;
+      } else if (a.boleta < b.boleta) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+    // this.itemsFiltrados = items;
   }
 }

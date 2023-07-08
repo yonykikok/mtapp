@@ -7,13 +7,13 @@ import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-form-equipo-vendido',
-  templateUrl: './form-equipo-vendido.component.html',
-  styleUrls: ['./form-equipo-vendido.component.scss'],
+  selector: 'app-form-equipo-disponible',
+  templateUrl: './form-equipo-disponible.component.html',
+  styleUrls: ['./form-equipo-disponible.component.scss'],
 })
-export class FormEquipoVendidoComponent implements OnInit {
+export class FormEquipoDisponibleComponent implements OnInit {
 
-  step=1;
+  step = 2;
   imagenes = [];
   equipoVendido;
   mostrarSpinner = false;
@@ -33,9 +33,6 @@ export class FormEquipoVendidoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.step1FormGroup = this._formBuilder.group({
-      dni: ['', Validators.required],
-    });
     this.step2FormGroup = this._formBuilder.group({
       marca: ['', Validators.required],
       modelo: ['', Validators.required],

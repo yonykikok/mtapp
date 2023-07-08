@@ -4,7 +4,7 @@ margin: 1rem;">
     <ion-card-title class="ion-text-center">Consultas online</ion-card-title>
   </ion-card-header>
   <ion-card-content>
-    <form [formGroup]="formConsulta">
+    <form [formGroup]="formConsulta" (ngSubmit)="enviarFormulario()">
       <ion-item>
         <ion-label position="floating" class="text1" style="font-weight: bold;">NOMBRE</ion-label>
         <ion-input type="text" formControlName="nombre"></ion-input>
@@ -21,7 +21,7 @@ margin: 1rem;">
         <ion-label position="floating" class="text1" style="font-weight: bold;">CONSULTA</ion-label>
         <ion-textarea formControlName="consulta"></ion-textarea>
       </ion-item>
-      <ion-button expand="block" color="primary"> Enviar consulta</ion-button>
+      <ion-button expand="block" color="primary" type="submit"> Enviar consulta</ion-button>
     </form>
   </ion-card-content>
 </ion-card>

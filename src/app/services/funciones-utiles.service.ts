@@ -241,7 +241,6 @@ export class FuncionesUtilesService {
    * Hace un Backup de la tabla IngresosBrutos el cual los guarda en firebase y localstorage.
    */
   hacerBackUp() {
-
     let subs = this.database.obtenerTodos(environment.TABLAS.ingresosBrutos).subscribe(ListDocRef => {
       let meses = ListDocRef.map(docRef => {
         let mes = docRef.payload.doc.data();

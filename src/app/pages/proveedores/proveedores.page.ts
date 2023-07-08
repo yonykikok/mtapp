@@ -1,10 +1,18 @@
 import { Component, OnInit } from '@angular/core';
+import { DocumentChangeAction } from '@angular/fire/compat/firestore';
+import { ModalController } from '@ionic/angular';
+import { FormAltaProveedorComponent } from 'src/app/components/forms/form-alta-proveedor/form-alta-proveedor.component';
+import { DetalleProveedorComponent } from 'src/app/components/views/detalle-proveedor/detalle-proveedor.component';
+import { AuthService } from 'src/app/services/auth.service';
+import { DataBaseService } from 'src/app/services/database.service';
+import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
+import { environment } from 'src/environments/environment';
 
-interface Proveedor {
+export interface Proveedor {
   nombre: string,
   direccion: string,
   telefono: string,
-  telefonoPrivado: string,
+  telefonoAlternativo: string,
   modulos: Modulo[],
 }
 interface Producto {
@@ -41,13 +49,16 @@ interface Modulo extends Producto {
 export class ProveedoresPage implements OnInit {
 
 
-
+  loggedUser
   precioDolar = 310;
   proveedores: Proveedor[] = [];
   productosAMostrar;
   textoABuscar;
 
-  constructor() {
+  constructor(public funcionesUtiles: FuncionesUtilesService,
+    private authService: AuthService,
+    private dataBase: DataBaseService,
+    private modalController: ModalController) {
 
     let producto: Modulo = {
       categoria: 'modulos',
@@ -74,7 +85,7 @@ export class ProveedoresPage implements OnInit {
       modulos: [{ ...producto }, { ...producto2 }],
       direccion: 'Corrientes 2400',
       telefono: '1140875800',
-      telefonoPrivado: null
+      telefonoAlternativo: null
     }
     this.proveedores.push(proveedor);
 
@@ -88,7 +99,7 @@ export class ProveedoresPage implements OnInit {
       modulos: [{ ...producto }, { ...producto2 }],
       direccion: 'Larrea 410',
       telefono: '1140545800',
-      telefonoPrivado: null
+      telefonoAlternativo: null
     }
     this.proveedores.push(proveedor2);
 
@@ -102,7 +113,7 @@ export class ProveedoresPage implements OnInit {
       modulos: [{ ...producto }, { ...producto2 }],
       direccion: 'Larrea 408',
       telefono: '1154255100',
-      telefonoPrivado: null
+      telefonoAlternativo: null
     }
     this.proveedores.push(proveedor3);
 
@@ -115,7 +126,7 @@ export class ProveedoresPage implements OnInit {
       modulos: [{ ...producto }, { ...producto2 }],
       direccion: 'Larrea 400',
       telefono: '1140404040',
-      telefonoPrivado: null
+      telefonoAlternativo: null
     }
     this.proveedores.push(proveedor4);
 
@@ -124,16 +135,67 @@ export class ProveedoresPage implements OnInit {
 
     let proveedor5: Proveedor = {
       nombre: 'Daniels cell',
-      modulos: [ { ...producto2 }],
+      modulos: [{ ...producto2 }],
       direccion: 'Larrea 400',
       telefono: '1140404040',
-      telefonoPrivado: null
+      telefonoAlternativo: null
     }
     this.proveedores.push(proveedor5);
 
   }
+  ionViewWillEnter(): void {
+    this.getCurrentUser();
 
+
+  }
   ngOnInit() {
+    this.dataBase.obtenerTodos(environment.TABLAS.proveedores).subscribe((listProveedoresRef) => {
+      this.proveedores = listProveedoresRef.map((proveedorRef: DocumentChangeAction<Proveedor>) => {
+        let proveedor = proveedorRef.payload.doc.data();
+        proveedor['id'] = proveedorRef.payload.doc.id;
+        return proveedor;
+      })
+      console.log(this.proveedores)
+    });
+  }
+
+  getCurrentUser() {
+    this.authService.getCurrentUser().subscribe((userRef: any) => {
+      this.dataBase.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res: any) => {
+        let usuario: any = res.payload.data();
+        usuario['uid'] = res.payload.id;
+
+        this.loggedUser = {
+          uid: usuario['uid'],
+          email: usuario['email'],
+          displayName: usuario['displayName'],
+          emailVerified: usuario['emailVerified'],
+          photoURL: usuario['photoURL'],
+          role: usuario['role'],
+          securityCode: usuario['securityCode']
+        };
+      })
+    })
+  }
+
+  async openDialog() {
+    try {
+      const modal = await this.modalController.create({
+        component: FormAltaProveedorComponent,
+        componentProps: {
+          loggedUser: this.loggedUser
+        },
+      })
+
+      modal.onDidDismiss().then((result: any) => {
+        if (!result.data || !result.role) return;
+
+
+      })
+      return await modal.present();
+    } catch (err) {
+    }
+
   }
 
   buscarProducto() {
@@ -190,5 +252,24 @@ export class ProveedoresPage implements OnInit {
     }
     return 'primary';
 
+  }
+
+  async mostrarDetalleProveedor(proveedor: Proveedor) {
+    try {
+      const modal = await this.modalController.create({
+        component: DetalleProveedorComponent,
+        componentProps: {
+          proveedor
+        },
+      })
+
+      modal.onDidDismiss().then((result: any) => {
+        if (!result.data || !result.role) return;
+
+
+      })
+      return await modal.present();
+    } catch (err) {
+    }
   }
 }

@@ -10,6 +10,7 @@ import { SpinnerService } from 'src/app/services/spinner.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { ModalController } from '@ionic/angular';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { DOC_ORIENTATION, NgxImageCompressService } from 'ngx-image-compress';
 firebase.initializeApp(environment.firebaseConfig);
 
 
@@ -28,34 +29,63 @@ export class FormAltaReparacionComponent implements OnInit {
     dniCliente: new FormControl('', [Validators.required]),
     nroBoleta: new FormControl('', [Validators.required]),
     telefono: new FormControl('', [Validators.required]),
+    modelo: new FormControl('', [Validators.required]),
   })
 
   constructor(private alertService: AlertService,
     private database: DataBaseService,
     private spinnerService: SpinnerService,
     private toastService: ToastService,
-    private modalController: ModalController) { }
+    private modalController: ModalController,
+    private imageCompress: NgxImageCompressService
+  ) { }
 
   ngOnInit() { }
 
 
-  async takePicture() {
+  async takePicture() { //TODO: COMPRIMIR IMAGENES 
+    this.spinnerService.showLoading('Comprimiendo imagen...');
+    setTimeout(() => { this.spinnerService.stopLoading(); }, 3000);
     try {
-      const capturedPhoto = await Camera.getPhoto({
-        resultType: CameraResultType.Base64,
-        source: CameraSource.Camera,
-        quality: 100,
+      const image = await Camera.getPhoto({
+        quality: 90,
+        promptLabelHeader: 'Seleccione una opción',
+        promptLabelCancel: 'Cancelar',
+        promptLabelPicture: 'Sacar una Foto con la Cámara',
+        promptLabelPhoto: 'Seleccionar desde Galería',
+        resultType: CameraResultType.DataUrl
       });
+      console.log(image)
 
-      this.imgVistaPrevia = 'data:image/jpeg;base64,' + capturedPhoto.base64String;
-    } catch {
-      console.error("error al capturar la imagen.")
+      let base64Image;
+
+      if (image.dataUrl.startsWith('data:image/jpeg')) {
+        console.log('se')
+        base64Image = image.dataUrl;
+      } else if (image.dataUrl.startsWith('data:image/png')) {
+        console.log('se2')
+        base64Image = image.dataUrl.replace('data:image/png', 'data:image/jpeg');
+      } else {
+        this.toastService.simpleMessage('No compatible', 'Tipo de imagen no compatible', ToastColor.danger);
+      }
+
+      //codigo para comprimir la imagen.
+      if (this.imageCompress.byteCount(image.dataUrl) >= 2_000_000) {
+        let compressedImage = await this.imageCompress
+          .compressFile(image.dataUrl, DOC_ORIENTATION.Default, 50, 50); // 50% ratio, 50% quality
+        base64Image = compressedImage;
+      }
+      this.imgVistaPrevia = base64Image;
+
+    } catch (error) {
+      console.log(error)
+      return false;
     }
   };
 
 
   mostrarConfirmacion() {
-    let { dniCliente, nroBoleta, telefono } = this.formAltaReparacion.value;
+    let { dniCliente, nroBoleta, telefono, modelo } = this.formAltaReparacion.value;
     let hoy = new Date(Date.now());
 
     const months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
@@ -65,25 +95,30 @@ export class FormAltaReparacionComponent implements OnInit {
     this.alertService.alertConfirmacion(
       'Confirma los datos',
       `Boleta:<b> ${nroBoleta}</b><br> 
+      Modelo: <b>${modelo}</b> <br>  
       DNI: <b>${dniCliente}</b> <br>  
       Telefono: <b>${telefono}</b> <br><br>
       ${this.imgVistaPrevia ? `<ion-img src=${this.imgVistaPrevia} alt="Boleta">` : ''}</ion-img>`,
       'Confirmar',
       () => {
+
         this.spinnerService.showLoading("Generando la boleta digital...")
 
-        this.storageRef.child("boletas/" + 'FotoName').putString(this.imgVistaPrevia, 'data_url').then(async (respuesta) => {
+
+        this.storageRef.child(`boletas/${month}${year}-${nroBoleta}-${dniCliente}`).putString(this.imgVistaPrevia, 'data_url').then(async (respuesta) => {
           let photo = await respuesta.ref.getDownloadURL();
           let boleta = {
             completa: false,
             images: [photo],
-            dniCliente:dniCliente.toString(),
-            nroBoleta:nroBoleta.toString(),
+            dniCliente: dniCliente.toString(),
+            modelo: modelo.toString(),
+            nroBoleta: nroBoleta.toString(),
             fechaAlta: new Date().getTime(),
             estado: boleta_estados.PENDIENTE,
-            telefono:telefono.toString(),
+            telefono: telefono.toString(),
             fechaId: `${month}${year}`
           }
+          console.log(boleta)
           this.database.crear(environment.TABLAS.boletasReparacion, boleta).then(res => {
             this.toastService.simpleMessage("Exito!", "Se genero la boleta correctamente", ToastColor.success);
             this.spinnerService.stopLoading();

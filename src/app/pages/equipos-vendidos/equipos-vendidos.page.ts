@@ -15,8 +15,12 @@ export class EquiposVendidosPage implements OnInit {
 
   // @ViewChild(MatAccordion) accordion: MatAccordion;
   listaEquiposVendidos;
+  listaEquipos;
   mostrarImagenes = false;
   loggedUser;
+
+  moduloSeleccionado;
+  listaAMostrar;
 
 
   constructor(
@@ -55,7 +59,7 @@ export class EquiposVendidosPage implements OnInit {
       //TODO sort fecha mas reciente.      
     });
   }
-  
+
   async openDialog() {
 
     try {
@@ -73,7 +77,7 @@ export class EquiposVendidosPage implements OnInit {
       return await modal.present();
     } catch (err) {
     }
-  
+
   }
 
   async mostrarImagenCompleta(imagen) {
@@ -113,5 +117,9 @@ export class EquiposVendidosPage implements OnInit {
       })
     })
   }
-
+  seleccionarModulo(modulo) {
+    this.moduloSeleccionado = modulo;
+    this.listaAMostrar = this.listaEquipos[modulo];
+    // this.ordenarLista(this.listaAMostrar);
+  }
 }
