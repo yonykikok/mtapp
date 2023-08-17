@@ -1,0 +1,35 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/trabajos-tercerizados'" [title]="'Alta trabajo tercerizado'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="ion-padding">
+
+    <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+
+      <ion-item>
+        <ion-label position="floating">Modelo del equipo</ion-label>
+        <ion-input formControlName="modelo" placeholder="J7 prime"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Trabajo a realizar</ion-label>
+        <ion-input formControlName="trabajo" placeholder="Liberacion, Flasheo, etc."></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Boleta del equipo</ion-label>
+        <ion-input type="number" formControlName="boleta" placeholder="4848"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Detalles del equipo</ion-label>
+        <ion-textarea formControlName="detallesDelEquipo" placeholder="El equipo lo mandamos con la tapa despegada, y el equipo astillado"></ion-textarea>
+      </ion-item>
+
+      <ion-button class="ion-margin" expand="full" type="submit" [disabled]="formulario.invalid">
+        Agregar trabajo tercerizado
+      </ion-button>
+    </form>
+  </ion-card>
+</ion-content>

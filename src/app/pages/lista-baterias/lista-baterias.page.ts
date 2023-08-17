@@ -4,6 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/clases/user';
 import { FormBateriaComponent } from 'src/app/components/forms/form-bateria/form-bateria.component';
+import { DetalleBateriaComponent } from 'src/app/components/views/detalle-bateria/detalle-bateria.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
@@ -61,22 +62,22 @@ export class ListaBateriasPage implements OnInit {
   }
 
   async seleccionar(bateria: any) {
-    // try {
-    //   const modal = await this.modalController.create({
-    //     component: DetalleModuloComponent,
-    //     componentProps: {
-    //       repuesto: bateria
-    //     },
-    //   })
+    try {
+      const modal = await this.modalController.create({
+        component: DetalleBateriaComponent,
+        componentProps: {
+          repuesto: bateria
+        },
+      })
 
-    //   modal.onDidDismiss().then((result: any) => {
-    //     if (!result.data || !result.role) return;
+      modal.onDidDismiss().then((result: any) => {
+        if (!result.data || !result.role) return;
 
 
-    //   })
-    //   return await modal.present();
-    // } catch (err) {
-    // }
+      })
+      return await modal.present();
+    } catch (err) {
+    }
 
   }
 

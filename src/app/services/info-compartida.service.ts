@@ -124,6 +124,7 @@ export class InfoCompartidaService {
 
   marcasModulos = ['Samsung', 'LG', 'Motorola', 'Huawei', 'Apple', 'Alcatel', 'Xiaomi', 'Sony'];
   calidadesModulos = ['AAA', 'GenMedCalidad', 'GenBueno', 'Estandar', 'Original Oled', 'Original Certificado'];
+  calidadesFlexDecarga = ['AAA', 'Mechanic', 'Original', 'Original Certificado'];
   coloresModulos = ['Blanco', 'Negro', 'Gris', 'Dorado', 'Celeste'];
   tiposModulos = ['Simple', 'C/M'];
 
@@ -138,7 +139,7 @@ export class InfoCompartidaService {
   calidadesBaterias = ['AAA', 'GenMedCalidad', 'GenBueno', 'Estandar', 'Original'];
   tiposBaterias = ['Tablet', 'Celular'];
 
-  calidadesFlexDeCarga = ['AAA', 'Estandar', 'Original'];
+
 
   constructor(private database: DataBaseService) {
 

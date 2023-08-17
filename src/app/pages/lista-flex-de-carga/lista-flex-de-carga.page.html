@@ -36,7 +36,7 @@
     <ion-row *ngFor="let flexDeCarga of flexDeCargasAMostrar" (click)="seleccionar(flexDeCarga)">
       <ion-col *ngIf="camposSeleccionados.includes('marca')">{{flexDeCarga.marca|titlecase}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('modelo')">{{flexDeCarga.modelo|titlecase}}</ion-col>
-      <ion-col *ngIf="camposSeleccionados.includes('precio')">{{flexDeCarga.precio*488|currency:'USD':'symbol':'1.0-0'
+      <ion-col *ngIf="camposSeleccionados.includes('precio')">{{flexDeCarga.precio*precioDolarBlue|currency:'USD':'symbol':'1.0-0'
         }}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('calidad')">{{flexDeCarga.calidad}}</ion-col>
     </ion-row>

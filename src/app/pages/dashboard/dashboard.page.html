@@ -2,31 +2,39 @@
   <app-clasic-toolbar [ruta]="'/home'" [title]="'Panel de control'"></app-clasic-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="loggedUser">
 
 
   <!-- <app-custom-ion-sliding *ngFor="let reparacion of reparacionesAMostrar" [reparacion]="reparacion"
     (mostrarDetalleEvent)="mostrarDetalle($event)"></app-custom-ion-sliding> -->
   <div class="container">
-    <ion-chip *ngFor='let modulo of modulos' class=" flexCenterCenter" [routerLink]="modulo.ruta"
-      routerLinkActive="router-link-active" [ngStyle]="{'background-color': modulo.color}">
-      <ion-text class="ion-text-center" style="color: white;"><b>{{modulo.titulo}}</b></ion-text>
-    </ion-chip>
-    <ion-chip class=" flexCenterCenter" color="success" outline="true" (click)="AgregarBackUpDiario()">
-      <ion-text class="ion-text-center" ><b>Generar Backup</b></ion-text>
+    <div *ngFor='let modulo of modulos'>
+      <ion-chip  *ngIf="funcionesUtiles.roleMinimoNecesario(modulo.role,loggedUser)" class=" flexCenterCenter"
+        [routerLink]="modulo.ruta" routerLinkActive="router-link-active"  [ngStyle]="{'background-color': modulo.img?'':modulo.color}">
+        <!-- <img *ngIf="modulo.img" style="
+        position: absolute;
+        background: #7ce08c;
+        z-index: -1;" src="/assets/svg/icons/btnRepuestos.png" alt=""> -->
+        <ion-text class="ion-text-center" style="color: white;"><b>{{modulo.titulo}}</b></ion-text>
+      </ion-chip>
+    </div>
+    <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)" class=" flexCenterCenter" color="success"
+      outline="true" (click)="confirmarBackUpDiario()">
+      <ion-text class="ion-text-center"><b>Generar Backup</b></ion-text>
     </ion-chip>
   </div>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="mostrarModalFormAltaReparacion()">
+  <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="mostrarModalFormAltaReparacion()" *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
-  </ion-fab>
+  </ion-fab> -->
 
 
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end"
+    *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)">
     <ion-fab-button>
-      <ion-icon name="chevron-up-outline"></ion-icon>
+      <ion-icon name="add"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="top" style="right: 0;">
       <ion-chip outline="true"

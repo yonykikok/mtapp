@@ -7,12 +7,6 @@
   <app-precio-dolar [loggedUser]="loggedUser"
     *ngIf="loggedUser && funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)"></app-precio-dolar>
 
-  <!-- <app-precio-dolar [loggedUser]="loggedUser" 
-    *ngIf="loggedUser && funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)"></app-precio-dolar>
-  <div class="h6 m-3" *ngIf="loggedUser && (funcionesUtiles.tieneUnRoleInferior('ADMIN',loggedUser));">
-    Todos los precios incluyen colocacion.
-  </div> -->
-
   <ion-item>
     <ion-select aria-label="Fruit" placeholder="Selecciona los campos que quieres ver" [multiple]="true"
       [(ngModel)]="camposSeleccionados">
@@ -37,7 +31,7 @@
     <ion-row *ngFor="let modulo of modulosAMostrar" (click)="seleccionar(modulo)">
       <ion-col *ngIf="camposSeleccionados.includes('marca')">{{modulo.marca|titlecase}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('modelo')">{{modulo.modelo|titlecase}}</ion-col>
-      <ion-col *ngIf="camposSeleccionados.includes('precio')">{{modulo.precio*488|currency:'USD':'symbol':'1.0-0'
+      <ion-col *ngIf="camposSeleccionados.includes('precio')">{{modulo.precio*precioDolarBlue|currency:'USD':'symbol':'1.0-0'
         }}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('calidad')">{{modulo.calidad}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('tipo')">{{modulo.tipo}}</ion-col>

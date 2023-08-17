@@ -4,6 +4,7 @@ import { Md5 } from 'ts-md5';
 import firebaseApp from 'firebase/compat/app';
 import { DataBaseService } from './database.service';
 import { User } from '../clases/user';
+import { switchMap } from 'rxjs/operators';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 
@@ -16,7 +17,17 @@ export class AuthService {
   public userData;
 
   constructor(private database: DataBaseService,
-    public afAuth: AngularFireAuth, private afs: AngularFirestore,) { }
+    public afAuth: AngularFireAuth, private afs: AngularFirestore,) { 
+
+      this.user$ = this.afAuth.authState.pipe(
+        switchMap((user) => {
+          if (user) {
+            return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
+          }
+          return of(null);
+        })
+      );
+    }
 
   setCurrentUser(user) {
     this.database.obtenerPorId('users', user.dni.toString()).subscribe(userRef => {

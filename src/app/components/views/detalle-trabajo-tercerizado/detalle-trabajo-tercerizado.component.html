@@ -1,0 +1,62 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/trabajos-tercerizados'" [title]="'trabajos tercerizados'"></app-clasic-toolbar>
+</ion-header>
+
+
+<ion-content *ngIf="loggedUser;">
+  <ion-card class="ion-padding ion-text-center">
+    <ion-item-divider class="ion-no-padding">
+      <ion-chip slot="start" style="flex-direction: column; " outline="true">
+        <small>Fecha de entrega</small>
+        <small>{{trabajo.fecha|date}}</small>
+      </ion-chip>
+      <ion-chip slot="end" style="flex-direction: column; " outline="true" *ngIf="trabajo.fechaRetiro; else btnRetirar">
+        <small>Fecha de retiro</small>
+        <small>{{trabajo.fechaRetiro|date}}</small>
+      </ion-chip>
+      <ng-template #btnRetirar>
+        <ion-chip color="success" slot="end" outline="true" (click)="marcarComoRetirado()">
+          <small>Marcar como retirado</small>
+        </ion-chip>
+      </ng-template>
+    </ion-item-divider>
+
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">
+        {{trabajo.modelo|titlecase}} ({{trabajo.boleta}})
+      </ion-card-title>
+
+
+    </ion-card-header>
+    <ion-card-content class="ion-no-padding">
+
+      <ion-item-divider style="flex-direction: column; text-align:center" class="ion-padding-bottom ion-padding-top">
+        <ion-text color="primary">
+          <b> Detalle del equipo</b>
+        </ion-text>
+        {{trabajo.detallesDelEquipo|titlecase}}
+      </ion-item-divider>
+
+      <ion-item-divider style="flex-direction: column; text-align:center" class="ion-padding-bottom">
+        <ion-text color="primary"><b> Trabajo a realizar</b> </ion-text>
+        {{trabajo.trabajo|titlecase}}
+      </ion-item-divider>
+
+      <ion-item-divider style="flex-direction: column; text-align:center" class="ion-padding-bottom">
+        <ion-text color="primary"> <b>Costo de la reparación</b> </ion-text>
+        {{(trabajo.costo?trabajo.costo:0)|currency:'USD':'symbol':'1.0-0' }}
+      </ion-item-divider>
+
+      <ion-item-divider style="flex-direction: column; text-align:center" class="ion-padding-bottom">
+        <ion-text color="primary"> <b>Precio para el cliente</b> </ion-text>
+        {{(trabajo.precio?trabajo.precio:0)|currency:'USD':'symbol':'1.0-0' }}
+      </ion-item-divider>
+
+    </ion-card-content>
+
+    <ion-chip [color]="trabajo.reparado?'success':'danger'" outline="true">
+      {{trabajo.reparado?'Reparado':'NO reparado'}}
+    </ion-chip>
+  </ion-card>
+
+</ion-content>

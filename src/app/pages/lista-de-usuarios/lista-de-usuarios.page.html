@@ -1,0 +1,50 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Lista de Usuarios'"></app-clasic-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+  <div class="text-center tabla" *ngIf="loggedUser; else mostrarSpinner">
+
+
+
+    <ion-item fill="outline" class="ion-margin" placeholder="Selecciona los campos que quieres ver">
+      <ion-label position="floating">Mostrar</ion-label>
+      <ion-select [(ngModel)]="camposSeleccionados" multiple>
+        <ion-select-option value="photoURL">Imagen</ion-select-option>
+        <ion-select-option value="role">Role</ion-select-option>
+        <ion-select-option value="displayName">Nombre</ion-select-option>
+        <ion-select-option value="email">Correo</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-searchbar show-clear-button="focus" placeholder="Juan Perez" (ionInput)="handleInput($event)"></ion-searchbar>
+
+    <ion-grid class="ion-text-center">
+      <ion-row>
+        <ion-col *ngIf="camposSeleccionados.includes('photoURL')"><b>Imagen</b></ion-col>
+        <ion-col *ngIf="camposSeleccionados.includes('role')"><b>Role</b></ion-col>
+        <ion-col *ngIf="camposSeleccionados.includes('displayName')"><b>Nombre</b></ion-col>
+        <ion-col *ngIf="camposSeleccionados.includes('email')"><b>Email</b></ion-col>
+      </ion-row>
+      <ion-row *ngFor="let usuario of usuariosAMostrar"
+        (click)="(loggedUser && loggedUser.role=='OWNER')?seleccionar(usuario):null">
+        <ion-col *ngIf="camposSeleccionados.includes('photoURL')">
+          <ion-avatar>
+            <img [src]="usuario.photoURL" />
+          </ion-avatar>
+        </ion-col>
+        <ion-col *ngIf="camposSeleccionados.includes('role')">{{usuario.role|titlecase}}</ion-col>
+        <ion-col *ngIf="camposSeleccionados.includes('displayName')">{{usuario.displayName|titlecase}}</ion-col>
+        <ion-col *ngIf="camposSeleccionados.includes('email')">{{usuario.email|titlecase}}</ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </div>
+  <!-- FIN TABLA -->
+  <ng-template #mostrarSpinner>
+    <ion-title>Cargando...</ion-title>
+    <!-- <app-spinner [size]="'100'"></app-spinner> -->
+  </ng-template>
+</ion-content>

@@ -9,6 +9,7 @@ import { ListaFlexDeCargaPageRoutingModule } from './lista-flex-de-carga-routing
 import { ListaFlexDeCargaPage } from './lista-flex-de-carga.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { FormFlexDeCargaComponent } from 'src/app/components/forms/form-flex-de-carga/form-flex-de-carga.component';
+import { DetalleFlexDeCargaComponent } from 'src/app/components/views/detalle-flex-de-carga/detalle-flex-de-carga.component';
 
 @NgModule({
   imports: [
@@ -18,6 +19,6 @@ import { FormFlexDeCargaComponent } from 'src/app/components/forms/form-flex-de-
     ListaFlexDeCargaPageRoutingModule,
     SharedModule
   ],
-  declarations: [ListaFlexDeCargaPage,FormFlexDeCargaComponent]
+  declarations: [ListaFlexDeCargaPage,FormFlexDeCargaComponent,DetalleFlexDeCargaComponent]
 })
 export class ListaFlexDeCargaPageModule {}

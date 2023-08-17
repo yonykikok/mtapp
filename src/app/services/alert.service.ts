@@ -25,7 +25,7 @@ export class AlertService {
     alert.present();
   }
 
-  async alertConfirmacion(header, message, acceptText,handlerAcceptButton) {
+  async alertConfirmacion(header, message, acceptText, handlerAcceptButton) {
     const alert = await this.alertController.create({
       mode: 'ios',
       header,
@@ -39,10 +39,66 @@ export class AlertService {
         {
           text: acceptText,
           cssClass: 'primary',
-          handler:handlerAcceptButton
+          handler: handlerAcceptButton
         }
       ]
     })
     alert.present();
+  }
+
+  async alertConfirmacionTripleAccion(header, message, acceptText, handlerAcceptButton, refuseText, handlerRefuseButton, handlerCancelButton) {
+    const alert = await this.alertController.create({
+      mode: 'ios',
+      header,
+      message,
+      buttons: [{
+        text: acceptText,
+        cssClass: 'primary',
+        handler: handlerAcceptButton
+      },
+      {
+        text: refuseText,
+        cssClass: 'secondary',
+        handler: handlerRefuseButton
+      },
+      {
+        text: 'Cancelar',
+        cssClass: 'secondary',
+        role: "cancel",
+        handler: handlerCancelButton
+      }
+
+      ]
+    })
+    alert.present();
+  }
+
+
+  async mostrarAlertaConPrompt(header: string, placeholder: string, cancelText: string, confirmText: string, handlerAcceptButton,handlerCancelButton) {
+    const alert = await this.alertController.create({
+      header,
+      inputs: [
+        {
+          name: 'valor',
+          type: 'number',
+          placeholder,
+        },
+      ],
+      buttons: [
+        {
+          text: cancelText,
+          role: 'cancel',
+          handler:handlerCancelButton
+        },
+        {
+          text: confirmText,
+          handler: handlerAcceptButton,
+        },
+      ],
+    });
+
+    await alert.present();
+
+    return new Promise<string | null>((resolve) => { });
   }
 }

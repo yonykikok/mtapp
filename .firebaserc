@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "mtapp-d4e48"
-  }
+    "default": "mtapp-d4e48",
+    "mtapp-d4e48": "mtapp-d4e48"
+  },
+  "targets": {},
+  "etags": {}
 }

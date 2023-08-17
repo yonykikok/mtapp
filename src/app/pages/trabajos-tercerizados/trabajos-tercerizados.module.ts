@@ -8,6 +8,8 @@ import { TrabajosTercerizadosPageRoutingModule } from './trabajos-tercerizados-r
 
 import { TrabajosTercerizadosPage } from './trabajos-tercerizados.page';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { FormAltaTrabajoTercerizadoComponent } from 'src/app/components/forms/form-alta-trabajo-tercerizado/form-alta-trabajo-tercerizado.component';
+import { DetalleTrabajoTercerizadoComponent } from 'src/app/components/views/detalle-trabajo-tercerizado/detalle-trabajo-tercerizado.component';
 
 @NgModule({
   imports: [
@@ -16,6 +18,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     IonicModule,
     TrabajosTercerizadosPageRoutingModule,SharedModule
   ],
-  declarations: [TrabajosTercerizadosPage]
+  declarations: [TrabajosTercerizadosPage,
+    FormAltaTrabajoTercerizadoComponent,
+  DetalleTrabajoTercerizadoComponent]
 })
 export class TrabajosTercerizadosPageModule {}

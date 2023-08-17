@@ -75,6 +75,7 @@ export class FuncionesUtilesService {
   }
 
   roleMinimoNecesario(role: Roles, loggedUser: User) {
+    if(!loggedUser) return false;
     if (ImportanciaRoles[role] <= ImportanciaRoles[loggedUser.role]) {
       return true;
     }

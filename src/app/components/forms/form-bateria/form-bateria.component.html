@@ -15,22 +15,27 @@
     <ion-card-content>
 
       <form class="card p-3 m-3 col-lg-6" [formGroup]="formBateria">
+        
+
+        <ion-item fill="outline" class="ion-margin">
+          <ion-select aria-label="fruit" placeholder="Select fruit" formControlName="marca">>
+            <ion-select-option *ngFor="let marca of marcas" [value]="marca">{{marca}}</ion-select-option>
+          </ion-select>
+        </ion-item>
 
         <ion-item fill="outline"  class="ion-margin">
-          <ion-input type="text" placeholder="Escriba el modelo" aria-label="FlexDeCarga" formControlName="modelo">
+          <ion-input type="text" placeholder="Escriba el modelo" aria-label="bateria" formControlName="modelo">
+          </ion-input>
+        </ion-item>
+
+        <ion-item fill="outline"  class="ion-margin">
+          <ion-input type="text" placeholder="Escriba el codigo" aria-label="bateria" formControlName="codigo">
           </ion-input>
         </ion-item>
 
         <ion-item fill="outline" class="ion-margin">
           <ion-input type="number" placeholder="precio en dolares" formControlName="precio"></ion-input>
           <ion-chip>{{formBateria.controls.precio.value*492|currency:'USD':'symbol':'1.0-0'}}</ion-chip>
-        </ion-item>
-
-
-        <ion-item fill="outline" class="ion-margin">
-          <ion-select aria-label="fruit" placeholder="Select fruit" formControlName="marca">>
-            <ion-select-option *ngFor="let marca of marcas" [value]="marca">{{marca}}</ion-select-option>
-          </ion-select>
         </ion-item>
 
 

@@ -4,6 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/clases/user';
 import { FormFlexDeCargaComponent } from 'src/app/components/forms/form-flex-de-carga/form-flex-de-carga.component';
+import { DetalleFlexDeCargaComponent } from 'src/app/components/views/detalle-flex-de-carga/detalle-flex-de-carga.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
@@ -61,22 +62,22 @@ export class ListaFlexDeCargaPage implements OnInit {
   }
 
   async seleccionar(flexDeCarga: any) {
-    // try {
-    //   const modal = await this.modalController.create({
-    //     component: DetalleModuloComponent,
-    //     componentProps: {
-    //       repuesto: flexDeCarga
-    //     },
-    //   })
+    try {
+      const modal = await this.modalController.create({
+        component: DetalleFlexDeCargaComponent,
+        componentProps: {
+          repuesto: flexDeCarga
+        },
+      })
 
-    //   modal.onDidDismiss().then((result: any) => {
-    //     if (!result.data || !result.role) return;
+      modal.onDidDismiss().then((result: any) => {
+        if (!result.data || !result.role) return;
 
 
-    //   })
-    //   return await modal.present();
-    // } catch (err) {
-    // }
+      })
+      return await modal.present();
+    } catch (err) {
+    }
 
   }
 

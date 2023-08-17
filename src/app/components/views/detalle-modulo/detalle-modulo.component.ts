@@ -4,6 +4,7 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { InfoCompartidaService } from 'src/app/services/info-compartida.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-detalle-modulo',
@@ -82,7 +83,7 @@ export class DetalleModuloComponent implements OnInit {
     this.repuesto = this.funcionesUtilesService.clonarObjeto(this.clonRepuesto);
 
     try {
-      await this.database.actualizar("modulos", this.repuesto, this.repuesto.id);
+      await this.database.actualizar(environment.TABLAS.modulos, this.repuesto, this.repuesto.id);
     } catch (err) {
       this.toastService.simpleMessage('Error', 'No se pudo actualizar', ToastColor.danger);
     }
@@ -92,7 +93,7 @@ export class DetalleModuloComponent implements OnInit {
   borrarArticulo() {
     this.repuesto = this.funcionesUtilesService.clonarObjeto(this.clonRepuesto);
 
-    this.database.eliminar("modulos", this.repuesto.id).then(() => {
+    this.database.eliminar(environment.TABLAS.modulos, this.repuesto.id).then(() => {
       this.toastService.simpleMessage('Exito', 'Modulo borrado con exito', ToastColor.success);
 
     }).catch(err => {

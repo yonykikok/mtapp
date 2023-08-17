@@ -1,0 +1,16 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Repuestos'"></app-clasic-toolbar>
+</ion-header>
+
+<!-- *ngIf="loggedUser" -->
+<ion-content>
+  <div class="grid-container">
+    <div *ngFor='let modulo of modulos'>
+      <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario(modulo.role,loggedUser)" class=" flexCenterCenter"
+        [routerLink]="'/repuestos'+modulo.ruta" routerLinkActive="router-link-active" [ngStyle]="{'background-color': modulo.color}">
+        <ion-text class="ion-text-center" style="color: white;"><b>{{modulo.titulo}}</b></ion-text>
+      </ion-chip>
+    </div>   
+  </div>
+
+</ion-content>

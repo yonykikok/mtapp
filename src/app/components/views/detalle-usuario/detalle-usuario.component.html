@@ -1,0 +1,94 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Lista de Usuarios'"></app-clasic-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-card *ngIf="usuario; loading">
+    <ion-card-header>
+      <ion-chip class="deleteBtn" color="danger" outline="true">
+        <ion-icon (click)="mostrarConfirmDialogEliminar()" name="trash-outline"></ion-icon>
+      </ion-chip>
+      <ion-avatar>
+        <img width="120px" height="120px"
+          src="{{usuario.photoURL?usuario.photoURL:'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png'}}"
+          alt="Imagen de perfil" referrerpolicy="no-referrer">
+      </ion-avatar>
+      <!-- <img width="120px" height="120px"
+        src="{{usuario.photoURL?usuario.photoURL:'https://cdn1.iconfinder.com/data/icons/user-pictures/100/unknown-512.png'}}"
+        alt="Imagen de perfil" referrerpolicy="no-referrer"> -->
+
+      <ion-card-title *ngIf="mostrarRole; else editarRole" (click)="mostrarRole=false"
+        (click)="roleSeleccionado=usuario.role">{{usuario.role}}
+      </ion-card-title>
+      <ng-template #editarRole>
+
+        <ion-item fill="outline">
+          <ion-label position="floating">Roles</ion-label>
+          <ion-select [(ngModel)]="roleSeleccionado" (ionChange)="mostrarConfirmDialogRole()">
+            <ion-select-option *ngFor="let role of roles" [value]="role">{{role}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-button (click)="mostrarRole=true" ion-stroked-ion-button color="warn">Cancelar</ion-button>
+      </ng-template>
+    </ion-card-header>
+
+    <ion-card-content>
+      <p>Nombre: {{usuario.displayName?usuario.displayName:'NO'}}</p>
+      <p>Correo: {{usuario.email?usuario.email:'NO'}} </p>
+      <p>Usuario Verificado:
+        <span [ngStyle]="{'color':usuario.emailVerified?'green':'red'}">
+          {{usuario.emailVerified?'SI':'NO'}}
+        </span>
+      </p>
+      <p>Usuario Bloqueado:
+        <span [ngStyle]="{'color':usuario.blocked?'red':'green'}">
+          {{usuario.blocked?'SI':'NO'}}
+        </span>
+        <ion-chip *ngIf="usuario.blocked; else habilitado" color="danger" outline="true"  (click)="mostrarConfirmDialog()">
+          <ion-icon name="lock-closed-outline"></ion-icon>
+        </ion-chip>
+        <ng-template #habilitado>
+          <ion-chip color="success" outline="true"  (click)="mostrarConfirmDialog()">
+            <ion-icon name="lock-open-outline"></ion-icon>
+          </ion-chip>
+        </ng-template>
+      </p>
+      <ion-chip outline="true" color="primary" (click)="verMasInfo=!verMasInfo">
+        {{verMasInfo?'Ver menos':'Ver mas información'}}
+      </ion-chip >
+      <ion-item-divider *ngIf="verMasInfo" style="flex-direction: column; align-items: start; background: none;">
+        <p>Direccion: {{usuario.adress?usuario.adress:'NO'}} </p>
+        <p>DNI: {{usuario.dni?usuario.dni:'NO'}} </p>
+        <p>Telefono: {{usuario.phoneNumber?usuario.phoneNumber:'NO'}} </p>
+      </ion-item-divider>
+
+      <ion-chip outline="true" color="primary" (click)="verTareas=!verTareas">
+        {{verTareas?'Ver menos':'Tareas asignadas'}}
+      </ion-chip >
+
+      <ion-card *ngIf="verTareas">
+        <ul>
+          <li *ngFor="let tarea of usuario.tareas" (click)="verDetalleTarea(tarea)">{{tarea.nombre}}</li>
+        </ul>
+        <ion-card-content>
+          <ion-button (click)="mostrarFormAltaTarea=true">Agregar tarea</ion-button>
+        </ion-card-content>
+
+      </ion-card>
+
+      <div *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',usuario)">
+        <p>Codigo personal:
+          <ion-chip outline="true" color="danger" *ngIf="usuario.securityCode">
+            {{usuario.securityCode}}
+          </ion-chip>
+        </p>
+      </div>
+
+    </ion-card-content>
+  </ion-card>
+
+  <!-- <app-form-alta-tarea *ngIf="mostrarFormAltaTarea" (cerrarFormularioEvent)="mostrarFormAltaTarea=false" [user]="user"> -->
+  <!-- </app-form-alta-tarea> -->
+</ion-content>

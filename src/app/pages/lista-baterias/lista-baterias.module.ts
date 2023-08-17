@@ -9,6 +9,7 @@ import { ListaBateriasPageRoutingModule } from './lista-baterias-routing.module'
 import { ListaBateriasPage } from './lista-baterias.page';
 import { FormBateriaComponent } from 'src/app/components/forms/form-bateria/form-bateria.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { DetalleBateriaComponent } from 'src/app/components/views/detalle-bateria/detalle-bateria.component';
 
 @NgModule({
   imports: [
@@ -18,6 +19,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ListaBateriasPageRoutingModule,
     SharedModule
   ],
-  declarations: [ListaBateriasPage, FormBateriaComponent]
+  declarations: [ListaBateriasPage, FormBateriaComponent,DetalleBateriaComponent]
 })
 export class ListaBateriasPageModule { }

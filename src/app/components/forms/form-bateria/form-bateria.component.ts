@@ -16,12 +16,11 @@ import { ToastColor, ToastService } from 'src/app/services/toast.service';
 export class FormBateriaComponent implements OnInit {
 
   @Input() nuevoBateria = {
-    calidad: '',
-    modelo: '',
     marca: '',
+    modelo: '',
+    codigo: '',
     precio: '',
-    tipo: '',
-    stock: []
+    calidad: '',
   }
 
   //auto complete
@@ -32,18 +31,15 @@ export class FormBateriaComponent implements OnInit {
   //parametros formulario
   marcas = this.infoConpatida.marcasModulos;
   calidades = this.infoConpatida.calidadesBaterias;
-  cantidades = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   //parametros formulario
 
   baterias;
 
   formBateria: FormGroup = new FormGroup({
-    modelo: new FormControl('', Validators.required),
-    precio: new FormControl('', Validators.required),
-    cantidad: new FormControl(0, Validators.required),
     marca: new FormControl('Samsung', Validators.required),
-    color: new FormControl('Blanco', Validators.required),
-    tipo: new FormControl('Simple', Validators.required),
+    modelo: new FormControl('', Validators.required),
+    codigo: new FormControl('', Validators.required),
+    precio: new FormControl('', Validators.required),
     calidad: new FormControl('AAA', Validators.required)
   });
 
@@ -53,14 +49,13 @@ export class FormBateriaComponent implements OnInit {
     private dataBase: DataBaseService,
     private alertService: AlertService,
     private toastService: ToastService,
-    // readonly snackBar: MatSnackBar,
     private afs: AngularFirestore) {
   }
 
   cargarInputAutoCompletado() {
     let listaSinRepetir = new Set();
 
-    this.afs.collection('baterias').snapshotChanges().subscribe(res => {
+    this.afs.collection(environment.TABLAS.baterias).snapshotChanges().subscribe(res => {
       this.baterias = res.map(bateriaRef => {
         let auxBateria = bateriaRef.payload.doc.data()
         auxBateria['id'] = bateriaRef.payload.doc.id;
@@ -99,19 +94,7 @@ export class FormBateriaComponent implements OnInit {
     });
   }
 
-  agregarNuevoColor() {
-    let { cantidad, color } = this.formBateria.value;
-    let existeColor = this.nuevoBateria.stock.find(stock => stock.color == color);
 
-    if (!existeColor) {
-      cantidad <= 0
-        ?
-        this.toastService.simpleMessage('Error en la cantidad', 'la cantidad debe ser mayor a 0', ToastColor.warning)
-        : this.nuevoBateria.stock.push({ cantidad, color });
-    } else {
-      this.toastService.simpleMessage('Error en el color', 'El color ya existe', ToastColor.warning)
-    }
-  }
 
 
 
@@ -123,17 +106,15 @@ export class FormBateriaComponent implements OnInit {
   }
 
   obtenerObjetoBateria() {
-    const { calidad, modelo, marca, precio, tipo } = this.formBateria.value;
-    let { stock } = this.nuevoBateria;
-    stock.length <= 0 ? stock = [{ color: 'Blanco', cantidad: 0 }] : null;
+    const { marca, modelo, codigo, precio, calidad } = this.formBateria.value;
+
 
     return {
-      calidad,
-      modelo,
       marca,
+      modelo,
+      codigo,
       precio,
-      tipo,
-      stock
+      calidad,
     }
   }
 

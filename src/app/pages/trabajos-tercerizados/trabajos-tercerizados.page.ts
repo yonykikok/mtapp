@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { DocumentChangeAction } from '@angular/fire/compat/firestore';
+import { ModalController } from '@ionic/angular';
+import { FormAltaTrabajoTercerizadoComponent } from 'src/app/components/forms/form-alta-trabajo-tercerizado/form-alta-trabajo-tercerizado.component';
+import { DetalleTrabajoTercerizadoComponent } from 'src/app/components/views/detalle-trabajo-tercerizado/detalle-trabajo-tercerizado.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { environment } from 'src/environments/environment';
 
-interface trabajoTercerizado {
+export interface trabajoTercerizado {
   fecha: number,
   modelo: string,
   trabajo: string,
@@ -11,7 +15,9 @@ interface trabajoTercerizado {
   detallesDelEquipo: string,
   fechaRetiro: number,
   costo: number,
-  precio: number
+  precio: number,
+  reparado: boolean,
+  id: string
 }
 @Component({
   selector: 'app-trabajos-tercerizados',
@@ -20,33 +26,25 @@ interface trabajoTercerizado {
 })
 export class TrabajosTercerizadosPage implements OnInit {
   loggedUser;
-  trabajosTercerizados: trabajoTercerizado[] = [{
-    boleta: 4040,
-    costo: 1500, 
-    detallesDelEquipo: 'tapa despegada',
-    fecha: Date.now(),
-    fechaRetiro: Date.now() + 545545,
-    modelo: 'J7 prime',
-    precio: 3000,
-    trabajo: 'Liberacion'
-  },
-  {
-    boleta: 4150,
-    costo: 1800, 
-    detallesDelEquipo: '',
-    fecha: Date.now(),
-    fechaRetiro: null,
-    modelo: 'A20',
-    precio: 3600,
-    trabajo: 'Liberacion'
-  }];
+  trabajosTercerizados: any[];
   constructor(
     private authService: AuthService,
     private database: DataBaseService,
+    private modalController: ModalController
   ) { }
 
   ionViewDidEnter(): void {
-    this.getCurrentUser()
+    this.getCurrentUser();
+    this.database.obtenerTodos(environment.TABLAS.trabajos_tercerizados).subscribe(listEquiposTercerizadosRef => {
+      let trabajosTercerizados = listEquiposTercerizadosRef.map((equipoTercerizadoRef: DocumentChangeAction<trabajoTercerizado>) => {
+        let trabajoTercerizado = equipoTercerizadoRef.payload.doc.data();
+        trabajoTercerizado['id'] = equipoTercerizadoRef.payload.doc.id;
+        return trabajoTercerizado;
+      });
+
+      this.trabajosTercerizados = trabajosTercerizados;
+    });
+
   }
   ngOnInit() {
   }
@@ -73,5 +71,53 @@ export class TrabajosTercerizadosPage implements OnInit {
 
   async abrirFormTrabajoTercerizado() {
 
+    try {
+      const modal = await this.modalController.create({
+        component: FormAltaTrabajoTercerizadoComponent,
+        componentProps: {
+          user: this.loggedUser
+        },
+      })
+
+      modal.onDidDismiss().then((result: any) => {
+        if (!result.data || !result.role) return;
+
+        if (result.role == 'guardarCambios') {
+
+          // this.toastService.simpleMessage('Exito', 'Cambios guardados', ToastColor.success);
+
+        }
+
+      })
+      return await modal.present();
+    } catch (err) {
+    }
   }
+
+  async mostrarDetalle(trabajo) {
+
+    try {
+      const modal = await this.modalController.create({
+        component: DetalleTrabajoTercerizadoComponent,
+        componentProps: {
+          loggedUser: this.loggedUser,
+          trabajo
+        },
+      })
+
+      modal.onDidDismiss().then((result: any) => {
+        if (!result.data || !result.role) return;
+
+        if (result.role == 'guardarCambios') {
+
+          // this.toastService.simpleMessage('Exito', 'Cambios guardados', ToastColor.success);
+
+        }
+
+      })
+      return await modal.present();
+    } catch (err) {
+    }
+  }
+
 }

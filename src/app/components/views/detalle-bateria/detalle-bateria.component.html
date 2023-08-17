@@ -1,0 +1,85 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/lista-baterias'" [title]="'Detalle de bateria'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">
+        <b> Informacion de modelo</b>
+      </ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item class="ion-text-center">
+        <b>Marca: </b> {{clonRepuesto?.marca}}
+        <ion-icon slot="end" name="create-outline" (click)="mostrar('editMarca')"></ion-icon>
+      </ion-item>
+      <ion-item class="ion-text-center">
+        <b>Modelo: </b> {{clonRepuesto?.modelo}}
+        <ion-icon slot="end" name="create-outline" (click)="mostrar('editModelo')"></ion-icon>
+      </ion-item>
+      <ion-item class="ion-text-center">
+        <b>Codigo: </b> {{clonRepuesto?.codigo}}
+        <ion-icon slot="end" name="create-outline" (click)="mostrar('editCodigo')"></ion-icon>
+      </ion-item>
+      <ion-item>
+        <b>Precio: </b> {{clonRepuesto.precio|currency:'USD':'symbol':'1.0-0'}} USD
+        <ion-icon slot="end" name="create-outline" (click)="mostrar('editPrecio')"></ion-icon>
+      </ion-item>
+      <ion-item>
+        <b>Calidad: </b> {{clonRepuesto.calidad}}
+        <ion-icon slot="end" name="create-outline" (click)="mostrar('editCalidad')"></ion-icon>
+      </ion-item>
+
+      <hr>
+
+
+
+      <!-- EDIT MARCA -->
+      <ion-item fill="outline" *ngIf="editMarca" class="ion-margin">
+        <ion-select aria-label="fruit" placeholder="Select fruit" [(ngModel)]="clonRepuesto.marca">
+          <ion-select-option *ngFor="let marca of marcas" [value]="marca">{{marca}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <!-- FIN EDIT MARCA -->
+
+      <!-- EDIT MODELO -->
+      <ion-item fill="outline" *ngIf="editModelo" class="ion-margin">
+        <ion-input type="text" placeholder="Escriba el modelo" aria-label="Bateria" [(ngModel)]="clonRepuesto.modelo">
+        </ion-input>
+      </ion-item>
+      <!-- FIN EDIT MODELO -->
+
+      <!-- EDIT CODIGO -->
+      <ion-item fill="outline" *ngIf="editCodigo" class="ion-margin">
+        <ion-input type="text" placeholder="Escriba el codigo" aria-label="Bateria" [(ngModel)]="clonRepuesto.codigo">
+        </ion-input>
+      </ion-item>
+      <!-- FIN EDIT CODIGO -->
+
+      <!-- EDIT PRECIO -->
+      <ion-item fill="outline" *ngIf="editPrecio" class="ion-margin">
+        <ion-input type="number" placeholder="precio en dolares" [(ngModel)]="clonRepuesto.precio"></ion-input>
+      </ion-item>
+      <!-- FIN EDIT PRECIO -->
+
+      <!-- EDIT CALIDAD -->
+      <ion-item fill="outline" *ngIf="editCalidad" class="ion-margin">
+        <ion-select aria-label="fruit" placeholder="Select fruit" [(ngModel)]="clonRepuesto.calidad">
+          <ion-select-option *ngFor="let calidad of calidades" [value]="calidad">{{calidad}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <!-- FIN EDIT CALIDAD -->
+
+
+      <ion-button class="ion-margin" expand="block" ion-stroked-ion-button color="primary"
+        (click)="showSaveDialog()">Guardar</ion-button>
+      <ion-button class="ion-margin" expand="block" ion-stroked-ion-button color="danger"
+        (click)="showDeleteDialog()">Borrar
+        <ion-icon slot="end" name="trash-outline"></ion-icon></ion-button>
+
+    </ion-card-content>
+  </ion-card>
+</ion-content>

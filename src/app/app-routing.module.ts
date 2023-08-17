@@ -1,5 +1,9 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { EsOwnerGuard } from './guards/es-owner.guard';
+import { EsAdminGuard } from './guards/es-admin.guard';
+import { EsSTGuard } from './guards/es-st.guard';
+import { EsClienteGuard } from './guards/es-cliente.guard';
 
 const routes: Routes = [
   {
@@ -56,28 +60,28 @@ const routes: Routes = [
   },
   {
     path: 'dashboard',
-    loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardPageModule)
+    loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardPageModule),canActivate:[EsClienteGuard]
   },
-  {
-    path: 'lista-modulos',
-    loadChildren: () => import('./pages/lista-modulos/lista-modulos.module').then( m => m.ListaModulosPageModule)
-  },
-  {
-    path: 'lista-tactiles',
-    loadChildren: () => import('./pages/lista-tactiles/lista-tactiles.module').then( m => m.ListaTactilesPageModule)
-  },
-  {
-    path: 'lista-baterias',
-    loadChildren: () => import('./pages/lista-baterias/lista-baterias.module').then( m => m.ListaBateriasPageModule)
-  },
-  {
-    path: 'lista-displays',
-    loadChildren: () => import('./pages/lista-displays/lista-displays.module').then( m => m.ListaDisplaysPageModule)
-  },
-  {
-    path: 'lista-flex-de-carga',
-    loadChildren: () => import('./pages/lista-flex-de-carga/lista-flex-de-carga.module').then( m => m.ListaFlexDeCargaPageModule)
-  },
+  // {
+  //   path: 'lista-modulos',
+  //   loadChildren: () => import('./pages/lista-modulos/lista-modulos.module').then( m => m.ListaModulosPageModule)
+  // },
+  // {
+  //   path: 'lista-tactiles',
+  //   loadChildren: () => import('./pages/lista-tactiles/lista-tactiles.module').then( m => m.ListaTactilesPageModule)
+  // },
+  // {
+  //   path: 'lista-baterias',
+  //   loadChildren: () => import('./pages/lista-baterias/lista-baterias.module').then( m => m.ListaBateriasPageModule)
+  // },
+  // {
+  //   path: 'lista-displays',
+  //   loadChildren: () => import('./pages/lista-displays/lista-displays.module').then( m => m.ListaDisplaysPageModule)
+  // },
+  // {
+  //   path: 'lista-flex-de-carga',
+  //   loadChildren: () => import('./pages/lista-flex-de-carga/lista-flex-de-carga.module').then( m => m.ListaFlexDeCargaPageModule)
+  // },
   {
     path: 'lista-pedidos',
     loadChildren: () => import('./pages/lista-pedidos/lista-pedidos.module').then( m => m.ListaPedidosPageModule)
@@ -97,7 +101,8 @@ const routes: Routes = [
   {
     path: 'stock-modulos',
     loadChildren: () => import('./pages/stock-modulos/stock-modulos.module').then( m => m.StockModulosPageModule)
-  },  {
+  },
+  {
     path: 'boletas',
     loadChildren: () => import('./pages/boletas/boletas.module').then( m => m.BoletasPageModule)
   },
@@ -105,6 +110,20 @@ const routes: Routes = [
     path: 'trabajos-tercerizados',
     loadChildren: () => import('./pages/trabajos-tercerizados/trabajos-tercerizados.module').then( m => m.TrabajosTercerizadosPageModule)
   },
+  {
+    path: 'lista-de-usuarios',
+    loadChildren: () => import('./pages/lista-de-usuarios/lista-de-usuarios.module').then( m => m.ListaDeUsuariosPageModule)
+  },
+  {
+    path: 'repuestos',
+    loadChildren: () => import('./pages/repuestos/repuestos.module').then( m => m.RepuestosPageModule)
+  },
+  {
+    path: 'proveedores/lista-modulos-proveedor',
+    loadChildren: () => import('./pages/lista-modulos-proveedor/lista-modulos-proveedor.module').then( m => m.ListaModulosProveedorPageModule)
+  },
+
+
 
 
  

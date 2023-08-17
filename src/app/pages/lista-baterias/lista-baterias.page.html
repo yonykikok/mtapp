@@ -19,6 +19,7 @@
       [(ngModel)]="camposSeleccionados">
       <ion-select-option value="marca">Marca</ion-select-option>
       <ion-select-option value="modelo">Modelo</ion-select-option>
+      <ion-select-option value="codigo">Codigo</ion-select-option>
       <ion-select-option value="precio">Precio</ion-select-option>
       <ion-select-option value="calidad">Calidad</ion-select-option>
     </ion-select>
@@ -30,13 +31,15 @@
     <ion-row>
       <ion-col *ngIf="camposSeleccionados.includes('marca')"><b>Marca</b></ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('modelo')"><b>Modelo</b></ion-col>
+      <ion-col *ngIf="camposSeleccionados.includes('codigo')"><b>Codigo</b></ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('precio')"><b>Precio</b></ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('calidad')"><b>Calidad</b></ion-col>
     </ion-row>
     <ion-row *ngFor="let bateria of bateriasAMostrar" (click)="seleccionar(bateria)">
       <ion-col *ngIf="camposSeleccionados.includes('marca')">{{bateria.marca|titlecase}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('modelo')">{{bateria.modelo|titlecase}}</ion-col>
-      <ion-col *ngIf="camposSeleccionados.includes('precio')">{{bateria.precio*488|currency:'USD':'symbol':'1.0-0'
+      <ion-col *ngIf="camposSeleccionados.includes('codigo')">{{bateria.codigo|titlecase}}</ion-col>
+      <ion-col *ngIf="camposSeleccionados.includes('precio')">{{bateria.precio*precioDolarBlue|currency:'USD':'symbol':'1.0-0'
         }}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('calidad')">{{bateria.calidad}}</ion-col>
     </ion-row>
