@@ -1,5 +1,5 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/lista-modulos'" [title]="'Detalle del modulo'"></app-clasic-toolbar>
+  <app-clasic-toolbar [ruta]="ruta" [title]="'Detalle del modulo'"></app-clasic-toolbar>
 </ion-header>
 
 <ion-content>
@@ -17,8 +17,8 @@
         Modelo: {{clonRepuesto?.modelo}}
         <ion-icon slot="end" name="create-outline" (click)="mostrar('editModelo')"></ion-icon>
       </ion-item>
-      <ion-list>
-        <ion-item>
+      <ion-list >
+        <ion-item *ngIf="clonRepuesto && clonRepuesto.stock">
 
           Colores:
           <div *ngFor="let stock of clonRepuesto?.stock">

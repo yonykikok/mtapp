@@ -9,13 +9,15 @@
     (mostrarDetalleEvent)="mostrarDetalle($event)"></app-custom-ion-sliding> -->
   <div class="container">
     <div *ngFor='let modulo of modulos'>
-      <ion-chip  *ngIf="funcionesUtiles.roleMinimoNecesario(modulo.role,loggedUser)" class=" flexCenterCenter"
-        [routerLink]="modulo.ruta" routerLinkActive="router-link-active"  [ngStyle]="{'background-color': modulo.img?'':modulo.color}">
+      <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario(modulo.role,loggedUser)" class=" flexCenterCenter"
+        [routerLink]="modulo.ruta" routerLinkActive="router-link-active"
+        [ngStyle]="{'background-color':modulo.color}">
         <!-- <img *ngIf="modulo.img" style="
         position: absolute;
         background: #7ce08c;
         z-index: -1;" src="/assets/svg/icons/btnRepuestos.png" alt=""> -->
-        <ion-text class="ion-text-center" style="color: white;"><b>{{modulo.titulo}}</b></ion-text>
+        <ion-text class="ion-text-center title" style="color: white;"><b>{{modulo.titulo}}</b></ion-text>
+        <img *ngIf="modulo.img" [src]="modulo.img" alt="">
       </ion-chip>
     </div>
     <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)" class=" flexCenterCenter" color="success"

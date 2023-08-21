@@ -8,6 +8,7 @@ import { map, startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { AlertService } from 'src/app/services/alert.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
+import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 @Component({
   selector: 'app-form-modulo',
   templateUrl: './form-modulo.component.html',
@@ -49,12 +50,14 @@ export class FormModuloComponent implements OnInit {
     calidad: new FormControl('AAA', Validators.required)
   });
 
+  precioDolarBlue: number | null = null;
 
   constructor(
     private infoConpatida: InfoCompartidaService,
     private dataBase: DataBaseService,
     private alertService: AlertService,
     private toastService: ToastService,
+    private funcionesUtiles: FuncionesUtilesService,
     // readonly snackBar: MatSnackBar,
     private afs: AngularFirestore) {
   }
@@ -82,6 +85,10 @@ export class FormModuloComponent implements OnInit {
 
 
   ngOnInit(): void {
+    if (this.funcionesUtiles.customDolar) {
+      this.precioDolarBlue = this.funcionesUtiles.customDolar;
+    }
+    this.funcionesUtiles.getPriceDolar().subscribe(newPrice => this.precioDolarBlue = newPrice);
     this.cargarInputAutoCompletado();
   }
 

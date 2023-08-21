@@ -11,16 +11,16 @@
     <ion-item-divider class="ion-no-padding ion-margin-bottom ion-padding-bottom ion-padding-top"
       *ngFor="let prod of productosAMostrar" style="flex-direction: column;">
       <div class="flexCenterCenter" style="flex-direction: column;">
-        <ion-text slot="start"> {{prod.marca}} {{prod.modelo}} ( {{prod.calidad}} ) </ion-text>
+        <ion-text slot="start"> {{prod.marca}} {{prod.modelo}} ( {{prod.calidad}} ){{prod.tipo}} </ion-text>
         <ion-text slot="end">
-          Precio promedio: {{prod.precioPromedio*precioDolar|currency:'USD':'symbol':'1.0-0'}}
+          Precio promedio: {{prod.precioPromedio|currency:'USD'}}
         </ion-text>
       </div>
 
       <div class="flexCenterCenter" style="flex-wrap: wrap;">
         <ion-chip outline="true" [color]="asignarColor(prod.precios,index)"
           *ngFor="let precio of prod.precios; let index=index" style="flex-direction: column;">
-          <ion-text>{{precio.precio*precioDolar|currency:'USD':'symbol':'1.0-0'}}</ion-text>
+          <ion-text>{{precio.precio|currency:'USD':'symbol':'1.0-0'}}</ion-text>
           <ion-text>{{precio.proveedor}}</ion-text>
         </ion-chip>
       </div>

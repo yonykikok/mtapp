@@ -8,6 +8,7 @@ import { map, startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { AlertService } from 'src/app/services/alert.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
+import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 @Component({
   selector: 'app-form-bateria',
   templateUrl: './form-bateria.component.html',
@@ -35,6 +36,7 @@ export class FormBateriaComponent implements OnInit {
 
   baterias;
 
+  precioDolarBlue: number | null = null;
   formBateria: FormGroup = new FormGroup({
     marca: new FormControl('Samsung', Validators.required),
     modelo: new FormControl('', Validators.required),
@@ -49,7 +51,8 @@ export class FormBateriaComponent implements OnInit {
     private dataBase: DataBaseService,
     private alertService: AlertService,
     private toastService: ToastService,
-    private afs: AngularFirestore) {
+    private afs: AngularFirestore,
+    private funcionesUtiles:FuncionesUtilesService) {
   }
 
   cargarInputAutoCompletado() {
@@ -75,6 +78,12 @@ export class FormBateriaComponent implements OnInit {
 
 
   ngOnInit(): void {
+
+       if (this.funcionesUtiles.customDolar) {
+      this.precioDolarBlue = this.funcionesUtiles.customDolar;
+    }
+    this.funcionesUtiles.getPriceDolar().subscribe(newPrice => this.precioDolarBlue = newPrice);
+
     this.cargarInputAutoCompletado();
   }
 

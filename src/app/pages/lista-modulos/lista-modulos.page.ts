@@ -8,6 +8,7 @@ import { DetalleModuloComponent } from 'src/app/components/views/detalle-modulo/
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
+import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -28,7 +29,9 @@ export class ListaModulosPage implements OnInit {
   constructor(private dataBase: DataBaseService,
     private authService: AuthService,
     public funcionesUtiles: FuncionesUtilesService,
-    private modalController: ModalController) {
+    private modalController: ModalController,
+    private database: DataBaseService,
+    private toastService: ToastService) {
 
     this.getCurrentUser();
     this.modulosAMostrar = [...this.modulos];
@@ -65,12 +68,28 @@ export class ListaModulosPage implements OnInit {
       const modal = await this.modalController.create({
         component: DetalleModuloComponent,
         componentProps: {
-          repuesto: modulo
+          repuesto: modulo,
+          ruta: '/repuestos/lista-modulos'
         },
       })
 
-      modal.onDidDismiss().then((result: any) => {
+      modal.onDidDismiss().then(async (result: any) => {
         if (!result.data || !result.role) return;
+
+        if (result.role == 'guardar') {
+          try {
+            await this.database.actualizar(environment.TABLAS.modulos, result.data, result.data.id);
+          } catch (err) {
+            this.toastService.simpleMessage('Error', 'No se pudo actualizar', ToastColor.danger);
+          }
+        } else if (result.role == 'borrar') {
+          this.database.eliminar(environment.TABLAS.modulos, result.data.id).then(() => {
+            this.toastService.simpleMessage('Exito', 'Modulo borrado con exito', ToastColor.success);
+
+          }).catch(err => {
+            this.toastService.simpleMessage('Error', 'No se pudo borrar el modulo', ToastColor.danger);
+          })
+        }
 
 
       })
@@ -79,6 +98,7 @@ export class ListaModulosPage implements OnInit {
     }
 
   }
+
 
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe((userRef: any) => {

@@ -39,7 +39,8 @@ export class ListaModulosProveedorPage implements OnInit {
     }
 
     this.funcionesUtiles.getPriceDolar().subscribe(newPrice => this.precioDolarBlue = newPrice);
-    this.modulosAMostrar = this.proveedor.modulos;
+    this.modulos = this.proveedor.modulos;
+    this.modulosAMostrar = [...this.modulos];
   }
 
   ordenarListaPor(lista: any[], criterio: string, criterio2: string) {
@@ -51,18 +52,35 @@ export class ListaModulosProveedorPage implements OnInit {
       const modal = await this.modalController.create({
         component: DetalleModuloComponent,
         componentProps: {
-          repuesto: modulo
+          repuesto: modulo,
+          ruta:'/proveedores'
         },
       })
 
       modal.onDidDismiss().then((result: any) => {
         if (!result.data || !result.role) return;
 
+        if (result.role == 'guardar') {
+          this.guardarCambiosProeveedor();
+        } else if (result.role == 'borrar') {
+          let indexABorrar = this.proveedor.modulos.findIndex(modulo => JSON.stringify(modulo) == JSON.stringify(result.data));
+          if (indexABorrar != -1) {
+            this.proveedor.modulos.splice(indexABorrar, 1);
+            this.guardarCambiosProeveedor();
+          }
+        }
+
 
       })
       return await modal.present();
     } catch (err) {
     }
+
+  }
+
+  guardarCambiosProeveedor() {
+    this.dataBase.actualizar(environment.TABLAS.proveedores, this.proveedor, this.proveedor.id).then(res => {
+    })
 
   }
 
@@ -85,8 +103,10 @@ export class ListaModulosProveedorPage implements OnInit {
     })
   }
   handleInput(event) {
-    const query = event.target.value.toLowerCase();
-    this.modulosAMostrar = this.modulos.filter((d) => d.modelo.toLowerCase().indexOf(query) > -1);
+    console.log(this.modulos)
+    const textABuscar = event.target.value.toLowerCase();
+    this.modulosAMostrar = this.modulos.filter((d) => d.modelo.toLowerCase().includes(textABuscar));
+    console.log(this.modulosAMostrar)
   }
 
 
@@ -95,6 +115,7 @@ export class ListaModulosProveedorPage implements OnInit {
       const modal = await this.modalController.create({
         component: FormModuloProveedorComponent,
         componentProps: {
+          proveedor: this.proveedor
         },
       })
 

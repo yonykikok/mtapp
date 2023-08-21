@@ -124,6 +124,7 @@ export class InfoCompartidaService {
 
   marcasModulos = ['Samsung', 'LG', 'Motorola', 'Huawei', 'Apple', 'Alcatel', 'Xiaomi', 'Sony'];
   calidadesModulos = ['AAA', 'GenMedCalidad', 'GenBueno', 'Estandar', 'Original Oled', 'Original Certificado'];
+  calidadesModulosProveedores = ['AAA', 'Incell','GenBueno', 'Oled', 'Original'];
   calidadesFlexDecarga = ['AAA', 'Mechanic', 'Original', 'Original Certificado'];
   coloresModulos = ['Blanco', 'Negro', 'Gris', 'Dorado', 'Celeste'];
   tiposModulos = ['Simple', 'C/M'];

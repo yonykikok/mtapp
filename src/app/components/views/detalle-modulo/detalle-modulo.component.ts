@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { AlertService } from 'src/app/services/alert.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
@@ -12,7 +13,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./detalle-modulo.component.scss'],
 })
 export class DetalleModuloComponent implements OnInit {
-
+  ruta;
   editModelo = false;
   editPrecio = false;
   editMarca = false;
@@ -29,16 +30,13 @@ export class DetalleModuloComponent implements OnInit {
   color = "Blanco";
   cantidad = 1;
 
-
-
-
-
   constructor(
     private infoConpatida: InfoCompartidaService,
     private database: DataBaseService,
     private alertService: AlertService,
     private funcionesUtilesService: FuncionesUtilesService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private modalController: ModalController
   ) { }
 
   ngOnInit(): void {
@@ -77,9 +75,16 @@ export class DetalleModuloComponent implements OnInit {
       })
 
   }
+  guardarCambios() {
+    this.repuesto = this.funcionesUtilesService.clonarObjeto(this.clonRepuesto);
+    this.modalController.dismiss(this.repuesto, 'guardar');
+  }
+  borrarArticulo() {
+    this.repuesto = this.funcionesUtilesService.clonarObjeto(this.clonRepuesto);
+    this.modalController.dismiss(this.repuesto, 'borrar');
+  }
 
-
-  async guardarCambios() {
+  async guardarCambios2() {//si se hace el cambio, cambien en todas las pantallas donde se usa detalle modulo.
     this.repuesto = this.funcionesUtilesService.clonarObjeto(this.clonRepuesto);
 
     try {
@@ -90,7 +95,7 @@ export class DetalleModuloComponent implements OnInit {
   }
 
 
-  borrarArticulo() {
+  borrarArticulo2() {//si se hace el cambio, cambien en todas las pantallas donde se usa detalle modulo.
     this.repuesto = this.funcionesUtilesService.clonarObjeto(this.clonRepuesto);
 
     this.database.eliminar(environment.TABLAS.modulos, this.repuesto.id).then(() => {

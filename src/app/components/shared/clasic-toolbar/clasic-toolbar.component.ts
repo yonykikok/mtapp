@@ -9,6 +9,7 @@ import { ModalController } from '@ionic/angular';
 export class ClasicToolbarComponent implements OnInit {
   @Input() title;
   @Input() ruta;
+  isModal=false;//agregar uso.
   constructor(private modalController: ModalController) { }
 
   ngOnInit() { }

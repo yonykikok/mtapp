@@ -8,6 +8,7 @@ import { map, startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { AlertService } from 'src/app/services/alert.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
+import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 
 @Component({
   selector: 'app-form-flex-de-carga',
@@ -25,6 +26,8 @@ export class FormFlexDeCargaComponent implements OnInit {
     stock: []
   }
 
+
+  precioDolarBlue: number | null = null;
   //auto complete
   modelosExistentes = [];
   flexDeCargasFiltrados: Observable<string[]>;
@@ -55,6 +58,7 @@ export class FormFlexDeCargaComponent implements OnInit {
     private alertService: AlertService,
     private toastService: ToastService,
     // readonly snackBar: MatSnackBar,
+    private funcionesUtiles:FuncionesUtilesService,
     private afs: AngularFirestore) {
   }
 
@@ -81,6 +85,11 @@ export class FormFlexDeCargaComponent implements OnInit {
 
 
   ngOnInit(): void {
+    if (this.funcionesUtiles.customDolar) {
+      this.precioDolarBlue = this.funcionesUtiles.customDolar;
+    }
+    this.funcionesUtiles.getPriceDolar().subscribe(newPrice => this.precioDolarBlue = newPrice);
+
     this.cargarInputAutoCompletado();
   }
 

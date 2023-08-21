@@ -9,6 +9,7 @@ import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.servic
 import { environment } from 'src/environments/environment';
 
 export interface Proveedor {
+  id?: string,
   nombre: string,
   direccion: string,
   telefono: string,
@@ -50,7 +51,8 @@ export class ProveedoresPage implements OnInit {
 
 
   loggedUser
-  precioDolar = 310;
+
+  precioDolarBlue: number | null = null;
   proveedores: Proveedor[] = [];
   productosAMostrar;
   textoABuscar;
@@ -149,6 +151,10 @@ export class ProveedoresPage implements OnInit {
 
   }
   ngOnInit() {
+    if (this.funcionesUtiles.customDolar) {
+      this.precioDolarBlue = this.funcionesUtiles.customDolar;
+    }
+    this.funcionesUtiles.getPriceDolar().subscribe(newPrice => this.precioDolarBlue = newPrice);
     this.dataBase.obtenerTodos(environment.TABLAS.proveedores).subscribe((listProveedoresRef) => {
       this.proveedores = listProveedoresRef.map((proveedorRef: DocumentChangeAction<Proveedor>) => {
         let proveedor = proveedorRef.payload.doc.data();
@@ -204,33 +210,34 @@ export class ProveedoresPage implements OnInit {
     let precios = [];
 
     this.proveedores.forEach((proveedor: Proveedor) => {
-      proveedor.modulos.forEach((producto: Modulo) => {
-        if (producto.modelo.toLowerCase().includes(this.textoABuscar.toLowerCase())) {
-          const productoExistente = productos.find((p: Producto) => p.modelo === producto.modelo);
+      proveedor.modulos.forEach((modulo: Modulo) => {
+        if (modulo.modelo.toLowerCase().includes(this.textoABuscar.toLowerCase())) {
+          console.log(productos,)
+          const productoExistente = productos.find((p: any) => (p.modelo.toLowerCase() === modulo.modelo.toLowerCase() && p.tipo.toLowerCase() == modulo.tipo.toLowerCase()));
 
           if (productoExistente) {
             productoExistente.precios.push({
               proveedor: proveedor.nombre,
-              precio: producto.precio
+              precio: modulo.precio
             });
             productoExistente.precios.sort((a, b) => a.precio - b.precio);
           } else {
             const nuevoProducto = {
-              calidad: producto.calidad,
-              modelo: producto.modelo,
+              calidad: modulo.calidad,
+              tipo: modulo.tipo,
+              modelo: modulo.modelo,
               precios: [{
                 proveedor: proveedor.nombre,
-                precio: producto.precio
+                precio: modulo.precio
               }]
             };
 
             productos.push(nuevoProducto);
           }
-          precios.push(producto.precio);
+          precios.push(modulo.precio);
         }
       });
     });
-
     const precioPromedio = precios.reduce((total, precio) => total + precio, 0) / precios.length;
 
     productos.forEach((producto: any) => {

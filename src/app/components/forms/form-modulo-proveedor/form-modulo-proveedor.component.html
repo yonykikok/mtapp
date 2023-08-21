@@ -1,5 +1,5 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/lista-modulos'" [title]="'Agregar modulo'"></app-clasic-toolbar>
+  <app-clasic-toolbar [ruta]="'/proveedores'" [title]="'Agregar modulo'"></app-clasic-toolbar>
 </ion-header>
 
 <ion-content>
@@ -16,6 +16,12 @@
 
       <form class="card p-3 m-3 col-lg-6" [formGroup]="formModulo">
 
+        <ion-item fill="outline" class="ion-margin">
+          <ion-select  placeholder="Seleccione la marca" formControlName="marca">>
+            <ion-select-option *ngFor="let marca of marcas" [value]="marca">{{marca}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
         <ion-item fill="outline"  class="ion-margin">
           <ion-input type="text" placeholder="Escriba el modelo" aria-label="Modulo" formControlName="modelo">
           </ion-input>
@@ -23,52 +29,17 @@
 
         <ion-item fill="outline" class="ion-margin">
           <ion-input type="number" placeholder="precio en dolares" formControlName="precio"></ion-input>
-          <ion-chip>{{formModulo.controls.precio.value*492|currency:'USD':'symbol':'1.0-0'}}</ion-chip>
+          <ion-chip>{{formModulo.controls.precio.value*precioDolarBlue|currency:'USD':'symbol':'1.0-0'}}</ion-chip>
         </ion-item>
 
 
         <ion-item fill="outline" class="ion-margin">
-          <ion-select  placeholder="Seleccione la marca" formControlName="marca">>
-            <ion-select-option *ngFor="let marca of marcas" [value]="marca">{{marca}}</ion-select-option>
-          </ion-select>
-        </ion-item>
-
-
-
-        <ion-card class="ion-margin">
-          <ion-item fill="outline" class="ion-margin">
-            <ion-select slot="start" placeholder="Selecciona el color" formControlName="color">
-              <ion-select-option *ngFor="let color of colores" [value]="color">{{color}}</ion-select-option>
-            </ion-select>
-            <ion-select slot="end" placeholder="Selecciona la cantidad" formControlName="cantidad">
-              <ion-select-option *ngFor="let cantidad of cantidades" [value]="cantidad">{{cantidad}}</ion-select-option>
-            </ion-select>
-          </ion-item>
-
-          <div class="divColores">
-            <div style="display: flex; justify-content: center;">
-              <div *ngFor="let auxStock of nuevoModulo?.stock">
-                <ion-chip outline="true" *ngIf="auxStock.color=='Blanco'" class="badge m-1"
-                  [ngStyle]="{'background-color':auxStock.color|colores}">{{auxStock.cantidad}}</ion-chip>
-                <ion-chip outline="true" *ngIf="auxStock.color!='Blanco'" class="badge m-1" style="color: white;"
-                  [ngStyle]="{'background-color':auxStock.color|colores}">{{auxStock.cantidad}}</ion-chip>
-              </div>
-            </div>
-            <ion-item-divider>
-              <ion-button color="secondary" (click)="agregarNuevoColor()">Nuevo color</ion-button>
-            </ion-item-divider>
-          </div>
-        </ion-card>
-
-
-
-        <ion-item fill="outline" class="ion-margin">
-          <ion-select aria-label="fruit" placeholder="Select fruit" formControlName="tipo">>
+          <ion-select aria-label="fruit" placeholder="Selecciona el tipo" formControlName="tipo">>
             <ion-select-option *ngFor="let tipo of tipos" [value]="tipo">{{tipo}}</ion-select-option>
           </ion-select>
         </ion-item>
         <ion-item fill="outline" class="ion-margin">
-          <ion-select aria-label="fruit" placeholder="Select fruit" formControlName="calidad">>
+          <ion-select aria-label="fruit" placeholder="Selecciona la calidad" formControlName="calidad">>
             <ion-select-option *ngFor="let calidad of calidades" [value]="calidad">{{calidad}}</ion-select-option>
           </ion-select>
         </ion-item>
