@@ -11,6 +11,8 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { environment } from 'src/environments/environment';
 import { Proveedor } from '../proveedores/proveedores.page';
+
+
 @Component({
   selector: 'app-lista-modulos-proveedor',
   templateUrl: './lista-modulos-proveedor.page.html',

@@ -2,8 +2,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { AlertService } from 'src/app/services/alert.service';
+import { DataBaseService } from 'src/app/services/database.service';
 import { reparacionShortMessage } from 'src/app/services/info-compartida.service';
 import { boleta_estados, listaDeEstadosBoletas, reparacionIconName } from 'src/app/services/info-compartida.service';
+import { ToastColor, ToastService } from 'src/app/services/toast.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-detalle-reparacion',
@@ -21,103 +24,14 @@ export class DetalleReparacionComponent implements OnInit {
   loggedUser;
   constructor(private alertController: AlertController,
     private alertService: AlertService,
-    private actionSheetController: ActionSheetController) { }
+    private actionSheetController: ActionSheetController,
+    private database: DataBaseService,
+    private toastService: ToastService) { }
 
   ngOnInit() {
     console.log(this.reparacion)
     this.getOpcionesEstadoDisponibles();
-    this.reparacion.historial = [
-      {
-        "estadoAnterior": "PENDIENTE",
-        "estadoActual": "EN_REVISION",
-        "fecha": "2023-06-28T02:10:16.228Z",
-        "modificadoPor": {
-          "displayName": "Jonathan Haedo"
-        },
-        "detalle": "Empezamos a revisar el equipo."
-      },
-      {
-        "estadoAnterior": "EN_REVISION",
-        "estadoActual": "PARA_NOTIFICAR",
-        "fecha": "2023-06-28T02:11:40.228Z",
-        "modificadoPor": {
-          "displayName": "Jonathan Haedo"
-        },
-        "detalle": "Se encontro el equipo mojado en el sector del flex de carga, se tiene que hacer una limpieza y posiblemente haya que cambiar el flex, precio de la limpieza $2500, precio del flex $7500."
-      },
-      {
-        "estadoAnterior": "PARA_NOTIFICAR",
-        "estadoActual": "ESPERADO_RESPUESTA",
-        "fecha": "2023-06-28T03:12:01.228Z",
-        "modificadoPor": {
-          "displayName": "Jonathan Haedo"
-        },
-        "detalle": "Se notifico y se espera respuesta para continuar."
-      },
-      {
-        "estadoAnterior": "ESPERADO_RESPUESTA",
-        "estadoActual": "EN_PROCESO",
-        "fecha": "2023-06-28T04:20:16.228Z",
-        "modificadoPor": {
-          "displayName": "Jonathan Haedo"
-        },
-        "detalle": "El cliente confirmo el presupuesto."
-      },
-      {
-        "estadoAnterior": "EN_PROCESO",
-        "estadoActual": "PAUSADO",
-        "fecha": "2023-06-28T05:20:16.228Z",
-        "modificadoPor": {
-          "displayName": "Jonathan Haedo"
-        },
-        "detalle": "Se hizo la limpieza pero hace falta cambiar el flex, no lo tenemos en stock. Se pausa hasta el sabado."
-      },
-      {
-        "estadoAnterior": "PAUSADO",
-        "estadoActual": "EN_PROCESO",
-        "fecha": "2023-06-28T06:20:16.228Z",
-        "modificadoPor": {
-          "displayName": "Jonathan Haedo"
-        },
-        "detalle": "Ya tenemos el repuesto, retomamos la reparacion."
-      },
-      {
-        "estadoAnterior": "EN_PROCESO",
-        "estadoActual": "REPARADO",
-        "fecha": "2023-06-28T07:20:16.228Z",
-        "modificadoPor": {
-          "displayName": "Jonathan Haedo"
-        },
-        "detalle": "El equipo quedo funcional con el cambio del flex de carga y la limpieza.."
-      },
-      {
-        "estadoAnterior": "REPARADO",
-        "estadoActual": "PARA_NOTIFICAR",
-        "fecha": "2023-06-28T07:40:16.228Z",
-        "modificadoPor": {
-          "displayName": "Jonathan Haedo"
-        },
-        "detalle": "Se tiene que notificar la reparacion y darle el monto total de $10.000 ."
-      },
-      {
-        "estadoAnterior": "PARA_NOTIFICAR",
-        "estadoActual": "PARA_ENTREGAR",
-        "fecha": "2023-06-28T28:50:10.228Z",
-        "modificadoPor": {
-          "displayName": "Jonathan Haedo"
-        },
-        "detalle": "Se notifico al cliente con el importe total y se pone para ser retirado."
-      },
-      {
-        "estadoAnterior": "PARA_ENTREGAR",
-        "estadoActual": "RETIRADO",
-        "fecha": "2023-06-28T09:20:16.228Z",
-        "modificadoPor": {
-          "displayName": "Jonathan Haedo"
-        },
-        "detalle": "El cliente paso a retirar el equipo sin boleta, dejando la firma en la original."
-      },
-    ]
+
 
   }
 
@@ -173,12 +87,13 @@ export class DetalleReparacionComponent implements OnInit {
         {
           text: 'Guardar',
           handler: (data) => {
+            console.log(this.loggedUser)
             let cambioDeEstado = {
               estadoAnterior: this.reparacion.estado,
               estadoActual: this.estadoSeleccionado,
-              fecha: new Date(),
+              fecha: new Date().toISOString(),
               modificadoPor: {
-                id: this.loggedUser.id,
+                id: this.loggedUser.uid,
                 displayName: this.loggedUser.displayName,
               },
               detalle: data.descripcion
@@ -188,8 +103,14 @@ export class DetalleReparacionComponent implements OnInit {
             this.reparacion.estado = this.estadoSeleccionado;
             if (!this.reparacion.historial) { this.reparacion.historial = [] };
             this.reparacion.historial = [...this.reparacion.historial, cambioDeEstado];
-            this.getOpcionesEstadoDisponibles();
+            console.log(this.reparacion)
+            this.getOpcionesEstadoDisponibles();//TODO: guardar en la db.
+
+            this.database.actualizar(environment.TABLAS.boletasReparacion, this.reparacion, this.reparacion.id)
+              .then(res => this.toastService.simpleMessage('Exito', `Se paso el estado a ${this.estadoSeleccionado}`, ToastColor.success))
+              .catch(err => this.toastService.simpleMessage('Error', `Hubo un error al cambiar el estado: ${err.message}`, ToastColor.danger));
           }
+
         }
       ]
     });
@@ -233,7 +154,7 @@ export class DetalleReparacionComponent implements OnInit {
         {
           text: 'Recordatorio de retiro',
           handler: () => {
-            mensaje=`Hola, ¿qué tal?, te escribo por el equipo de la boleta (${reparacion.nroBoleta}) dejado el dia de la fecha ---, 
+            mensaje = `Hola, ¿qué tal?, te escribo por el equipo de la boleta (${reparacion.nroBoleta}) dejado el dia de la fecha ---, 
             le informamos nuevamente que el equipo esta listo para ser retirado desde la fecha ---`;
             this.abrirWhatsApp(reparacion, mensaje)
           }

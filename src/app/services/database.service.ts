@@ -33,10 +33,11 @@ export class DataBaseService {
   }
 
   public actualizar(coleccion: string, data: any, id: string) {
+    console.log(coleccion, data, id);
     try {
       return this.firestore.collection(coleccion).doc(id).set(data);
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
   }
 
@@ -159,7 +160,7 @@ export class DataBaseService {
   // }
 
 
-  
+
   async getBoletasPorIntervaloDeFecha(fechaInicio, fechaFin) {
     let collectionRef = this.firestore.collection(environment.TABLAS.boletasReparacion).ref;
     try {
