@@ -33,19 +33,44 @@
 
       <ion-chip class="ion-margin"> Boleta: ({{reparacion.nroBoleta}})</ion-chip>
 
+      <small style="position: absolute;top: 0.5rem;right: 0.5rem;"><b>{{reparacion.fechaAlta|date}}</b></small>
       <ion-chip outline="true" class="flexColumn" style="justify-content: center; align-items: start;">
-        <label><b>DNI cliente:</b>{{reparacion.dniCliente}}</label>
-        <label> <b>Telefono: </b>{{reparacion.telefono?reparacion.telefono:'No tiene'}}</label>
-        <ion-icon (click)="solicitarConfirmacion(reparacion)" *ngIf="reparacion.telefono"
-          style="position: absolute; right: 1rem; font-size: 2rem;" color="success" name="logo-whatsapp"></ion-icon>
+        <label style="margin-bottom: 0.2rem;">
+          <b>DNI cliente: </b>{{reparacion.dniCliente}}
+          <ion-icon name="pencil-outline" (click)="mostrarFormularioEditarinformacion('dni','dniCliente')"> </ion-icon>
+        </label>
+        <label style="margin-bottom: 0.2rem;">
+          <b>Telefono: </b>{{reparacion.telefono?reparacion.telefono:'NO TIENE'}}
+          <ion-icon name="pencil-outline" (click)="mostrarFormularioEditarinformacion('telefono','telefono')"></ion-icon>
+        </label>
+        <label style="margin-bottom: 0.2rem;">
+          <b>Modelo: </b>{{(reparacion.modelo?reparacion.modelo:'NO TIENE')|uppercase}}
+          <ion-icon name="pencil-outline" (click)="mostrarFormularioEditarinformacion('modelo','modelo')"></ion-icon>
+        </label>
+
+        <ion-chip color="success" class="ion-no-margin" style="position: absolute; right: 1rem; ">
+          <ion-icon (click)="solicitarConfirmacion($event,reparacion)" *ngIf="reparacion.telefono"
+            style=" font-size: 2rem; margin: 0;" color="success" name="logo-whatsapp"></ion-icon>
+        </ion-chip>
       </ion-chip>
 
       <ion-chip [appEstadoReparacionColor]="reparacion.estado" [appEstadoReparacionBorderColor]="reparacion.estado"
-        style="display: flex; justify-content: center;" class="ion-margin ion-text-center" outline>
+        style="display: flex; justify-content: center; border-radius: 0;" class="ion-margin ion-text-center" outline>
         {{reparacion.estado | estadoReparacion}}
       </ion-chip>
 
-      <ion-img class="ion-margin" *ngIf="mostrarImgBoleta" [src]="reparacion.images[0]"></ion-img>
+      <div *ngIf="mostrarImgBoleta">
+        <ion-img [ngStyle]="{ 'transform': 'rotate(' + imagenGradosRotada + 'deg)' }" class="ion-margin"
+          [src]="reparacion.images[0]"></ion-img>
+        <ion-chip color="primary">
+          <ion-icon style="font-size: 1.5rem;" class="ion-margin-start ion-margin-end" (click)="girarImagen(-90)"
+            name="arrow-undo-outline"></ion-icon>
+        </ion-chip>
+        <ion-chip color="primary">
+          <ion-icon style="font-size: 1.5rem;" class="ion-margin-start ion-margin-end" (click)="girarImagen(90)"
+            name="arrow-redo-outline"></ion-icon>
+        </ion-chip>
+      </div>
 
       <ion-button color="primary" mode="ios" class="ion-margin" expand="block"
         (click)="mostrarImgBoleta? mostrarImgBoleta=false:mostrarImgBoleta=true">
@@ -55,7 +80,8 @@
 
 
 
-      <label class="flexColumn flexCenterCenter ion-margin ion-text-center ">Ver historial
+      <label class="flexColumn flexCenterCenter ion-margin ion-text-center "
+        *ngIf="reparacion.historial && reparacion.historial.length>0">Ver historial
         <ion-toggle [(ngModel)]="mostrarHistorial"></ion-toggle>
       </label>
 

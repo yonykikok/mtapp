@@ -22,11 +22,13 @@ export class DetalleReparacionComponent implements OnInit {
   estadosPosibles;
   estadoSeleccionado;
   loggedUser;
+
+  imagenGradosRotada = 0;
   constructor(private alertController: AlertController,
     private alertService: AlertService,
     private actionSheetController: ActionSheetController,
     private database: DataBaseService,
-    private toastService: ToastService) { }
+    private toastService: ToastService,) { }
 
   ngOnInit() {
     console.log(this.reparacion)
@@ -121,8 +123,9 @@ export class DetalleReparacionComponent implements OnInit {
     return reparacionShortMessage[estado.toUpperCase()];
   }
 
-  solicitarConfirmacion(reparacion) {
-    console.log(reparacion)
+  solicitarConfirmacion(event, reparacion) {
+    console.log("se")
+    event.stopPropagation();
     this.alertService.alertConfirmacion('Confirmación', '¿Quiere enviarle un mensaje al cliente en este momento?', 'Si', this.presentActionSheet.bind(this, reparacion));
   }
 
@@ -171,5 +174,29 @@ export class DetalleReparacionComponent implements OnInit {
     });
 
     await actionSheet.present();
+  }
+
+
+
+
+  girarImagen(grados: number) {
+    return this.imagenGradosRotada += grados;
+  }
+
+  mostrarFormularioEditarinformacion(nombre: string, campo: string) {
+    console.log("entra")
+    this.alertService.mostrarAlertaConTextPrompt(`Actualizar ${nombre}`, `Ingresa el nuevo ${nombre}`, 'Cancelar', 'Actualizar', (input) => {
+      this.reparacion[campo] = input.valor;
+      console.log("Actualizamos", this.reparacion);
+      this.database.actualizar(environment.TABLAS.boletasReparacion, this.reparacion, this.reparacion.id).then(() => {
+        this.toastService.simpleMessage('Exito', `Se cambio el ${campo} con exito`, ToastColor.success);
+      }).catch(err => {
+        this.toastService.simpleMessage('Error', `No se pudo cambiar el ${campo}`, ToastColor.danger);
+
+      });
+    }, () => {
+
+      console.log("Cancelo");
+    })
   }
 }

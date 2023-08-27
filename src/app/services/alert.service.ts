@@ -74,7 +74,7 @@ export class AlertService {
   }
 
 
-  async mostrarAlertaConPrompt(header: string, placeholder: string, cancelText: string, confirmText: string, handlerAcceptButton,handlerCancelButton) {
+  async mostrarAlertaConPrompt(header: string, placeholder: string, cancelText: string, confirmText: string, handlerAcceptButton, handlerCancelButton) {
     const alert = await this.alertController.create({
       header,
       inputs: [
@@ -88,7 +88,33 @@ export class AlertService {
         {
           text: cancelText,
           role: 'cancel',
-          handler:handlerCancelButton
+          handler: handlerCancelButton
+        },
+        {
+          text: confirmText,
+          handler: handlerAcceptButton,
+        },
+      ],
+    });
+
+    await alert.present();
+
+    return new Promise<string | null>((resolve) => { });
+  }
+  async mostrarAlertaConTextPrompt(header: string, placeholder: string, cancelText: string, confirmText: string, handlerAcceptButton, handlerCancelButton) {
+    const alert = await this.alertController.create({
+      header,
+      inputs: [
+        {
+          name: 'valor',
+          placeholder,
+        },
+      ],
+      buttons: [
+        {
+          text: cancelText,
+          role: 'cancel',
+          handler: handlerCancelButton
         },
         {
           text: confirmText,
