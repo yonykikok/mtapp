@@ -127,7 +127,7 @@ export class DetalleReparacionComponent implements OnInit {
   }
 
   abrirWhatsApp(reparacion: any, mensaje: string) {
-    const url = `https://api.whatsapp.com/send?phone=${reparacion.telefono}&text=${encodeURIComponent(mensaje)}`;
+    const url = `https://api.whatsapp.com/send?phone=+54${reparacion.telefono}&text=${encodeURIComponent(mensaje)}`;
 
     window.open(url, '_system');
   }
