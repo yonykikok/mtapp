@@ -19,9 +19,9 @@ export class SpinnerService {
   }
 
   async stopLoading() {
-    console.log("entra",)
+//console.log("entra",)
     let loading = await this.loadingCtrl.getTop();
-    console.log("entra",loading)
+//console.log("entra",loading)
     if (loading) {
       this.loadingCtrl.dismiss();
     }

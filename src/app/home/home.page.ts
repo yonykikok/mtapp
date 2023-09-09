@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { DataBaseService } from '../services/database.service';
+import { ModalController } from '@ionic/angular';
+import { EncuestaCalificacionComponent } from '../components/encuesta-calificacion/encuesta-calificacion.component';
 
 @Component({
   selector: 'app-home',
@@ -17,11 +19,20 @@ export class HomePage {
 
   reparaciones;
   reparacionesAMostrar
-  
 
-  constructor() {
+
+  constructor(private modalController: ModalController) {
+
+    // this.mostrarFormulario();
   }
 
+  async mostrarFormulario() {
+    let modal = this.modalController.create({
+      component: EncuestaCalificacionComponent
+    })
+
+    ;(await modal).present();
+  }
 
 }
 

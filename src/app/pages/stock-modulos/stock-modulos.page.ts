@@ -223,7 +223,7 @@ export class StockModulosPage implements OnInit {
 
     this.listaDeModulos.forEach(modulo => {
       modulo.stock.sinMarco.forEach((stock: any) => {
-        if (stock.cantidad <= 1) {
+        if (stock.cantidad <= 0) {
           listaStockBajo.push({
             color: stock.color,
             cantidad: stock.cantidad.toString(),
@@ -234,7 +234,7 @@ export class StockModulosPage implements OnInit {
         }
       });
       modulo.stock.conMarco.forEach((stock: any) => {
-        if (stock.cantidad <= 1) {
+        if (stock.cantidad <= 0) {
           listaStockBajo.push({
             color: stock.color,
             cantidad: stock.cantidad.toString(),

@@ -47,6 +47,7 @@
           [color]="pedidoPorCliente?'success':'secondary'"><b>{{pedidoPorCliente?'SI':'NO'}}</b></ion-chip>
       </div>
 
+      
       <ion-item *ngIf="pedidoPorCliente" fill="outline" class="ion-margin">
         <ion-label position="floating">Informacion del cliente</ion-label>
         <ion-textarea placeholder="Jorge: 1151256116, precio maximo $1500" formControlName="cliente"></ion-textarea>

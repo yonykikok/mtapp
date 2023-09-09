@@ -29,15 +29,15 @@ export class DashboardPage implements OnInit {
     // { titulo: 'Modulos', color: '#28a745', ruta: "/lista-modulos", role: 'CLIENTE' },
     // { titulo: 'Baterias', color: '#ffc107', ruta: "/lista-baterias", role: 'CLIENTE' },
     // { titulo: 'Flex de carga', color: '#d34fb2', ruta: "/lista-flex-de-carga", role: 'CLIENTE' },
-    { titulo: 'Mis reparaciones', color: '#d34fb2', ruta: "/mis-reparaciones", role: 'CLIENTE', img: '/assets/svg/icons/reparaciones.svg' },
+    { titulo: 'Libro diario', color: '#dc70fd', ruta: "/libro-diario", role: 'EMPLEADO', img: '/assets/svg/icons/librodiario.svg' },
     { titulo: 'Repuestos', color: 'rgb(79 132 211)', ruta: "/repuestos", role: 'CLIENTE', img: '/assets/svg/icons/btnRepuestos.png' },
     { titulo: 'Pedidos', color: '#007bff', ruta: "/lista-pedidos", role: 'EMPLEADO', img: '/assets/svg/icons/pedidos.svg' },
-    { titulo: 'Ventas', color: '#7fbdc7', ruta: "/equipos-vendidos", role: 'EMPLEADO', img: '/assets/svg/icons/ventas.svg' },
-    { titulo: 'Libro diario', color: '#dc70fd', ruta: "/libro-diario", role: 'EMPLEADO', img: '/assets/svg/icons/librodiario.svg' },
+    { titulo: 'Historial', color: 'rgb(113 112 253)', ruta: "/historial-caja", role: 'ADMIN', img: '/assets/svg/icons/historial.svg' },
     { titulo: 'Stock Modulos', color: 'rgb(103 102 102)', ruta: "/stock-modulos", role: 'EMPLEADO', img: '/assets/svg/icons/stock.svg' },
     { titulo: 'Boletas', color: 'rgb(149 157 126)', ruta: "/boletas", role: 'EMPLEADO', img: '/assets/svg/icons/boletas.svg' },
+    { titulo: 'Ventas', color: '#7fbdc7', ruta: "/equipos-vendidos", role: 'EMPLEADO', img: '/assets/svg/icons/ventas.svg' },
     { titulo: 'Cuentas clientes', color: '#dc3545', ruta: "/cuentas-clientes", role: 'ADMIN', img: '/assets/svg/icons/deudores2.svg'},
-    { titulo: 'Historial', color: 'rgb(113 112 253)', ruta: "/historial-caja", role: 'ADMIN', img: '/assets/svg/icons/historial.svg' },
+    { titulo: 'Mis reparaciones', color: '#d34fb2', ruta: "/mis-reparaciones", role: 'CLIENTE', img: '/assets/svg/icons/reparaciones.svg' },
     { titulo: 'Trabajos tercerizados', color: 'rgb(141 205 119)', ruta: "/trabajos-tercerizados", role: 'ADMIN', img: '/assets/svg/icons/delegar.svg' },
     { titulo: 'Proveedores', color: 'rgb(149 57 126)', ruta: "/proveedores", role: 'OWNER', img: '/assets/svg/icons/proveedores.svg' },
     { titulo: 'Usuarios', color: 'rgb(149 57 126)', ruta: "/lista-de-usuarios", role: 'OWNER', img: '/assets/svg/icons/usuarios.svg' },
@@ -122,8 +122,8 @@ export class DashboardPage implements OnInit {
         alert(JSON.stringify(this.productosEscaneados));
       }
       // this.scannerResultEvent.emit(barcodeData);
-      console.log("------------------", barcodeData);
-      console.log("------------------", JSON.stringify(barcodeData));
+ //console.log("------------------", barcodeData);
+ //console.log("------------------", JSON.stringify(barcodeData));
     }).catch(err => {
       console.error('Error', err);
     });
@@ -139,7 +139,7 @@ export class DashboardPage implements OnInit {
         mes['id'] = mesRef.payload.doc.id;
         return mes;
       });
-      console.log(meses)
+ //console.log(meses)
       meses.forEach(mes => {
         this.database.actualizar(environment.TABLAS.backUps, mes, mes.id);
       })
@@ -159,13 +159,13 @@ export class DashboardPage implements OnInit {
       subscripcion.unsubscribe();
       let mes: any = res.payload.data();
       mes['id'] = res.payload.id;
-      console.log(mes)
+ //console.log(mes)
       let subscripcion2 = this.database.obtenerPorId(environment.TABLAS.backUps, `${month}${year}`).subscribe(async (res) => {
         subscripcion2.unsubscribe();
         if (res.payload.exists) {
           let mesBackUp: any = res.payload.data();
           mesBackUp['id'] = res.payload.id;
-          console.log(mesBackUp)
+     //console.log(mesBackUp)
 
           if (mes.dias && mesBackUp.dias) {
 
@@ -177,12 +177,12 @@ export class DashboardPage implements OnInit {
               }
             }
             else {
-              console.log("NO ACTUALIZAMOS!");
+         //console.log("NO ACTUALIZAMOS!");
             }
           }
 
         } else {
-          console.log("creamos el backup de ese mes")
+     //console.log("creamos el backup de ese mes")
           haceFaltaActualizarElBackUp = true;
         }
 

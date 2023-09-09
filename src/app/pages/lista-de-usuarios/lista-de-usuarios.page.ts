@@ -48,7 +48,7 @@ export class ListaDeUsuariosPage implements OnInit {
       this.usuarios = [...lista];
 
       this.usuariosAMostrar = lista;
-      console.log(this.usuariosAMostrar)
+ //console.log(this.usuariosAMostrar)
     });
   }
 
@@ -109,7 +109,7 @@ export class ListaDeUsuariosPage implements OnInit {
 
     if (query.length == 0) {
       this.usuariosAMostrar = [...this.usuarios];
-      console.log("entra")
+ //console.log("entra")
     }
   }
   openDialog(): void {

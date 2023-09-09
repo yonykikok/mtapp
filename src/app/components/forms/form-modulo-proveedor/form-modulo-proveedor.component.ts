@@ -548,7 +548,7 @@ export class FormModuloProveedorComponent implements OnInit {
     //   return modulo;
     // });
     this.dataBase.actualizar(environment.TABLAS.proveedores, this.proveedor, this.proveedor.id);
-    console.log(this.proveedor);
+//console.log(this.proveedor);
 
     return;
   }

@@ -12,7 +12,8 @@
     </ion-select>
   </ion-item>
 
-  <ion-searchbar *ngIf="listaSeleccionada=='completa'" show-clear-button="focus" placeholder="J7 prime" (ionInput)="handleInput($event)"></ion-searchbar>
+  <ion-searchbar *ngIf="listaSeleccionada=='completa'" show-clear-button="focus" placeholder="J7 prime"
+    (ionInput)="handleInput($event)"></ion-searchbar>
 
   <!-- TABLA -->
   <ion-grid class="ion-text-center">
@@ -20,7 +21,8 @@
       <ion-col *ngFor='let atributo of displayedColumnKeys.value'><b>{{atributo|titlecase}}</b></ion-col>
     </ion-row>
 
-    <ion-row (click)="(loggedUser && funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)&& listaSeleccionada=='completa')?seleccionar(modulo):null"
+    <ion-row
+      (click)="(loggedUser && funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)&& listaSeleccionada=='completa')?seleccionar(modulo):null"
       *ngFor="let modulo of listaDeModulosAMostrar">
       <ion-col *ngFor='let atributo of displayedColumnKeys.value'>
         <ion-text *ngIf="atributo!='c/m' && atributo!='s/m';else formatoStock">
@@ -30,13 +32,15 @@
         <ng-template #formatoStock>
           <div *ngIf="atributo=='c/m'; else sinMarco">
             <div *ngFor="let auxStock of modulo.stock.conMarco">
-              <ion-chip outline="true" *ngIf="auxStock.color=='Blanco'"
-                [ngStyle]="{'background-color':auxStock.color|colores}"
-                (click)="seleccionarColorYTipo($event,auxStock,modulo,'conMarco')">{{auxStock.cantidad}}C/M
+              <ion-chip outline="true" *ngIf="auxStock.color=='Blanco'" [ngStyle]="{
+                'background-color':auxStock.color|colores,
+                'border':auxStock.cantidad==0?'2px solid red':''
+              }" (click)="seleccionarColorYTipo($event,auxStock,modulo,'conMarco')">{{auxStock.cantidad}}C/M
               </ion-chip>
 
               <ion-chip outline="true" *ngIf="auxStock.color!='Blanco'" style="color: white;"
-                [ngStyle]="{'background-color':auxStock.color|colores}"
+                [ngStyle]="{'background-color':auxStock.color|colores,
+                'border':auxStock.cantidad==0?'2px solid red':''}"
                 (click)="seleccionarColorYTipo($event,auxStock,modulo,'conMarco')">
                 {{auxStock.cantidad}} C/M
               </ion-chip>
@@ -47,12 +51,14 @@
           <ng-template #sinMarco>
             <div *ngFor="let auxStock of modulo.stock.sinMarco">
               <ion-chip outline="true" *ngIf="auxStock.color=='Blanco'"
-                [ngStyle]="{'background-color':auxStock.color|colores}"
+                [ngStyle]="{'background-color':auxStock.color|colores,
+                'border':auxStock.cantidad==0?'2px solid red':''}"
                 (click)="seleccionarColorYTipo($event,auxStock,modulo,'sinMarco')">{{auxStock.cantidad}} S/M
               </ion-chip>
 
               <ion-chip outline="true" *ngIf="auxStock.color!='Blanco'" style="color: white;"
-                [ngStyle]="{'background-color':auxStock.color|colores}"
+                [ngStyle]="{'background-color':auxStock.color|colores,
+                'border':auxStock.cantidad==0?'2px solid red':''}"
                 (click)="seleccionarColorYTipo($event,auxStock,modulo,'sinMarco')">{{auxStock.cantidad}} S/M
               </ion-chip>
             </div>
@@ -114,7 +120,7 @@
 
         <ion-tab-button (click)="mostrarLista('stockBajo')">
           <ion-icon color="secondary" name="trending-down-outline"></ion-icon>
-          Stock bajo
+          Lista sin stock
         </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>

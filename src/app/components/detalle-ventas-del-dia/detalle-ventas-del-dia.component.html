@@ -30,6 +30,30 @@
           </tr>
         </tbody>
       </table>
+
+      <ion-accordion-group *ngIf="libroDiario.historialDeCierre">
+        <ion-accordion value="first">
+          <ion-item slot="header">
+            <ion-label>Historial de cierre</ion-label>
+          </ion-item>
+          <div class="ion-padding" slot="content">
+            <ion-chip style="flex-direction: column;"
+              [color]="cierre.resultadoDeCaja<0?'danger':cierre.resultadoDeCaja>0?'primary':'success'"
+              *ngFor="let cierre of  libroDiario.historialDeCierre">
+              <div style="display: flex; justify-content: space-between; width: 100%;">
+                <p>{{cierre.usuario|titlecase}}</p>
+                <p>{{cierre.fechaString|date}}</p>
+              </div>
+              <div style="display: flex;  justify-content: space-between; width: 100%; margin-top: 0.5rem;">
+                <p>{{cierre.mensaje|titlecase}}</p>
+                <p>{{cierre.resultadoDeCaja|currency}}</p>
+              </div>
+
+            </ion-chip>
+
+          </div>
+        </ion-accordion>
+      </ion-accordion-group>
     </ion-card-content>
   </ion-card>
 

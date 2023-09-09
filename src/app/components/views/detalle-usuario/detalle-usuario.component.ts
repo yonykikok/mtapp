@@ -83,6 +83,6 @@ export class DetalleUsuarioComponent implements OnInit {
 
   }
   verDetalleTarea(tarea) {
-    console.log(tarea)
+//console.log(tarea)
   }
 }

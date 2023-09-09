@@ -24,10 +24,10 @@ export class ListaPedidosPage implements OnInit {
   listaSeleccionada = 'pendientes';
   pedidosAMostrar = [];
   pedidos = {
-      conseguidos: [],
-      notificados: [],
-      pendientes: []
-    };
+    conseguidos: [],
+    notificados: [],
+    pendientes: []
+  };
 
   @Input() loggedUser: User;
   @Input() listaPedidos;
@@ -53,7 +53,7 @@ export class ListaPedidosPage implements OnInit {
       pedidosRef.forEach(pedidoRef => {
         let pedido = pedidoRef.payload.doc.data();
         pedido['id'] = pedidoRef.payload.doc.id;
-        console.log(pedido)
+        //console.log(pedido)
 
         if (pedido['conseguido'] && !pedido['notificado']) {
           this.pedidos.conseguidos.push(pedido);
@@ -156,7 +156,7 @@ export class ListaPedidosPage implements OnInit {
         switch (result.role) {
           case 'cancelarPedido':
 
-          this.database.eliminar(environment.TABLAS.pedidos, pedido.id).finally(() => {
+            this.database.eliminar(environment.TABLAS.pedidos, pedido.id).finally(() => {
               this.toastService.simpleMessage('', 'Se elimino el pedido, ya no aparecera en los listados', ToastColor.success);
               // this.actualizarLista();
             });
@@ -209,6 +209,13 @@ export class ListaPedidosPage implements OnInit {
     this.listaSeleccionada = estado;
 
 
+  }
+
+  cargarListaDePedidosParaNotificar() {
+    this.pedidosAMostrar = this.pedidos.conseguidos.filter(pedido => pedido.cliente);
+    this.pedidosAMostrar?.sort(this.compare.bind(this))
+    this.listaSeleccionada = 'para_notificar';
+    console.log(this.pedidosAMostrar);
   }
 
   async mostrarFormularioDeAltaPedido() {

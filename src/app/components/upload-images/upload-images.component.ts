@@ -49,7 +49,7 @@ export class UploadImagesComponent implements OnInit {
         (result: string) => {
           // imgResult = result;
           this.imagenes.push(result);
-          console.log(result)
+     //console.log(result)
           this.imagesListChangedEvent.emit(this.imagenes);
           this.selectedImg=result;
         },
@@ -57,7 +57,7 @@ export class UploadImagesComponent implements OnInit {
           console.info('The compression algorithm didn\'t succed! The best size we can do is', this.imageCompress.byteCount(result), 'bytes')
           // imgResult = result;
           this.imagenes.push(result);
-          console.log(result)
+     //console.log(result)
           this.imagesListChangedEvent.emit(this.imagenes);
           this.selectedImg=result;
         });

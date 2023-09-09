@@ -18,7 +18,7 @@ export class DetalleProveedorComponent implements OnInit {
 
   async agregarModuloProveedor(proveedor: Proveedor) {
 
-    console.log(proveedor)
+//console.log(proveedor)
     let modal = await this.modalController.create({
       component: ListaModulosProveedorPage,
       componentProps: {

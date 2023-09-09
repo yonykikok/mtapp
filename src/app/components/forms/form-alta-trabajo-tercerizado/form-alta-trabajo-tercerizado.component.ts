@@ -52,7 +52,7 @@ export class FormAltaTrabajoTercerizadoComponent implements OnInit {
         this.spinnerService.stopLoading();
       })
       // Realizar acción con los datos del formulario
-      console.log(trabajoTercerizado);
+ //console.log(trabajoTercerizado);
     } else {
       // Formulario inválido, mostrar errores o tomar acción adicional
     }

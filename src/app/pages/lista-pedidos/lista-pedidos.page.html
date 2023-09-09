@@ -16,9 +16,11 @@
     <ion-row *ngFor="let pedido of pedidosAMostrar" [appPrioridadPedido]="pedido" (click)="mostrarDetalle(pedido)">
       <ion-col>{{pedido.tipo|titlecase}}</ion-col>
       <ion-col>{{pedido.modelo|titlecase}}</ion-col>
-      <ion-col><ion-checkbox [(ngModel)]="pedido.conseguido" (click)="pedido.conseguido
+      <ion-col>
+        <ion-checkbox [(ngModel)]="pedido.conseguido" (click)="pedido.conseguido
         ?confirmarDesmarcado(pedido,'conseguido',$event)
-        :confirmarMarcado(pedido,'conseguido',$event)">Conseguido</ion-checkbox></ion-col>
+        :confirmarMarcado(pedido,'conseguido',$event)">Conseguido</ion-checkbox>
+      </ion-col>
     </ion-row>
   </ion-grid>
 
@@ -43,9 +45,9 @@
           Conseguidos
         </ion-tab-button>
 
-        <ion-tab-button (click)="cargarListaDePedidos('notificados')">
+        <ion-tab-button (click)="cargarListaDePedidosParaNotificar()">
           <ion-icon color="success" name="checkmark-done-outline"></ion-icon>
-          Notificados
+          Para notificar
         </ion-tab-button>
 
       </ion-tab-bar>

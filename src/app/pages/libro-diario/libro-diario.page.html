@@ -12,8 +12,8 @@
         <h2 class="ion-no-margin" *ngIf="mostrarMontoInicial;else mostrarMontoTotal">Monto inicial:
           {{libroDiarioHoy.montoInicial|currency}}
         </h2>
-        <ion-icon *ngIf="!libroDiarioHoy.ventas" class="ion-margin-end" slot="end"
-          (click)="reiniciarMontoInicialDeCaja()" name="create-outline"></ion-icon>
+        <ion-icon *ngIf="!libroDiarioHoy.ventas || funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)"
+          class="ion-margin-end" slot="end" (click)="reiniciarMontoInicialDeCaja()" name="create-outline"></ion-icon>
       </ion-item-divider>
 
       <ng-template #mostrarMontoTotal>
@@ -58,7 +58,8 @@
 
 
     <!-- modal cierre de caja -->
-    <div style="position: fixed; top: 20%; display: flex; justify-content: center;align-items: center; width: 100%;"
+    <div
+      style="position: fixed; top: 20%; display: flex; justify-content: center;align-items: center; width: 100%; z-index: 999;"
       (click)="mostrarModalCierreDeCaja=false" *ngIf="mostrarModalCierreDeCaja">
 
       <ion-card style="padding: 2rem;" (click)="detenerPropagacion($event)">

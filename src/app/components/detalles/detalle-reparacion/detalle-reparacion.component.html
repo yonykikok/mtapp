@@ -111,9 +111,10 @@
             <ion-chip style="background-color: white;" outline="true" color="tertiary"
               class="flexColumn flexCenterCenter">
               <b>Detalle <ion-icon style="position: absolute; right: 1rem; font-size: 1.2rem;" class="ion-margin-start"
-                  name="create-outline"></ion-icon></b>
-              <p>{{estado.detalle}}</p>
+                  name="create-outline" (click)="mostrarEditarDetalle(estado)"></ion-icon></b>
+              <p style="margin-top: 1rem;">{{estado.detalle}}</p>
             </ion-chip>
+
           </div>
         </ion-accordion>
       </ion-accordion-group>

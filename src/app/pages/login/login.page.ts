@@ -112,7 +112,7 @@ export class LoginPage implements OnInit {
       return false;
     }
     else if (user && user.emailVerified) {
-      this.router.navigate(['']);
+      this.router.navigate(['/home']);
       return true;
     } else {
       return false;

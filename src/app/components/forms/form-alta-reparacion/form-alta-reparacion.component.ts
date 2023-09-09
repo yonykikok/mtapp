@@ -55,15 +55,15 @@ export class FormAltaReparacionComponent implements OnInit {
         promptLabelPhoto: 'Seleccionar desde Galería',
         resultType: CameraResultType.DataUrl
       });
-      console.log(image)
+ //console.log(image)
 
       let base64Image;
 
       if (image.dataUrl.startsWith('data:image/jpeg')) {
-        console.log('se')
+   //console.log('se')
         base64Image = image.dataUrl;
       } else if (image.dataUrl.startsWith('data:image/png')) {
-        console.log('se2')
+   //console.log('se2')
         base64Image = image.dataUrl.replace('data:image/png', 'data:image/jpeg');
       } else {
         this.toastService.simpleMessage('No compatible', 'Tipo de imagen no compatible', ToastColor.danger);
@@ -78,7 +78,7 @@ export class FormAltaReparacionComponent implements OnInit {
       this.imgVistaPrevia = base64Image;
 
     } catch (error) {
-      console.log(error)
+ //console.log(error)
       return false;
     }
   };
@@ -118,7 +118,7 @@ export class FormAltaReparacionComponent implements OnInit {
             telefono: telefono.toString(),
             fechaId: `${month}${year}`
           }
-          console.log(boleta)
+     //console.log(boleta)
           this.database.crear(environment.TABLAS.boletasReparacion, boleta).then(res => {
             this.toastService.simpleMessage("Exito!", "Se genero la boleta correctamente", ToastColor.success);
             this.spinnerService.stopLoading();

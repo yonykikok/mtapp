@@ -161,6 +161,24 @@ export class DataBaseService {
 
 
 
+  async getBoletasModificadasHoy(fechaInicio, fechaFin) {
+    let collectionRef = this.firestore.collection(environment.TABLAS.boletasReparacion).ref;
+    try {
+      const respuesta = await collectionRef
+        .where('fechaUltimoCambioDeEstado', '>', fechaInicio)
+        .where('fechaUltimoCambioDeEstado', '<', fechaFin)
+        .get();
+
+      if (respuesta.empty) return null;
+
+      return respuesta.docs;
+
+    } catch (err) {
+      // this.snackBar.open('Error, al traer los pedidos faltantes', 'Cerrar', { duration: 5000, panelClass: ['dangerSnackBar'] });
+      return null;
+    }
+  }
+
   async getBoletasPorIntervaloDeFecha(fechaInicio, fechaFin) {
     let collectionRef = this.firestore.collection(environment.TABLAS.boletasReparacion).ref;
     try {

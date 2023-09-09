@@ -105,10 +105,10 @@ export class ListaModulosProveedorPage implements OnInit {
     })
   }
   handleInput(event) {
-    console.log(this.modulos)
+//console.log(this.modulos)
     const textABuscar = event.target.value.toLowerCase();
     this.modulosAMostrar = this.modulos.filter((d) => d.modelo.toLowerCase().includes(textABuscar));
-    console.log(this.modulosAMostrar)
+//console.log(this.modulosAMostrar)
   }
 
 

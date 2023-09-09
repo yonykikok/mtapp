@@ -161,7 +161,7 @@ export class ProveedoresPage implements OnInit {
         proveedor['id'] = proveedorRef.payload.doc.id;
         return proveedor;
       })
-      console.log(this.proveedores)
+ //console.log(this.proveedores)
     });
   }
 
@@ -212,7 +212,7 @@ export class ProveedoresPage implements OnInit {
     this.proveedores.forEach((proveedor: Proveedor) => {
       proveedor.modulos.forEach((modulo: Modulo) => {
         if (modulo.modelo.toLowerCase().includes(this.textoABuscar.toLowerCase())) {
-          console.log(productos,)
+     //console.log(productos,)
           const productoExistente = productos.find((p: any) => (p.modelo.toLowerCase() === modulo.modelo.toLowerCase() && p.tipo.toLowerCase() == modulo.tipo.toLowerCase()));
 
           if (productoExistente) {

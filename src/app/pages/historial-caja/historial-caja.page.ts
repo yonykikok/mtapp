@@ -174,8 +174,8 @@ export class HistorialCajaPage implements OnInit {
         return;
       }
       this.mesSeleccionado = res.payload.data();
-      console.log(res)
-      console.log(res.payload.data())
+ //console.log(res)
+ //console.log(res.payload.data())
       this.mesSeleccionado['id'] = res.payload.id;
       this.mesSeleccionado['dias'] = this.mesSeleccionado['dias'].filter(dia => dia.montoTotalEfectivo > 0);
 

@@ -149,6 +149,7 @@ export class LibroDiarioPage implements OnInit {
       const modal = await this.modalController.create({
         component: FormDetalleVentaComponent,
         componentProps: {
+          isModal: false
         },
       })
 
@@ -194,6 +195,35 @@ export class LibroDiarioPage implements OnInit {
 
   comprobar() {
     this.resultadoDeCaja = (this.libroDiarioHoy.montoTotalEfectivo + this.libroDiarioHoy.montoInicial) - this.montoDeCaja;
+
+
+    let mensaje = '';
+    if (this.resultadoDeCaja > 0) {//(falta plata en la caja)
+      mensaje = 'falta plata en la caja';
+    }
+    else if (this.resultadoDeCaja < 0) {//(hay de mas en la caja)
+      mensaje = 'hay de mas en la caja';
+    } else {//Cerro perfecto!
+      mensaje = 'Cerro perfecto!';
+    }
+
+    if (!this.libroDiarioHoy.historialDeCierre) {
+      this.libroDiarioHoy.historialDeCierre = [];
+    }
+
+    this.libroDiarioHoy.historialDeCierre = [...this.libroDiarioHoy.historialDeCierre, {
+      fecha: Date.now(),
+      fechaString: new Date().toLocaleString(),
+      mensaje,
+      usuario: this.loggedUser.displayName,
+      resultadoDeCaja: this.montoDeCaja - (this.libroDiarioHoy.montoTotalEfectivo + this.libroDiarioHoy.montoInicial),
+    }]
+    console.log(this.libroDiarioHoy)
+
+    this.database.actualizar(environment.TABLAS.ingresosBrutos, this.esteMes, this.esteMes.id).then(res => {
+      // this.toastService.simpleMessage('Exito', 'Se modifico la venta', ToastColor.success);
+    });
+
   }
   detenerPropagacion(e) {
     e.stopPropagation();
@@ -230,7 +260,7 @@ export class LibroDiarioPage implements OnInit {
 
         } else if (result.role == 'eliminarItemVenta') {
           let indexAEliminar = this.libroDiarioHoy.ventas.findIndex(auxVenta => auxVenta == venta);
-          console.log(indexAEliminar)
+          //console.log(indexAEliminar)
           if (indexAEliminar != -1) {
             this.libroDiarioHoy.ventas.splice(indexAEliminar, 1);
             necesitaActualizar = true;

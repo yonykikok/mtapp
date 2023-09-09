@@ -37,7 +37,18 @@ export class BoletasPage implements OnInit {
     this.getCurrentUser();
 
   }
-  ngOnInit(): void { }
+  ngOnInit(): void {//obtenemos las boletas modificadas del dia.
+    // const fechaHoy = new Date().getTime();
+    // const fechaAyer = fechaHoy - 24 * 60 * 60 * 1000; // Restamos un día
+    // this.dataBase.getBoletasModificadasHoy(fechaAyer, fechaHoy).then(boletasListRef => {
+    //   let boletas = boletasListRef.map(boletaRef => {
+    //     let boleta = boletaRef.data();
+    //     boleta['id'] = boletaRef.id;
+    //     return boleta;
+    //   })
+    //   console.log(boletas);
+    // })
+  }
 
 
 

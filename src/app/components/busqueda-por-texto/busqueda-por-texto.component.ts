@@ -33,7 +33,7 @@ export class BusquedaPorTextoComponent implements OnInit {
         }
       });
     });
-    console.log(items)
+//console.log(items)
     this.itemsFiltrados=items.sort((a: any, b: any) => {
       if (a.fecha > b.fecha) {
         return 1;

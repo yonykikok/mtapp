@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 
 @Component({
@@ -9,14 +9,18 @@ import { ModalController } from '@ionic/angular';
 export class ClasicToolbarComponent implements OnInit {
   @Input() title;
   @Input() ruta;
-  isModal=false;//agregar uso.
+  @Input() isModal = true;//agregar uso.
+  @Output() atrasEvent = new EventEmitter<any>();
   constructor(private modalController: ModalController) { }
 
   ngOnInit() { }
   async emitirDismissEvent() {
-    let modal = await this.modalController.getTop();
-    if (modal) {
-      modal.dismiss();
+    this.atrasEvent.emit();
+    if(this.isModal){
+      let modal = await this.modalController.getTop();
+      if (modal) {
+        modal.dismiss();
+      }
     }
   }
 }

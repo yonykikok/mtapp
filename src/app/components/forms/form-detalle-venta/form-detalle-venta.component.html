@@ -1,5 +1,6 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/libro-diario'" [title]="'Agregar venta'"></app-clasic-toolbar>
+  <app-clasic-toolbar [isModal]="false" [ruta]="'/libro-diario'" (atrasEvent)="volverAtras()"
+    [title]="'Agregar venta'"></app-clasic-toolbar>
 </ion-header>
 
 <ion-content>
@@ -57,29 +58,31 @@
           <ion-fab-button slot="" size="small" (click)="step=1">
             <ion-icon name="arrow-up-outline"></ion-icon>
           </ion-fab-button>
-          <ion-text><b>Subir</b></ion-text>
+          <ion-text><b>Volver</b></ion-text>
         </div>
       </ion-item-divider>
 
       <ion-radio-group aria-label="Medio de pago" [(ngModel)]="medioDePago"
         *ngIf="(montoTotal+((montoTotal/100)*porcentajeDeRecargo))>0; else descuento">
 
-        <ion-text class="textRadio">
-          Efectivo<ion-radio value="efectivo" (click)="porcentajeDeRecargo=0">Efectivo</ion-radio>
+        <ion-text class="textRadio" color="success">
+          Efectivo<ion-radio value="efectivo" (click)="porcentajeDeRecargo=0"></ion-radio>
         </ion-text><br>
 
-        <ion-text class="textRadio">
-          Transferencia<ion-radio value="transferencia" (click)="porcentajeDeRecargo=8">Transferencia (+8%)</ion-radio>
+        <ion-text class="textRadio" color="secondary">
+          Transferencia (+8%)<ion-radio value="transferencia" (click)="porcentajeDeRecargo=8"
+            (click)="presentActionSheet()"></ion-radio>
         </ion-text><br>
 
-        <ion-text class="textRadio">
-          Mercado<ion-radio value="mercadopago" (click)="porcentajeDeRecargo=12">Mercado pago (+12%)</ion-radio>
+        <ion-text class=" textRadio" color="primary">
+          Mercado pago (+12%)<ion-radio value="mercadopago" (click)="porcentajeDeRecargo=12"
+            (click)="presentActionSheet()"></ion-radio>
         </ion-text>
 
       </ion-radio-group>
 
       <ng-template #descuento>
-        <ion-radio-group aria-label="Medio de pago" [(ngModel)]="medioDePago">
+        <ion-radio-group aria-label=" Medio de pago" [(ngModel)]="medioDePago">
           <ion-radio value="efectivo" (click)="porcentajeDeRecargo=0">Efectivo</ion-radio><br>
           <ion-radio value="transferencia" (click)="porcentajeDeRecargo=0">Transferencia</ion-radio><br>
           <ion-radio value="mercadopago" (click)="porcentajeDeRecargo=0">Mercado pago</ion-radio>
@@ -98,6 +101,28 @@
       </ion-item>
 
       <ng-template #pagoDigital>
+
+        <!-- <ion-item fill="outline" mode="md">
+          <ion-label position="floating">Alias/CBU de la cuenta</ion-label>
+          <ion-select placeholder="Seleccione el estado" [(ngModel)]="titularDeCuenta"
+            [ngModelOptions]="{standalone: true}">
+            <ion-select-option *ngFor="let cuenta of cuentasBancarias" [value]="cuenta.alias">
+              <small>({{cuenta.titular}})</small>
+              <small>{{cuenta.alias?cuenta.alias:cuenta.CBU}}</small>
+            </ion-select-option>
+          </ion-select>
+        </ion-item> -->
+
+        <ion-text class="ion-margin" slot="start"
+          style="display: flex; align-items: center; justify-content: space-between;">
+          <b> Anular recargo </b><ion-toggle color="danger" [(ngModel)]="anularRecargo" [ngModelOptions]="{standalone: true}"
+            (click)="verDeAnularRecargo()"></ion-toggle>
+        </ion-text>
+
+        <div *ngIf="anularRecargo" class="flexCenterCenter" ngClass="ion-margin-top ion-margin-bottom">
+          <ion-chip color="danger">Estas por cobrar sin recargo en "{{medioDePago}}"</ion-chip>
+        </div>
+
         <ion-item fill="outline">
           <ion-label position="floating">Alias de la cuenta</ion-label>
           <ion-input type="text" placeholder="Ej: Disco.choza.escudo" [(ngModel)]="titularDeCuenta"
@@ -106,7 +131,9 @@
       </ng-template>
 
 
-      <h3 *ngIf="montoAbonado>montoTotal" class="ion-text-center"> <b>Vuelto a dar: {{montoAbonado-montoTotal|currency}}</b></h3>
+      <h3 *ngIf="montoAbonado>montoTotal" class="ion-text-center"> <b>Vuelto a dar:
+          {{montoAbonado-montoTotal|currency}}</b></h3>
+
 
       <ion-button *ngIf="medioDePago=='efectivo';else otroMedioDePago" style="width: 100%;" color="secondary"
         [disabled]="!items || items.length<=0" (click)="showConfirmDialog()">Finalizar</ion-button>

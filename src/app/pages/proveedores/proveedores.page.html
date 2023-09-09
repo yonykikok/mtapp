@@ -11,7 +11,8 @@
     <ion-item-divider class="ion-no-padding ion-margin-bottom ion-padding-bottom ion-padding-top"
       *ngFor="let prod of productosAMostrar" style="flex-direction: column;">
       <div class="flexCenterCenter" style="flex-direction: column;">
-        <ion-text slot="start"> {{prod.marca}} {{prod.modelo}} ( {{prod.calidad}} ){{prod.tipo}} </ion-text>
+        <ion-text slot="start"> {{prod.marca}} {{prod.modelo}} ( {{prod.calidad}} ) 
+          <label [ngClass]="prod.tipo=='Simple' ? 'left' : 'right' ">{{prod.tipo}}</label> </ion-text>
         <ion-text slot="end">
           Precio promedio: {{prod.precioPromedio|currency:'USD'}}
         </ion-text>

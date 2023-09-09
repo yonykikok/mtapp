@@ -59,10 +59,10 @@ export class DetalleBateriaComponent implements OnInit {
     this.repuesto = this.funcionesUtilesService.clonarObjeto(this.clonRepuesto);
 
     try {
-      console.log(this.repuesto)
+ //console.log(this.repuesto)
       this.database.actualizar(environment.TABLAS.baterias, this.repuesto, this.repuesto.id).then(res => {
         this.toastService.simpleMessage('Error', 'Bateria actualizado con exito', ToastColor.success);
-        console.log(res)
+   //console.log(res)
       });
     } catch (err) {
       this.toastService.simpleMessage('Error', 'No se pudo actualizar', ToastColor.danger);
