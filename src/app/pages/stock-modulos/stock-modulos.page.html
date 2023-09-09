@@ -5,6 +5,23 @@
 
 
 <ion-content *ngIf="loggedUser;">
+
+
+  <ion-segment value="default">
+    <ion-segment-button value="default" (click)="mostrarLista('completa')">
+      <ion-icon color="primary" name="list-outline"></ion-icon>
+      <ion-label>
+        Lista completa
+      </ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="segment" (click)="mostrarLista('stockBajo')">
+      <ion-icon color="secondary" name="trending-down-outline"></ion-icon>
+      <ion-label>
+        Lista sin stock
+      </ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
   <ion-item>
     <ion-select aria-label="Fruit" placeholder="Selecciona los campos que quieres ver" [multiple]="true"
       [formControl]="displayedColumnKeys">
@@ -38,8 +55,7 @@
               }" (click)="seleccionarColorYTipo($event,auxStock,modulo,'conMarco')">{{auxStock.cantidad}}C/M
               </ion-chip>
 
-              <ion-chip outline="true" *ngIf="auxStock.color!='Blanco'" style="color: white;"
-                [ngStyle]="{'background-color':auxStock.color|colores,
+              <ion-chip outline="true" *ngIf="auxStock.color!='Blanco'" style="color: white;" [ngStyle]="{'background-color':auxStock.color|colores,
                 'border':auxStock.cantidad==0?'2px solid red':''}"
                 (click)="seleccionarColorYTipo($event,auxStock,modulo,'conMarco')">
                 {{auxStock.cantidad}} C/M
@@ -50,14 +66,12 @@
 
           <ng-template #sinMarco>
             <div *ngFor="let auxStock of modulo.stock.sinMarco">
-              <ion-chip outline="true" *ngIf="auxStock.color=='Blanco'"
-                [ngStyle]="{'background-color':auxStock.color|colores,
+              <ion-chip outline="true" *ngIf="auxStock.color=='Blanco'" [ngStyle]="{'background-color':auxStock.color|colores,
                 'border':auxStock.cantidad==0?'2px solid red':''}"
                 (click)="seleccionarColorYTipo($event,auxStock,modulo,'sinMarco')">{{auxStock.cantidad}} S/M
               </ion-chip>
 
-              <ion-chip outline="true" *ngIf="auxStock.color!='Blanco'" style="color: white;"
-                [ngStyle]="{'background-color':auxStock.color|colores,
+              <ion-chip outline="true" *ngIf="auxStock.color!='Blanco'" style="color: white;" [ngStyle]="{'background-color':auxStock.color|colores,
                 'border':auxStock.cantidad==0?'2px solid red':''}"
                 (click)="seleccionarColorYTipo($event,auxStock,modulo,'sinMarco')">{{auxStock.cantidad}} S/M
               </ion-chip>
@@ -101,7 +115,7 @@
 
   <!-- FAB AGREGAR NUEVO -->
   <ion-fab slot="fixed" horizontal="end" vertical="bottom" color="secondary" (click)="openDialog()"
-    *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)">
+    *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser) && listaSeleccionada!='stockBajo'">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
@@ -109,7 +123,7 @@
   <!-- FIN FAB AGREGAR NUEVO -->
 
 </ion-content>
-<ion-footer [translucent]="true">
+<!-- <ion-footer [translucent]="true">
   <ion-toolbar>
     <ion-tabs>
       <ion-tab-bar slot="bottom">
@@ -125,4 +139,4 @@
       </ion-tab-bar>
     </ion-tabs>
   </ion-toolbar>
-</ion-footer>
+</ion-footer> -->

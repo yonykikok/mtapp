@@ -234,7 +234,11 @@ export class ListaPedidosPage implements OnInit {
     }
   }
 
-
+  notificarPorWhatsapp(e: any, pedido: any) {
+    e.stopPropagation();
+    console.log(e)
+    console.log(pedido)
+  }
 }
 
 

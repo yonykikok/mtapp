@@ -46,15 +46,40 @@
         <ion-chip outline="true"
           [color]="pedidoPorCliente?'success':'secondary'"><b>{{pedidoPorCliente?'SI':'NO'}}</b></ion-chip>
       </div>
+      <!-- PEDIDO POR CLIENTE -->
+      <ion-card *ngIf="pedidoPorCliente" class="ion-padding">
+        <form [formGroup]="clienteFormGroup">
+          <ion-item fill="outline">
+            <ion-label position="floating">Nombre</ion-label>
+            <ion-input type="text" formControlName="nombre" placeholder="Ej:Jorge"></ion-input>
+          </ion-item>
 
-      
-      <ion-item *ngIf="pedidoPorCliente" fill="outline" class="ion-margin">
+          <ion-item fill="outline">
+            <ion-label position="floating">Teléfono</ion-label>
+            <ion-input type="tel" formControlName="telefono" placeholder="Ej:1140506030"></ion-input>
+          </ion-item>
+
+          <ion-item fill="outline">
+            <ion-label position="floating">Número de Boleta</ion-label>
+            <ion-input type="text" formControlName="boleta" placeholder="Ej:4510"></ion-input>
+          </ion-item>
+
+          <ion-item fill="outline">
+            <ion-label position="floating">Precio Máximo</ion-label>
+            <ion-input type="number" formControlName="precio" placeholder="Ej:7500"></ion-input>
+          </ion-item>
+
+        </form>
+      </ion-card>
+      <!-- FIN PEDIDO POR CLIENTE -->
+
+      <!-- <ion-item *ngIf="pedidoPorCliente" fill="outline" class="ion-margin">
         <ion-label position="floating">Informacion del cliente</ion-label>
         <ion-textarea placeholder="Jorge: 1151256116, precio maximo $1500" formControlName="cliente"></ion-textarea>
-      </ion-item>
+      </ion-item> -->
 
       <ion-button expand="block" color="primary" class="ion-margin" (click)="showConfirmDialog()"
-        [disabled]="!formgroupPedido.valid">Agregar</ion-button>
+        [disabled]="!formgroupPedido.valid || (pedidoPorCliente && !clienteFormGroup.valid)">Agregar</ion-button>
 
 
     </form>

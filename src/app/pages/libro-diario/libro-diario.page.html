@@ -113,7 +113,7 @@
   <ion-fab slot="fixed" vertical="bottom" horizontal="start"
     *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser) && libroDiarioHoy && libroDiarioHoy['montoTotalEfectivo']>0"
     (click)="mostrarModalCierreDeCaja=true">
-    <ion-fab-button color="secondary">
+    <ion-fab-button color="success">
       <ion-icon name="newspaper-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>

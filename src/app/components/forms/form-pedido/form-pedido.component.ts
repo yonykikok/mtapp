@@ -14,6 +14,15 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./form-pedido.component.scss'],
 })
 export class FormPedidoComponent implements OnInit {
+
+
+  clienteFormGroup = new FormGroup({
+    nombre: new FormControl('', [Validators.required]),
+    telefono: new FormControl('', [Validators.required]),
+    boleta: new FormControl('', []),
+    precio: new FormControl('', []),
+  });
+
   pedidoPorCliente = false;
   tipoDeRepuestoFiltrado: Observable<string[]>;
   // @Output() cerrarFormEvent = new EventEmitter<void>();
@@ -23,7 +32,6 @@ export class FormPedidoComponent implements OnInit {
     cantidad: new FormControl('', [Validators.required, Validators.min(1), this.formsValidatorsService.isInt]),
     detalle: new FormControl('', Validators.required),
     prioridad: new FormControl('', Validators.required),
-    cliente: new FormControl(''),
   });
 
   listaDePrioridades = ['Opcional', 'Sin stock', 'Averiguar', 'Urgente'];
@@ -35,8 +43,8 @@ export class FormPedidoComponent implements OnInit {
   constructor(
     private database: DataBaseService,
     private alertService: AlertService,
-    private toastService:ToastService,
-    private formsValidatorsService:FormsValidatorsService
+    private toastService: ToastService,
+    private formsValidatorsService: FormsValidatorsService
   ) { }
 
   ngOnInit() {
@@ -47,13 +55,15 @@ export class FormPedidoComponent implements OnInit {
   }
 
   showConfirmDialog() {
-    this.alertService.alertConfirmacion('Confirmación', '¿Esta seguro de agregar el pedido?', 'Si, agregar', this.agregarPedido.bind(this));
+    let pedido = { ...this.formgroupPedido.value, cliente: this.clienteFormGroup.value };
+    console.log(pedido);
+    this.alertService.alertConfirmacion('Confirmación', '¿Esta seguro de agregar el pedido?', 'Si, agregar', this.agregarPedido.bind(this, pedido));
   }
-  agregarPedido() {
-    const pedido = this.formgroupPedido.value;
+  agregarPedido(pedido: any) {
     pedido['fecha'] = Date.now();
+    console.log(pedido)
     this.database.crear(environment.TABLAS.pedidos, pedido).then(res => {
-      this.toastService.simpleMessage('Exito','Se agrego el pedido a la lista',ToastColor.success);
+      this.toastService.simpleMessage('Exito', 'Se agrego el pedido a la lista', ToastColor.success);
       this.resetForm();
     })
   }
@@ -68,6 +78,7 @@ export class FormPedidoComponent implements OnInit {
 
   resetForm() {
     this.formgroupPedido.reset();
+    this.clienteFormGroup.reset();
     this.pedidoPorCliente = false;
   }
 
