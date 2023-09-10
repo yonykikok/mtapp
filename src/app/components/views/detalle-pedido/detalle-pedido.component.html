@@ -31,19 +31,25 @@
       <ion-item>
         <b> Fecha:</b> <label slot="end">{{pedido.fecha|date}}</label>
       </ion-item>
-      <ion-item-divider *ngIf="pedido.cliente">
-        <b>Cliente:</b>
-        <ion-textarea style="width: 100%;" class="ion-margin-start" [readonly]="true"
-          [value]="pedido.cliente"></ion-textarea>
+    
+      <ion-item-divider *ngIf="pedido.cliente.nombre" style="flex-direction: column; align-items: start;">
+        <b>Datos del cliente</b>
+        <p *ngIf="pedido.cliente.nombre">Nombre: {{pedido.cliente.nombre}}</p>
+        <p *ngIf="pedido.cliente.telefono">Telefono: {{pedido.cliente.telefono}}</p>
+        <p *ngIf="pedido.cliente.boleta">Boleta: {{pedido.cliente.boleta}}</p>
+        <p *ngIf="pedido.cliente.precio">Precio: {{pedido.cliente.precio|currency}}</p>
       </ion-item-divider>
 
 
+
       <!-- Agregar anotacion -->
-      <div *ngIf="showAgregarNota; else showBtnAgregar" class="flexAroundCenter">
+      <div *ngIf="showAgregarNota; else showBtnAgregar" class="flexColumn">
         <textarea name="notaPedido" id="" cols="10" rows="3" style="width: 100%;" class="mb-2" [(ngModel)]="notaPedido"
           value=""></textarea>
-        <ion-button color="warning" (click)="showAgregarNota=false;">Cancelar</ion-button>
-        <ion-button color="primary" (click)="agregarNotaAlPedido()">Guardar nota</ion-button>
+          <div class="flexCenterCenter">
+            <ion-button color="warning" (click)="showAgregarNota=false;">Cancelar</ion-button>
+            <ion-button color="primary" (click)="agregarNotaAlPedido()">Guardar nota</ion-button>
+          </div>
       </div>
       <ng-template #showBtnAgregar>
         <div class="ion-text-center">

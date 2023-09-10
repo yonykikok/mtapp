@@ -41,6 +41,27 @@ export class StorageService {
       return null;
     }
   }
+  
+  async borrarImagen(ruta: string): Promise<boolean> {
+    try {
+      // Obtén una referencia al archivo que deseas borrar
+      const archivoRef = this.storageRef.child(ruta);
+  
+      // Borra el archivo
+      await archivoRef.delete();
+  
+      // El archivo se ha borrado exitosamente
+      return true;
+    } catch (error) {
+      console.error(error);
+      
+      // Maneja el error aquí, puedes mostrar un mensaje de error o realizar otra acción.
+      return false; // Devuelve false en caso de error
+    }
+  }
+  
+
+
   async subirImagenEquiposTercerizados(ruta: string, imgBase64: any) {
     try {
       let respuesta = await this.storageRef.child(ruta).putString(imgBase64, 'data_url');

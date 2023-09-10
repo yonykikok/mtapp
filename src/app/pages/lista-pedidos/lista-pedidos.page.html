@@ -4,6 +4,7 @@
 
 
 <ion-content>
+  <!-- <ion-button (click)="borarPedidosConseguidosSinClientes()">borrar</ion-button> -->
   <ion-searchbar show-clear-button="focus" placeholder="J7 prime" [(ngModel)]="textoABuscar"
     (ionInput)="filtrarPorTexto($event.target['value'])"></ion-searchbar>
 
@@ -17,8 +18,8 @@
       <ion-col>{{pedido.tipo|titlecase}}</ion-col>
       <ion-col>{{pedido.modelo|titlecase}}</ion-col>
       <ion-col>
-        <ion-button color="success" *ngIf="listaSeleccionada=='para_notificar' && pedido.cliente && pedido.cliente.telefono"> 
-          <ion-icon style="font-size: 1.5rem;"   name="logo-whatsapp" (click)="notificarPorWhatsapp($event,pedido)"></ion-icon>
+        <ion-button (click)="notificarPorWhatsapp($event,pedido)" color="success" *ngIf="listaSeleccionada=='para_notificar' && pedido.cliente && pedido.cliente.telefono"> 
+          <ion-icon style="font-size: 1.5rem;"   name="logo-whatsapp" ></ion-icon>
         </ion-button>
 
         <ion-checkbox *ngIf="listaSeleccionada!='para_notificar'"  [(ngModel)]="pedido.conseguido" (click)="pedido.conseguido

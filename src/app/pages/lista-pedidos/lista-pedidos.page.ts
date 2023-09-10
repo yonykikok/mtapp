@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ActionSheetController, ModalController } from '@ionic/angular';
 import { User } from 'src/app/clases/user';
 import { FormPedidoComponent } from 'src/app/components/forms/form-pedido/form-pedido.component';
 import { DetallePedidoComponent } from 'src/app/components/views/detalle-pedido/detalle-pedido.component';
@@ -38,7 +38,8 @@ export class ListaPedidosPage implements OnInit {
     private database: DataBaseService,
     private alerService: AlertService,
     private toastService: ToastService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private actionSheetController:ActionSheetController
   ) { }
   ngOnInit(): void {
     // this.pedidosAMostrar = [...this.pedidos.pendientes];
@@ -183,9 +184,9 @@ export class ListaPedidosPage implements OnInit {
 
   }
 
-  borarPedidosConseguidos() {
+  borarPedidosConseguidosSinClientes() {
     let auxLista = this.pedidos.conseguidos.filter(ped => {
-      if (ped.conseguido && !ped.nota) {
+      if (ped.conseguido && !ped.cliente) {
         return ped;
       }
     });
@@ -236,9 +237,51 @@ export class ListaPedidosPage implements OnInit {
 
   notificarPorWhatsapp(e: any, pedido: any) {
     e.stopPropagation();
-    console.log(e)
-    console.log(pedido)
+    this.presentActionSheet(pedido)
   }
+
+
+  abrirWhatsApp(pedido: any, mensaje: string) {
+    const url = `https://api.whatsapp.com/send?phone=+54${pedido.telefono}&text=${encodeURIComponent(mensaje)}`;
+
+    window.open(url, '_system');
+  }
+
+  async presentActionSheet(pedido) {
+
+    let boletaMessage=pedido.cliente.boleta
+    ?`Recorda que tu numero de boleta es ${pedido.cliente.boleta}.`
+    :'';
+    console.log(pedido)
+    let mensaje = `Hola ${pedido.cliente.nombre} como estas? te escribia por el pedido de ${pedido.tipo} que habias realizado. Era para informarte que ya lo conseguimos, por favor indicanos si aun estas interesado en el pedido. ${boletaMessage}`;
+      // Mensaje predeterminado para el cliente;
+    const actionSheet = await this.actionSheetController.create({
+      mode: 'ios',
+      header: 'Elija una opción',
+      buttons: [
+        {
+          text: 'Enviar mensaje',
+          handler: () => {
+            this.abrirWhatsApp(pedido, mensaje)
+          }
+        }, {
+          text: 'Enviar mensaje con precio',
+          handler: () => {
+            let precioMensaje=" Tambien aprovecho y te adjunto el precio final que es de XXXX";
+            this.abrirWhatsApp(pedido, mensaje + precioMensaje)
+          }
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        }
+      ]
+    });
+
+    await actionSheet.present();
+  }
+
+
 }
 
 
