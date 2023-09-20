@@ -42,7 +42,7 @@
               *ngFor="let cierre of  libroDiario.historialDeCierre">
               <div style="display: flex; justify-content: space-between; width: 100%;">
                 <p>{{cierre.usuario|titlecase}}</p>
-                <p>{{cierre.fechaString|date}}</p>
+                <p>{{cierre.fechaString}}</p>
               </div>
               <div style="display: flex;  justify-content: space-between; width: 100%; margin-top: 0.5rem;">
                 <p>{{cierre.mensaje|titlecase}}</p>
