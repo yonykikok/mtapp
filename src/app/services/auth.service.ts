@@ -7,7 +7,9 @@ import { User } from '../clases/user';
 import { switchMap } from 'rxjs/operators';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
+const provider = new GoogleAuthProvider();
 @Injectable({
   providedIn: 'root'
 })
@@ -50,15 +52,22 @@ export class AuthService {
     return Md5.hashStr(password);
   }
 
-  async loginWithGoogle(): Promise<any> {
+  async loginWithGoogle() {
+
+    const auth = getAuth();
+    let result = await signInWithPopup(auth, provider)
     try {
-      const { user } = await this.afAuth.signInWithPopup(new firebaseApp.auth.GoogleAuthProvider());
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      const token = credential ? credential.accessToken : null;
+
+      const user = result.user;
       this.updateUserData(user);
+      console.log(user);
       return user;
-    } catch (err) {
-      // this.snackBar.open('Error, iniciar sesion con Google ', 'Cerrar', { duration: 5000, panelClass: ['dangerSnackBar'] });
-      return null;
+    } catch (error) {
+      console.log(error);
     }
+    return null;
   }
 
   private updateUserData(user: any) {

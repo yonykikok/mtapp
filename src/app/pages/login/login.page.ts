@@ -106,7 +106,7 @@ export class LoginPage implements OnInit {
 
   async onGoogleLogin() {
     try {
-      const user = await this.authService.loginWithGoogle();
+      const user:any = await this.authService.loginWithGoogle();
       if (user) {
         this.checkUserIsVerified(user);
       }
