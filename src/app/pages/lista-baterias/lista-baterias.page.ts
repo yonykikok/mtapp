@@ -19,10 +19,10 @@ export class ListaBateriasPage implements OnInit {
 
   loggedUser: User | null = null;
   camposSeleccionados = ['modelo', 'calidad', 'precio'];
-  baterias = [];
-  bateriasAMostrar = [];
+  baterias: any = [];
+  bateriasAMostrar: any = [];
 
-  precioDolarBlue: number | null = null;
+  precioDolarBlue: number=0;
   mostrarFormModulo = true;
 
   dolarObservable$: Observable<number> | null = null;
@@ -99,9 +99,9 @@ export class ListaBateriasPage implements OnInit {
       })
     })
   }
-  handleInput(event) {
+  handleInput(event: any) {
     const query = event.target.value.toLowerCase();
-    this.bateriasAMostrar = this.baterias.filter((d) => d.modelo.toLowerCase().indexOf(query) > -1);
+    this.bateriasAMostrar = this.baterias.filter((d: any) => d.modelo.toLowerCase().indexOf(query) > -1);
   }
 
 

@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./visualizador-de-imagen.component.scss'],
 })
 export class VisualizadorDeImagenComponent implements OnInit {
-  imagen;
+  imagen!:string;
   constructor() { }
 
   ngOnInit() {}

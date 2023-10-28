@@ -28,9 +28,9 @@ export class FormAcreedorComponent implements OnInit {
     montoTotal: 0,
     fechaLimite: ''
   }
-  listaAcreedores = [];
-  pagos = [];
-  items = [];
+  listaAcreedores: any[] = [];
+  pagos: any[] = [];
+  items: any[] = [];
 
   // fechaLimite = new FormControl('');
   formGroupDatosCliente = new FormGroup({
@@ -76,15 +76,15 @@ export class FormAcreedorComponent implements OnInit {
   }
 
 
-  agregarItems(items) {
+  agregarItems(items:any) {
     this.nuevoAcreedor.items = items;
   }
 
-  eliminarPago(selectedItem) {
+  eliminarPago(selectedItem:any) {
     this.pagos.splice(this.pagos.findIndex(item => selectedItem === item), 1);
   }
   agregarPago() {
-    let pago = this.formGroupPago.value;
+    let pago:any = this.formGroupPago.value;
     if (Number(pago.monto) > 0) {
       pago['fecha'] = Date.now();
       this.pagos.push(pago);
@@ -94,7 +94,7 @@ export class FormAcreedorComponent implements OnInit {
   }
 
   agregarItem() {
-    let item = this.formGroupItem.value;
+    let item:any = this.formGroupItem.value;
 
     let existe = this.items.find(auxItem => item == auxItem);
     if (!existe) {
@@ -103,7 +103,7 @@ export class FormAcreedorComponent implements OnInit {
     }
     this.formGroupItem.reset();
   }
-  eliminarItem(selectedItem) {
+  eliminarItem(selectedItem:any) {
     this.items.splice(this.items.findIndex(item => selectedItem === item), 1);
 
     // this.items = this.items.ilter(item => item != selectedItem);

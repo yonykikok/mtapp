@@ -6,7 +6,7 @@
 <ion-content>
   <!-- <ion-button (click)="borarPedidosConseguidosSinClientes()">borrar</ion-button> -->
   <ion-searchbar show-clear-button="focus" placeholder="J7 prime" [(ngModel)]="textoABuscar"
-    (ionInput)="filtrarPorTexto($event.target['value'])"></ion-searchbar>
+    (ionInput)="filtrarPorTexto($event)"></ion-searchbar>
 
   <ion-grid class="ion-text-center" style="margin-bottom: 5rem;">
     <ion-row>

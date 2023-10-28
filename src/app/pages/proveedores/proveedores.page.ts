@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DocumentChangeAction } from '@angular/fire/compat/firestore';
 import { ModalController } from '@ionic/angular';
+import { User } from 'src/app/clases/user';
 import { FormAltaProveedorComponent } from 'src/app/components/forms/form-alta-proveedor/form-alta-proveedor.component';
 import { DetalleProveedorComponent } from 'src/app/components/views/detalle-proveedor/detalle-proveedor.component';
 import { AuthService } from 'src/app/services/auth.service';
@@ -50,12 +51,12 @@ interface Modulo extends Producto {
 export class ProveedoresPage implements OnInit {
 
 
-  loggedUser
+  loggedUser!: User
 
-  precioDolarBlue: number | null = null;
+  precioDolarBlue: number=0;
   proveedores: Proveedor[] = [];
-  productosAMostrar;
-  textoABuscar;
+  productosAMostrar: any[] = [];
+  textoABuscar: string = '';
 
   constructor(public funcionesUtiles: FuncionesUtilesService,
     private authService: AuthService,
@@ -83,11 +84,12 @@ export class ProveedoresPage implements OnInit {
       tipo: tipoModulo.simple,
     }
     let proveedor: Proveedor = {
+      id: '12',
       nombre: 'Brandon',
       modulos: [{ ...producto }, { ...producto2 }],
       direccion: 'Corrientes 2400',
       telefono: '1140875800',
-      telefonoAlternativo: null
+      telefonoAlternativo: ''
     }
     this.proveedores.push(proveedor);
 
@@ -97,11 +99,12 @@ export class ProveedoresPage implements OnInit {
     producto2.precioVenta += 5;
 
     let proveedor2: Proveedor = {
+      id: '12',
       nombre: 'Todo Celu',
       modulos: [{ ...producto }, { ...producto2 }],
       direccion: 'Larrea 410',
       telefono: '1140545800',
-      telefonoAlternativo: null
+      telefonoAlternativo: ''
     }
     this.proveedores.push(proveedor2);
 
@@ -111,11 +114,12 @@ export class ProveedoresPage implements OnInit {
     producto2.precioVenta -= 2;
 
     let proveedor3: Proveedor = {
+      id: '12',
       nombre: 'World cell',
       modulos: [{ ...producto }, { ...producto2 }],
       direccion: 'Larrea 408',
       telefono: '1154255100',
-      telefonoAlternativo: null
+      telefonoAlternativo: ''
     }
     this.proveedores.push(proveedor3);
 
@@ -124,11 +128,12 @@ export class ProveedoresPage implements OnInit {
     producto.precioVenta -= 2;
     producto2.precioVenta -= 2;
     let proveedor4: Proveedor = {
+      id: '12',
       nombre: 'Dari Cell',
       modulos: [{ ...producto }, { ...producto2 }],
       direccion: 'Larrea 400',
       telefono: '1140404040',
-      telefonoAlternativo: null
+      telefonoAlternativo: ''
     }
     this.proveedores.push(proveedor4);
 
@@ -136,11 +141,12 @@ export class ProveedoresPage implements OnInit {
     producto2.precioVenta += 5;
 
     let proveedor5: Proveedor = {
+      id: '12',
       nombre: 'Daniels cell',
       modulos: [{ ...producto2 }],
       direccion: 'Larrea 400',
       telefono: '1140404040',
-      telefonoAlternativo: null
+      telefonoAlternativo: ''
     }
     this.proveedores.push(proveedor5);
 
@@ -156,12 +162,12 @@ export class ProveedoresPage implements OnInit {
     }
     this.funcionesUtiles.getPriceDolar().subscribe(newPrice => this.precioDolarBlue = newPrice);
     this.dataBase.obtenerTodos(environment.TABLAS.proveedores).subscribe((listProveedoresRef) => {
-      this.proveedores = listProveedoresRef.map((proveedorRef: DocumentChangeAction<Proveedor>) => {
-        let proveedor = proveedorRef.payload.doc.data();
+      this.proveedores = listProveedoresRef.map((proveedorRef: DocumentChangeAction<any>) => {
+        let proveedor: Proveedor = proveedorRef.payload.doc.data() as Proveedor;
         proveedor['id'] = proveedorRef.payload.doc.id;
         return proveedor;
       })
- //console.log(this.proveedores)
+      //console.log(this.proveedores)
     });
   }
 
@@ -206,13 +212,13 @@ export class ProveedoresPage implements OnInit {
 
   buscarProducto() {
     if (this.textoABuscar == '') { this.productosAMostrar = []; return; };
-    let productos = [];
-    let precios = [];
+    let productos: any[] = [];
+    let precios: any[] = [];
 
     this.proveedores.forEach((proveedor: Proveedor) => {
       proveedor.modulos.forEach((modulo: Modulo) => {
         if (modulo.modelo.toLowerCase().includes(this.textoABuscar.toLowerCase())) {
-     //console.log(productos,)
+          //console.log(productos,)
           const productoExistente = productos.find((p: any) => (p.modelo.toLowerCase() === modulo.modelo.toLowerCase() && p.tipo.toLowerCase() == modulo.tipo.toLowerCase()));
 
           if (productoExistente) {
@@ -220,7 +226,7 @@ export class ProveedoresPage implements OnInit {
               proveedor: proveedor.nombre,
               precio: modulo.precio
             });
-            productoExistente.precios.sort((a, b) => a.precio - b.precio);
+            productoExistente.precios.sort((a: any, b: any) => a.precio - b.precio);
           } else {
             const nuevoProducto = {
               calidad: modulo.calidad,
@@ -251,7 +257,7 @@ export class ProveedoresPage implements OnInit {
 
 
 
-  asignarColor(lista, index) {
+  asignarColor(lista:any[], index:number) {
     if (index == 0) {
       return 'success';
     } else if (index == lista.length - 1) {

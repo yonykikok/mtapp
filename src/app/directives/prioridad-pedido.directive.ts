@@ -4,7 +4,7 @@ import { Directive, ElementRef, Input, OnInit } from '@angular/core';
   selector: '[appPrioridadPedido]'
 })
 export class PrioridadPedidoDirective implements OnInit {
-  @Input() appPrioridadPedido;
+  @Input() appPrioridadPedido: any;
 
   constructor(private el: ElementRef) {
   }

@@ -23,7 +23,7 @@
             <th>Efectivo</th>
             <td>{{libroDiario.montoTotalEfectivo|currency}}</td>
           </tr>
-          <tr>
+          <tr *ngIf="libroDiario.montoTotalEfectivo && libroDiario.montoInicial">
             <th>TOTAL:</th>
             <td>{{libroDiario.montoTotalEfectivo+
               libroDiario.montoInicial|currency}}</td>

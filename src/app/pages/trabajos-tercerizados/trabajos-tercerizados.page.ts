@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DocumentChangeAction } from '@angular/fire/compat/firestore';
 import { ModalController } from '@ionic/angular';
+import { User } from 'src/app/clases/user';
 import { FormAltaTrabajoTercerizadoComponent } from 'src/app/components/forms/form-alta-trabajo-tercerizado/form-alta-trabajo-tercerizado.component';
 import { DetalleTrabajoTercerizadoComponent } from 'src/app/components/views/detalle-trabajo-tercerizado/detalle-trabajo-tercerizado.component';
 import { AuthService } from 'src/app/services/auth.service';
@@ -17,7 +18,7 @@ export interface trabajoTercerizado {
   costo: number,
   precio: number,
   reparado: boolean,
-  id: string
+  id?: string
 }
 @Component({
   selector: 'app-trabajos-tercerizados',
@@ -25,8 +26,8 @@ export interface trabajoTercerizado {
   styleUrls: ['./trabajos-tercerizados.page.scss'],
 })
 export class TrabajosTercerizadosPage implements OnInit {
-  loggedUser;
-  trabajosTercerizados: any[];
+  loggedUser!: User;
+  trabajosTercerizados: any[] = [];
   constructor(
     private authService: AuthService,
     private database: DataBaseService,
@@ -36,7 +37,7 @@ export class TrabajosTercerizadosPage implements OnInit {
   ionViewDidEnter(): void {
     this.getCurrentUser();
     this.database.obtenerTodos(environment.TABLAS.trabajos_tercerizados).subscribe(listEquiposTercerizadosRef => {
-      let trabajosTercerizados = listEquiposTercerizadosRef.map((equipoTercerizadoRef: DocumentChangeAction<trabajoTercerizado>) => {
+      let trabajosTercerizados = listEquiposTercerizadosRef.map((equipoTercerizadoRef: DocumentChangeAction<any>) => {
         let trabajoTercerizado = equipoTercerizadoRef.payload.doc.data();
         trabajoTercerizado['id'] = equipoTercerizadoRef.payload.doc.id;
         return trabajoTercerizado;
@@ -50,9 +51,9 @@ export class TrabajosTercerizadosPage implements OnInit {
   }
 
   getCurrentUser() {
-    this.authService.getCurrentUser().subscribe(userRef => {
+    this.authService.getCurrentUser().subscribe((userRef: any) => {
       this.database.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res) => {
-        let usuario = res.payload.data();
+        let usuario: User = res.payload.data() as User;
         usuario['uid'] = res.payload.id;
 
         this.loggedUser = {
@@ -94,7 +95,7 @@ export class TrabajosTercerizadosPage implements OnInit {
     }
   }
 
-  async mostrarDetalle(trabajo) {
+  async mostrarDetalle(trabajo: any) {
 
     try {
       const modal = await this.modalController.create({

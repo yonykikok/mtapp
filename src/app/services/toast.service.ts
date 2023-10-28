@@ -36,7 +36,7 @@ export class ToastService {
 
 
 
-  async simpleMessage(header, message, color: ToastColor) {
+  async simpleMessage(header:string, message:string, color: ToastColor) {
     const toast = await this.toastController.create({
       header,
       message,
@@ -47,7 +47,7 @@ export class ToastService {
     await toast.present();
   }
 
-  async customAlert(header, message, duration, color: ToastColor, position: ToastPosition, icon?: ToastIcon) {
+  async customAlert(header:string, message:string, duration:number, color: ToastColor, position: ToastPosition, icon?: ToastIcon) {
     const toast = await this.toastController.create({
       header,
       message,

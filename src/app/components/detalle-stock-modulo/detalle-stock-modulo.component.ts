@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { User } from 'src/app/clases/user';
 import { AlertService } from 'src/app/services/alert.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
@@ -16,13 +17,13 @@ export class DetalleStockModuloComponent implements OnInit {
 
   editarTitulo = false;
   panelOpenState = false;
-  loggedUser;
+  loggedUser!: User;
 
   agregarColor = false;
   colores = this.infoConpatida.coloresModulos;
   cantidades = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   tipos = ['conMarco', 'sinMarco'];
-  repuesto;
+  repuesto: any;
 
   cantidad = 1;
   color = this.infoConpatida.coloresModulos[0];
@@ -43,12 +44,12 @@ export class DetalleStockModuloComponent implements OnInit {
   ngOnInit(): void {
     this.repuesto['cantidadTotal'] = this.calcularCantidadTotalDeStock(this.repuesto);
   }
-  calcularCantidadTotalDeStock(repuesto) {
-    let cantidadConMarco = repuesto.stock.conMarco.reduce((cant, stockConMarco) => {
+  calcularCantidadTotalDeStock(repuesto: any) {
+    let cantidadConMarco = repuesto.stock.conMarco.reduce((cant: number, stockConMarco: any) => {
       return cant += Number(stockConMarco.cantidad);
     }, 0);
 
-    let cantidadSinMarco = repuesto.stock.sinMarco.reduce((cant, stockConMarco) => {
+    let cantidadSinMarco = repuesto.stock.sinMarco.reduce((cant: number, stockConMarco: any) => {
       return cant += Number(stockConMarco.cantidad);
     }, 0);
 
@@ -57,7 +58,7 @@ export class DetalleStockModuloComponent implements OnInit {
   }
 
 
-  cambiarCantidad(stock, accion, indice) {
+  cambiarCantidad(stock: any, accion: any, indice: number) {
     if (accion == 'aumentar') {
       stock.cantidad = Number(stock.cantidad) + 1
     } else {
@@ -73,7 +74,7 @@ export class DetalleStockModuloComponent implements OnInit {
 
   actualizarCantidadTotal() {
 
-    this.repuesto['cantidadTotal'] = this.repuesto.stock.conMarco.reduce((cantidad, stock) => {
+    this.repuesto['cantidadTotal'] = this.repuesto.stock.conMarco.reduce((cantidad: number, stock: any) => {
       return cantidad += Number(stock.cantidad);
     }, 0);
     this.modalController.dismiss(this.repuesto, 'agregarStock')
@@ -91,7 +92,7 @@ export class DetalleStockModuloComponent implements OnInit {
     let colorExistente;
     this.alertService.alertConfirmacion('Confirmación', `¿Quiere agregar <b>${cantidad}</b> del color <b>${color.toLowerCase()} ${this.tipo == 'conMarco' ? 'con marco' : 'sin marco'}</b>`, 'Si', () => {
 
-      colorExistente = this.repuesto.stock[this.tipo].find(stock => stock.color == color);
+      colorExistente = this.repuesto.stock[this.tipo].find((stock: any) => stock.color == color);
 
 
       if (!colorExistente) {
@@ -116,7 +117,7 @@ export class DetalleStockModuloComponent implements OnInit {
 
   actualizarModelo() {
 
-    this.database.actualizar(environment.TABLAS.stockModulos, { ...this.repuesto }, this.repuesto.id).then(res => {
+    this.database.actualizar(environment.TABLAS.stockModulos, { ...this.repuesto }, this.repuesto.id)?.then(res => {
       this.modalController.dismiss();
     })
   }

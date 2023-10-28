@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { AlertService } from 'src/app/services/alert.service';
 import { DataBaseService } from 'src/app/services/database.service';
+import { Pedido } from 'src/app/services/info-compartida.service';
 
 @Component({
   selector: 'app-detalle-pedido',
@@ -13,8 +14,8 @@ export class DetallePedidoComponent implements OnInit {
   listaDePrioridades = ['Opcional', 'Sin stock', 'Averiguar', 'Urgente'];
   editarPrioridad = false;
   showAgregarNota = false;
-  notaPedido: FormControl;
-  pedido;
+  notaPedido: string = '';
+  pedido!: Pedido;
   constructor(
     private database: DataBaseService,
     private alertService: AlertService,
@@ -23,11 +24,11 @@ export class DetallePedidoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-console.log(this.pedido)
+    console.log(this.pedido)
 
   }
 
-  mostrarConfirmacion(e) {
+  mostrarConfirmacion(e:any) {
     this.alertService.alertConfirmacion('Confirmación', `Esta por pasar de '${this.pedido.prioridad}' a '${e.target.value}'`, 'Si, confirmar', () => {
       this.pedido.prioridad = e.target.value;
       // this.database.actualizar(environment.TABLAS.pedidos', this.pedido, this.pedido.id).then(res => {
@@ -50,7 +51,7 @@ console.log(this.pedido)
     // this.agregarNotaEvent.emit(this.pedido);
   }
 
-  cargarTextArea(texto) {
+  cargarTextArea(texto: string) {
     this.notaPedido = texto;
   }
 }

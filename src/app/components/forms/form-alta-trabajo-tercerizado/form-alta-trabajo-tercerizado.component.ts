@@ -36,12 +36,11 @@ export class FormAltaTrabajoTercerizadoComponent implements OnInit {
         trabajo,
         boleta,
         detallesDelEquipo,
-        costo: null,
+        costo: 0,
         fecha: Date.now(),
-        fechaRetiro: null,
-        precio: null,
+        fechaRetiro: -1,
+        precio: 0,
         reparado: false,
-        id: null
       }
       this.spinnerService.showLoading('Cargando...');
       this.database.crear(environment.TABLAS.trabajos_tercerizados, trabajoTercerizado).then(res => {

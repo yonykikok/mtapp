@@ -8,18 +8,22 @@ export enum ImportanciaRoles {
     'OWNER' = 5,
 }
 export class User {
-    uid?: string;
+    uid!: string;
     email?: string;
     displayName?: string;
     emailVerified?: boolean;
     password?: string;
     photoURL?: string;
-    role?: Roles;
+    role!: Roles;
     securityCode?: string
     dni?: string;
     phoneNumber?: string;
     adress?: string;
-    blocked?: string;
+    blocked?: boolean;
     estado?: Estados;
     tareas?: any[];
+    activo?:boolean;
+    fNacimiento?:any;
+    sexo?:string;
+    [key: string]: any;
 }

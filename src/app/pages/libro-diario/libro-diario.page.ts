@@ -18,12 +18,12 @@ import { environment } from 'src/environments/environment';
 })
 export class LibroDiarioPage implements OnInit {
 
-  montoInicialOriginal;
+  montoInicialOriginal: number = 0;
   mostrarModalCierreDeCaja = false;
-  resultadoDeCaja = null;
+  resultadoDeCaja: number = 0;
   montoDeCaja = null;
   libroDiarioHoy: LibroDiario = {
-    fecha: null,
+    fecha: -1,
     ventas: [],
     montoInicial: 0,
     montoTotal: 0,
@@ -35,9 +35,9 @@ export class LibroDiarioPage implements OnInit {
     montoTotalNegativo: 0
   }
   mostrarMontoInicial = true;
-  montoIngresado;
-  loggedUser: User;
-  esteMes;
+  montoIngresado: number = 0;
+  loggedUser!: User;
+  esteMes!: { dias: any[], id: string };
 
   constructor(private authService: AuthService,
     private database: DataBaseService,
@@ -65,23 +65,24 @@ export class LibroDiarioPage implements OnInit {
         return;
       }
 
-      this.esteMes = res.payload.data();
-      this.esteMes['id'] = res.payload.id;
+      this.esteMes = res.payload.data() as { dias: any[], id: string };
+      this.esteMes.id = res.payload.id;
 
       let hoy = new Date();
       hoy.setHours(0);
       hoy.setMinutes(0);
       hoy.setSeconds(0);
-      let libroDiarioDeHoy = this.esteMes.dias?.find(dia => new Date(dia.fecha).toString() == hoy.toString());
+      let libroDiarioDeHoy = this.esteMes.dias?.find((dia: any) => new Date(dia.fecha).toString() == hoy.toString());
       if (libroDiarioDeHoy) {
         this.libroDiarioHoy = libroDiarioDeHoy;
       } else {
         let nuevoLibroDiario = this.obtenerNuevoLibroDiario();//aca debe estar el problema
-
-        this.esteMes.dias = [...this.esteMes.dias, nuevoLibroDiario];
-        this.database.actualizar(environment.TABLAS.ingresosBrutos, this.esteMes, this.esteMes.id);
+        if (Array.isArray(this.esteMes.dias)) {
+          this.esteMes.dias = [...this.esteMes.dias, nuevoLibroDiario];
+          this.database.actualizar(environment.TABLAS.ingresosBrutos, this.esteMes, this.esteMes.id);
+        }
       }
-      this.montoInicialOriginal = this.libroDiarioHoy.montoInicial;
+      this.montoInicialOriginal = this.libroDiarioHoy.montoInicial || 0;
       this.libroDiarioHoy.montoTotalEfectivo = this.obtenerMontoTotalPorMedioDePago(this.libroDiarioHoy, MediosDePago.Efectivo);
     });
 
@@ -93,8 +94,8 @@ export class LibroDiarioPage implements OnInit {
       this.esteMes['dias'] = [libroDiario];
       await this.database.actualizar(environment.TABLAS.ingresosBrutos, this.esteMes, this.esteMes.id);
     } else {
-      let diarioDeHoy = this.esteMes.dias.find(dia => {
-        if (new Date(dia.fecha).toString() == new Date(libroDiario.fecha).toString()) {
+      let diarioDeHoy = this.esteMes.dias.find((dia: any) => {
+        if (libroDiario.fecha && (new Date(dia.fecha).toString() == new Date(libroDiario.fecha).toString())) {
           return dia;
         }
       });
@@ -110,7 +111,7 @@ export class LibroDiarioPage implements OnInit {
     hoy.setMinutes(0);
     hoy.setSeconds(0);
 
-    let libroDiario = {
+    let libroDiario: LibroDiario = {
       fecha: hoy.getTime(),
       fechaString: hoy.toString(),
       ventas: [],
@@ -127,8 +128,10 @@ export class LibroDiarioPage implements OnInit {
 
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe(userRef => {
+      if (!userRef) return;
+
       this.database.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res) => {
-        let usuario = res.payload.data();
+        let usuario: any = res.payload.data();
         usuario['uid'] = res.payload.id;
 
         this.loggedUser = {
@@ -163,6 +166,7 @@ export class LibroDiarioPage implements OnInit {
             this.libroDiarioHoy.montoTotalEfectivo = Number(this.libroDiarioHoy.montoInicial);
           }
 
+          this.libroDiarioHoy.ventas = this.libroDiarioHoy.ventas || [];
           this.libroDiarioHoy.ventas = [...this.libroDiarioHoy.ventas, ...result.data];
           this.libroDiarioHoy.montoTotalEfectivo = this.obtenerMontoTotalPorMedioDePago(this.libroDiarioHoy, MediosDePago.Efectivo);//total en efectivo
           this.libroDiarioHoy.montoTotalTransferencia = this.obtenerMontoTotalPorMedioDePago(this.libroDiarioHoy, MediosDePago.Transferencia);//total en efectivo
@@ -183,9 +187,9 @@ export class LibroDiarioPage implements OnInit {
 
   }
 
-  obtenerMontoTotalPorMedioDePago(libroDiarioHoy, medioDePago: MediosDePago) {
+  obtenerMontoTotalPorMedioDePago(libroDiarioHoy: any, medioDePago: MediosDePago) {
     let acumulador = 0;
-    libroDiarioHoy.ventas.forEach((venta) => {
+    libroDiarioHoy.ventas.forEach((venta: any) => {
       if (venta.medioDePago == medioDePago) {
         acumulador += venta.precio;
       }
@@ -194,46 +198,46 @@ export class LibroDiarioPage implements OnInit {
   }
 
   comprobar() {
-    this.resultadoDeCaja = (this.libroDiarioHoy.montoTotalEfectivo + this.libroDiarioHoy.montoInicial) - this.montoDeCaja;
+    if (this.libroDiarioHoy.montoTotalEfectivo && this.libroDiarioHoy.montoInicial && this.montoDeCaja) {
+
+      this.resultadoDeCaja = (this.libroDiarioHoy.montoTotalEfectivo + this.libroDiarioHoy.montoInicial) - this.montoDeCaja;
 
 
-    let mensaje = '';
-    if (this.resultadoDeCaja > 0) {//(falta plata en la caja)
-      mensaje = 'falta plata en la caja';
+      let mensaje = '';
+      if (this.resultadoDeCaja > 0) {//(falta plata en la caja)
+        mensaje = 'falta plata en la caja';
+      }
+      else if (this.resultadoDeCaja < 0) {//(hay de mas en la caja)
+        mensaje = 'hay de mas en la caja';
+      } else {//Cerro perfecto!
+        mensaje = 'Cerro perfecto!';
+      }
+
+      if (!this.libroDiarioHoy.historialDeCierre) {
+        this.libroDiarioHoy.historialDeCierre = [];
+      }
+
+      this.libroDiarioHoy.historialDeCierre.push({
+        fecha: Date.now(),
+        fechaString: new Date().toLocaleString(),
+        mensaje,
+        usuario: this.loggedUser.displayName || '',
+        resultadoDeCaja: this.montoDeCaja - (this.libroDiarioHoy.montoTotalEfectivo + this.libroDiarioHoy.montoInicial),
+      });
+
+      this.database.actualizar(environment.TABLAS.ingresosBrutos, this.esteMes, this.esteMes.id);
     }
-    else if (this.resultadoDeCaja < 0) {//(hay de mas en la caja)
-      mensaje = 'hay de mas en la caja';
-    } else {//Cerro perfecto!
-      mensaje = 'Cerro perfecto!';
-    }
-
-    if (!this.libroDiarioHoy.historialDeCierre) {
-      this.libroDiarioHoy.historialDeCierre = [];
-    }
-
-    this.libroDiarioHoy.historialDeCierre = [...this.libroDiarioHoy.historialDeCierre, {
-      fecha: Date.now(),
-      fechaString: new Date().toLocaleString(),
-      mensaje,
-      usuario: this.loggedUser.displayName,
-      resultadoDeCaja: this.montoDeCaja - (this.libroDiarioHoy.montoTotalEfectivo + this.libroDiarioHoy.montoInicial),
-    }]
-    console.log(this.libroDiarioHoy)
-
-    this.database.actualizar(environment.TABLAS.ingresosBrutos, this.esteMes, this.esteMes.id).then(res => {
-      // this.toastService.simpleMessage('Exito', 'Se modifico la venta', ToastColor.success);
-    });
 
   }
-  detenerPropagacion(e) {
+  detenerPropagacion(e: any) {
     e.stopPropagation();
   }
   reiniciarMontoInicialDeCaja() {
-    this.libroDiarioHoy.montoInicial = null;
+    this.libroDiarioHoy.montoInicial = 0;
   }
-  obtenerMontoTotalPorNegativo(libroDiarioHoy) {
+  obtenerMontoTotalPorNegativo(libroDiarioHoy: any) {
     let acumuladorNegativo = 0;
-    libroDiarioHoy.ventas.forEach((venta) => {
+    libroDiarioHoy.ventas.forEach((venta: any) => {
       if (venta.precio < 0) {
         acumuladorNegativo += venta.precio;
       }
@@ -241,7 +245,7 @@ export class LibroDiarioPage implements OnInit {
     return acumuladorNegativo;
   }
 
-  async mostrarModalEditarVenta(venta) {
+  async mostrarModalEditarVenta(venta: any) {
     try {
       const modal = await this.modalController.create({
         component: FormActualizarItemLibroDiarioComponent,
@@ -259,7 +263,7 @@ export class LibroDiarioPage implements OnInit {
           necesitaActualizar = true;
 
         } else if (result.role == 'eliminarItemVenta') {
-          let indexAEliminar = this.libroDiarioHoy.ventas.findIndex(auxVenta => auxVenta == venta);
+          let indexAEliminar: number = this.libroDiarioHoy.ventas.findIndex(auxVenta => auxVenta == venta);
           //console.log(indexAEliminar)
           if (indexAEliminar != -1) {
             this.libroDiarioHoy.ventas.splice(indexAEliminar, 1);
@@ -275,7 +279,7 @@ export class LibroDiarioPage implements OnInit {
           this.libroDiarioHoy.montoTotalMercadoPago = this.obtenerMontoTotalPorMedioDePago(this.libroDiarioHoy, MediosDePago.MercadoPago);//total en efectivo
           this.libroDiarioHoy.montoTotalNegativo = this.obtenerMontoTotalPorNegativo(this.libroDiarioHoy);//total negativo
 
-          this.database.actualizar(environment.TABLAS.ingresosBrutos, this.esteMes, this.esteMes.id).then(res => {
+          this.database.actualizar(environment.TABLAS.ingresosBrutos, this.esteMes, this.esteMes.id)?.then(res => {
             this.toastService.simpleMessage('Exito', 'Se modifico la venta', ToastColor.success);
           });
         }

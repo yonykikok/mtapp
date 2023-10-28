@@ -24,7 +24,7 @@ export class FormPedidoComponent implements OnInit {
   });
 
   pedidoPorCliente = false;
-  tipoDeRepuestoFiltrado: Observable<string[]>;
+  tipoDeRepuestoFiltrado: Observable<string[]> = new Observable<string[]>();
   // @Output() cerrarFormEvent = new EventEmitter<void>();
   formgroupPedido = new FormGroup({
     tipo: new FormControl('', Validators.required),
@@ -49,9 +49,15 @@ export class FormPedidoComponent implements OnInit {
 
   ngOnInit() {
     this.tipoDeRepuestoFiltrado = this.formgroupPedido.controls.tipo.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value)),
+      startWith(null as unknown), // Convertir primero a 'unknown'
+      map(value => this._filter(value as string)), // Luego convertir a 'string'
     );
+
+
+    // this.tipoDeRepuestoFiltrado = this.formgroupPedido.controls.tipo.valueChanges.pipe(
+    //   startWith(''),
+    //   map(value => this._filter(value)),
+    // );
   }
 
   showConfirmDialog() {
@@ -68,12 +74,11 @@ export class FormPedidoComponent implements OnInit {
     })
   }
 
-  private _filter(value: string): string[] {
+  private _filter(value: string): any {
     if (value) {
       const filterValue = value.toLowerCase();
       return this.listaTipoDeRepuestos.filter(option => option.toLowerCase().includes(filterValue));
     }
-    return null;
   }
 
   resetForm() {

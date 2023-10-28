@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { DataBaseService } from 'src/app/services/database.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -14,14 +14,25 @@ import { environment } from 'src/environments/environment';
 export class FormEquipoDisponibleComponent implements OnInit {
 
   step = 2;
-  imagenes = [];
-  equipoVendido;
+  imagenes: any[] = [];
+  equipoVendido: any;
   mostrarSpinner = false;
 
-  step1FormGroup: FormGroup;
-  step2FormGroup: FormGroup;
-  step3FormGroup: FormGroup;
-  step4FormGroup: FormGroup;
+  step1FormGroup: FormGroup = new FormGroup({
+    dni: new FormControl(['', Validators.required]),
+  });
+  step2FormGroup: FormGroup = new FormGroup({
+    marca: new FormControl(['', Validators.required]),
+    modelo: new FormControl(['', Validators.required]),
+    imei: new FormControl(['', [Validators.required, Validators.minLength(15), Validators.maxLength(17)]]),
+    precio: new FormControl(['', Validators.required]),
+  });
+  step3FormGroup: FormGroup = new FormGroup({
+    accesorios: new FormControl(['']),
+  });
+  step4FormGroup: FormGroup = new FormGroup({
+    images: new FormControl(['']),
+  });
 
   constructor(private _formBuilder: FormBuilder,
     private dataBase: DataBaseService,
@@ -50,11 +61,11 @@ export class FormEquipoDisponibleComponent implements OnInit {
 
 
 
-  actualizarImagenes(images) {
-    this.step4FormGroup.controls.images.setValue(images);
+  actualizarImagenes(images: any) {
+    this.step4FormGroup.controls['images'].setValue(images);
   }
 
-  agregarImagen(e) {
+  agregarImagen(e: any) {
     if (this.imagenes.length >= 2) {
       this.imagenes = [];
     }
@@ -66,7 +77,7 @@ export class FormEquipoDisponibleComponent implements OnInit {
       reader.readAsDataURL(files[i]);
       reader.onloadend = () => {
         if (this.imagenes.length < 2) {
-          this.imagenes.push(reader.result);
+          this.imagenes.push(reader.result as string);
           // this.selectedImg = this.imagenes[0];
         }
       }
@@ -88,13 +99,13 @@ export class FormEquipoDisponibleComponent implements OnInit {
   cerrarFormulario() {
     this.modalController.dismiss();
   }
-  uploadImages(images, imgPath) {
+  uploadImages(images: any[], imgPath: string) {
     this.mostrarSpinner = true;
-    let imgUrls = [];
+    let imgUrls: string[] = [];
     let contador = 0;
     images.forEach(imgBase64 => {
-      this.storageService.subirImagenEquiposVenta(imgPath + Date.now(), imgBase64).then(urlImagen => {
-        imgUrls.push(urlImagen);
+      this.storageService.subirImagenEquiposVenta(imgPath + Date.now(), imgBase64).then((urlImagen) => {
+        imgUrls.push(urlImagen as string);
         contador++;
         if (contador == images.length) {
           this.equipoVendido.images = imgUrls;

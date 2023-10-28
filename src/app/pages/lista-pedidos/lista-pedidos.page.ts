@@ -5,6 +5,7 @@ import { FormPedidoComponent } from 'src/app/components/forms/form-pedido/form-p
 import { DetallePedidoComponent } from 'src/app/components/views/detalle-pedido/detalle-pedido.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { DataBaseService } from 'src/app/services/database.service';
+import { Pedido } from 'src/app/services/info-compartida.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 export interface PeriodicElement {
@@ -22,16 +23,16 @@ var ELEMENT_DATA: PeriodicElement[] = [
 })
 export class ListaPedidosPage implements OnInit {
   listaSeleccionada = 'pendientes';
-  pedidosAMostrar = [];
-  pedidos = {
+  pedidosAMostrar: any = [];
+  pedidos: any = {
     conseguidos: [],
     notificados: [],
     pendientes: []
   };
 
-  @Input() loggedUser: User;
-  @Input() listaPedidos;
-  textoABuscar;
+  @Input() loggedUser!: User;
+  @Input() listaPedidos: Pedido[] = [];
+  textoABuscar: string = '';
 
 
   constructor(
@@ -39,20 +40,20 @@ export class ListaPedidosPage implements OnInit {
     private alerService: AlertService,
     private toastService: ToastService,
     private modalController: ModalController,
-    private actionSheetController:ActionSheetController
+    private actionSheetController: ActionSheetController
   ) { }
   ngOnInit(): void {
     // this.pedidosAMostrar = [...this.pedidos.pendientes];
     //   this.pedidosAMostrar?.sort(this.compare.bind(this))
     // return;
-    let sus = this.database.obtenerTodos(environment.TABLAS.pedidos).subscribe(pedidosRef => {
+    let sus = this.database.obtenerTodos(environment.TABLAS.pedidos).subscribe((pedidosRef: any) => {
       this.pedidos = {
         conseguidos: [],
         notificados: [],
         pendientes: []
       };
-      pedidosRef.forEach(pedidoRef => {
-        let pedido = pedidoRef.payload.doc.data();
+      pedidosRef.forEach((pedidoRef: any) => {
+        let pedido: any = pedidoRef.payload.doc.data();
         pedido['id'] = pedidoRef.payload.doc.id;
         //console.log(pedido)
 
@@ -74,11 +75,11 @@ export class ListaPedidosPage implements OnInit {
 
 
 
-  showSaveDialog(pedido, campo, message) {
+  showSaveDialog(pedido: Pedido, campo: string, message: string) {
     this.alerService.alertConfirmacion('Confirmación', message, 'Si, confirmo', this.guardar.bind(this, pedido, campo));
   }
 
-  confirmarMarcado(pedido, campo, e) {
+  confirmarMarcado(pedido: Pedido, campo: string, e: any) {
     let message = `¿  Ya has ${campo} el pedido?`;
     if (!pedido[campo]) {
       setTimeout(() => { pedido[campo] = false; }, 50);
@@ -88,7 +89,7 @@ export class ListaPedidosPage implements OnInit {
     this.showSaveDialog(pedido, campo, message);
   }
 
-  confirmarDesmarcado(pedido, campo, e) {
+  confirmarDesmarcado(pedido: Pedido, campo: string, e: any) {
     let message = `¿Quieres desmarcar el pedido?`;
     if (pedido[campo]) {
       setTimeout(() => { pedido[campo] = true; }, 50);
@@ -98,7 +99,7 @@ export class ListaPedidosPage implements OnInit {
     this.showSaveDialog(pedido, campo, message);
   }
 
-  guardar(pedido, campo) {
+  guardar(pedido: Pedido, campo: string) {
 
     if (!pedido[campo]) {
       pedido[campo] = true;
@@ -107,7 +108,7 @@ export class ListaPedidosPage implements OnInit {
     }
     let auxPedido = { ...pedido };
 
-    this.database.actualizar(environment.TABLAS.pedidos, auxPedido, pedido.id).finally(() => {
+    this.database.actualizar(environment.TABLAS.pedidos, auxPedido, pedido.id)?.finally(() => {
       let mensaje = auxPedido[campo] ?
         `Se marco como '${campo}', podras verlo en pedidos ${campo}s.` :
         "Se marco como 'pendiente', podras verlo en pedidos pendientes.";
@@ -115,7 +116,7 @@ export class ListaPedidosPage implements OnInit {
     });
   }
 
-  obtenerNivelDePrioridad(prioridad) {
+  obtenerNivelDePrioridad(prioridad: string) {
     switch (prioridad) {
       case "Opcional":
         return 0;
@@ -130,7 +131,7 @@ export class ListaPedidosPage implements OnInit {
     }
   }
 
-  compare(a, b) {
+  compare(a: Pedido, b: Pedido) {
     if (this.obtenerNivelDePrioridad(a.prioridad) < this.obtenerNivelDePrioridad(b.prioridad)) return 1;
     if (this.obtenerNivelDePrioridad(a.prioridad) > this.obtenerNivelDePrioridad(b.prioridad)) return -1;
     else {
@@ -139,7 +140,7 @@ export class ListaPedidosPage implements OnInit {
       return 0;
     }
   }
-  async mostrarDetalle(pedido) {
+  async mostrarDetalle(pedido: Pedido) {
 
 
     try {
@@ -163,12 +164,12 @@ export class ListaPedidosPage implements OnInit {
             });
             break;
           case 'agregarNota':
-            this.database.actualizar(environment.TABLAS.pedidos, pedido, pedido.id).finally(() => {
+            this.database.actualizar(environment.TABLAS.pedidos, pedido, pedido.id)?.finally(() => {
               this.toastService.simpleMessage('', 'Nota agregada', ToastColor.success);
             });
             break;
           case 'actualizarEstado':
-            this.database.actualizar(environment.TABLAS.pedidos, pedido, pedido.id).then(res => {
+            this.database.actualizar(environment.TABLAS.pedidos, pedido, pedido.id)?.then((res: any) => {
               this.toastService.simpleMessage('', `Prioridad establecida como ${pedido.prioridad}`, ToastColor.success);
               // this.actualizarLista();
             });
@@ -185,20 +186,22 @@ export class ListaPedidosPage implements OnInit {
   }
 
   borarPedidosConseguidosSinClientes() {
-    let auxLista = this.pedidos.conseguidos.filter(ped => {
+    let auxLista = this.pedidos.conseguidos.filter((ped: Pedido) => {
       if (ped.conseguido && !ped.cliente) {
         return ped;
       }
+      return;
     });
-    auxLista.forEach(element => {
+    auxLista.forEach((element: Pedido) => {
       this.database.eliminar(environment.TABLAS.pedidos, element.id).finally(() => {
       });
     });
 
   }
-  filtrarPorTexto(texto) {
+  filtrarPorTexto(event: any) {
+    let texto = event.target['value'];
     const query = !texto ? "" : texto.toLowerCase();
-    this.pedidosAMostrar = this.pedidos[this.listaSeleccionada].filter((d) => d.modelo.toLowerCase().indexOf(query) > -1 || d.tipo.toLowerCase().indexOf(query) > -1);
+    this.pedidosAMostrar = this.pedidos[this.listaSeleccionada].filter((ped: Pedido) => ped.modelo.toLowerCase().indexOf(query) > -1 || ped.tipo.toLowerCase().indexOf(query) > -1);
     this.pedidosAMostrar?.sort(this.compare.bind(this))
 
   }
@@ -213,7 +216,7 @@ export class ListaPedidosPage implements OnInit {
   }
 
   cargarListaDePedidosParaNotificar() {
-    this.pedidosAMostrar = this.pedidos.conseguidos.filter(pedido => pedido.cliente);
+    this.pedidosAMostrar = this.pedidos.conseguidos.filter((pedido: Pedido) => pedido.cliente);
     this.pedidosAMostrar?.sort(this.compare.bind(this))
     this.listaSeleccionada = 'para_notificar';
     console.log(this.pedidosAMostrar);
@@ -247,14 +250,14 @@ export class ListaPedidosPage implements OnInit {
     window.open(url, '_system');
   }
 
-  async presentActionSheet(pedido) {
+  async presentActionSheet(pedido: Pedido) {
 
-    let boletaMessage=pedido.cliente.boleta
-    ?`Recorda que tu numero de boleta es ${pedido.cliente.boleta}.`
-    :'';
+    let boletaMessage = pedido.cliente.boleta
+      ? `Recorda que tu numero de boleta es ${pedido.cliente.boleta}.`
+      : '';
     console.log(pedido)
     let mensaje = `Hola ${pedido.cliente.nombre} como estas? te escribia por el pedido de ${pedido.tipo} que habias realizado. Era para informarte que ya lo conseguimos, por favor indicanos si aun estas interesado en el pedido. ${boletaMessage}`;
-      // Mensaje predeterminado para el cliente;
+    // Mensaje predeterminado para el cliente;
     const actionSheet = await this.actionSheetController.create({
       mode: 'ios',
       header: 'Elija una opción',
@@ -267,7 +270,7 @@ export class ListaPedidosPage implements OnInit {
         }, {
           text: 'Enviar mensaje con precio',
           handler: () => {
-            let precioMensaje=" Tambien aprovecho y te adjunto el precio final que es de XXXX";
+            let precioMensaje = " Tambien aprovecho y te adjunto el precio final que es de XXXX";
             this.abrirWhatsApp(pedido, mensaje + precioMensaje)
           }
         },

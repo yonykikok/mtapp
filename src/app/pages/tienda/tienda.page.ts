@@ -6,12 +6,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./tienda.page.scss'],
 })
 export class TiendaPage implements OnInit {
-  textoABuscar;
+  textoABuscar: string = '';
 
-  precioMin: number;
-  precioMax: number;
+  precioMin: number = 0;
+  precioMax: number = 0;
 
-  categorias;
+  categorias:any;
   accesoriosTelefonia = [
     {
       nombre: "Cargador Inalámbrico",

@@ -9,20 +9,20 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./cargar-correo.component.scss'],
 })
 export class CargarCorreoComponent implements OnInit {
-  modoActualizar=false;
-  correo;
+  modoActualizar = false;
+  correo!: string;
   formCorreo = new FormGroup({
     correo: new FormControl('', [Validators.required, Validators.email])
   })
 
   constructor(private modalController: ModalController) {
-   }
+  }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.formCorreo.controls.correo.setValue(this.correo);
 
   }
-  guardar(){
-    this.modalController.dismiss(this.formCorreo.controls.correo.value,'create');
+  guardar() {
+    this.modalController.dismiss(this.formCorreo.controls.correo.value, 'create');
   }
 }

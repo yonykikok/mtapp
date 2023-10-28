@@ -9,22 +9,22 @@
 
       <ion-accordion-group style="width: 100%;">
         <ion-accordion value="first">
-          <ion-item slot="header" color="light"
-            [ngStyle]="{'background-color': equipo.fecha<='retirado'?'#f2e60f2e':''}">
+          <!-- [ngStyle]="{'background-color': equipo.fecha<='retirado'?'#f2e60f2e':''}" //TODO: retomar esto en el ion-item -->
+          <ion-item slot="header" color="light">
             <ion-text slot="start"> <b>{{equipo.modelo|titlecase}}</b> </ion-text>
             <ion-text slot="end"> <b>{{equipo.dni}}</b> </ion-text>
           </ion-item>
           <div slot="content">
-            <ul >
+            <ul>
               <li><b>Fecha de venta: </b> {{equipo.fecha|date:'medium'}}</li>
               <li><b>Equipo: </b>{{equipo.marca}} {{equipo.modelo}}</li>
               <li><b>Imei: </b>{{equipo.imei}}</li>
               <li><b>Precio: </b> {{equipo.precio|currency:'USD':'symbol':'1.0-0'}}</li>
-              <li><b>Se vendio hace: </b> ({{equipo.tiempoTranscurrido}}) dias</li>
-              <li [ngStyle]="{'color': equipo.tiempoTranscurrido > 15?'rgb(230 49 49)':'green'}"><b>Garantia: </b>
-                {{(equipo.tiempoTranscurrido <= 15)?'Vigente!' :'Vencida hace ('+(equipo.tiempoTranscurrido-15)+') dias'}}
-              </li>
-              
+              <li><b>Se vendio hace: </b> ({{equipo['tiempoTranscurrido']}}) dias</li>
+              <li [ngStyle]="{'color': equipo['tiempoTranscurrido'] > 15?'rgb(230 49 49)':'green'}"><b>Garantia: </b>
+                {{(equipo['tiempoTranscurrido'] <= 15)?'Vigente!' :'Vencida hace ('+(equipo['tiempoTranscurrido']-15)+')
+                  dias'}} </li>
+
               <li *ngIf="equipo.accesorios.length"><b>Accesorios: </b><br>
                 [ <b *ngFor="let accesorio of equipo.accesorios; let index = index">
                   <!-- para quitar la ',' del ultimo lugar -->
@@ -34,21 +34,21 @@
             </ul>
             <div *ngIf="equipo.images.length>0 ">
               <div>
-                <ion-button class="ion-margin" expand="block" *ngIf="!equipo.mostrarImagenes"
-                (click)="equipo.mostrarImagenes=true" color="primary">
-                ver imagenes
-              </ion-button>
+                <ion-button class="ion-margin" expand="block" *ngIf="!equipo['mostrarImagenes']"
+                  (click)="equipo['mostrarImagenes']=true" color="primary">
+                  ver imagenes
+                </ion-button>
               </div>
-              
-              <div class="ion-text-center flexAroundCenter ion-margin" *ngIf="equipo.mostrarImagenes" >
+
+              <div class="ion-text-center flexAroundCenter ion-margin" *ngIf="equipo['mostrarImagenes']">
                 <ion-avatar *ngFor="let img of equipo.images; let index = index" (click)="mostrarImagenCompleta(img)">
                   <img alt="imagen celular" [src]="img" />
                 </ion-avatar>
               </div>
             </div>
           </div>
-          </ion-accordion>
-        </ion-accordion-group>
+        </ion-accordion>
+      </ion-accordion-group>
     </ion-item-divider>
 
   </div>

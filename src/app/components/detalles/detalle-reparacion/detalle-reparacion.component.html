@@ -12,7 +12,7 @@
           <ion-icon [name]="getIconName()" style=" margin-right: 0.5rem;"> </ion-icon>
           {{ reparacion.estado | estadoReparacion:'short' }}
           <ion-icon class="ion-margin-start" name="create-outline" (click)="modoEditar=true"
-            *ngIf="reparacion.estado!='RETIRADO' &&  reparacion.estado!='retirado' && ruta=='boletas'"></ion-icon>
+            *ngIf="reparacion.estado!='RETIRADO' && ruta=='boletas'"></ion-icon>
         </label>
 
         <ng-template #mostrarSelect>

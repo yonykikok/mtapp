@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
+// import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
 import { ModalController } from '@ionic/angular';
 
 @Component({
@@ -8,32 +8,32 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./barcode-scanner.component.scss'],
 })
 export class BarcodeScannerComponent implements OnInit {
-  @Input() formats;
-  @Output() scannerResultEvent = new EventEmitter<any>();
+  // @Input() formats: string = "QR_CODE,PDF_417";
+  // @Output() scannerResultEvent = new EventEmitter<any>();
 
 
   constructor(
-    private barcodeScanner: BarcodeScanner,
+    // private barcodeScanner: BarcodeScanner,
     private modalRef: ModalController
   ) { }
 
   ngOnInit() {
 
   }
-  abrirScanner() {
-    let options = {
-      formats: this.formats ? this.formats : "QR_CODE,PDF_417"
-    }
+  // abrirScanner() {
+  //   let options = {
+  //     formats: this.formats ? this.formats : "QR_CODE,PDF_417"
+  //   }
 
-    this.barcodeScanner.scan(options).then(barcodeData => {
-      // this.scannerResultEvent.emit(barcodeData);
-      this.modalRef.dismiss(barcodeData);
-    }).catch(err => {
-      console.error('Error', err);
-    });
+  //   // this.barcodeScanner.scan(options).then((barcodeData: any) => {
+  //   //   // this.scannerResultEvent.emit(barcodeData);
+  //   //   this.modalRef.dismiss(barcodeData);
+  //   // }).catch((err: Error) => {
+  //   //   console.error('Error', err);
+  //   // });
 
-  }
-  cerrarScanner() {
-    this.modalRef.dismiss();
-  }
+  // }
+  // cerrarScanner() {
+  //   this.modalRef.dismiss();
+  // }
 }

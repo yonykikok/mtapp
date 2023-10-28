@@ -24,7 +24,7 @@ export class BlockedUserGuard implements CanActivate {
           Para desbloquear tu cuenta comunicate con stmultitask@gmail.com`, ToastColor.danger);
 
           this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(
-            (event: NavigationEnd) => { this.router.navigate([event.url]); });//vuelvo a la ruta anterior.
+            (event: any) => { this.router.navigate([event.url]); });//vuelvo a la ruta anterior.
         }
         else {
         }

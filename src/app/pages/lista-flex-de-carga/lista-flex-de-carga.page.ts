@@ -16,12 +16,12 @@ import { environment } from 'src/environments/environment';
 })
 export class ListaFlexDeCargaPage implements OnInit {
 
-  loggedUser: User | null = null;
+  loggedUser!: User;
   camposSeleccionados = ['modelo', 'calidad', 'precio'];
-  flexDeCargas = [];
-  flexDeCargasAMostrar = [];
+  flexDeCargas: any[] = [];
+  flexDeCargasAMostrar: any[] = [];
 
-  precioDolarBlue: number | null = null;
+  precioDolarBlue: number = 0;
   mostrarFormModulo = true;
 
   dolarObservable$: Observable<number> | null = null;
@@ -99,7 +99,7 @@ export class ListaFlexDeCargaPage implements OnInit {
       })
     })
   }
-  handleInput(event) {
+  handleInput(event: any) {
     const query = event.target.value.toLowerCase();
     this.flexDeCargasAMostrar = this.flexDeCargas.filter((d) => d.modelo.toLowerCase().indexOf(query) > -1);
   }

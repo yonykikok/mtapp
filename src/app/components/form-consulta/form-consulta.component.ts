@@ -35,6 +35,8 @@ export class FormConsultaComponent implements OnInit {
 
   enviarFormulario() {
     let { nombre, apellido, telefono, consulta } = this.formConsulta.value;
+    if (!nombre || !apellido || !telefono || !consulta) return; //TODO: informar
+    
     let consultaOnline: Consulta = {
       nombre,
       apellido,

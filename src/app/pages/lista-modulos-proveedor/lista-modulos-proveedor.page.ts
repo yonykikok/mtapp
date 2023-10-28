@@ -21,11 +21,11 @@ import { Proveedor } from '../proveedores/proveedores.page';
 export class ListaModulosProveedorPage implements OnInit {
   loggedUser: User | null = null;
   camposSeleccionados = ['modelo', 'calidad', 'precio'];
-  modulos = [];
-  modulosAMostrar = [];
-  proveedor: Proveedor;
+  modulos: any[] = [];
+  modulosAMostrar: any[] = [];
+  proveedor!: Proveedor;
   mostrarFormModulo = true;
-  precioDolarBlue: number | null = null;
+  precioDolarBlue: number=0;
 
   constructor(private dataBase: DataBaseService,
     private authService: AuthService,
@@ -55,7 +55,7 @@ export class ListaModulosProveedorPage implements OnInit {
         component: DetalleModuloComponent,
         componentProps: {
           repuesto: modulo,
-          ruta:'/proveedores'
+          ruta: '/proveedores'
         },
       })
 
@@ -81,9 +81,8 @@ export class ListaModulosProveedorPage implements OnInit {
   }
 
   guardarCambiosProeveedor() {
-    this.dataBase.actualizar(environment.TABLAS.proveedores, this.proveedor, this.proveedor.id).then(res => {
-    })
-
+    if (!this.proveedor || !this.proveedor.id) return; //TODO: notificar.
+      this.dataBase.actualizar(environment.TABLAS.proveedores, this.proveedor, this.proveedor.id);
   }
 
   getCurrentUser() {
@@ -104,11 +103,11 @@ export class ListaModulosProveedorPage implements OnInit {
       })
     })
   }
-  handleInput(event) {
-//console.log(this.modulos)
+  handleInput(event: any) {
+    //console.log(this.modulos)
     const textABuscar = event.target.value.toLowerCase();
-    this.modulosAMostrar = this.modulos.filter((d) => d.modelo.toLowerCase().includes(textABuscar));
-//console.log(this.modulosAMostrar)
+    this.modulosAMostrar = this.modulos.filter((modulo) => modulo.modelo.toLowerCase().includes(textABuscar));
+    //console.log(this.modulosAMostrar)
   }
 
 

@@ -9,7 +9,7 @@ export class SpinnerService {
   constructor(private loadingCtrl: LoadingController) { }
 
 
-  async showLoading(message) {
+  async showLoading(message:string) {
     let loading = await this.loadingCtrl.create({
       message,
       mode: 'ios',

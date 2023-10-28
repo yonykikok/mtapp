@@ -36,10 +36,10 @@ export class FormDetalleVentaComponent implements OnInit {
 
   step = 1;
   medioDePago: string = MediosDePago.Efectivo;
-  titularDeCuenta;
-  montoAbonado;
+  titularDeCuenta: any;
+  montoAbonado!: number;
   montoTotal = 0;
-  items = [];
+  items: any[] = [];
   item = {
     precio: null,
     boleta: '',
@@ -94,7 +94,7 @@ export class FormDetalleVentaComponent implements OnInit {
     this.modalController.dismiss(items, 'guardarItems');
     this.items = [];
   }
-  eliminarItem(selectedItem) {
+  eliminarItem(selectedItem: any) {
     this.items.splice(this.items.findIndex(item => selectedItem === item), 1);
     this.calcularMontoTotal();
   }

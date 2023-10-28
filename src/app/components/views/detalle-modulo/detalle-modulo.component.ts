@@ -13,15 +13,15 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./detalle-modulo.component.scss'],
 })
 export class DetalleModuloComponent implements OnInit {
-  ruta;
+  ruta!: string;
   editModelo = false;
   editPrecio = false;
   editMarca = false;
   editTipo = false;
   editStock = false;
   editCalidad = false;
-  repuesto;
-  clonRepuesto;
+  repuesto!: any;//es modulo 
+  clonRepuesto: any;
   marcas = this.infoConpatida.marcasModulos;
   colores = this.infoConpatida.coloresModulos;
   tipos = this.infoConpatida.tiposModulos;
@@ -43,7 +43,7 @@ export class DetalleModuloComponent implements OnInit {
     this.clonRepuesto = this.funcionesUtilesService.clonarObjeto(this.repuesto);
   }
 
-  mostrar(campo) {
+  mostrar(campo: 'editModelo' | 'editStock' | 'editPrecio' | 'editTipo' | 'editCalidad') {
     this.resetBanderas();
     this[campo] = true;
   }
@@ -58,7 +58,7 @@ export class DetalleModuloComponent implements OnInit {
   agregarNuevoColor() {
     let cantidad = this.cantidad;
     let color = this.color;
-    let colorExistente = this.clonRepuesto.stock.find(stock => stock.color == color);
+    let colorExistente = this.clonRepuesto.stock.find((stock: { color: string, cantidad: number }) => stock.color == color);
 
     if (!colorExistente) {
       cantidad <= 0

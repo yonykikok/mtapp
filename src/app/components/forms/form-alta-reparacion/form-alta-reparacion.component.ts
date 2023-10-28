@@ -11,6 +11,7 @@ import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { ModalController } from '@ionic/angular';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DOC_ORIENTATION, NgxImageCompressService } from 'ngx-image-compress';
+import { boleta } from 'src/app/pages/mis-reparaciones/mis-reparaciones.page';
 firebase.initializeApp(environment.firebaseConfig);
 
 
@@ -20,9 +21,9 @@ firebase.initializeApp(environment.firebaseConfig);
   styleUrls: ['./form-alta-reparacion.component.scss'],
 })
 export class FormAltaReparacionComponent implements OnInit {
-  ruta;
+  ruta: string = '';
   storageRef = firebase.app().storage().ref();
-  imgVistaPrevia;
+  imgVistaPrevia!: string;
 
 
   formAltaReparacion = new FormGroup({
@@ -55,15 +56,16 @@ export class FormAltaReparacionComponent implements OnInit {
         promptLabelPhoto: 'Seleccionar desde Galería',
         resultType: CameraResultType.DataUrl
       });
- //console.log(image)
+      //console.log(image)
+      if (!image || !image.dataUrl) return;
 
       let base64Image;
 
       if (image.dataUrl.startsWith('data:image/jpeg')) {
-   //console.log('se')
+        //console.log('se')
         base64Image = image.dataUrl;
       } else if (image.dataUrl.startsWith('data:image/png')) {
-   //console.log('se2')
+        //console.log('se2')
         base64Image = image.dataUrl.replace('data:image/png', 'data:image/jpeg');
       } else {
         this.toastService.simpleMessage('No compatible', 'Tipo de imagen no compatible', ToastColor.danger);
@@ -75,11 +77,11 @@ export class FormAltaReparacionComponent implements OnInit {
           .compressFile(image.dataUrl, DOC_ORIENTATION.Default, 50, 50); // 50% ratio, 50% quality
         base64Image = compressedImage;
       }
-      this.imgVistaPrevia = base64Image;
+      this.imgVistaPrevia = base64Image as string;
 
     } catch (error) {
- //console.log(error)
-      return false;
+      //console.log(error)
+      return;
     }
   };
 
@@ -91,6 +93,8 @@ export class FormAltaReparacionComponent implements OnInit {
     const months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
     let month = months[hoy.getMonth()];
     let year = hoy.getFullYear();
+
+
 
     this.alertService.alertConfirmacion(
       'Confirma los datos',
@@ -107,7 +111,8 @@ export class FormAltaReparacionComponent implements OnInit {
 
         this.storageRef.child(`boletas/${month}${year}-${nroBoleta}-${dniCliente}`).putString(this.imgVistaPrevia, 'data_url').then(async (respuesta) => {
           let photo = await respuesta.ref.getDownloadURL();
-          let boleta = {
+          if (!dniCliente || !nroBoleta || !telefono || !modelo) return; //TODO: notificar
+          let boleta: boleta = {
             completa: false,
             images: [photo],
             dniCliente: dniCliente.toString(),
@@ -118,7 +123,7 @@ export class FormAltaReparacionComponent implements OnInit {
             telefono: telefono.toString(),
             fechaId: `${month}${year}`
           }
-     //console.log(boleta)
+          //console.log(boleta)
           this.database.crear(environment.TABLAS.boletasReparacion, boleta).then(res => {
             this.toastService.simpleMessage("Exito!", "Se genero la boleta correctamente", ToastColor.success);
             this.spinnerService.stopLoading();

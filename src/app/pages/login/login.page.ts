@@ -14,7 +14,7 @@ import { roles } from 'src/app/services/info-compartida.service';
 export class LoginPage implements OnInit {
   mostrarInputClave = false;
   formUser = new FormGroup({
-    dni: new FormControl('3775513', [Validators.required, this.validDniNumber]),
+    dni: new FormControl('', [Validators.required, this.validDniNumber]),
     password: new FormControl('', []),
   });
   constructor(private router: Router,
@@ -27,37 +27,41 @@ export class LoginPage implements OnInit {
   }
 
   preLogin() {
-    let user = this.formUser.value;
-    try {
+    let user: any = this.formUser.value;
+    if (user.dni) {
 
-      var suscripcion = this.database.obtenerPorId('users', user.dni.toString()).subscribe(async (res: any) => {
-        const auxUser = res.payload.data();
+      try {
 
-        if (!res.payload.exists) {//si no existe lo creamos.
-          user['activo'] = false;
-          user['fechaCreacion'] = new Date();
-          user['role'] = roles.CLIENTE;
-          await this.database.crearConCustomId('users', user.dni.toString(), this.formUser.value);
+        var suscripcion = this.database.obtenerPorId('users', user.dni.toString()).subscribe(async (res: any) => {
+          const auxUser = res.payload.data();
 
-          this.alertService.alertSinAccion('Bienvenido!!',
-            'Gracias por sumarte a nuestra comunidad, una ves finalizada el registro podras acceder a todos los sectores de la App.',
-            'Ok');
-        }
+          if (!res.payload.exists && user.dni) {//si no existe lo creamos.
+            user['activo'] = false;
+            user['fechaCreacion'] = new Date();
+            user['role'] = roles.CLIENTE;
+            await this.database.crearConCustomId('users', user.dni.toString(), this.formUser.value);
 
-        this.authService.setCurrentUser(user)
+            this.alertService.alertSinAccion('Bienvenido!!',
+              'Gracias por sumarte a nuestra comunidad, una ves finalizada el registro podras acceder a todos los sectores de la App.',
+              'Ok');
+          }
 
-        if (auxUser && auxUser.password) {
-          this.mostrarInputClave = true;
-        } else {
-          this.router.navigate(['/home']);
-          suscripcion.unsubscribe();
-        }
+          this.authService.setCurrentUser(user)
 
-      });
+          if (auxUser && auxUser.password) {
+            this.mostrarInputClave = true;
+          } else {
+            this.router.navigate(['/home']);
+            suscripcion.unsubscribe();
+          }
 
-    } catch (err) {
-      console.error(err);
+        });
+
+      } catch (err) {
+        console.error(err);
+      }
     }
+
     setTimeout(() => {
       // this.router.navigate(['/home']);
     }, 1000);
@@ -77,21 +81,26 @@ export class LoginPage implements OnInit {
 
   ingresar() {
     let formUser = this.formUser.value;
-    var suscripcion = this.database.obtenerPorId('users', formUser.dni.toString()).subscribe((res: any) => {
-      const auxUser = res.payload.data();
+    if (formUser.dni) {
 
-      if (!res.payload.exists) {
-        return;
-      }
-      // if (auxUser.password.toString().toLowerCase() === formUser.password.toString().toLowerCase()) {
-      if (this.authService.compararPassword(formUser.password.toString())) {
-        this.router.navigate(['/home']);
-        this.authService.setCurrentUser(formUser);
-      } else {
-      }
-      this.mostrarInputClave = false;
-      suscripcion.unsubscribe();
-    });
+      var suscripcion = this.database.obtenerPorId('users', formUser.dni.toString()).subscribe((res: any) => {
+        const auxUser = res.payload.data();
+
+        if (!res.payload.exists) {
+          return;
+        }
+
+        if (formUser.password) {
+          if (this.authService.compararPassword(formUser.password.toString())) {
+            this.router.navigate(['/home']);
+            this.authService.setCurrentUser(formUser);
+          } else {
+          }
+          this.mostrarInputClave = false;
+        }
+        suscripcion.unsubscribe();
+      });
+    }
   }
 
 

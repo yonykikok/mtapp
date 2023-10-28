@@ -1,6 +1,6 @@
 <ion-header>
   <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Stock de modulos'"
-    (click)="showStockDialog=null"></app-clasic-toolbar>
+    (click)="showStockDialog=false"></app-clasic-toolbar>
 </ion-header>
 
 
@@ -84,7 +84,7 @@
   <!-- FIN TABLA -->
 
   <!-- FORM MODIFICAR STOCK RAPIDO -->
-  <div *ngIf="showStockDialog" (click)="this.showStockDialog = null;" class="flexCenterCenter customModal">
+  <div *ngIf="showStockDialog" (click)="this.showStockDialog = false;" class="flexCenterCenter customModal">
     <ion-card (click)="$event.stopPropagation();">
       <ion-card-header>
 

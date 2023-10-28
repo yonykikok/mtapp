@@ -8,18 +8,18 @@ import { AnimationController, ViewDidEnter } from '@ionic/angular';
   styleUrls: ['./intro.page.scss'],
 })
 export class IntroPage implements OnInit, ViewDidEnter {
-  @ViewChild('svgTapa', { static: false }) svgTapaRef: ElementRef;
-  @ViewChild('svgBateria', { static: false }) svgBateriaRef: ElementRef;
-  @ViewChild('svgCamPincipal', { static: false }) svgCamPincipalRef: ElementRef;
-  @ViewChild('svgCamSecundaria', { static: false }) svgCamSecundariaRef: ElementRef;
-  @ViewChild('svgCubreLente', { static: false }) svgCubreLenteRef: ElementRef;
-  @ViewChild('svgFlexCarga', { static: false }) svgFlexCargaRef: ElementRef;
-  @ViewChild('svgPantalla', { static: false }) svgPantallaRef: ElementRef;
-  @ViewChild('svgPortaSim', { static: false }) svgPortaSimRef: ElementRef;
-  @ViewChild('svgMicroSd', { static: false }) svgMicroSdRef: ElementRef;
-  @ViewChild('svgMarco', { static: false }) svgMarcoRef: ElementRef;
-  @ViewChild('svgMidTapa', { static: false }) svgMidTapaRef: ElementRef;
-  @ViewChild('svgSombra', { static: false }) svgSombraRef: ElementRef;
+  @ViewChild('svgTapa', { static: false }) svgTapaRef!: ElementRef;
+  @ViewChild('svgBateria', { static: false }) svgBateriaRef!: ElementRef;
+  @ViewChild('svgCamPincipal', { static: false }) svgCamPincipalRef!: ElementRef;
+  @ViewChild('svgCamSecundaria', { static: false }) svgCamSecundariaRef!: ElementRef;
+  @ViewChild('svgCubreLente', { static: false }) svgCubreLenteRef!: ElementRef;
+  @ViewChild('svgFlexCarga', { static: false }) svgFlexCargaRef!: ElementRef;
+  @ViewChild('svgPantalla', { static: false }) svgPantallaRef!: ElementRef;
+  @ViewChild('svgPortaSim', { static: false }) svgPortaSimRef!: ElementRef;
+  @ViewChild('svgMicroSd', { static: false }) svgMicroSdRef!: ElementRef;
+  @ViewChild('svgMarco', { static: false }) svgMarcoRef!: ElementRef;
+  @ViewChild('svgMidTapa', { static: false }) svgMidTapaRef!: ElementRef;
+  @ViewChild('svgSombra', { static: false }) svgSombraRef!: ElementRef;
 
   constructor(
     private animationCtrl: AnimationController,

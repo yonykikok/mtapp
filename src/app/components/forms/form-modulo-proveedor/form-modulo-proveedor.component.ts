@@ -10,6 +10,7 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { ModalController } from '@ionic/angular';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
+import { Proveedor } from 'src/app/pages/proveedores/proveedores.page';
 // const modulos = [
 //   {
 //     "modelo": "A01 core",
@@ -474,7 +475,7 @@ import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.servic
 })
 
 export class FormModuloProveedorComponent implements OnInit {
-  proveedor;
+  proveedor!: Proveedor;
   @Input() nuevoModulo = {
     calidad: '',
     modelo: '',
@@ -484,8 +485,8 @@ export class FormModuloProveedorComponent implements OnInit {
   }
 
   //auto complete
-  modelosExistentes = [];
-  modulosFiltrados: Observable<string[]>;
+  modelosExistentes: any[] = [];
+  modulosFiltrados: Observable<string[]> = new Observable<string[]>();
   //auto complete
 
   //parametros formulario
@@ -494,9 +495,9 @@ export class FormModuloProveedorComponent implements OnInit {
   tipos = this.infoConpatida.tiposModulos;
   //parametros formulario
 
-  modulos;
+  modulos: any[] = [];
 
-  precioDolarBlue: number | null = null;
+  precioDolarBlue: number = 0;
   formModulo: FormGroup = new FormGroup({
     marca: new FormControl('Samsung', Validators.required),
     modelo: new FormControl('', Validators.required),
@@ -527,7 +528,7 @@ export class FormModuloProveedorComponent implements OnInit {
     })
     this.modelosExistentes = [...listaSinRepetir];
 
-    this.modulosFiltrados = this.formModulo.controls.modelo.valueChanges.pipe(
+    this.modulosFiltrados = this.formModulo.controls['modelo'].valueChanges.pipe(
       startWith(''),
       map((value: string) => this._filter(value)),
     );
@@ -547,8 +548,10 @@ export class FormModuloProveedorComponent implements OnInit {
     //   modulo.precio = (modulo.precio / 720);
     //   return modulo;
     // });
-    this.dataBase.actualizar(environment.TABLAS.proveedores, this.proveedor, this.proveedor.id);
-//console.log(this.proveedor);
+    if(this.proveedor.id){
+      this.dataBase.actualizar(environment.TABLAS.proveedores, this.proveedor, this.proveedor.id);
+    }
+    //console.log(this.proveedor);
 
     return;
   }
@@ -556,10 +559,10 @@ export class FormModuloProveedorComponent implements OnInit {
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
-    return this.modelosExistentes.filter(modulo => modulo.toLowerCase().includes(filterValue));
+    return this.modelosExistentes.filter((modulo: string) => modulo.toLowerCase().includes(filterValue));
   }
-  buscarPorModeloCalidadYTipo(listaModulos, moduloABuscar) {
-    return listaModulos.find(modulo => {
+  buscarPorModeloCalidadYTipo(listaModulos: any, moduloABuscar: any) {
+    return listaModulos.find((modulo: any) => {
       if (modulo.modelo.toLowerCase() == moduloABuscar.modelo.toLowerCase() &&
         modulo.calidad.toLowerCase() == moduloABuscar.calidad.toLowerCase() &&
         modulo.tipo.toLowerCase() == moduloABuscar.tipo.toLowerCase()) {
@@ -568,14 +571,16 @@ export class FormModuloProveedorComponent implements OnInit {
     });
   }
 
-  agregarModulo(nuevoModulo) {
+  agregarModulo(nuevoModulo: any) {
     this.proveedor.modulos.push(nuevoModulo);
 
     // return;
-    this.dataBase.actualizar(environment.TABLAS.proveedores, this.proveedor, this.proveedor.id).then(() => {
-      this.toastService.simpleMessage('Exito', 'Se agrego el modulo correctamente', ToastColor.success);
-      this.formModulo.reset();
-    });
+    if (this.proveedor.id) {
+      this.dataBase.actualizar(environment.TABLAS.proveedores, this.proveedor, this.proveedor.id)?.then(() => {
+        this.toastService.simpleMessage('Exito', 'Se agrego el modulo correctamente', ToastColor.success);
+        this.formModulo.reset();
+      });
+    }
   }
 
   obtenerObjetoModulo() {

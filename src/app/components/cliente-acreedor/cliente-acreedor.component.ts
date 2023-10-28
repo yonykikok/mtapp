@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 import { FormAgregarItemDeudaComponent } from '../forms/form-agregar-item-deuda/form-agregar-item-deuda.component';
 import { FormAgregarPagoDeudaComponent } from '../forms/form-agregar-pago-deuda/form-agregar-pago-deuda.component';
 import { VerificationCodeComponent } from '../verification-code/verification-code.component';
+import { User } from 'src/app/clases/user';
 @Component({
   selector: 'app-cliente-acreedor',
   templateUrl: './cliente-acreedor.component.html',
@@ -16,8 +17,8 @@ import { VerificationCodeComponent } from '../verification-code/verification-cod
 })
 export class ClienteAcreedorComponent implements OnInit {
   panelOpenState = false;
-  @Input() acreedor;
-  @Input() loggedUser;
+  @Input() acreedor: any;
+  @Input() loggedUser!: User;
 
 
 
@@ -36,7 +37,7 @@ export class ClienteAcreedorComponent implements OnInit {
 
   calcularPagos() {
     if (!this.acreedor.pagos) return;
-    return Array.isArray(this.acreedor.items) ? this.acreedor.pagos.reduce((suma, pago) => suma + pago.monto, 0) : 0;
+    return Array.isArray(this.acreedor.items) ? this.acreedor.pagos.reduce((suma: number, pago: any) => suma + pago.monto, 0) : 0;
 
   }
 
@@ -86,7 +87,7 @@ export class ClienteAcreedorComponent implements OnInit {
 
         if (result.role == 'guardarCambios') {
           this.acreedor.pagos = result.data;
-          this.database.actualizar(environment.TABLAS.acreedores, this.acreedor, this.acreedor.id).then(res => {
+          this.database.actualizar(environment.TABLAS.acreedores, this.acreedor, this.acreedor.id)?.then(res => {
             this.toastService.simpleMessage('Exito', 'Cambios guardados', ToastColor.success);
           })
         }
@@ -101,7 +102,7 @@ export class ClienteAcreedorComponent implements OnInit {
   solicitarConfirmacion() {
     this.alertService.alertConfirmacion('Confirmación', '¿Quiere confirmar que este cliente esta llevando el producto que quiere?', 'Si, confirmar', () => {
       this.acreedor['saldado'] = true;
-      this.database.actualizar(environment.TABLAS.acreedores, this.acreedor, this.acreedor.id).then(res => console.log(res));
+      this.database.actualizar(environment.TABLAS.acreedores, this.acreedor, this.acreedor.id)?.then(res => console.log(res));
     });
   }
 

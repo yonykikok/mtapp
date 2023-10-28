@@ -20,8 +20,8 @@ export class DetalleBateriaComponent implements OnInit {
   editCodigo = false;
   editPrecio = false;
   editCalidad = false;
-  repuesto;
-  clonRepuesto;
+  repuesto: any;
+  clonRepuesto: any;
 
   marcas = this.infoConpatida.marcasModulos;
   calidades = this.infoConpatida.calidadesBaterias;
@@ -42,7 +42,7 @@ export class DetalleBateriaComponent implements OnInit {
     this.clonRepuesto = this.funcionesUtilesService.clonarObjeto(this.repuesto);
   }
 
-  mostrar(campo) {
+  mostrar(campo: 'editMarca' | 'editModelo' | 'editCodigo' | 'editPrecio' | 'editCalidad') {
     this.resetBanderas();
     this[campo] = true;
   }
@@ -59,11 +59,11 @@ export class DetalleBateriaComponent implements OnInit {
     this.repuesto = this.funcionesUtilesService.clonarObjeto(this.clonRepuesto);
 
     try {
- //console.log(this.repuesto)
-      this.database.actualizar(environment.TABLAS.baterias, this.repuesto, this.repuesto.id).then(res => {
-        this.toastService.simpleMessage('Error', 'Bateria actualizado con exito', ToastColor.success);
-   //console.log(res)
-      });
+      if (this.repuesto && this.repuesto.id) {
+        this.database.actualizar(environment.TABLAS.baterias, this.repuesto, this.repuesto.id)?.then(res => {
+          this.toastService.simpleMessage('Error', 'Bateria actualizado con exito', ToastColor.success);
+        });
+      }
     } catch (err) {
       this.toastService.simpleMessage('Error', 'No se pudo actualizar', ToastColor.danger);
     }

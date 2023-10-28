@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
+import { User } from 'src/app/clases/user';
 import { BusquedaPorTextoComponent } from 'src/app/components/busqueda-por-texto/busqueda-por-texto.component';
 import { DetalleVentasDelDiaComponent } from 'src/app/components/detalle-ventas-del-dia/detalle-ventas-del-dia.component';
 import { MediosDePago } from 'src/app/components/forms/form-detalle-venta/form-detalle-venta.component';
@@ -20,19 +21,19 @@ export class HistorialCajaPage implements OnInit {
   // mostarSideBar=false;
   mostrarAcciones = false;
 
-  textoABuscar;
+  textoABuscar!: string;
   mostrarBuscador = false;
-  itemsFiltrados;
-  itemSeleccionado;
+  itemsFiltrados: any[] = [];
+  itemSeleccionado: any[] = [];
 
-  fechaSeleccionada: Date | null;
-  fechaSeleccionadaDate: Date | null;
-  libroDiario;
-  loggedUser;
-  mesSeleccionado;
-  dataLibroDiarioDialog;
+  fechaSeleccionada!: Date;
+  fechaSeleccionadaDate!: Date;
+  libroDiario: any;
+  loggedUser!: User;
+  mesSeleccionado: any;
+  dataLibroDiarioDialog: any;
 
-  precioDolarBlue: number | null = null;
+  precioDolarBlue: number=0;
   dolarObservable$: Observable<number> | null = null;
   constructor(private authService: AuthService, private database: DataBaseService,
     private toastService: ToastService,
@@ -50,7 +51,8 @@ export class HistorialCajaPage implements OnInit {
 
 
   }
-  updateCalcs(e) {
+  updateCalcs(e: any) {
+    if (!this.fechaSeleccionadaDate) return;
     this.mostrarAcciones = true;
     let fecha = new Date(this.fechaSeleccionadaDate);
     fecha.setHours(0, 0, 0, 0);
@@ -58,15 +60,16 @@ export class HistorialCajaPage implements OnInit {
   }
 
   transformarFecha() {
+    if (!this.fechaSeleccionada) return;
     return new Date(this.fechaSeleccionada).toLocaleString();
   }
   applyFilter() {
     //TODO: continuar desde aqui.
     //tenemos coincidencias por texto y/o boleta falta generar una vista para estos items.
-    let items = [];
+    let items: any[] = [];
 
-    this.mesSeleccionado.dias.forEach(dia => {
-      dia.ventas.forEach(venta => {
+    this.mesSeleccionado.dias.forEach((dia: any) => {
+      dia.ventas.forEach((venta: any) => {
         if (venta.descripcion.toLowerCase().includes(this.textoABuscar.toLowerCase()) ||
           venta.boleta == this.textoABuscar) {
           let auxVenta = { ...venta };
@@ -83,9 +86,9 @@ export class HistorialCajaPage implements OnInit {
   }
 
   getCurrentUser() {
-    this.authService.getCurrentUser().subscribe(userRef => {
+    this.authService.getCurrentUser().subscribe((userRef: any) => {
       this.database.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res) => {
-        let usuario = res.payload.data();
+        let usuario: User = res.payload.data() as User;
         usuario['uid'] = res.payload.id;
 
         this.loggedUser = {
@@ -118,7 +121,7 @@ export class HistorialCajaPage implements OnInit {
       this.mesSeleccionado = res.payload.data();
       this.mesSeleccionado['id'] = res.payload.id;
 
-      let libroDiarioSeleccionado = this.mesSeleccionado.dias?.find(dia =>
+      let libroDiarioSeleccionado = this.mesSeleccionado.dias?.find((dia: any) =>
         new Date(dia.fecha).toString() == this.fechaSeleccionada.toString());
 
 
@@ -135,7 +138,7 @@ export class HistorialCajaPage implements OnInit {
 
     });
   }
-  async mostrarDialogLibroDiario(libroDiario) {
+  async mostrarDialogLibroDiario(libroDiario: any) {
     try {
       const modal = await this.modalController.create({
         component: DetalleVentasDelDiaComponent,
@@ -155,7 +158,7 @@ export class HistorialCajaPage implements OnInit {
 
   }
 
-  mostrarMesCompleto(mostrarBuscador) {
+  mostrarMesCompleto(mostrarBuscador: boolean) {
     mostrarBuscador ? this.mostrarBuscador = true : this.mostrarBuscador = false;
 
     // this.obtenerCotizacionDelDolarActual();
@@ -174,17 +177,17 @@ export class HistorialCajaPage implements OnInit {
         return;
       }
       this.mesSeleccionado = res.payload.data();
- //console.log(res)
- //console.log(res.payload.data())
+      //console.log(res)
+      //console.log(res.payload.data())
       this.mesSeleccionado['id'] = res.payload.id;
-      this.mesSeleccionado['dias'] = this.mesSeleccionado['dias'].filter(dia => dia.montoTotalEfectivo > 0);
+      this.mesSeleccionado['dias'] = this.mesSeleccionado['dias'].filter((dia: any) => dia.montoTotalEfectivo > 0);
 
       this.mesSeleccionado['montoTotalMensualEfectivo'] = this.getMontoTotalMensual(MediosDePago.Efectivo);
       this.mesSeleccionado['montoTotalMensualTransferencia'] = this.getMontoTotalMensual(MediosDePago.Transferencia);
       this.mesSeleccionado['montoTotalMensualMercadoPago'] = this.getMontoTotalMensual(MediosDePago.MercadoPago);
       this.mesSeleccionado['montoNegativoTotalMensualEfectivo'] = this.getMontoTotalMensualNegativo();
 
-      this.mesSeleccionado.dias = this.mesSeleccionado.dias.sort((diaA, diaB) => {
+      this.mesSeleccionado.dias = this.mesSeleccionado.dias.sort((diaA: any, diaB: any) => {
         if (diaA.fecha > diaB.fecha) {
           return 1
         } else if (diaA.fecha < diaB.fecha) {
@@ -206,7 +209,7 @@ export class HistorialCajaPage implements OnInit {
   }
 
   getMontoTotalMensualNegativo() {
-    return this.mesSeleccionado.dias.reduce((monto, dia) => {
+    return this.mesSeleccionado.dias.reduce((monto: number, dia: any) => {
       if (dia.montoTotalNegativo <= 0) {
         return monto += dia.montoTotalNegativo;
       }
@@ -214,8 +217,8 @@ export class HistorialCajaPage implements OnInit {
     }, 0);
   }
 
-  getMontoTotalMensual(medioDePago) {
-    return this.mesSeleccionado.dias.reduce((monto, dia) => {
+  getMontoTotalMensual(medioDePago: MediosDePago) {
+    return this.mesSeleccionado.dias.reduce((monto: number, dia: any) => {
       switch (medioDePago) {
         case MediosDePago.Transferencia:
           return monto += dia.montoTotalTransferencia;
@@ -283,7 +286,7 @@ export class HistorialCajaPage implements OnInit {
 
 
 
-  scrollToElement(e, id) {
+  scrollToElement(e: any, id: any) {
     e?.preventDefault();
     setTimeout(() => {
       this.funcionesUtiles.scrollToElement(id);

@@ -17,8 +17,8 @@ export class DetalleFlexDeCargaComponent implements OnInit {
   editPrecio = false;
   editMarca = false;
   editCalidad = false;
-  repuesto;
-  clonRepuesto;
+  repuesto: any;
+  clonRepuesto: any;
   marcas = this.infoConpatida.marcasModulos;
   colores = this.infoConpatida.coloresModulos;
   tipos = this.infoConpatida.tiposModulos;
@@ -43,7 +43,7 @@ export class DetalleFlexDeCargaComponent implements OnInit {
     this.clonRepuesto = this.funcionesUtilesService.clonarObjeto(this.repuesto);
   }
 
-  mostrar(campo) {
+  mostrar(campo: 'editMarca' | 'editModelo' | 'editPrecio' | 'editCalidad') {
     this.resetBanderas();
     this[campo] = true;
   }
@@ -56,7 +56,7 @@ export class DetalleFlexDeCargaComponent implements OnInit {
   agregarNuevoColor() {
     let cantidad = this.cantidad;
     let color = this.color;
-    let colorExistente = this.clonRepuesto.stock.find(stock => stock.color == color);
+    let colorExistente = this.clonRepuesto.stock.find((stock: { color: string, cantidad: number }) => stock.color == color);
 
     if (!colorExistente) {
       cantidad <= 0
@@ -79,11 +79,11 @@ export class DetalleFlexDeCargaComponent implements OnInit {
     this.repuesto = this.funcionesUtilesService.clonarObjeto(this.clonRepuesto);
 
     try {
- //console.log(this.repuesto)
-      this.database.actualizar(environment.TABLAS.flexs, this.repuesto, this.repuesto.id).then(res => {
-      this.toastService.simpleMessage('Error', 'Flex actualizado con exito', ToastColor.success);
- //console.log(res)
-      });
+      if (this.repuesto && this.repuesto.id) {
+        this.database.actualizar(environment.TABLAS.flexs, this.repuesto, this.repuesto.id)?.then(res => {
+          this.toastService.simpleMessage('Error', 'Flex actualizado con exito', ToastColor.success);
+        });
+      }
     } catch (err) {
       this.toastService.simpleMessage('Error', 'No se pudo actualizar', ToastColor.danger);
     }

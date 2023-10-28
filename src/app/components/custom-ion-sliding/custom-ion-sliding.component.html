@@ -3,11 +3,11 @@
     <ion-icon [name]="slidingConfig.iconName" [appEstadoReparacionColor]="reparacion.estado"></ion-icon>
     <ion-label class="itemSlidding" [appEstadoReparacionBgcolor]="reparacion.estado">
       {{slidingConfig.stateMessage}}
-      <small class="smallFecha" style="position: absolute; right: 1.5rem; top: 1rem;">{{reparacion.fecha|date}} </small>
+      <small class="smallFecha" style="position: absolute; right: 1.5rem; top: 1rem;">{{reparacion['fecha']|date}}
+      </small>
       <small class="smallBoleta"
         style="position: absolute; right: 1.5rem; bottom: 1rem;">({{reparacion.nroBoleta}})</small>
-      <small class="smallBoleta"
-        style="position: absolute; right: 1.5rem; top: 1rem;">{{reparacion.modelo}}</small>
+      <small class="smallBoleta" style="position: absolute; right: 1.5rem; top: 1rem;">{{reparacion.modelo}}</small>
     </ion-label>
   </ion-item>
   <ion-item-options>

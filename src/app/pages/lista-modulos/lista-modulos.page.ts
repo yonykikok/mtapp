@@ -17,12 +17,12 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./lista-modulos.page.scss'],
 })
 export class ListaModulosPage implements OnInit {
-  loggedUser: User | null = null;
+  loggedUser!: User;
   camposSeleccionados = ['modelo', 'calidad', 'precio'];
-  modulos = [];
-  modulosAMostrar = [];
+  modulos: any[] = [];
+  modulosAMostrar: any[] = [];
 
-  precioDolarBlue: number | null = null;
+  precioDolarBlue: number = 0;
   mostrarFormModulo = true;
 
   dolarObservable$: Observable<number> | null = null;
@@ -44,7 +44,7 @@ export class ListaModulosPage implements OnInit {
     this.funcionesUtiles.getPriceDolar().subscribe(newPrice => this.precioDolarBlue = newPrice);
 
     let lista = [];
-    this.dataBase.obtenerTodos(environment.TABLAS.modulos).subscribe((docsModulosRef) => {
+    this.dataBase.obtenerTodos(environment.TABLAS.modulos).subscribe((docsModulosRef: any) => {
       if (docsModulosRef.length <= 0) return;
       lista = docsModulosRef.map((element: any) => {
         let auxElement = element.payload.doc.data();
@@ -86,7 +86,7 @@ export class ListaModulosPage implements OnInit {
           this.database.eliminar(environment.TABLAS.modulos, result.data.id).then(() => {
             this.toastService.simpleMessage('Exito', 'Modulo borrado con exito', ToastColor.success);
 
-          }).catch(err => {
+          }).catch((err: Error) => {
             this.toastService.simpleMessage('Error', 'No se pudo borrar el modulo', ToastColor.danger);
           })
         }
@@ -118,7 +118,7 @@ export class ListaModulosPage implements OnInit {
       })
     })
   }
-  handleInput(event) {
+  handleInput(event: any) {
     const query = event.target.value.toLowerCase();
     this.modulosAMostrar = this.modulos.filter((d) => d.modelo.toLowerCase().indexOf(query) > -1);
   }

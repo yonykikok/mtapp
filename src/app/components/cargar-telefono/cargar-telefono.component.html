@@ -12,7 +12,7 @@
 
     <div class="ion-text-center">
 
-      <ion-chip class="ion-margin" color="primary" *ngIf="formTelefono.controls.telefono.value?.toString().length>=8"
+      <ion-chip class="ion-margin" color="primary" *ngIf="formTelefono.controls.telefono.value && formTelefono.controls.telefono.value.toString().length>=8"
         style="flex-direction: column;">
         Nos comunicaremos por medio de este numero: <br>
         <b> {{formTelefono.controls.telefono.value}}</b>

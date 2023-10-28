@@ -1,12 +1,12 @@
 import { Directive, ElementRef, Input } from '@angular/core';
-import { reparacionBgColor } from '../services/info-compartida.service';
+import { boleta_estados, reparacionBgColor } from '../services/info-compartida.service';
 
 @Directive({
   selector: '[appEstadoReparacionBorderColor]'
 })
 export class EstadoReparacionBorderColorDirective {
 
-  @Input() appEstadoReparacionBorderColor = '';
+  @Input() appEstadoReparacionBorderColor:boleta_estados=boleta_estados.PENDIENTE;
   constructor(private el: ElementRef) {
    
   }
@@ -16,7 +16,7 @@ export class EstadoReparacionBorderColorDirective {
   }
 
   private actualizarEstado(): void {
-    this.el.nativeElement.style.borderColor = reparacionBgColor[this.appEstadoReparacionBorderColor.toUpperCase()];
+    this.el.nativeElement.style.borderColor = reparacionBgColor[this.appEstadoReparacionBorderColor];
 
   }
 

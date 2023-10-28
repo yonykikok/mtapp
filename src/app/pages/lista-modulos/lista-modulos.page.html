@@ -31,8 +31,8 @@
     <ion-row *ngFor="let modulo of modulosAMostrar" (click)="seleccionar(modulo)">
       <ion-col *ngIf="camposSeleccionados.includes('marca')">{{modulo.marca|titlecase}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('modelo')">{{modulo.modelo|titlecase}}</ion-col>
-      <ion-col *ngIf="camposSeleccionados.includes('precio')">{{modulo.precio*precioDolarBlue|currency:'USD':'symbol':'1.0-0'
-        }}</ion-col>
+      <ion-col *ngIf="camposSeleccionados.includes('precio')">
+        {{modulo.precio*precioDolarBlue|currency:'USD':'symbol':'1.0-0' }}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('calidad')">{{modulo.calidad}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('tipo')">{{modulo.tipo}}</ion-col>
     </ion-row>

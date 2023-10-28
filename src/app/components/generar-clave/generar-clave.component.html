@@ -11,7 +11,8 @@
 
     <div class="ion-text-center">
 
-      <ion-chip class="ion-margin" color="danger" *ngIf="formPassword.controls.password.value?.toString().length>=8"
+      <ion-chip class="ion-margin" color="danger"
+        *ngIf="formPassword.controls.password.value&&formPassword.controls.password.value.toString().length>=8"
         style="flex-direction: column;">
         NO compartas tu clave con nadie! <br>
       </ion-chip>

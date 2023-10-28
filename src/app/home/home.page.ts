@@ -17,8 +17,8 @@ export class HomePage {
 
 
 
-  reparaciones;
-  reparacionesAMostrar
+  reparaciones: any[] = [];
+  reparacionesAMostrar: any[] = [];
 
 
   constructor(private modalController: ModalController) {
@@ -31,7 +31,7 @@ export class HomePage {
       component: EncuestaCalificacionComponent
     })
 
-    ;(await modal).present();
+      ; (await modal).present();
   }
 
 }

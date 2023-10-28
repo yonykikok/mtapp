@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { User } from 'src/app/clases/user';
 import { FormEquipoVendidoComponent } from 'src/app/components/forms/form-equipo-vendido/form-equipo-vendido.component';
 import { VisualizadorDeImagenComponent } from 'src/app/components/views/visualizador-de-imagen/visualizador-de-imagen.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
+import { EquipoVendido } from 'src/app/services/info-compartida.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -14,13 +16,13 @@ import { environment } from 'src/environments/environment';
 export class EquiposVendidosPage implements OnInit {
 
   // @ViewChild(MatAccordion) accordion: MatAccordion;
-  listaEquiposVendidos;
-  listaEquipos;
+  listaEquiposVendidos: EquipoVendido[] = [];
+  listaEquipos: any;
   mostrarImagenes = false;
-  loggedUser;
+  loggedUser!: User;
 
-  moduloSeleccionado;
-  listaAMostrar;
+  moduloSeleccionado: 'vendidos' | 'disponibles' = 'vendidos';
+  listaAMostrar: any;
 
 
   constructor(
@@ -34,8 +36,8 @@ export class EquiposVendidosPage implements OnInit {
     // this.openDialog();
     this.database.obtenerTodos(environment.TABLAS.equipos_vendidos).subscribe(listRef => {
       let currentDay = new Date();
-      this.listaEquiposVendidos = listRef.map(equipoRef => {
-        let equipoVendido = equipoRef.payload.doc.data();
+      this.listaEquiposVendidos = listRef.map((equipoRef: any) => {
+        let equipoVendido = equipoRef.payload.doc.data() as EquipoVendido;
         equipoVendido['id'] = equipoRef.payload.doc.id;
         equipoVendido['mostrarImagenes'] = false;
         let diferenciaEnMilisegundos = Math.abs(Number(currentDay) - Number(equipoVendido['fecha']));
@@ -80,7 +82,7 @@ export class EquiposVendidosPage implements OnInit {
 
   }
 
-  async mostrarImagenCompleta(imagen) {
+  async mostrarImagenCompleta(imagen: string) {
     try {
       const modal = await this.modalController.create({
         component: VisualizadorDeImagenComponent,
@@ -100,9 +102,9 @@ export class EquiposVendidosPage implements OnInit {
   }
 
   getCurrentUser() {
-    this.authService.getCurrentUser().subscribe(userRef => {
+    this.authService.getCurrentUser().subscribe((userRef: any) => {
       this.database.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res) => {
-        let usuario = res.payload.data();
+        let usuario = res.payload.data() as User;
         usuario['uid'] = res.payload.id;
 
         this.loggedUser = {
@@ -117,7 +119,7 @@ export class EquiposVendidosPage implements OnInit {
       })
     })
   }
-  seleccionarModulo(modulo) {
+  seleccionarModulo(modulo: "vendidos" | "disponibles") {
     this.moduloSeleccionado = modulo;
     this.listaAMostrar = this.listaEquipos[modulo];
     // this.ordenarLista(this.listaAMostrar);

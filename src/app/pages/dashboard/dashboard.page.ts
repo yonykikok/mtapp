@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
+// import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
 import { ModalController } from '@ionic/angular';
-import { Roles } from 'src/app/clases/user';
+import { Roles, User } from 'src/app/clases/user';
 import { FormAltaReparacionComponent } from 'src/app/components/forms/form-alta-reparacion/form-alta-reparacion.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { environment } from 'src/environments/environment';
+import { boleta } from '../mis-reparaciones/mis-reparaciones.page';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,9 +16,9 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./dashboard.page.scss'],
 })
 export class DashboardPage implements OnInit {
-  reparaciones;
-  reparacionesAMostrar;
-  codigoEscaneado;
+  reparaciones: boleta[] = [];
+  reparacionesAMostrar: boleta[] = [];
+  codigoEscaneado: string = '';
   productosEscaneados = [];
   productos = [{
     nombre: 'cargador',
@@ -36,17 +37,17 @@ export class DashboardPage implements OnInit {
     { titulo: 'Stock Modulos', color: 'rgb(103 102 102)', ruta: "/stock-modulos", role: 'EMPLEADO', img: '/assets/svg/icons/stock.svg' },
     { titulo: 'Boletas', color: 'rgb(149 157 126)', ruta: "/boletas", role: 'EMPLEADO', img: '/assets/svg/icons/boletas.svg' },
     { titulo: 'Ventas', color: '#7fbdc7', ruta: "/equipos-vendidos", role: 'EMPLEADO', img: '/assets/svg/icons/ventas.svg' },
-    { titulo: 'Cuentas clientes', color: '#dc3545', ruta: "/cuentas-clientes", role: 'ADMIN', img: '/assets/svg/icons/deudores2.svg'},
+    { titulo: 'Cuentas clientes', color: '#dc3545', ruta: "/cuentas-clientes", role: 'ADMIN', img: '/assets/svg/icons/deudores2.svg' },
     { titulo: 'Mis reparaciones', color: '#d34fb2', ruta: "/mis-reparaciones", role: 'CLIENTE', img: '/assets/svg/icons/reparaciones.svg' },
     { titulo: 'Trabajos tercerizados', color: 'rgb(141 205 119)', ruta: "/trabajos-tercerizados", role: 'ADMIN', img: '/assets/svg/icons/delegar.svg' },
     { titulo: 'Proveedores', color: 'rgb(149 57 126)', ruta: "/proveedores", role: 'OWNER', img: '/assets/svg/icons/proveedores.svg' },
     { titulo: 'Usuarios', color: 'rgb(149 57 126)', ruta: "/lista-de-usuarios", role: 'OWNER', img: '/assets/svg/icons/usuarios.svg' },
   ];
 
-  loggedUser;
+  loggedUser!: User;
   constructor(private modalController: ModalController,
     private database: DataBaseService,
-    private barcodeScanner: BarcodeScanner,
+    // private barcodeScanner: BarcodeScanner,
     private alertService: AlertService,
     public funcionesUtiles: FuncionesUtilesService,
     private authService: AuthService) { }
@@ -58,7 +59,7 @@ export class DashboardPage implements OnInit {
       if (!documentListRef) return;
 
       this.reparaciones = documentListRef.map(documentRef => {
-        let reparacion = documentRef.payload.doc.data();
+        let reparacion = documentRef.payload.doc.data() as boleta;
         reparacion['id'] = documentRef.payload.doc.id;
         return reparacion;
       });
@@ -113,38 +114,38 @@ export class DashboardPage implements OnInit {
     //   formats: "QR_CODE,PDF_417"
     // }
 
-    this.barcodeScanner.scan().then(barcodeData => {
-      if (barcodeData.cancelled) return;
+    // this.barcodeScanner.scan().then(barcodeData => {
+    //   if (barcodeData.cancelled) return;
 
-      if (barcodeData.text) {
-        this.codigoEscaneado = barcodeData.text;
-        this.productosEscaneados = [...this.productosEscaneados, this.productos.find((prod: any) => prod.codigo == barcodeData.text)];
-        alert(JSON.stringify(this.productosEscaneados));
-      }
-      // this.scannerResultEvent.emit(barcodeData);
- //console.log("------------------", barcodeData);
- //console.log("------------------", JSON.stringify(barcodeData));
-    }).catch(err => {
-      console.error('Error', err);
-    });
+    //   if (barcodeData.text) {
+    //     this.codigoEscaneado = barcodeData.text;
+    //     this.productosEscaneados = [...this.productosEscaneados, this.productos.find((prod: any) => prod.codigo == barcodeData.text)];
+    //     alert(JSON.stringify(this.productosEscaneados));
+    //   }
+    //   // this.scannerResultEvent.emit(barcodeData);
+    //   //console.log("------------------", barcodeData);
+    //   //console.log("------------------", JSON.stringify(barcodeData));
+    // }).catch(err => {
+    //   console.error('Error', err);
+    // });
 
   }
 
   ejecutarBackup() {
-    return;
-    let sus = this.database.obtenerTodos(environment.TABLAS.ingresosBrutos).subscribe(mesListRef => {
-      sus.unsubscribe();
-      let meses: any = mesListRef.map(mesRef => {
-        let mes = mesRef.payload.doc.data();
-        mes['id'] = mesRef.payload.doc.id;
-        return mes;
-      });
- //console.log(meses)
-      meses.forEach(mes => {
-        this.database.actualizar(environment.TABLAS.backUps, mes, mes.id);
-      })
+    // return;
+    // let sus = this.database.obtenerTodos(environment.TABLAS.ingresosBrutos).subscribe(mesListRef => {
+    //   sus.unsubscribe();
+    //   let meses: any = mesListRef.map(mesRef => {
+    //     let mes = mesRef.payload.doc.data();
+    //     mes['id'] = mesRef.payload.doc.id;
+    //     return mes;
+    //   });
+    //   //console.log(meses)
+    //   meses.forEach(mes => {
+    //     this.database.actualizar(environment.TABLAS.backUps, mes, mes.id);
+    //   })
 
-    })
+    // })
   }
 
 
@@ -159,13 +160,13 @@ export class DashboardPage implements OnInit {
       subscripcion.unsubscribe();
       let mes: any = res.payload.data();
       mes['id'] = res.payload.id;
- //console.log(mes)
+      //console.log(mes)
       let subscripcion2 = this.database.obtenerPorId(environment.TABLAS.backUps, `${month}${year}`).subscribe(async (res) => {
         subscripcion2.unsubscribe();
         if (res.payload.exists) {
           let mesBackUp: any = res.payload.data();
           mesBackUp['id'] = res.payload.id;
-     //console.log(mesBackUp)
+          //console.log(mesBackUp)
 
           if (mes.dias && mesBackUp.dias) {
 
@@ -177,12 +178,12 @@ export class DashboardPage implements OnInit {
               }
             }
             else {
-         //console.log("NO ACTUALIZAMOS!");
+              //console.log("NO ACTUALIZAMOS!");
             }
           }
 
         } else {
-     //console.log("creamos el backup de ese mes")
+          //console.log("creamos el backup de ese mes")
           haceFaltaActualizarElBackUp = true;
         }
 

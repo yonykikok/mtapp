@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { boleta } from 'src/app/pages/mis-reparaciones/mis-reparaciones.page';
 import { AlertService } from 'src/app/services/alert.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { boleta_estados, reparacionBgColor, reparacionIconName, reparacionMessage } from 'src/app/services/info-compartida.service';
@@ -14,48 +15,48 @@ import { boleta_estados, reparacionBgColor, reparacionIconName, reparacionMessag
 
 export class CustomIonSlidingComponent implements OnInit {
   @Output() mostrarDetalleEvent = new EventEmitter<any>();
-  @Input() reparacion;
+  @Input() reparacion!: boleta;
   slidingConfig = {
     iconName: reparacionIconName.PENDIENTE,
     bgColor: reparacionBgColor.PENDIENTE,
     stateMessage: reparacionMessage.PENDIENTE
   }
-  slidingOptions = [];
+  slidingOptions: any[] = [];
   slidingOptionsByState = {
-    pendiente: {
-      text: 'Cancelar', bgColor: reparacionBgColor.PENDIENTE, click: async (reparacion) => {
+    PENDIENTE: {
+      text: 'Cancelar', bgColor: reparacionBgColor.PENDIENTE, click: async (reparacion: boleta) => {
         this.alertService.alertConfirmacion('Cancelar Reparacion', 'Estas seguro de querer cancelarla?', "Si", this.cambiarEstadoReparacion.bind(this, reparacion, boleta_estados.CANCELADO_POR_EL_USUARIO));
       }
     },
-    en_revision: {
-      text: 'En revisión', bgColor: reparacionBgColor.EN_REVISION, click: (reparacion) => { console.log("En revisión"); }
+    EN_REVISION: {
+      text: 'En revisión', bgColor: reparacionBgColor.EN_REVISION, click: (reparacion: boleta) => { console.log("En revisión"); }
     },
-    cancelado_por_el_usuario: {
-      text: 'Cancelado por el usuario', bgColor: reparacionBgColor.CANCELADO_POR_EL_USUARIO, click: (reparacion) => { console.log("Cancelado por el usuario"); }
+    CANCELADO_POR_EL_USUARIO: {
+      text: 'Cancelado por el usuario', bgColor: reparacionBgColor.CANCELADO_POR_EL_USUARIO, click: (reparacion: boleta) => { console.log("Cancelado por el usuario"); }
     },
-    en_proceso: {
-      text: 'En proceso', bgColor: reparacionBgColor.EN_PROCESO, click: (reparacion) => { console.log("En proceso"); }
+    EN_PROCESO: {
+      text: 'En proceso', bgColor: reparacionBgColor.EN_PROCESO, click: (reparacion: boleta) => { console.log("En proceso"); }
     },
-    esperado_respuesta: {
-      text: 'Esperando respuesta', bgColor: reparacionBgColor.ESPERADO_RESPUESTA, click: (reparacion) => { console.log("Esperando respuesta"); }
+    ESPERADO_RESPUESTA: {
+      text: 'Esperando respuesta', bgColor: reparacionBgColor.ESPERADO_RESPUESTA, click: (reparacion: boleta) => { console.log("Esperando respuesta"); }
     },
-    pausado: {
-      text: 'Pausado', bgColor: reparacionBgColor.PAUSADO, click: (reparacion) => { console.log("Pausado"); }
+    PAUSADO: {
+      text: 'Pausado', bgColor: reparacionBgColor.PAUSADO, click: (reparacion: boleta) => { console.log("Pausado"); }
     },
-    no_reparado: {
-      text: 'No reparado', bgColor: reparacionBgColor.NO_REPARADO, click: (reparacion) => { console.log("No reparado"); }
+    NO_REPARADO: {
+      text: 'No reparado', bgColor: reparacionBgColor.NO_REPARADO, click: (reparacion: boleta) => { console.log("No reparado"); }
     },
-    reparado: {
-      text: 'Reparado', bgColor: reparacionBgColor.REPARADO, click: (reparacion) => { console.log("Reparado"); }
+    REPARADO: {
+      text: 'Reparado', bgColor: reparacionBgColor.REPARADO, click: (reparacion: boleta) => { console.log("Reparado"); }
     },
-    para_notificar: {
-      text: 'Para notificar', bgColor: reparacionBgColor.PARA_NOTIFICAR, click: (reparacion) => { console.log("Para notificar"); }
+    PARA_NOTIFICAR: {
+      text: 'Para notificar', bgColor: reparacionBgColor.PARA_NOTIFICAR, click: (reparacion: boleta) => { console.log("Para notificar"); }
     },
-    para_entregar: {
-      text: 'Para entregar', bgColor: reparacionBgColor.PARA_ENTREGAR, click: (reparacion) => { console.log("Para entregar"); }
+    PARA_ENTREGAR: {
+      text: 'Para entregar', bgColor: reparacionBgColor.PARA_ENTREGAR, click: (reparacion: boleta) => { console.log("Para entregar"); }
     },
-    retirado: {
-      text: 'Retirado', bgColor: reparacionBgColor.RETIRADO, click: (reparacion) => { console.log("Retirado"); }
+    RETIRADO: {
+      text: 'Retirado', bgColor: reparacionBgColor.RETIRADO, click: (reparacion: boleta) => { console.log("Retirado"); }
     },
   }
 
@@ -65,14 +66,14 @@ export class CustomIonSlidingComponent implements OnInit {
   }
 
   ngOnInit() {
-console.log(this.reparacion)
+    console.log(this.reparacion)
     this.slidingConfig = {
-      iconName: reparacionIconName[this.reparacion.estado.toUpperCase()],
-      bgColor: reparacionBgColor[this.reparacion.estado.toUpperCase()],
-      stateMessage: reparacionMessage[this.reparacion.estado.toUpperCase()]
+      iconName: reparacionIconName[this.reparacion.estado],
+      bgColor: reparacionBgColor[this.reparacion.estado],
+      stateMessage: reparacionMessage[this.reparacion.estado]
     }
 
-    this.slidingOptions.push(this.slidingOptionsByState[this.reparacion.estado.toLowerCase()]);
+    this.slidingOptions.push(this.slidingOptionsByState[this.reparacion.estado]);
 
 
   }
@@ -82,15 +83,21 @@ console.log(this.reparacion)
 
   }
 
-  procesar(e) {
+  procesar(e: any) {
     e.stopPropagation();
     this.slidingOptions[0].click(this.reparacion);
 
   }
 
 
-  async cambiarEstadoReparacion(reparacion, nuevoEstado) {
+  async cambiarEstadoReparacion(reparacion: boleta, nuevoEstado: boleta_estados) {
     reparacion.estado = nuevoEstado;
-    await this.databaseService.actualizar('boletas', reparacion, reparacion.id);
+    try {
+      if (reparacion && reparacion.id) {
+        await this.databaseService.actualizar('boletas', reparacion, reparacion.id);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

@@ -38,14 +38,14 @@ export class FormStockModuloComponent implements OnInit {
   }
 
   //auto complete
-  modelosExistentes = [];
-  modulosFiltrados: Observable<string[]>;
+  modelosExistentes: any[] = [];
+  modulosFiltrados: Observable<string[]> = new Observable<string[]>();
   //auto complete
 
   marcas = this.infoConpatida.marcasModulos;
   calidades = this.infoConpatida.calidadesModulos;
 
-  modulos;
+  modulos: any[] = [];
 
   formModulo: FormGroup = new FormGroup({
     modelo: new FormControl('', Validators.required),
@@ -66,7 +66,7 @@ export class FormStockModuloComponent implements OnInit {
 
     this.afs.collection('stockModulos').snapshotChanges().subscribe(res => {
       this.modulos = res.map(moduloRef => {
-        let auxModulo = moduloRef.payload.doc.data()
+        let auxModulo: any = moduloRef.payload.doc.data()
         auxModulo['id'] = moduloRef.payload.doc.id;
         return auxModulo;
       });
@@ -76,7 +76,7 @@ export class FormStockModuloComponent implements OnInit {
       this.modelosExistentes = [...listaSinRepetir];
     });
 
-    this.modulosFiltrados = this.formModulo.controls.modelo.valueChanges.pipe(
+    this.modulosFiltrados = this.formModulo.controls['modelo'].valueChanges.pipe(
       startWith(''),
       map((value: string) => this._filter(value)),
     );
@@ -92,8 +92,8 @@ export class FormStockModuloComponent implements OnInit {
 
     return this.modelosExistentes.filter(modulo => modulo.toLowerCase().includes(filterValue));
   }
-  buscarPorModeloCalidad(listaModulos, moduloABuscar) {
-    return listaModulos.find(modulo => {
+  buscarPorModeloCalidad(listaModulos: any, moduloABuscar: any) {
+    return listaModulos.find((modulo: any) => {
       if (modulo.modelo.toLowerCase() == moduloABuscar.modelo.toLowerCase() &&
         modulo.calidad.toLowerCase() == moduloABuscar.calidad.toLowerCase()) {
         return modulo;
@@ -101,8 +101,8 @@ export class FormStockModuloComponent implements OnInit {
     });
   }
 
-  buscarPorModeloYCalidad(listaModulos, moduloABuscar) {
-    return listaModulos.find(modulo => {
+  buscarPorModeloYCalidad(listaModulos: any, moduloABuscar: any) {
+    return listaModulos.find((modulo: any) => {
       if (modulo.modelo.toLowerCase() == moduloABuscar.modelo.toLowerCase() &&
         modulo.calidad.toLowerCase() == moduloABuscar.calidad.toLowerCase()) {
         return modulo;
@@ -111,7 +111,7 @@ export class FormStockModuloComponent implements OnInit {
   }
 
 
-  agregarModulo(nuevoModulo) {
+  agregarModulo(nuevoModulo: any) {
     this.dataBase.crear(environment.TABLAS.stockModulos, nuevoModulo).then(() => {
       this.toastService.simpleMessage('Exito', 'Modulo agregado', ToastColor.success);
       // this.snackBar.open('Modulo agregado', 'Cerrar', { duration: 5000, panelClass: ['successSnackBar'] });

@@ -9,7 +9,7 @@ export class AlertService {
   constructor(private alertController: AlertController) { }
 
 
-  async alertSinAccion(header, message, textButton) {
+  async alertSinAccion(header: string, message: string, textButton: string) {
     const alert = await this.alertController.create({
       mode: 'ios',
       header,
@@ -25,7 +25,7 @@ export class AlertService {
     alert.present();
   }
 
-  async alertConfirmacion(header, message, acceptText, handlerAcceptButton) {
+  async alertConfirmacion(header: string, message: string, acceptText: string, handlerAcceptButton: any) {
     const alert = await this.alertController.create({
       mode: 'ios',
       header,
@@ -46,7 +46,7 @@ export class AlertService {
     alert.present();
   }
 
-  async alertConfirmacionTripleAccion(header, message, acceptText, handlerAcceptButton, refuseText, handlerRefuseButton, handlerCancelButton) {
+  async alertConfirmacionTripleAccion(header: string, message: string, acceptText: string, handlerAcceptButton: any, refuseText: string, handlerRefuseButton: any, handlerCancelButton: any) {
     const alert = await this.alertController.create({
       mode: 'ios',
       header,
@@ -74,7 +74,7 @@ export class AlertService {
   }
 
 
-  async mostrarAlertaConPrompt(header: string, placeholder: string, cancelText: string, confirmText: string, handlerAcceptButton, handlerCancelButton) {
+  async mostrarAlertaConPrompt(header: string, placeholder: string, cancelText: string, confirmText: string, handlerAcceptButton: any, handlerCancelButton: any) {
     const alert = await this.alertController.create({
       header,
       inputs: [
@@ -101,7 +101,7 @@ export class AlertService {
 
     return new Promise<string | null>((resolve) => { });
   }
-  async mostrarAlertaConTextPrompt(header: string, placeholder: string, cancelText: string, confirmText: string, handlerAcceptButton, handlerCancelButton) {
+  async mostrarAlertaConTextPrompt(header: string, placeholder: string, cancelText: string, confirmText: string, handlerAcceptButton:any, handlerCancelButton:any) {
     const alert = await this.alertController.create({
       header,
       inputs: [

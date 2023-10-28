@@ -13,8 +13,8 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 })
 export class AuthService {
   currentUser: any;
-  public user$: Observable<User>;
-  public userData;
+  public user$: Observable<any>;
+  public userData:any;
 
   constructor(private database: DataBaseService,
     public afAuth: AngularFireAuth, private afs: AngularFirestore,) { 
@@ -22,14 +22,14 @@ export class AuthService {
       this.user$ = this.afAuth.authState.pipe(
         switchMap((user) => {
           if (user) {
-            return this.afs.doc<User>(`users/${user.uid}`).valueChanges();
+            return this.afs.doc<any>(`users/${user.uid}`).valueChanges();
           }
           return of(null);
         })
       );
     }
 
-  setCurrentUser(user) {
+  setCurrentUser(user:any) {
     this.database.obtenerPorId('users', user.dni.toString()).subscribe(userRef => {
       this.currentUser = userRef.payload.data();
     });
@@ -37,7 +37,7 @@ export class AuthService {
   }
 
 
-  compararPassword(password) {
+  compararPassword(password:string) {
     let hashPassword = Md5.hashStr(password);
     if (hashPassword === this.currentUser.password) {
       return true;
@@ -50,7 +50,7 @@ export class AuthService {
     return Md5.hashStr(password);
   }
 
-  async loginWithGoogle(): Promise<User> {
+  async loginWithGoogle(): Promise<any> {
     try {
       const { user } = await this.afAuth.signInWithPopup(new firebaseApp.auth.GoogleAuthProvider());
       this.updateUserData(user);
@@ -61,11 +61,11 @@ export class AuthService {
     }
   }
 
-  private updateUserData(user: User) {
+  private updateUserData(user: any) {
     const userRef: AngularFirestoreDocument<User> = this.afs.doc(`users/${user.uid}`);
     userRef.get().subscribe(res => {
       const userData = res.data();
-      let data: User;
+      let data: any;
 
       data = {
         uid: user.uid,

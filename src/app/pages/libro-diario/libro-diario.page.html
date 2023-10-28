@@ -19,7 +19,8 @@
       <ng-template #mostrarMontoTotal>
         <ion-item-divider class="ion-no-padding ion-text-center" style="flex-direction: column;">
           <h2 class="ion-no-margin">Monto total en caja</h2>
-          <h2 class="ion-no-margin">{{(libroDiarioHoy['montoTotalEfectivo']+libroDiarioHoy['montoInicial'])|currency}}
+          <h2 class="ion-no-margin" *ngIf="libroDiarioHoy['montoTotalEfectivo']&&libroDiarioHoy['montoInicial']">
+            {{(libroDiarioHoy['montoTotalEfectivo']+libroDiarioHoy['montoInicial'])|currency}}
           </h2>
         </ion-item-divider>
       </ng-template>
@@ -103,7 +104,7 @@
 
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end" (click)="openDialog()"
-    *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser) && libroDiarioHoy &&libroDiarioHoy.montoInicial>0">
+    *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser) && libroDiarioHoy &&libroDiarioHoy.montoInicial &&libroDiarioHoy.montoInicial>0">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
@@ -111,7 +112,7 @@
 
   <!-- boton modal cierre de caja -->
   <ion-fab slot="fixed" vertical="bottom" horizontal="start"
-    *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser) && libroDiarioHoy && libroDiarioHoy['montoTotalEfectivo']>0"
+    *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser) && libroDiarioHoy && libroDiarioHoy['montoTotalEfectivo']&& libroDiarioHoy['montoTotalEfectivo']>0"
     (click)="mostrarModalCierreDeCaja=true">
     <ion-fab-button color="success">
       <ion-icon name="newspaper-outline"></ion-icon>

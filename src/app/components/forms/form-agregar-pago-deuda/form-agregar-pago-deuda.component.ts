@@ -3,6 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { AlertService } from 'src/app/services/alert.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
+import { MediosDePago } from '../form-detalle-venta/form-detalle-venta.component';
+import { User } from 'src/app/clases/user';
 
 @Component({
   selector: 'app-form-agregar-pago-deuda',
@@ -10,14 +12,14 @@ import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.servic
   styleUrls: ['./form-agregar-pago-deuda.component.scss'],
 })
 export class FormAgregarPagoDeudaComponent implements OnInit {
-  tipoDePagoSeleccionado;
-  pagos = [];
+  tipoDePagoSeleccionado: any;
+  pagos: any[] = [];
   formGroupPago = new FormGroup({
     concepto: new FormControl('', Validators.required),
     monto: new FormControl('', Validators.required),
   });
 
-  user
+  user!: User;
   constructor(
     public funcionesUtiles: FuncionesUtilesService,
     private alertService: AlertService,
@@ -38,11 +40,11 @@ export class FormAgregarPagoDeudaComponent implements OnInit {
       this.formGroupPago.controls.concepto.setValue('');
     }
   }
-  eliminarPago(selectedItem) {
+  eliminarPago(selectedItem: any) {
     this.pagos.splice(this.pagos.findIndex(item => selectedItem === item), 1);
   }
   agregarPago() {
-    let pago = this.formGroupPago.value;
+    let pago: any = this.formGroupPago.value;
     if (Number(pago.monto) <= 0) return;
 
     pago['fecha'] = Date.now();
@@ -51,12 +53,12 @@ export class FormAgregarPagoDeudaComponent implements OnInit {
   }
   confirmarGuardadoDePagos() {
     this.alertService.alertConfirmacion('Confirmación', "¿Quiere guardar los cambios?", 'Si, Guardar', () => {
-      this.modalController.dismiss(this.pagos,'guardarCambios');
+      this.modalController.dismiss(this.pagos, 'guardarCambios');
     });
 
   }
 
-  showDeletePaymentDialog(item) {
+  showDeletePaymentDialog(item: any) {
     this.alertService.alertConfirmacion('Confirmación', "¿Esta seguro de borrar este pago?", 'Si, borrar pago', this.eliminarPago.bind(this, item));
   }
 }

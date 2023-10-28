@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
+import { User } from 'src/app/clases/user';
 import { AlertService } from 'src/app/services/alert.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 
@@ -11,8 +12,8 @@ import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.servic
 })
 export class FormAgregarItemDeudaComponent implements OnInit {
 
-  user;
-  items = [];
+  user!: User;
+  items: any[] = [];
   formGroupCompra = new FormGroup({
     producto: new FormControl('', Validators.required),
     precio: new FormControl('', Validators.required),
@@ -21,7 +22,7 @@ export class FormAgregarItemDeudaComponent implements OnInit {
   constructor(
     public funcionesUtiles: FuncionesUtilesService,
     private alertService: AlertService,
-    private modalController:ModalController
+    private modalController: ModalController
     // private confirmDialog: ConfirmDialogService,
     // @Inject(MAT_DIALOG_DATA) data
   ) {
@@ -31,7 +32,7 @@ export class FormAgregarItemDeudaComponent implements OnInit {
   ngOnInit(): void {
   }
   agregarItem() {
-    let item = this.formGroupCompra.value;
+    let item: any = this.formGroupCompra.value;
 
     let existe = this.items.find(auxItem => item == auxItem);
     if (!existe) {
@@ -39,17 +40,17 @@ export class FormAgregarItemDeudaComponent implements OnInit {
       this.items.push(item);
     }
   }
-  eliminarItem(selectedItem) {
+  eliminarItem(selectedItem: any) {
     this.items.splice(this.items.findIndex(item => selectedItem === item), 1);
   }
 
-  showDeleteItemDialog(item) {
+  showDeleteItemDialog(item: any) {
     this.alertService.alertConfirmacion('Confirmación', "¿Esta seguro de borrar este articulo?", 'Si, borrar pago', this.eliminarItem.bind(this, item));
   }
 
   confirmarGuardadoDeCompras() {
     this.alertService.alertConfirmacion('Confirmación', "¿Quiere guardar los cambios?", 'Si, Guardar', () => {
-      this.modalController.dismiss(this.items,'guardarCambios');
+      this.modalController.dismiss(this.items, 'guardarCambios');
     });
 
   }

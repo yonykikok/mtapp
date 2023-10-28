@@ -18,13 +18,13 @@ export class EsOwnerGuard implements CanActivate {
   canActivate(): Observable<boolean> | Promise<boolean> | boolean {
     return this.authService.user$.pipe(
       take(1),
-      map((user) => user && (ImportanciaRoles['EMPLEADO'] <= ImportanciaRoles[user.role])),
+      map((user) => user && (Number(ImportanciaRoles['EMPLEADO']) <= Number(ImportanciaRoles[user.role]))),
       tap(canEdit => {
         if (!canEdit) {
           this.toastService.simpleMessage('Acceso no permitido', `No tiene permisos para este sector`, ToastColor.danger);
 
           this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(
-            (event: NavigationEnd) => { this.router.navigate([event.url]); });//vuelvo a la ruta anterior.
+            (event: any) => { this.router.navigate([event.url]); });//vuelvo a la ruta anterior.
         }
         else {
         }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Roles } from 'src/app/clases/user';
+import { Roles, User } from 'src/app/clases/user';
 import { AlertService } from 'src/app/services/alert.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
@@ -13,12 +13,12 @@ import { environment } from 'src/environments/environment';
 })
 export class DetalleUsuarioComponent implements OnInit {
 
-  usuario;
+  usuario!: User;
   verMasInfo = false;
   verTareas = false;
   mostrarFormAltaTarea = false;
   mostrarRole = true;
-  roleSeleccionado = 'CLIENTE';
+  roleSeleccionado: Roles = 'CLIENTE';
   roles: Roles[] = ['CLIENTE', 'ST', 'EMPLEADO', 'ADMIN', 'OWNER'];
 
   constructor(
@@ -34,12 +34,12 @@ export class DetalleUsuarioComponent implements OnInit {
   mostrarConfirmDialogRole() {
     this.alertService.alertConfirmacion('Confirmación', `Seguro cambiar de ${this.usuario.role} 🡆 ${this.roleSeleccionado}`, 'Si', () => {
       this.usuario.role = this.roleSeleccionado;
-      this.database.actualizar(environment.TABLAS.users, this.usuario, this.usuario.id).then(() => {
+      this.database.actualizar(environment.TABLAS.users, this.usuario, this.usuario['id'])?.then(() => {
         this.toastService.simpleMessage(`Exito`, `Se ha actualizado el rol a ${this.roleSeleccionado}`, ToastColor.success);
       }).catch(err => {
         this.toastService.simpleMessage(`Error`, `Hubo un error al cambiar el rol al usuario,  ${err}`, ToastColor.success);
       }).finally(() => {
-        this.roleSeleccionado = null;
+        this.roleSeleccionado = 'CLIENTE';
         this.mostrarRole = true;
       });
     });
@@ -47,7 +47,7 @@ export class DetalleUsuarioComponent implements OnInit {
   mostrarConfirmDialog() {
     this.alertService.alertConfirmacion('Confirmación', `Esta seguro de ${this.usuario.blocked ? 'desbloquear' : 'bloquear'} a este usuario?`, 'Si', () => {
       this.usuario.blocked = this.usuario.blocked ? false : true;
-      this.database.actualizar(environment.TABLAS.users, this.usuario, this.usuario.uid).then(() => {
+      this.database.actualizar(environment.TABLAS.users, this.usuario, this.usuario.uid)?.then(() => {
         this.toastService.simpleMessage(`Exito`, `Se ha ${this.usuario.blocked ? 'bloqueado' : 'desbloqueado'} al usuario`, ToastColor.success);
       }).catch(err => {
         this.toastService.simpleMessage(`Error`, `Hubo un error al bloquear al usuario,  ${err}`, ToastColor.success);
@@ -73,16 +73,17 @@ export class DetalleUsuarioComponent implements OnInit {
     });
   }
 
-  eliminarUsuario(user) {
+  eliminarUsuario(user: User) {
+    if (!user) return;
     user.estado = 'ELIMINADO';
-    this.database.actualizar(environment.TABLAS.users, user, user.id).then(() => {
+    this.database.actualizar(environment.TABLAS.users, user, user['id'])?.then(() => {
       this.toastService.simpleMessage(`Exito`, `Se ha eliminado con exito al usuario`, ToastColor.success);
     }).catch(err => {
       this.toastService.simpleMessage(`Error`, `Hubo un error al eliminar al usuario,  ${err}`, ToastColor.success);
     });
 
   }
-  verDetalleTarea(tarea) {
-//console.log(tarea)
+  verDetalleTarea(tarea: any) {
+    //console.log(tarea)
   }
 }

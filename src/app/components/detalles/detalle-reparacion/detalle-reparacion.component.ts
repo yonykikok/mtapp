@@ -1,13 +1,14 @@
 
 import { Component, OnInit } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
+import { User } from 'src/app/clases/user';
+import { boleta } from 'src/app/pages/mis-reparaciones/mis-reparaciones.page';
 import { AlertService } from 'src/app/services/alert.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { reparacionShortMessage } from 'src/app/services/info-compartida.service';
 import { boleta_estados, listaDeEstadosBoletas, reparacionIconName } from 'src/app/services/info-compartida.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
-
 @Component({
   selector: 'app-detalle-reparacion',
   templateUrl: './detalle-reparacion.component.html',
@@ -15,21 +16,23 @@ import { environment } from 'src/environments/environment';
 })
 export class DetalleReparacionComponent implements OnInit {
   editarDetalle = false;
-  ruta;
+  ruta: string = '';
   mostrarHistorial = false;
   modoEditar = false;
-  reparacion;
+  reparacion!: boleta;
   mostrarImgBoleta = false;
-  estadosPosibles;
-  estadoSeleccionado;
-  loggedUser;
+  estadosPosibles: any[] = [];
+  estadoSeleccionado?: any;
+  loggedUser!: User;
 
   imagenGradosRotada = 0;
   constructor(private alertController: AlertController,
     private alertService: AlertService,
     private actionSheetController: ActionSheetController,
     private database: DataBaseService,
-    private toastService: ToastService,) { }
+    private toastService: ToastService) {
+
+  }
 
   ngOnInit() {
     //console.log(this.reparacion)
@@ -39,6 +42,7 @@ export class DetalleReparacionComponent implements OnInit {
   }
 
   getOpcionesEstadoDisponibles(): void {
+
     const opcionesPorEstado: { [key: string]: string[] } = {
 
       [boleta_estados.PENDIENTE]: [boleta_estados.EN_REVISION, boleta_estados.CANCELADO_POR_EL_USUARIO, boleta_estados.EN_PROCESO],
@@ -55,19 +59,32 @@ export class DetalleReparacionComponent implements OnInit {
 
     };
 
-    const estadosCoincidentes = listaDeEstadosBoletas.filter((estado) =>
-      opcionesPorEstado[this.reparacion.estado.toUpperCase()].includes(estado.variable.toUpperCase())
-    );
+    const estadosCoincidentes = listaDeEstadosBoletas.filter((estado) => {
+      let retorno;
+      if (this.reparacion) {
+        retorno = opcionesPorEstado[this.reparacion.estado.toUpperCase()].includes(estado.variable.toUpperCase())
+      }
+      return retorno;
+    });
 
 
     this.estadosPosibles = estadosCoincidentes || [];
   }
-  getIconName() {
-    return reparacionIconName[this.reparacion.estado.toUpperCase()];
+  getIconName(): string {
+    let retorno = reparacionIconName.PENDIENTE;
+    if (this.reparacion) {
+      const estado = this.reparacion.estado.toUpperCase() as keyof typeof reparacionIconName;
+      if (estado in reparacionIconName) {
+        retorno = reparacionIconName[estado];
+      }
+    }
+    return retorno;
   }
 
 
+
   async cambiarEstado() {
+
     const alert = await this.alertController.create({
       header: 'Describe el motivo del cambio de estado',
       inputs: [
@@ -97,7 +114,7 @@ export class DetalleReparacionComponent implements OnInit {
               fecha: new Date().toISOString(),
               modificadoPor: {
                 id: this.loggedUser.uid,
-                displayName: this.loggedUser.displayName,
+                displayName: this.loggedUser.displayName ? this.loggedUser.displayName : '',
               },
               detalle: data.descripcion
             }
@@ -106,14 +123,18 @@ export class DetalleReparacionComponent implements OnInit {
             this.reparacion.estado = this.estadoSeleccionado;
             this.reparacion.fechaUltimoCambioDeEstado = Date.now()
             console.log(this.reparacion);
-            if (!this.reparacion.historial) { this.reparacion.historial = [] };
-            this.reparacion.historial = [...this.reparacion.historial, cambioDeEstado];
+            if (!this.reparacion.historial) {
+              this.reparacion.historial = [cambioDeEstado]
+            } else {
+              this.reparacion.historial.push(cambioDeEstado);
+            };
             //console.log(this.reparacion)
             this.getOpcionesEstadoDisponibles();//TODO: guardar en la db.
 
+            if (!this.reparacion || !this.reparacion.id) return //TODO:informar
             this.database.actualizar(environment.TABLAS.boletasReparacion, this.reparacion, this.reparacion.id)
-              .then(res => this.toastService.simpleMessage('Exito', `Se paso el estado a ${this.estadoSeleccionado}`, ToastColor.success))
-              .catch(err => this.toastService.simpleMessage('Error', `Hubo un error al cambiar el estado: ${err.message}`, ToastColor.danger));
+              ?.then((res: any) => this.toastService.simpleMessage('Exito', `Se paso el estado a ${this.estadoSeleccionado}`, ToastColor.success))
+              .catch((err: Error) => this.toastService.simpleMessage('Error', `Hubo un error al cambiar el estado: ${err.message}`, ToastColor.danger));
           }
 
         }
@@ -122,11 +143,14 @@ export class DetalleReparacionComponent implements OnInit {
 
     await alert.present();
   }
-  obtenerMensajeDelEstado(estado) {
-    return reparacionShortMessage[estado.toUpperCase()];
+
+
+  obtenerMensajeDelEstado(estado: boleta_estados) {
+    return reparacionShortMessage[estado];
   }
 
-  solicitarConfirmacion(event, reparacion) {
+
+  solicitarConfirmacion(event: any, reparacion: boleta) {
     //console.log("se")
     event.stopPropagation();
     this.alertService.alertConfirmacion('Confirmación', '¿Quiere enviarle un mensaje al cliente en este momento?', 'Si', this.presentActionSheet.bind(this, reparacion));
@@ -138,7 +162,7 @@ export class DetalleReparacionComponent implements OnInit {
     window.open(url, '_system');
   }
 
-  async presentActionSheet(reparacion) {
+  async presentActionSheet(reparacion: boleta) {
     let mensaje = `Hola, ¿qué tal?, te escribo por el equipo ${reparacion.modelo} de la boleta (${reparacion.nroBoleta})`; // Mensaje predeterminado para el cliente;
     const actionSheet = await this.actionSheetController.create({
       mode: 'ios',
@@ -188,15 +212,18 @@ export class DetalleReparacionComponent implements OnInit {
 
   mostrarFormularioEditarinformacion(nombre: string, campo: string) {
     //console.log("entra")
-    this.alertService.mostrarAlertaConTextPrompt(`Actualizar ${nombre}`, `Ingresa el nuevo ${nombre}`, 'Cancelar', 'Actualizar', (input) => {
+    this.alertService.mostrarAlertaConTextPrompt(`Actualizar ${nombre}`, `Ingresa el nuevo ${nombre}`, 'Cancelar', 'Actualizar', (input: any) => {
       this.reparacion[campo] = input.valor;
       //console.log("Actualizamos", this.reparacion);
-      this.database.actualizar(environment.TABLAS.boletasReparacion, this.reparacion, this.reparacion.id).then(() => {
-        this.toastService.simpleMessage('Exito', `Se cambio el ${campo} con exito`, ToastColor.success);
-      }).catch(err => {
-        this.toastService.simpleMessage('Error', `No se pudo cambiar el ${campo}`, ToastColor.danger);
 
-      });
+      if (!this.reparacion || !this.reparacion.id) return //TODO:informar
+      this.database.actualizar(environment.TABLAS.boletasReparacion, this.reparacion, this.reparacion.id)
+        ?.then(() => {
+          this.toastService.simpleMessage('Exito', `Se cambio el ${campo} con exito`, ToastColor.success);
+        }).catch((err: Error) => {
+          this.toastService.simpleMessage('Error', `No se pudo cambiar el ${campo}`, ToastColor.danger);
+
+        });
     }, () => {
 
       //console.log("Cancelo");
@@ -223,10 +250,11 @@ export class DetalleReparacionComponent implements OnInit {
           text: 'Guardar',
           handler: (data) => {
             estado.detalle = data.descripcion;
+            if (!this.reparacion || !this.reparacion.id) return //TODO:informar
 
             this.database.actualizar(environment.TABLAS.boletasReparacion, this.reparacion, this.reparacion.id)
-              .then(res => this.toastService.simpleMessage('Exito', `Se actualizo la informacion del detalle`, ToastColor.success))
-              .catch(err => this.toastService.simpleMessage('Error', `Hubo un error al actualizar el detalle: ${err.message}`, ToastColor.danger));
+              ?.then((res: any) => this.toastService.simpleMessage('Exito', `Se actualizo la informacion del detalle`, ToastColor.success))
+              .catch((err: Error) => this.toastService.simpleMessage('Error', `Hubo un error al actualizar el detalle: ${err.message}`, ToastColor.danger));
           }
 
         }

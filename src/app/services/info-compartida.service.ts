@@ -83,19 +83,68 @@ export enum reparacionIconName {
 }
 
 export enum roles {
-  OWNER = 'owner',
-  ADMIN = 'admin',
-  CLIENTE = 'cliente',
-  EMPLEADO = 'empleado',
-  ST = 'st',
+  OWNER = 'OWNER',
+  ADMIN = 'ADMIN',
+  CLIENTE = 'CLIENTE',
+  EMPLEADO = 'EMPLEADO',
+  ST = 'ST',
 }
-export interface Modulo {
+
+
+export interface EquipoVendido {
+  accesorios: [string];
+  dni: string;
+  fecha: number;
+  images: string[];
+  imei: string;
   marca: string;
   modelo: string;
   precio: number;
-  color: string;
+  id: string;
+  [key: string]: any;
+}
+export interface Modulo {
+  id?: string;
+  marca: string;
+  modelo: string;
+  precio: number;
+  // color: string;
   tipo: string;
   calidad: string;
+  stock: any[]
+}
+export interface StockModulo {
+  id: string,
+  calidad: string;
+  cantidadTotal: number;
+  marca: string;
+  modelo: string;
+  stock:
+  {
+    conMarco: [{ cantidad: number, color: string }],
+    sinMarco: [{ cantidad: number, color: string }]
+    [key: string]: any;
+  };
+}
+
+export interface Pedido {
+  id: string,
+  cantidad: string;
+  cliente: {
+    boleta: number,
+    nombre: string,
+    precio: number,
+    telefono: string,
+  };
+  detalle: string;
+  fecha: number;
+  modelo: string;
+  prioridad: string;
+  tipo: string;
+  conseguido: boolean,
+  nota: string,
+  [key: string]: any;
+
 }
 
 @Injectable({
@@ -124,7 +173,7 @@ export class InfoCompartidaService {
 
   marcasModulos = ['Samsung', 'LG', 'Motorola', 'Huawei', 'Apple', 'Alcatel', 'Xiaomi', 'Sony'];
   calidadesModulos = ['AAA', 'GenMedCalidad', 'GenBueno', 'Estandar', 'Original Oled', 'Original Certificado'];
-  calidadesModulosProveedores = ['AAA', 'Incell','GenBueno', 'Oled', 'Original'];
+  calidadesModulosProveedores = ['AAA', 'Incell', 'GenBueno', 'Oled', 'Original'];
   calidadesFlexDecarga = ['AAA', 'Mechanic', 'Original', 'Original Certificado'];
   coloresModulos = ['Blanco', 'Negro', 'Gris', 'Dorado', 'Celeste'];
   tiposModulos = ['Simple', 'C/M'];

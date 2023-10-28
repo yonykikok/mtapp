@@ -7,10 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BusquedaPorTextoComponent implements OnInit {
   textoABuscar = "";
-  mesSeleccionado;
-  itemsFiltrados;
-  mostrarBuscador;
-  itemSeleccionado;
+  mesSeleccionado: any;
+  itemsFiltrados: any;
+  mostrarBuscador: any;
+  itemSeleccionado: any;
   constructor() { }
 
   ngOnInit() {
@@ -19,10 +19,10 @@ export class BusquedaPorTextoComponent implements OnInit {
 
 
   applyFilter() {
-    let items = [];
+    let items: any[] = [];
 
-    this.mesSeleccionado.dias.forEach(dia => {
-      dia.ventas.forEach(venta => {
+    this.mesSeleccionado.dias.forEach((dia: any) => {
+      dia.ventas.forEach((venta: any) => {
         if (venta.descripcion.toLowerCase().includes(this.textoABuscar.toLowerCase()) ||
           venta?.boleta?.toString()?.includes(this.textoABuscar.toLowerCase())) {
           let auxVenta = { ...venta };
@@ -33,8 +33,8 @@ export class BusquedaPorTextoComponent implements OnInit {
         }
       });
     });
-//console.log(items)
-    this.itemsFiltrados=items.sort((a: any, b: any) => {
+    //console.log(items)
+    this.itemsFiltrados = items.sort((a: any, b: any) => {
       if (a.fecha > b.fecha) {
         return 1;
       } else if (a.boleta < b.boleta) {

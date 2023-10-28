@@ -31,7 +31,7 @@
       <ion-item>
         <b> Fecha:</b> <label slot="end">{{pedido.fecha|date}}</label>
       </ion-item>
-    
+
       <ion-item-divider *ngIf="pedido.cliente.nombre" style="flex-direction: column; align-items: start;">
         <b>Datos del cliente</b>
         <p *ngIf="pedido.cliente.nombre">Nombre: {{pedido.cliente.nombre}}</p>
@@ -46,10 +46,10 @@
       <div *ngIf="showAgregarNota; else showBtnAgregar" class="flexColumn">
         <textarea name="notaPedido" id="" cols="10" rows="3" style="width: 100%;" class="mb-2" [(ngModel)]="notaPedido"
           value=""></textarea>
-          <div class="flexCenterCenter">
-            <ion-button color="warning" (click)="showAgregarNota=false;">Cancelar</ion-button>
-            <ion-button color="primary" (click)="agregarNotaAlPedido()">Guardar nota</ion-button>
-          </div>
+        <div class="flexCenterCenter">
+          <ion-button color="warning" (click)="showAgregarNota=false;">Cancelar</ion-button>
+          <ion-button color="primary" (click)="agregarNotaAlPedido()">Guardar nota</ion-button>
+        </div>
       </div>
       <ng-template #showBtnAgregar>
         <div class="ion-text-center">

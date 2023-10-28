@@ -8,7 +8,7 @@ import { LibroDiario } from 'src/app/clases/libro-diario';
 })
 export class DetalleVentasDelDiaComponent implements OnInit {
 
-   libroDiario: LibroDiario;
+   libroDiario!: LibroDiario;
   constructor() { }
 
   ngOnInit(): void {

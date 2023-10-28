@@ -8,6 +8,7 @@ import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
+import { Modulo, StockModulo } from 'src/app/services/info-compartida.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 
@@ -20,16 +21,16 @@ export class StockModulosPage implements OnInit {
   listaSeleccionada = 'completa';
   mostrarSpinner = false;
   loggedUser: User | null = null;
-  stockSeleccionado;
-  stockSeleccionadoEditable;
+  stockSeleccionado: any;
+  stockSeleccionadoEditable: any;
   showStockDialog = false;
-  moduloCompletoSeleccionado;
-  tipoDeStockSeleccionado;
+  moduloCompletoSeleccionado!: StockModulo;
+  tipoDeStockSeleccionado: any;
 
   // filterValue = '';
   displayedColumnKeys = new FormControl(['modelo', 'calidad', 'c/m', 's/m']);//columnas mostradas predeterminado
   listaDeModulos: any;
-  listaDeModulosAMostrar = [];
+  listaDeModulosAMostrar: any[] = [];
   listaDeAtributos = ['marca', 'modelo', 'calidad', 'c/m', 's/m'];
   // mostrarFormModulo = true;
 
@@ -107,9 +108,9 @@ export class StockModulosPage implements OnInit {
       this.mostrarSpinner = false;
     }
   }
-  handleInput(event) {
+  handleInput(event: any) {
     const query = event.target.value.toLowerCase();
-    this.listaDeModulosAMostrar = this.listaDeModulos.filter((d) => d.modelo.toLowerCase().indexOf(query) > -1);
+    this.listaDeModulosAMostrar = this.listaDeModulos.filter((d: StockModulo) => d.modelo.toLowerCase().indexOf(query) > -1);
   }
 
 
@@ -152,7 +153,7 @@ export class StockModulosPage implements OnInit {
     })
   }
 
-  seleccionarColorYTipo($event, stock, modulo, tipo) {
+  seleccionarColorYTipo($event: any, stock: any, modulo: StockModulo, tipo: any) {
     $event.stopPropagation();
     this.moduloCompletoSeleccionado = modulo;
     this.tipoDeStockSeleccionado = tipo;
@@ -161,7 +162,7 @@ export class StockModulosPage implements OnInit {
     this.showStockDialog = true;
   }
 
-  cambiarCantidad(accion) {
+  cambiarCantidad(accion: string) {
     let stock = this.stockSeleccionadoEditable;
 
     if (accion == 'aumentar') {
@@ -178,7 +179,7 @@ export class StockModulosPage implements OnInit {
 
   preguntarSiQuiereRemoverEsteColorDeLaVista() {
     this.alertService.alertConfirmacion('Confirmación', "¿Quiere remover este color de la lista?", 'Si, remover', () => {
-      let indiceStockSeleccionado = this.moduloCompletoSeleccionado.stock[this.tipoDeStockSeleccionado].findIndex(stock => stock == this.stockSeleccionado);
+      let indiceStockSeleccionado = this.moduloCompletoSeleccionado.stock[this.tipoDeStockSeleccionado].findIndex((stock: any) => stock == this.stockSeleccionado);
       if (indiceStockSeleccionado != -1) {
         this.moduloCompletoSeleccionado.stock[this.tipoDeStockSeleccionado].splice(indiceStockSeleccionado, 1);
       }
@@ -219,9 +220,9 @@ export class StockModulosPage implements OnInit {
   }
 
   mostrarStockBajo() {
-    let listaStockBajo = [];
+    let listaStockBajo: any = [];
 
-    this.listaDeModulos.forEach(modulo => {
+    this.listaDeModulos.forEach((modulo: StockModulo) => {
       modulo.stock.sinMarco.forEach((stock: any) => {
         if (stock.cantidad <= 0) {
           listaStockBajo.push({
@@ -246,7 +247,8 @@ export class StockModulosPage implements OnInit {
       });
 
     });
-    this.listaDeModulosAMostrar = listaStockBajo.sort((a, b) => {
+    
+    this.listaDeModulosAMostrar = listaStockBajo.sort((a:any, b:any) => {
       if (a.modelo < b.modelo) return -1;
       if (a.modelo > b.modelo) return 1;
       if (a.tipo < b.tipo) return -1;
@@ -258,7 +260,7 @@ export class StockModulosPage implements OnInit {
 
   }
 
-  mostrarLista(lista) {
+  mostrarLista(lista: string) {
     this.listaSeleccionada = lista;
     if (lista == 'completa') {
       this.displayedColumnKeys = new FormControl(['modelo', 'calidad', 'c/m', 's/m']);

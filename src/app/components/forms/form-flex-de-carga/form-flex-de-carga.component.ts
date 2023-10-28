@@ -27,10 +27,10 @@ export class FormFlexDeCargaComponent implements OnInit {
   }
 
 
-  precioDolarBlue: number | null = null;
+  precioDolarBlue: number=0;
   //auto complete
-  modelosExistentes = [];
-  flexDeCargasFiltrados: Observable<string[]>;
+  modelosExistentes: any[] = [];
+  flexDeCargasFiltrados: Observable<string[]> = new Observable<string[]>();
   //auto complete
 
   //parametros formulario
@@ -39,7 +39,7 @@ export class FormFlexDeCargaComponent implements OnInit {
   cantidades = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   //parametros formulario
 
-  flexDeCargas;
+  flexDeCargas: any[] = [];
 
   formFlexDeCarga: FormGroup = new FormGroup({
     modelo: new FormControl('', Validators.required),
@@ -58,7 +58,7 @@ export class FormFlexDeCargaComponent implements OnInit {
     private alertService: AlertService,
     private toastService: ToastService,
     // readonly snackBar: MatSnackBar,
-    private funcionesUtiles:FuncionesUtilesService,
+    private funcionesUtiles: FuncionesUtilesService,
     private afs: AngularFirestore) {
   }
 
@@ -67,7 +67,7 @@ export class FormFlexDeCargaComponent implements OnInit {
 
     this.afs.collection('flexDeCargas').snapshotChanges().subscribe(res => {
       this.flexDeCargas = res.map(flexDeCargaRef => {
-        let auxFlexDeCarga = flexDeCargaRef.payload.doc.data()
+        let auxFlexDeCarga: any = flexDeCargaRef.payload.doc.data()
         auxFlexDeCarga['id'] = flexDeCargaRef.payload.doc.id;
         return auxFlexDeCarga;
       });
@@ -77,7 +77,7 @@ export class FormFlexDeCargaComponent implements OnInit {
       this.modelosExistentes = [...listaSinRepetir];
     });
 
-    this.flexDeCargasFiltrados = this.formFlexDeCarga.controls.modelo.valueChanges.pipe(
+    this.flexDeCargasFiltrados = this.formFlexDeCarga.controls['modelo'].valueChanges.pipe(
       startWith(''),
       map((value: string) => this._filter(value)),
     );
@@ -100,8 +100,8 @@ export class FormFlexDeCargaComponent implements OnInit {
   }
 
 
-  buscarPorModeloYCalidad(listaFlexDeCargas, flexDeCargaABuscar) {
-    return listaFlexDeCargas.find(flexDeCarga => {
+  buscarPorModeloYCalidad(listaFlexDeCargas: any, flexDeCargaABuscar: any) {
+    return listaFlexDeCargas.find((flexDeCarga: any) => {
       if (flexDeCarga.modelo.toLowerCase() == flexDeCargaABuscar.modelo.toLowerCase() &&
         flexDeCarga.calidad.toLowerCase() == flexDeCargaABuscar.calidad.toLowerCase()) {
         return flexDeCarga;
@@ -109,23 +109,22 @@ export class FormFlexDeCargaComponent implements OnInit {
     });
   }
 
-  agregarNuevoColor() {
-    let { cantidad, color } = this.formFlexDeCarga.value;
-    let existeColor = this.nuevoFlexDeCarga.stock.find(stock => stock.color == color);
+  // agregarNuevoColor() {
+  //   let { cantidad, color } = this.formFlexDeCarga.value;
+  //   let existeColor = this.nuevoFlexDeCarga.stock.find((stock: any) => stock.color == color);
 
-    if (!existeColor) {
-      cantidad <= 0
-        ?
-        this.toastService.simpleMessage('Error en la cantidad', 'la cantidad debe ser mayor a 0', ToastColor.warning)
-        : this.nuevoFlexDeCarga.stock.push({ cantidad, color });
-    } else {
-      this.toastService.simpleMessage('Error en el color', 'El color ya existe', ToastColor.warning)
-    }
-  }
-
+  //   if (!existeColor) {
+  //     cantidad <= 0
+  //       ? this.toastService.simpleMessage('Error en la cantidad', 'la cantidad debe ser mayor a 0', ToastColor.warning)
+  //       : this.nuevoFlexDeCarga.stock.push({ cantidad, color });
+  //   } else {
+  //     this.toastService.simpleMessage('Error en el color', 'El color ya existe', ToastColor.warning)
+  //   }
+  // }
 
 
-  agregarFlexDeCarga(nuevoFlexDeCarga) {
+
+  agregarFlexDeCarga(nuevoFlexDeCarga: any) {
     this.dataBase.crear(environment.TABLAS.flexs, nuevoFlexDeCarga).then(() => {
       this.toastService.simpleMessage('Exito', 'Se agrego el flexDeCarga correctamente', ToastColor.success);
 
@@ -134,8 +133,8 @@ export class FormFlexDeCargaComponent implements OnInit {
 
   obtenerObjetoFlexDeCarga() {
     const { calidad, modelo, marca, precio, tipo } = this.formFlexDeCarga.value;
-    let { stock } = this.nuevoFlexDeCarga;
-    stock.length <= 0 ? stock = [{ color: 'Blanco', cantidad: 0 }] : null;
+    // let { stock } = this.nuevoFlexDeCarga;
+    // stock.length <= 0 ? stock = [{ color: 'Blanco', cantidad: 0 }] : null;
 
     return {
       calidad,
@@ -143,7 +142,7 @@ export class FormFlexDeCargaComponent implements OnInit {
       marca,
       precio,
       tipo,
-      stock
+      // stock
     }
   }
 

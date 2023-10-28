@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { DataBaseService } from 'src/app/services/database.service';
+import { EquipoVendido } from 'src/app/services/info-compartida.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
@@ -13,15 +14,26 @@ import { environment } from 'src/environments/environment';
 })
 export class FormEquipoVendidoComponent implements OnInit {
 
-  step=1;
-  imagenes = [];
-  equipoVendido;
+  step = 1;
+  imagenes: string[] = [];
+  equipoVendido!: EquipoVendido;
   mostrarSpinner = false;
 
-  step1FormGroup: FormGroup;
-  step2FormGroup: FormGroup;
-  step3FormGroup: FormGroup;
-  step4FormGroup: FormGroup;
+  step1FormGroup: FormGroup = new FormGroup({
+    dni: new FormControl(['', Validators.required]),
+  });
+  step2FormGroup: FormGroup = new FormGroup({
+    marca: new FormControl(['', Validators.required]),
+    modelo: new FormControl(['', Validators.required]),
+    imei: new FormControl(['', [Validators.required, Validators.minLength(15), Validators.maxLength(17)]]),
+    precio: new FormControl(['', Validators.required]),
+  });
+  step3FormGroup: FormGroup = new FormGroup({
+    accesorios: new FormControl(['']),
+  });
+  step4FormGroup: FormGroup = new FormGroup({
+    images: new FormControl(['']),
+  });
 
   constructor(private _formBuilder: FormBuilder,
     private dataBase: DataBaseService,
@@ -33,31 +45,31 @@ export class FormEquipoVendidoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.step1FormGroup = this._formBuilder.group({
-      dni: ['', Validators.required],
-    });
-    this.step2FormGroup = this._formBuilder.group({
-      marca: ['', Validators.required],
-      modelo: ['', Validators.required],
-      imei: ['', [Validators.required, Validators.minLength(15), Validators.maxLength(17)]],
-      precio: ['', Validators.required],
-    });
-    this.step3FormGroup = this._formBuilder.group({
-      accesorios: [''],
-    });
-    this.step4FormGroup = this._formBuilder.group({
-      images: [''],
-    });
+    // this.step1FormGroup = this._formBuilder.group({
+    //   dni: ['', Validators.required],
+    // });
+    // this.step2FormGroup = this._formBuilder.group({
+    //   marca: ['', Validators.required],
+    //   modelo: ['', Validators.required],
+    //   imei: ['', [Validators.required, Validators.minLength(15), Validators.maxLength(17)]],
+    //   precio: ['', Validators.required],
+    // });
+    // this.step3FormGroup = this._formBuilder.group({
+    //   accesorios: [''],
+    // });
+    // this.step4FormGroup = this._formBuilder.group({
+    //   images: [''],
+    // });
   }
 
 
 
 
-  actualizarImagenes(images) {
-    this.step4FormGroup.controls.images.setValue(images);
+  actualizarImagenes(images: any) {
+    this.step4FormGroup.controls['images'].setValue(images);
   }
 
-  agregarImagen(e) {
+  agregarImagen(e: any) {
     if (this.imagenes.length >= 2) {
       this.imagenes = [];
     }
@@ -69,7 +81,7 @@ export class FormEquipoVendidoComponent implements OnInit {
       reader.readAsDataURL(files[i]);
       reader.onloadend = () => {
         if (this.imagenes.length < 2) {
-          this.imagenes.push(reader.result);
+          this.imagenes.push(reader.result as string);
           // this.selectedImg = this.imagenes[0];
         }
       }
@@ -91,12 +103,12 @@ export class FormEquipoVendidoComponent implements OnInit {
   cerrarFormulario() {
     this.modalController.dismiss();
   }
-  uploadImages(images, imgPath) {
+  uploadImages(images: string[], imgPath: string) {
     this.mostrarSpinner = true;
-    let imgUrls = [];
+    let imgUrls: string[] = [];
     let contador = 0;
     images.forEach(imgBase64 => {
-      this.storageService.subirImagenEquiposVenta(imgPath + Date.now(), imgBase64).then(urlImagen => {
+      this.storageService.subirImagenEquiposVenta(imgPath + Date.now(), imgBase64).then((urlImagen: any) => {
         imgUrls.push(urlImagen);
         contador++;
         if (contador == images.length) {

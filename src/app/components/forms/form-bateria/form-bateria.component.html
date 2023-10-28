@@ -35,7 +35,7 @@
 
         <ion-item fill="outline" class="ion-margin">
           <ion-input type="number" placeholder="precio en dolares" formControlName="precio"></ion-input>
-          <ion-chip>{{formBateria.controls.precio.value*precioDolarBlue|currency:'USD':'symbol':'1.0-0'}}</ion-chip>
+          <ion-chip>{{formBateria.controls['precio'].value*precioDolarBlue|currency:'USD':'symbol':'1.0-0'}}</ion-chip>
         </ion-item>
 
 

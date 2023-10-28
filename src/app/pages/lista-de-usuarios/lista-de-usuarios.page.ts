@@ -18,16 +18,16 @@ export class ListaDeUsuariosPage implements OnInit {
 
   camposSeleccionados = ['role', 'displayName'];
 
-  usuariosAMostrar;
-  loggedUser: User;
+  usuariosAMostrar: User[] = [];
+  loggedUser!: User;
   filterValue = '';
   mostrarFormModulo = true;
-  usuarios;
+  usuarios: User[] = [];
 
   constructor(private dataBase: DataBaseService,
     // public dialog: MatDialog,
     // readonly snackBar: MatSnackBar,
-    private modalController:ModalController,
+    private modalController: ModalController,
     private funcionesUtiles: FuncionesUtilesService,
     private authService: AuthService) {
     this.getCurrentUser();
@@ -39,7 +39,7 @@ export class ListaDeUsuariosPage implements OnInit {
       if (docsUsersRef.length <= 0) return;
 
       lista = docsUsersRef.map(userDocRef => {
-        let userInfo = userDocRef.payload.doc.data();
+        let userInfo: any = userDocRef.payload.doc.data();
         userInfo['id'] = userDocRef.payload.doc.id;
         return userInfo;
       });
@@ -48,7 +48,7 @@ export class ListaDeUsuariosPage implements OnInit {
       this.usuarios = [...lista];
 
       this.usuariosAMostrar = lista;
- //console.log(this.usuariosAMostrar)
+      //console.log(this.usuariosAMostrar)
     });
   }
 
@@ -81,14 +81,23 @@ export class ListaDeUsuariosPage implements OnInit {
 
 
   applyFilter(event: Event) {
-    this.usuariosAMostrar.filter = this.filterValue.trim().toLowerCase();
+
+    this.usuariosAMostrar = this.usuariosAMostrar.filter((user: User) => {
+      // Aplica tu lógica de filtrado aquí
+      return user['nombre'].toLowerCase().includes(this.filterValue.trim().toLowerCase());
+    });
+
+
+    // this.usuariosAMostrar.filter = this.filterValue.trim().toLowerCase();
   }
 
 
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe(userRef => {
+      if (!userRef) return;//TODO: informar que no se encotnro el afiliado
+
       this.dataBase.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res) => {
-        let usuario = res.payload.data();
+        let usuario:any = res.payload.data();
         usuario['uid'] = res.payload.id;
 
         this.loggedUser = {
@@ -103,13 +112,13 @@ export class ListaDeUsuariosPage implements OnInit {
       })
     })
   }
-  handleInput(event) {
+  handleInput(event: any) {
     const query = event.target.value.toLowerCase();
-    this.usuariosAMostrar = this.usuarios.filter((u) => u.displayName?.toLowerCase().indexOf(query) > -1);
+    this.usuariosAMostrar = this.usuarios.filter((u:any) => u.displayName?.toLowerCase().indexOf(query) > -1);
 
     if (query.length == 0) {
       this.usuariosAMostrar = [...this.usuarios];
- //console.log("entra")
+      //console.log("entra")
     }
   }
   openDialog(): void {

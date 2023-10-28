@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
+import { User } from 'src/app/clases/user';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 
 @Component({
@@ -9,12 +10,12 @@ import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.servic
 })
 export class PrecioDolarComponent implements OnInit {
   editarPrecio = false;
-  @Input() loggedUser;
-  precioDolarBlueOriginal;
-  precioDolarBlue;
-  precioDolarBlueIngresado;
+  @Input() loggedUser!: User;
+  precioDolarBlueOriginal = 0;
+  precioDolarBlue = 0;
+  precioDolarBlueIngresado = 0;
   @Output() setPrecioBlue = new EventEmitter<Number>();
-  dolarObservable$: Observable<number>;
+  dolarObservable$: Observable<number> = new Observable<number>();
 
   constructor(
     public funcionesUtiles: FuncionesUtilesService) {

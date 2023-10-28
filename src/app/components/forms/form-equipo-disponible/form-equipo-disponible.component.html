@@ -89,13 +89,13 @@
       <form [formGroup]="step4FormGroup">
         <app-upload-images (imagesListChangedEvent)="actualizarImagenes($event)"></app-upload-images>
 
-        <small style="color:'red'" class="flexCenterCenter" *ngIf="step4FormGroup.controls.images.value.length<=0">
+        <small style="color:'red'" class="flexCenterCenter" *ngIf="step4FormGroup.controls['images'].value.length<=0">
           <ion-icon>error_outline</ion-icon>
           Debe seleccionar al menos una foto
         </small>
         <div class="ion-text-center">
           <ion-button color="warning" (click)="step=step-1">Atras</ion-button>
-          <ion-button [disabled]="step4FormGroup.controls.images.value.length<=0" color="primary"
+          <ion-button [disabled]="step4FormGroup.controls['images'].value.length<=0" color="primary"
             (click)="step=step+1">Siguiente</ion-button>
         </div>
       </form>
@@ -108,22 +108,22 @@
     <ion-card-content>
 
       <ul>
-        <li><b>Dni: </b> {{step1FormGroup.controls.dni.value}}</li>
-        <li><b>Marca: </b>{{step2FormGroup.controls.marca.value}}</li>
-        <li><b>Modelo: </b>{{step2FormGroup.controls.modelo.value}}</li>
-        <li><b>Imei: </b>{{step2FormGroup.controls.imei.value}}</li>
-        <li><b>Precio: </b> {{step2FormGroup.controls.precio.value}}</li>
-        <li *ngIf="step3FormGroup.controls.accesorios.value.length"><b>Accesorios: </b><br>
+        <li><b>Dni: </b> {{step1FormGroup.controls['dni'].value}}</li>
+        <li><b>Marca: </b>{{step2FormGroup.controls['marca'].value}}</li>
+        <li><b>Modelo: </b>{{step2FormGroup.controls['modelo'].value}}</li>
+        <li><b>Imei: </b>{{step2FormGroup.controls['imei'].value}}</li>
+        <li><b>Precio: </b> {{step2FormGroup.controls['precio'].value}}</li>
+        <li *ngIf="step3FormGroup.controls['accesorios'].value.length"><b>Accesorios: </b><br>
           [ <b style="font-weight: 400;"
-            *ngFor="let accesorio of step3FormGroup.controls.accesorios.value; let index = index">
+            *ngFor="let accesorio of step3FormGroup.controls['accesorios'].value; let index = index">
             <!-- para quitar la ',' del ultimo lugar -->
-            {{accesorio }}{{((index+1)==step3FormGroup.controls.accesorios.value.length)?'':', '}}
+            {{accesorio }}{{((index+1)==step3FormGroup.controls['accesorios'].value.length)?'':', '}}
           </b> ]
         </li>
-        <li *ngIf="step4FormGroup.controls.images.value.length > 0">
+        <li *ngIf="step4FormGroup.controls['images'].value.length > 0">
           <b>imagenes:</b>
           <div class="image-grid">
-            <img width="40px" height="40px" *ngFor="let img of step4FormGroup.controls.images.value; let index = index"
+            <img width="40px" height="40px" *ngFor="let img of step4FormGroup.controls['images'].value; let index = index"
               [src]="img" alt="imagen celular">
           </div>
         </li>
@@ -138,8 +138,8 @@
       <div class="ion-text-center">
         <ion-button (click)="step=step-1">Atras</ion-button>
         <ion-button (click)="procesarVenta()"
-          [disabled]="step4FormGroup.controls.images.value.length<=0">Finalizar</ion-button>
-        <small style="color:'red'" class="flexCenterCenter" *ngIf="step4FormGroup.controls.images.value.length<=0">
+          [disabled]="step4FormGroup.controls['images'].value.length<=0">Finalizar</ion-button>
+        <small style="color:'red'" class="flexCenterCenter" *ngIf="step4FormGroup.controls['images'].value.length<=0">
           <ion-icon>error_outline</ion-icon>
           Debe seleccionar al menos una foto
         </small>

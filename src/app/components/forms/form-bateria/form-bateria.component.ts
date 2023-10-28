@@ -25,8 +25,8 @@ export class FormBateriaComponent implements OnInit {
   }
 
   //auto complete
-  modelosExistentes = [];
-  bateriasFiltrados: Observable<string[]>;
+  modelosExistentes: any[] = [];
+  bateriasFiltrados: Observable<string[]> = new Observable<string[]>();
   //auto complete
 
   //parametros formulario
@@ -34,9 +34,9 @@ export class FormBateriaComponent implements OnInit {
   calidades = this.infoConpatida.calidadesBaterias;
   //parametros formulario
 
-  baterias;
+  baterias: any[] = [];
 
-  precioDolarBlue: number | null = null;
+  precioDolarBlue: number=0;
   formBateria: FormGroup = new FormGroup({
     marca: new FormControl('Samsung', Validators.required),
     modelo: new FormControl('', Validators.required),
@@ -52,7 +52,7 @@ export class FormBateriaComponent implements OnInit {
     private alertService: AlertService,
     private toastService: ToastService,
     private afs: AngularFirestore,
-    private funcionesUtiles:FuncionesUtilesService) {
+    private funcionesUtiles: FuncionesUtilesService) {
   }
 
   cargarInputAutoCompletado() {
@@ -60,7 +60,7 @@ export class FormBateriaComponent implements OnInit {
 
     this.afs.collection(environment.TABLAS.baterias).snapshotChanges().subscribe(res => {
       this.baterias = res.map(bateriaRef => {
-        let auxBateria = bateriaRef.payload.doc.data()
+        let auxBateria: any = bateriaRef.payload.doc.data()
         auxBateria['id'] = bateriaRef.payload.doc.id;
         return auxBateria;
       });
@@ -70,7 +70,7 @@ export class FormBateriaComponent implements OnInit {
       this.modelosExistentes = [...listaSinRepetir];
     });
 
-    this.bateriasFiltrados = this.formBateria.controls.modelo.valueChanges.pipe(
+    this.bateriasFiltrados = this.formBateria.controls['modelo'].valueChanges.pipe(
       startWith(''),
       map((value: string) => this._filter(value)),
     );
@@ -79,7 +79,7 @@ export class FormBateriaComponent implements OnInit {
 
   ngOnInit(): void {
 
-       if (this.funcionesUtiles.customDolar) {
+    if (this.funcionesUtiles.customDolar) {
       this.precioDolarBlue = this.funcionesUtiles.customDolar;
     }
     this.funcionesUtiles.getPriceDolar().subscribe(newPrice => this.precioDolarBlue = newPrice);
@@ -94,7 +94,7 @@ export class FormBateriaComponent implements OnInit {
   }
 
 
-  buscarPorModeloYCalidad(listaBaterias, bateriaABuscar) {
+  buscarPorModeloYCalidad(listaBaterias: any[], bateriaABuscar: any) {
     return listaBaterias.find(bateria => {
       if (bateria.modelo.toLowerCase() == bateriaABuscar.modelo.toLowerCase() &&
         bateria.calidad.toLowerCase() == bateriaABuscar.calidad.toLowerCase()) {
@@ -107,7 +107,7 @@ export class FormBateriaComponent implements OnInit {
 
 
 
-  agregarBateria(nuevoBateria) {
+  agregarBateria(nuevoBateria: any) {
     this.dataBase.crear(environment.TABLAS.baterias, nuevoBateria).then(() => {
       this.toastService.simpleMessage('Exito', 'Se agrego el bateria correctamente', ToastColor.success);
 

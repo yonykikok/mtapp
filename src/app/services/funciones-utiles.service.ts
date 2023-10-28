@@ -10,9 +10,9 @@ import { MediosDePago } from '../components/forms/form-detalle-venta/form-detall
 })
 export class FuncionesUtilesService {
 
-  precioOriginal: number | null = null;
-  dolar: number | null = null;
-  customDolar: number | null = null;
+  precioOriginal: number = 0;
+  dolar: number = 0;
+  customDolar: number = 0;
   dolar$: Subject<number>;
 
 
@@ -29,10 +29,11 @@ export class FuncionesUtilesService {
         this.customDolar = res.payload.data()['price'];
       }
 
-      if (this.customDolar > this.dolar) {
+      if ((this.customDolar && this.dolar) && this.customDolar > this.dolar) {
         this.dolar$.next(this.customDolar);
       } else {
-        this.dolar$.next(this.dolar);
+        if (this.dolar)
+          this.dolar$.next(this.dolar);
       }
     });
   }
@@ -60,8 +61,8 @@ export class FuncionesUtilesService {
       const cotizaciones = await res.json();
       const cotizacionBlue = cotizaciones.blue.value_sell;
 
-      this.dolar = parseFloat(cotizacionBlue) + 2;
-      this.precioOriginal = parseFloat(cotizacionBlue) + 2;
+      this.dolar = parseFloat(cotizacionBlue);
+      this.precioOriginal = parseFloat(cotizacionBlue);
 
       this.dolar$.next(this.dolar);
     } catch (err) {
@@ -149,14 +150,14 @@ export class FuncionesUtilesService {
       if (!ingresosListRed || ingresosListRed.length <= 0) return;
 
       let ingresos: any = ingresosListRed.map(ingresoRef => {
-        let ingreso = ingresoRef.payload.doc.data();
+        let ingreso: any = ingresoRef.payload.doc.data();
         ingreso['id'] = ingresoRef.payload.doc.id;
         return ingreso;
       });
 
-      let ventasMalUbicadas = [];
+      let ventasMalUbicadas: any = [];
       ingresos.forEach((mes: any) => {//buscamos los dias mal ubicados.
-        mes.dias.forEach((dia) => {
+        mes.dias.forEach((dia: any) => {
 
           if (!mes.id.includes(this.obtenerNombreDelMes(new Date(dia.fecha)))) {
             ventasMalUbicadas.push(dia);
@@ -166,18 +167,19 @@ export class FuncionesUtilesService {
       });
 
 
-      let mes;
-      ventasMalUbicadas.forEach(diaMalUbicado => {//ponemos los dias en el mes que corresponde.
-        mes = ingresos.find(mes => mes.id == this.obtenerMesId(new Date(diaMalUbicado.fechaString)));
+      let mes: any;
+      ventasMalUbicadas.forEach((diaMalUbicado: any) => {//ponemos los dias en el mes que corresponde.
+        mes = ingresos.find((mes: any) => mes.id == this.obtenerMesId(new Date(diaMalUbicado.fechaString)));
 
         mes.dias.push(diaMalUbicado);
 
       });
-      this.database.actualizar(environment.TABLAS.ingresosBrutos, mes, mes.id);// queda borrar a mano los duplicados
+      if (mes)
+        this.database.actualizar(environment.TABLAS.ingresosBrutos, mes, mes.id);// queda borrar a mano los duplicados
       suscript.unsubscribe();
     });
   }
-  obtenerMesId(fecha) {
+  obtenerMesId(fecha: any) {
     const months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
     let month = months[fecha.getMonth()];
     let year = fecha.getFullYear();
@@ -192,13 +194,13 @@ export class FuncionesUtilesService {
   reajustar() {
     let subs = this.database.obtenerTodos(environment.TABLAS.ingresosBrutos).subscribe(ListDocRef => {
       let meses = ListDocRef.map(docRef => {
-        let mes = docRef.payload.doc.data();
+        let mes: any = docRef.payload.doc.data();
         mes['id'] = docRef.payload.doc.id;
         return mes;
       });
 
       meses.forEach((mes: any) => {
-        mes.dias.forEach(libroDiarioHoy => {
+        mes.dias.forEach((libroDiarioHoy: any) => {
           libroDiarioHoy.montoTotalTransferencia = 0;
           libroDiarioHoy.montoTotalMercadoPago = 0;
           libroDiarioHoy.montoTotalNegativo = 0;
@@ -208,7 +210,7 @@ export class FuncionesUtilesService {
           let acumuladorMercadoPago = 0;
           let acumuladorNegativo = 0;
 
-          libroDiarioHoy.ventas.forEach((venta) => {
+          libroDiarioHoy.ventas.forEach((venta: any) => {
             if (!venta.medioDePago) {
               venta.medioDePago = MediosDePago.Efectivo;
             }
@@ -240,12 +242,12 @@ export class FuncionesUtilesService {
   eliminarDiasSinIngresos() {
     let subs = this.database.obtenerTodos(environment.TABLAS.ingresosBrutos).subscribe(ListDocRef => {
       let meses = ListDocRef.map(docRef => {
-        let mes = docRef.payload.doc.data();
+        let mes: any = docRef.payload.doc.data();
         mes['id'] = docRef.payload.doc.id;
         return mes;
       });
       meses.forEach((mes: any) => {
-        mes.dias = mes.dias.filter(libroDiarioHoy => (libroDiarioHoy.ventas && libroDiarioHoy.ventas.length > 0));
+        mes.dias = mes.dias.filter((libroDiarioHoy: any) => (libroDiarioHoy.ventas && libroDiarioHoy.ventas.length > 0));
         // this.database.actualizar(environment.TABLAS.ingresosBrutos, mes, mes.id);
       });
       subs.unsubscribe();
@@ -258,7 +260,7 @@ export class FuncionesUtilesService {
   hacerBackUp() {
     let subs = this.database.obtenerTodos(environment.TABLAS.ingresosBrutos).subscribe(ListDocRef => {
       let meses = ListDocRef.map(docRef => {
-        let mes = docRef.payload.doc.data();
+        let mes: any = docRef.payload.doc.data();
         mes['id'] = docRef.payload.doc.id;
         return mes;
       });

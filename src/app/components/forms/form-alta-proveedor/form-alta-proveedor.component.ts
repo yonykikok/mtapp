@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
+import { User } from 'src/app/clases/user';
 import { Proveedor } from 'src/app/pages/proveedores/proveedores.page';
 import { AlertService } from 'src/app/services/alert.service';
 import { DataBaseService } from 'src/app/services/database.service';
@@ -15,7 +16,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./form-alta-proveedor.component.scss'],
 })
 export class FormAltaProveedorComponent implements OnInit {
-  loggedUser;
+  loggedUser!:User;
   formAltaProveedor = new FormGroup({
     nombre: new FormControl('', [Validators.required]),
     direccion: new FormControl('', [Validators.required]),
@@ -32,6 +33,7 @@ export class FormAltaProveedorComponent implements OnInit {
 
   mostrarConfirmacion() {
     let { nombre, direccion, telefono, telefonoAlternativo } = this.formAltaProveedor.value;
+    if (!nombre! || !direccion || !telefono || !telefonoAlternativo) return;  //TODO: informar
     let proveedor: Proveedor = {
       nombre,
       direccion,

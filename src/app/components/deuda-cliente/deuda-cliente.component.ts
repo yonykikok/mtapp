@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 import { FormAgregarItemDeudaComponent } from '../forms/form-agregar-item-deuda/form-agregar-item-deuda.component';
 import { FormAgregarPagoDeudaComponent } from '../forms/form-agregar-pago-deuda/form-agregar-pago-deuda.component';
 import { VerificationCodeComponent } from '../verification-code/verification-code.component';
+import { User } from 'src/app/clases/user';
 
 @Component({
   selector: 'app-deuda-cliente',
@@ -17,8 +18,8 @@ import { VerificationCodeComponent } from '../verification-code/verification-cod
 })
 export class DeudaClienteComponent {
   panelOpenState = false;
-  @Input() deudor;
-  @Input() loggedUser;
+  @Input() deudor:any;
+  @Input() loggedUser!:User;
 
 
 
@@ -33,13 +34,13 @@ export class DeudaClienteComponent {
 
   calcularDeuda() {
     if (!this.deudor.items) return;
-    return Array.isArray(this.deudor.items) ? this.deudor.items.reduce((suma, item) => suma + item.precio, 0) : 0;
+    return Array.isArray(this.deudor.items) ? this.deudor.items.reduce((suma:number, item:any) => suma + item.precio, 0) : 0;
 
   }
 
   calcularPagos() {
     if (!this.deudor.pagos) return;
-    return Array.isArray(this.deudor.items) ? this.deudor.pagos.reduce((suma, pago) => suma + pago.monto, 0) : 0;
+    return Array.isArray(this.deudor.items) ? this.deudor.pagos.reduce((suma:number, pago:any) => suma + pago.monto, 0) : 0;
 
   }
   calcularRestante() {
@@ -105,7 +106,7 @@ export class DeudaClienteComponent {
             this.deudor.items = [];
             this.deudor.pagos = [];
           }
-          this.database.actualizar(environment.TABLAS.deudores, this.deudor, this.deudor.id).then(res => {
+          this.database.actualizar(environment.TABLAS.deudores, this.deudor, this.deudor.id)?.then(res => {
             this.toastService.simpleMessage('Exito', 'Cambios guardados', ToastColor.success);
           })
         }
@@ -132,7 +133,7 @@ export class DeudaClienteComponent {
 
         if (result.role == 'guardarCambios') {
           this.deudor.items = result.data;
-          this.database.actualizar(environment.TABLAS.deudores, this.deudor, this.deudor.id).then(res => {
+          this.database.actualizar(environment.TABLAS.deudores, this.deudor, this.deudor.id)?.then(res => {
             this.toastService.simpleMessage('Exito', 'Se guardaron los cambios', ToastColor.success);
           })
         }

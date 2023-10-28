@@ -10,7 +10,7 @@ import { Proveedor } from 'src/app/pages/proveedores/proveedores.page';
   styleUrls: ['./detalle-proveedor.component.scss'],
 })
 export class DetalleProveedorComponent implements OnInit {
-  proveedor;
+  proveedor: any;
   constructor(private modalController: ModalController) { }
 
   ngOnInit() { }
@@ -18,7 +18,7 @@ export class DetalleProveedorComponent implements OnInit {
 
   async agregarModuloProveedor(proveedor: Proveedor) {
 
-//console.log(proveedor)
+    //console.log(proveedor)
     let modal = await this.modalController.create({
       component: ListaModulosProveedorPage,
       componentProps: {

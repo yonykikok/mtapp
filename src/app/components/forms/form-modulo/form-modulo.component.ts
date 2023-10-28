@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DataBaseService } from 'src/app/services/database.service';
-import { InfoCompartidaService } from 'src/app/services/info-compartida.service';
+import { InfoCompartidaService, Modulo } from 'src/app/services/info-compartida.service';
 import { environment } from 'src/environments/environment';
 import { map, startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -16,18 +16,19 @@ import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.servic
 })
 export class FormModuloComponent implements OnInit {
 
-  @Input() nuevoModulo = {
+  @Input() nuevoModulo: Modulo = {
+    id: '',
     calidad: '',
     modelo: '',
     marca: '',
-    precio: '',
+    precio: 0,
     tipo: '',
     stock: []
   }
 
   //auto complete
-  modelosExistentes = [];
-  modulosFiltrados: Observable<string[]>;
+  modelosExistentes: string[] = [];
+  modulosFiltrados: Observable<string[]> = new Observable<string[]>();
   //auto complete
 
   //parametros formulario
@@ -38,7 +39,7 @@ export class FormModuloComponent implements OnInit {
   cantidades = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   //parametros formulario
 
-  modulos;
+  modulos: Modulo[] = [];
 
   formModulo: FormGroup = new FormGroup({
     modelo: new FormControl('', Validators.required),
@@ -50,7 +51,7 @@ export class FormModuloComponent implements OnInit {
     calidad: new FormControl('AAA', Validators.required)
   });
 
-  precioDolarBlue: number | null = null;
+  precioDolarBlue: number=0;
 
   constructor(
     private infoConpatida: InfoCompartidaService,
@@ -63,21 +64,21 @@ export class FormModuloComponent implements OnInit {
   }
 
   cargarInputAutoCompletado() {
-    let listaSinRepetir = new Set();
+    let listaSinRepetir = new Set<string>();
 
     this.afs.collection('modulos').snapshotChanges().subscribe(res => {
       this.modulos = res.map(moduloRef => {
-        let auxModulo = moduloRef.payload.doc.data()
+        let auxModulo: Modulo = moduloRef.payload.doc.data() as Modulo;
         auxModulo['id'] = moduloRef.payload.doc.id;
         return auxModulo;
       });
-      this.modulos.forEach(modulo => {
+      this.modulos.forEach((modulo: Modulo) => {
         listaSinRepetir.add(modulo['modelo']);
       })
       this.modelosExistentes = [...listaSinRepetir];
     });
 
-    this.modulosFiltrados = this.formModulo.controls.modelo.valueChanges.pipe(
+    this.modulosFiltrados = this.formModulo.controls['modelo'].valueChanges.pipe(
       startWith(''),
       map((value: string) => this._filter(value)),
     );
@@ -97,22 +98,26 @@ export class FormModuloComponent implements OnInit {
 
     return this.modelosExistentes.filter(modulo => modulo.toLowerCase().includes(filterValue));
   }
-  buscarPorModeloCalidadYTipo(listaModulos, moduloABuscar) {
-    return listaModulos.find(modulo => {
+  buscarPorModeloCalidadYTipo(listaModulos: Modulo[], moduloABuscar: Modulo) {
+    return listaModulos.find((modulo: Modulo) => {
+      let retorno;
       if (modulo.modelo.toLowerCase() == moduloABuscar.modelo.toLowerCase() &&
         modulo.calidad.toLowerCase() == moduloABuscar.calidad.toLowerCase() &&
         modulo.tipo.toLowerCase() == moduloABuscar.tipo.toLowerCase()) {
-        return modulo;
+        retorno = modulo;
       }
+      return retorno;
     });
   }
 
-  buscarPorModeloYCalidad(listaModulos, moduloABuscar) {
-    return listaModulos.find(modulo => {
+  buscarPorModeloYCalidad(listaModulos: Modulo[], moduloABuscar: Modulo) {
+    return listaModulos.find((modulo: Modulo) => {
+      let retorno;
       if (modulo.modelo.toLowerCase() == moduloABuscar.modelo.toLowerCase() &&
         modulo.calidad.toLowerCase() == moduloABuscar.calidad.toLowerCase()) {
-        return modulo;
+        retorno = modulo;
       }
+      return retorno;
     });
   }
 
@@ -132,7 +137,7 @@ export class FormModuloComponent implements OnInit {
 
 
 
-  agregarModulo(nuevoModulo) {
+  agregarModulo(nuevoModulo: Modulo) {
     this.dataBase.crear(environment.TABLAS.modulos, nuevoModulo).then(() => {
       this.toastService.simpleMessage('Exito', 'Se agrego el modulo correctamente', ToastColor.success);
 
@@ -143,20 +148,20 @@ export class FormModuloComponent implements OnInit {
     const { calidad, modelo, marca, precio, tipo } = this.formModulo.value;
     let { stock } = this.nuevoModulo;
     stock.length <= 0 ? stock = [{ color: 'Blanco', cantidad: 0 }] : null;
-
-    return {
+    let modulo: Modulo = {
       calidad,
       modelo,
       marca,
       precio,
       tipo,
-      stock
+      stock,
     }
+    return modulo;
   }
 
 
   async procesarAltaModulo() {
-    const nuevoModulo = this.obtenerObjetoModulo();
+    const nuevoModulo: Modulo = this.obtenerObjetoModulo();
 
     let primeraConsulta = true;//para que no repira por el suscribe
 

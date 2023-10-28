@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { User } from 'src/app/clases/user';
 import { FormAcreedorComponent } from 'src/app/components/forms/form-acreedor/form-acreedor.component';
 import { FormDeudorComponent } from 'src/app/components/forms/form-deudor/form-deudor.component';
 import { AuthService } from 'src/app/services/auth.service';
@@ -18,15 +19,15 @@ export class CuentasClientesPage implements OnInit {
   totalFiado = 0;
   totalAdeudado = 0;
 
-  listaClientes = {
+  listaClientes: any = {
     acreedores: [],
     deudores: []
   }
 
-  listaAMostrar;
+  listaAMostrar: any[] = [];
 
-  loggedUser;
-  textoABuscar;
+  loggedUser!: User;
+  textoABuscar: string = '';
 
   constructor(private database: DataBaseService,
     private authService: AuthService,
@@ -40,15 +41,15 @@ export class CuentasClientesPage implements OnInit {
     //LISTA DEUDORES
     this.database.obtenerTodos(environment.TABLAS.deudores).subscribe(deudoresListRef => {
       this.listaClientes.deudores = deudoresListRef.map(deudorRef => {
-        let deudor = deudorRef.payload.doc.data();
+        let deudor: any = deudorRef.payload.doc.data();
         deudor['id'] = deudorRef.payload.doc.id;
         return deudor;
       });
       this.listaAMostrar = [...this.listaClientes.deudores];
       this.ordenarLista(this.listaAMostrar);
 
-      this.totalFiado = this.listaClientes.deudores.reduce((suma, deudor) => {
-        return suma + (deudor.items.reduce((suma, item) => suma + item.precio, 0) - deudor.pagos.reduce((suma, pago) => suma + pago.monto, 0));
+      this.totalFiado = this.listaClientes.deudores.reduce((suma: number, deudor: any) => {
+        return suma + (deudor.items.reduce((suma: number, item: any) => suma + item.precio, 0) - deudor.pagos.reduce((suma: number, pago: any) => suma + pago.monto, 0));
       }, 0);
 
     });
@@ -57,15 +58,15 @@ export class CuentasClientesPage implements OnInit {
     //LISTA ACREEDORES
     this.database.obtenerTodos(environment.TABLAS.acreedores).subscribe(acreedoresListRef => {
       this.listaClientes.acreedores = acreedoresListRef.map(acreedorRef => {
-        let acreedor = acreedorRef.payload.doc.data();
+        let acreedor: any = acreedorRef.payload.doc.data();
         acreedor['id'] = acreedorRef.payload.doc.id;
         return acreedor;
       });
 
-      this.totalAdeudado = this.listaClientes.acreedores.reduce((suma, acreedor) => {
+      this.totalAdeudado = this.listaClientes.acreedores.reduce((suma: number, acreedor: any) => {
         if (!acreedor.saldado) {
-          return suma + (acreedor.pagos.reduce((suma, pago) => suma + pago.monto, 0));
-        }else{
+          return suma + (acreedor.pagos.reduce((suma: number, pago: any) => suma + pago.monto, 0));
+        } else {
           return suma;
         }
       }, 0);
@@ -73,9 +74,10 @@ export class CuentasClientesPage implements OnInit {
   }
 
 
-  filtrarPorTexto(texto) {
+  filtrarPorTexto(event: any) {
+    let texto = event.target['value'];
     const query = !texto ? "" : texto.toLowerCase();
-    this.listaAMostrar = this.listaClientes[this.moduloSeleccionado].filter((d) =>
+    this.listaAMostrar = this.listaClientes[this.moduloSeleccionado].filter((d: any) =>
       d.apellido.toString().toLowerCase().indexOf(query) > -1 ||
       d.direccion.toString().toLowerCase().indexOf(query) > -1 ||
       d.dni.toString().toLowerCase().indexOf(query) > -1 ||
@@ -88,8 +90,9 @@ export class CuentasClientesPage implements OnInit {
 
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe(userRef => {
+      if (!userRef) return; //TODO:notificar
       this.database.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res) => {
-        let usuario = res.payload.data();
+        let usuario = res.payload.data() as User;
         usuario['uid'] = res.payload.id;
 
         this.loggedUser = {
@@ -105,8 +108,8 @@ export class CuentasClientesPage implements OnInit {
     })
   }
 
-  async openDialog(moduloSeleccionado) {
-    let componentes = {
+  async openDialog(moduloSeleccionado: any) {
+    let componentes: any = {
       deudores: FormDeudorComponent,
       acreedores: FormAcreedorComponent
     }
@@ -156,21 +159,21 @@ export class CuentasClientesPage implements OnInit {
     })
   }
 
-  calcularRestante(deudor) {
+  calcularRestante(deudor: any) {
     return this.calcularDeuda(deudor) - this.calcularPagos(deudor);
   }
 
-  calcularDeuda(deudor) {
+  calcularDeuda(deudor: any) {
     if (!deudor.items) return;
-    return Array.isArray(deudor.items) ? deudor.items.reduce((suma, item) => suma + item.precio, 0) : 0;
+    return Array.isArray(deudor.items) ? deudor.items.reduce((suma: number, item: any) => suma + item.precio, 0) : 0;
   }
-  calcularPagos(deudor) {
+  calcularPagos(deudor: any) {
     if (!deudor.pagos) return;
-    return Array.isArray(deudor.items) ? deudor.pagos.reduce((suma, pago) => suma + pago.monto, 0) : 0;
+    return Array.isArray(deudor.items) ? deudor.pagos.reduce((suma: number, pago: any) => suma + pago.monto, 0) : 0;
 
   }
 
-  seleccionarModulo(modulo) {
+  seleccionarModulo(modulo: any) {
     this.moduloSeleccionado = modulo;
     this.listaAMostrar = this.listaClientes[modulo];
     this.ordenarLista(this.listaAMostrar);

@@ -9,6 +9,7 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
+import { boleta } from '../mis-reparaciones/mis-reparaciones.page';
 export const enum OrderByDireccions {
   ascendente = 'asc',
   descendente = 'desc'
@@ -20,7 +21,7 @@ export const enum OrderByDireccions {
 })
 export class BoletasPage implements OnInit {
 
-  boletas = [];
+  boletas: boleta[] = [];
   loggedUser: User | null = null;
   sinCoincidencias = false;
 
@@ -91,12 +92,12 @@ export class BoletasPage implements OnInit {
 
   }
 
-  async seleccionar(element: Element) {
+  async seleccionar(boleta: boleta) {
     try {
       const modal = await this.modalController.create({
         component: DetalleReparacionComponent,
         componentProps: {
-          reparacion: element,
+          reparacion: boleta,
           autoFocus: false,
           loggedUser: this.loggedUser,
           ruta: 'boletas'
@@ -120,15 +121,18 @@ export class BoletasPage implements OnInit {
     this.sinCoincidencias = false;
     let textoABuscar = (event.target as HTMLInputElement).value;
     if (textoABuscar.length == 4 || textoABuscar.length == 5 || textoABuscar.length == 8) {
-      let metodoALlamar = (textoABuscar.length == 4 || textoABuscar.length == 5) ? 'obtenerBoletaPorNroBoleta' : 'obtenerBoletaPorDni';
 
-      this.dataBase[metodoALlamar](environment.TABLAS.boletasReparacion, textoABuscar).then(res => {
+      let metodoALlamar: any = (textoABuscar.length == 4 || textoABuscar.length == 5)
+        ? this.dataBase.obtenerBoletaPorNroBoleta
+        : this.dataBase.obtenerBoletaPorDni;
+
+      metodoALlamar(environment.TABLAS.boletasReparacion, textoABuscar).then((res: any) => {
         if (!res) {
           this.sinCoincidencias = true;
           return;
         }
 
-        let boletas = res.map(element => {
+        let boletas = res.map((element: any) => {
           let boleta = element.data();
           boleta['id'] = element.id;
           return boleta;

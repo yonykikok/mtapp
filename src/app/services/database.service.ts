@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from "@angular/fire/compat/firestore";
+import { AngularFirestore } from "@angular/fire/compat/firestore";
 import { boleta_estados } from 'src/app/services/info-compartida.service';
 import { environment } from 'src/environments/environment';
 import { OrderByDireccions } from '../pages/boletas/boletas.page';
@@ -37,6 +37,7 @@ export class DataBaseService {
     try {
       return this.firestore.collection(coleccion).doc(id).set(data);
     } catch (err) {
+      return;
       console.log(err);
     }
   }
@@ -45,7 +46,7 @@ export class DataBaseService {
     return this.firestore.collection(collection).doc(id).delete();
   }
 
-  async getBoletasPorDni(dni) {
+  async getBoletasPorDni(dni: any) {
     let collectionRef = this.firestore.collection(environment.TABLAS.boletasReparacion).ref;
     try {
 
@@ -55,7 +56,8 @@ export class DataBaseService {
       return respuesta.docs;
 
     } catch (err) {
-      //console.error(err);
+      console.error(err);
+      return;
     }
   }
 
@@ -69,7 +71,8 @@ export class DataBaseService {
       return respuesta.docs;
 
     } catch (err) {
-      //console.error(err);
+      return
+      console.error(err);
     }
   }
 
@@ -83,11 +86,12 @@ export class DataBaseService {
       return respuesta.docs;
 
     } catch (err) {
-      //console.error(err);
+      return;
+      console.error(err);
     }
   }
 
-  async paginatorNext(collection: string, interval: number, lastDoc, orderByAtributo: string, orderByDirection: OrderByDireccions) {
+  async paginatorNext(collection: string, interval: number, lastDoc: any, orderByAtributo: string, orderByDirection: OrderByDireccions) {
     let collectionRef = this.firestore.collection(collection).ref;
     try {
       const respuesta = await collectionRef.
@@ -104,7 +108,7 @@ export class DataBaseService {
       return null;
     }
   }
-  async paginatorPrevious(collection: string, interval: number, firstDoc, orderByAtributo: string, orderByDirection: OrderByDireccions) {
+  async paginatorPrevious(collection: string, interval: number, firstDoc:any, orderByAtributo: string, orderByDirection: OrderByDireccions) {
     let collectionRef = this.firestore.collection(collection).ref;
     try {
       const respuesta = await collectionRef.
@@ -161,7 +165,7 @@ export class DataBaseService {
 
 
 
-  async getBoletasModificadasHoy(fechaInicio, fechaFin) {
+  async getBoletasModificadasHoy(fechaInicio:any, fechaFin:any) {
     let collectionRef = this.firestore.collection(environment.TABLAS.boletasReparacion).ref;
     try {
       const respuesta = await collectionRef
@@ -179,7 +183,7 @@ export class DataBaseService {
     }
   }
 
-  async getBoletasPorIntervaloDeFecha(fechaInicio, fechaFin) {
+  async getBoletasPorIntervaloDeFecha(fechaInicio:any, fechaFin:any) {
     let collectionRef = this.firestore.collection(environment.TABLAS.boletasReparacion).ref;
     try {
       const respuesta = await collectionRef
@@ -198,7 +202,7 @@ export class DataBaseService {
   }
 
 
-  async obtenerBoletaPorNroBoleta(coleccion, nroBoleta) {
+  async obtenerBoletaPorNroBoleta(coleccion:any, nroBoleta:any) {
     let collectionRef = this.firestore.collection(coleccion).ref;
     try {
       const respuesta = await collectionRef.where('nroBoleta', '==', nroBoleta).get();
@@ -212,7 +216,7 @@ export class DataBaseService {
       return null;
     }
   }
-  async obtenerBoletaPorDni(coleccion, dniCliente) {
+  async obtenerBoletaPorDni(coleccion:any, dniCliente:any) {
     let collectionRef = this.firestore.collection(coleccion).ref;
     try {
       const respuesta = await collectionRef.where('dniCliente', '==', dniCliente).get();

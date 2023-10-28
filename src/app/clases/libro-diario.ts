@@ -7,15 +7,15 @@ interface historialCaja {
 }
 
 export class LibroDiario {
-    cuadra: boolean;
-    fecha: number | Date;
-    fechaString: string;
-    montoInicial: number
-    montoTotal: number
-    montoTotalEfectivo: number
-    montoTotalMercadoPago: number
-    montoTotalTransferencia: number
-    ventas: any[];
-    montoTotalNegativo: number;
+    cuadra?: boolean;
+    fecha?: number;
+    fechaString?: string;
+    montoInicial?: number
+    montoTotal?: number
+    montoTotalEfectivo?: number
+    montoTotalMercadoPago?: number
+    montoTotalTransferencia?: number
+    ventas: any[] = [];
+    montoTotalNegativo?: number;
     historialDeCierre?: historialCaja[];
 }

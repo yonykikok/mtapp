@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, ModalController, ViewDidEnter } from '@ionic/angular';
+import { User } from 'src/app/clases/user';
 import { BarcodeScannerComponent } from 'src/app/components/barcode-scanner/barcode-scanner.component';
 import { CargarCorreoComponent } from 'src/app/components/cargar-correo/cargar-correo.component';
 import { CargarTelefonoComponent } from 'src/app/components/cargar-telefono/cargar-telefono.component';
@@ -15,7 +16,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./mi-cuenta.page.scss'],
 })
 export class MiCuentaPage implements OnInit, ViewDidEnter {
-  loggedUser;
+  loggedUser!: User;
   constructor(private modalController: ModalController,
     private database: DataBaseService,
     private authService: AuthService,
@@ -29,10 +30,10 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
 
   verSiTieneLaInfoCompleta() {
     if (!this.loggedUser) return;
-    if (!this.loggedUser.correo) {
+    if (!this.loggedUser.email) {
       this.mostrarPopupCorreo();
     }
-    if (!this.loggedUser.telefono) {
+    if (!this.loggedUser.phoneNumber) {
       this.mostrarPopupNumeroTelefonico();
     }
   }
@@ -57,15 +58,15 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
 
           if (info) {
             if (String(info.dni) == String(this.authService.currentUser.dni)) {
-              this.loggedUser['nombre'] = info.nombre;
-              this.loggedUser['apellido'] = info.apellido;
-              this.loggedUser['dni'] = info.dni;
-              this.loggedUser['fecha'] = info.fNacimiento;
-              this.loggedUser['sexo'] = info.sexo;
+
+              this.loggedUser.displayName = `${info.apellido} ${info.nombre}`;
+              this.loggedUser.dni = info.dni;
+              this.loggedUser.fNacimiento = info.fNacimiento;
+              this.loggedUser.sexo = info.sexo;
               this.toastService.simpleMessage("Escaneo exitoso", "Se cargó la información del documento a su cuenta.", ToastColor.success);
               this.actualizarUsuario();
 
-              if (!this.loggedUser.correo) {
+              if (!this.loggedUser.email) {
                 this.mostrarPopupCorreo();
               }
             } else {
@@ -100,11 +101,11 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
         if (!result.data || !result.role) return;
         switch (result.role) {
           case 'create':
-            this.loggedUser['correo'] = result.data;
+            this.loggedUser.email = result.data;
             this.actualizarUsuario();
             this.toastService.simpleMessage("Correo guardado", "Se cargó el correo a su cuenta.", ToastColor.success);
 
-            if (!this.loggedUser.telefono) {
+            if (!this.loggedUser.phoneNumber) {
               this.mostrarPopupNumeroTelefonico();
             }
             break;
@@ -121,15 +122,16 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
   }
   actualizarUsuario() {
     if (
-      this.loggedUser.correo &&
-      this.loggedUser.telefono &&
-      this.loggedUser.nombre &&
+      this.loggedUser.email &&
+      this.loggedUser.phoneNumber &&
+      this.loggedUser.displayName &&
       this.loggedUser.password
     ) {
-      this.loggedUser.activo = true;
+      this.loggedUser.activo = true;//TODO:ver porque este codigo no es valido en esta app, not enemos el campo activo.
       this.toastService.simpleMessage("Cuenta activada", "Se activó con éxito su cuenta, ya puede comenzar a utilizar la App", ToastColor.success);
     }
-    this.database.actualizar('users', this.loggedUser, this.loggedUser.dni.toString());
+    if (this.loggedUser.dni)
+      this.database.actualizar('users', this.loggedUser, this.loggedUser.dni.toString());
   }
 
   async mostrarPopupNumeroTelefonico() {
@@ -137,7 +139,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       const modal = await this.modalController.create({
         component: CargarTelefonoComponent,
         componentProps: {
-          telefono: this.loggedUser?.telefono
+          telefono: this.loggedUser.phoneNumber
         },
       })
 
@@ -145,7 +147,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
         if (!result.data || !result.role) return;
         switch (result.role) {
           case 'create':
-            this.loggedUser['telefono'] = result.data;
+            this.loggedUser.phoneNumber = result.data;
             this.actualizarUsuario();
             this.toastService.simpleMessage("Teléfono guardado", "Se cargó el número de teléfono a su cuenta.", ToastColor.success);
 
@@ -237,8 +239,9 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
   }
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe(userRef => {
+      if(!userRef) return; //TODO:notificar
       this.database.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res) => {
-        let usuario = res.payload.data();
+        let usuario: any = res.payload.data();
         usuario['uid'] = res.payload.id;
 
         this.loggedUser = {
@@ -250,7 +253,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
           role: usuario['role'],
           securityCode: usuario['securityCode'],
           dni: usuario['dni']
-        };
+        } as User;
         // this.verSiTieneLaInfoCompleta();
 
       })
