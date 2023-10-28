@@ -122,6 +122,46 @@ export class BoletasPage implements OnInit {
     let textoABuscar = (event.target as HTMLInputElement).value;
     if (textoABuscar.length == 4 || textoABuscar.length == 5 || textoABuscar.length == 8) {
 
+      if ((textoABuscar.length == 4 || textoABuscar.length == 5)) {
+        console.log(textoABuscar)
+        this.dataBase.obtenerBoletaPorNroBoleta(environment.TABLAS.boletasReparacion, textoABuscar).then((res: any) => {
+          if (!res) {
+            this.sinCoincidencias = true;
+            return;
+          }
+
+          let boletas = res.map((element: any) => {
+            let boleta = element.data();
+            boleta['id'] = element.id;
+            return boleta;
+          });
+          this.boletas = boletas;
+
+        });
+      }
+      else {
+        this.dataBase.obtenerBoletaPorDni(environment.TABLAS.boletasReparacion, textoABuscar).then((res: any) => {
+          if (!res) {
+            this.sinCoincidencias = true;
+            return;
+          }
+
+          let boletas = res.map((element: any) => {
+            let boleta = element.data();
+            boleta['id'] = element.id;
+            return boleta;
+          });
+          this.boletas = boletas;
+
+        });
+      }
+    }
+  }
+  applyFilter2(event: Event) {
+    this.sinCoincidencias = false;
+    let textoABuscar = (event.target as HTMLInputElement).value;
+    if (textoABuscar.length == 4 || textoABuscar.length == 5 || textoABuscar.length == 8) {
+
       let metodoALlamar: any = (textoABuscar.length == 4 || textoABuscar.length == 5)
         ? this.dataBase.obtenerBoletaPorNroBoleta
         : this.dataBase.obtenerBoletaPorDni;
