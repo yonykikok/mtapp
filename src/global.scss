@@ -80,6 +80,8 @@ ion-toolbar {
     height: 100vh;
     background-color: rgba(128, 128, 128, 0.747);
     z-index: 999999999;
+    max-height: 100%;
+    max-width: 100%;
 }
 ion-chip {
     height: auto;

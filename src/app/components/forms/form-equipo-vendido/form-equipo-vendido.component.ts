@@ -20,13 +20,13 @@ export class FormEquipoVendidoComponent implements OnInit {
   mostrarSpinner = false;
 
   step1FormGroup: FormGroup = new FormGroup({
-    dni: new FormControl(['', Validators.required]),
+    dni: new FormControl('', [Validators.required]),
   });
   step2FormGroup: FormGroup = new FormGroup({
-    marca: new FormControl(['', Validators.required]),
-    modelo: new FormControl(['', Validators.required]),
-    imei: new FormControl(['', [Validators.required, Validators.minLength(15), Validators.maxLength(17)]]),
-    precio: new FormControl(['', Validators.required]),
+    marca: new FormControl('', [Validators.required]),
+    modelo: new FormControl('', [Validators.required]),
+    imei: new FormControl('', [Validators.required, Validators.minLength(15), Validators.maxLength(17)]),
+    precio: new FormControl('', [Validators.required]),
   });
   step3FormGroup: FormGroup = new FormGroup({
     accesorios: new FormControl(['']),
@@ -46,13 +46,13 @@ export class FormEquipoVendidoComponent implements OnInit {
 
   ngOnInit(): void {
     // this.step1FormGroup = this._formBuilder.group({
-    //   dni: ['', Validators.required],
+    //   dni: '', [Validators.required],
     // });
     // this.step2FormGroup = this._formBuilder.group({
-    //   marca: ['', Validators.required],
-    //   modelo: ['', Validators.required],
+    //   marca: '', [Validators.required],
+    //   modelo: '', [Validators.required],
     //   imei: ['', [Validators.required, Validators.minLength(15), Validators.maxLength(17)]],
-    //   precio: ['', Validators.required],
+    //   precio: '', [Validators.required],
     // });
     // this.step3FormGroup = this._formBuilder.group({
     //   accesorios: [''],

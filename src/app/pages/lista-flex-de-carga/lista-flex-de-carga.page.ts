@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/clases/user';
@@ -28,7 +29,8 @@ export class ListaFlexDeCargaPage implements OnInit {
   constructor(private dataBase: DataBaseService,
     private authService: AuthService,
     public funcionesUtiles: FuncionesUtilesService,
-    private modalController: ModalController) {
+    private modalController: ModalController,
+    private router:Router) {
 
     this.getCurrentUser();
     this.flexDeCargasAMostrar = [...this.flexDeCargas];
@@ -83,6 +85,10 @@ export class ListaFlexDeCargaPage implements OnInit {
 
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe((userRef: any) => {
+      if (!userRef||!userRef.uid) {
+        this.router.navigate(["/login"]);
+return;
+      }
       this.dataBase.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res: any) => {
         let usuario: any = res.payload.data();
         usuario['uid'] = res.payload.id;

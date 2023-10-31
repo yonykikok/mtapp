@@ -11,6 +11,7 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { environment } from 'src/environments/environment';
 import { Proveedor } from '../proveedores/proveedores.page';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -25,12 +26,13 @@ export class ListaModulosProveedorPage implements OnInit {
   modulosAMostrar: any[] = [];
   proveedor!: Proveedor;
   mostrarFormModulo = true;
-  precioDolarBlue: number=0;
+  precioDolarBlue: number = 0;
 
   constructor(private dataBase: DataBaseService,
     private authService: AuthService,
     public funcionesUtiles: FuncionesUtilesService,
-    private modalController: ModalController) {
+    private modalController: ModalController,
+    private router:Router) {
 
     this.getCurrentUser();
     this.modulosAMostrar = [...this.modulos];
@@ -82,11 +84,15 @@ export class ListaModulosProveedorPage implements OnInit {
 
   guardarCambiosProeveedor() {
     if (!this.proveedor || !this.proveedor.id) return; //TODO: notificar.
-      this.dataBase.actualizar(environment.TABLAS.proveedores, this.proveedor, this.proveedor.id);
+    this.dataBase.actualizar(environment.TABLAS.proveedores, this.proveedor, this.proveedor.id);
   }
 
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe((userRef: any) => {
+      if (!userRef||!userRef.uid) {
+        this.router.navigate(["/login"]);
+return;
+      }
       this.dataBase.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res: any) => {
         let usuario: any = res.payload.data();
         usuario['uid'] = res.payload.id;

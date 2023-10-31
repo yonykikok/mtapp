@@ -9,6 +9,7 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { environment } from 'src/environments/environment';
 import { boleta } from '../mis-reparaciones/mis-reparaciones.page';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -50,7 +51,8 @@ export class DashboardPage implements OnInit {
     // private barcodeScanner: BarcodeScanner,
     private alertService: AlertService,
     public funcionesUtiles: FuncionesUtilesService,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private router: Router) { }
 
   ngOnInit() {
     this.getCurrentUser();
@@ -81,6 +83,10 @@ export class DashboardPage implements OnInit {
 
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe((userRef: any) => {
+      if (!userRef||!userRef.uid) {
+        this.router.navigate(["/login"]);
+return;
+      }
       this.database.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res: any) => {
         let usuario: any = res.payload.data();
         usuario['uid'] = res.payload.id;
