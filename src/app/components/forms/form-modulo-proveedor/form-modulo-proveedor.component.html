@@ -16,29 +16,29 @@
 
       <form class="card p-3 m-3 col-lg-6" [formGroup]="formModulo">
 
-        <ion-item fill="outline" class="ion-margin">
+        <ion-item  class="ion-margin">
           <ion-select  placeholder="Seleccione la marca" formControlName="marca">>
             <ion-select-option *ngFor="let marca of marcas" [value]="marca">{{marca}}</ion-select-option>
           </ion-select>
         </ion-item>
 
-        <ion-item fill="outline"  class="ion-margin">
+        <ion-item   class="ion-margin">
           <ion-input type="text" placeholder="Escriba el modelo" aria-label="Modulo" formControlName="modelo">
           </ion-input>
         </ion-item>
 
-        <ion-item fill="outline" class="ion-margin">
+        <ion-item  class="ion-margin">
           <ion-input type="number" placeholder="precio en dolares" formControlName="precio"></ion-input>
-          <ion-chip>{{formModulo.controls['precio'].value*precioDolarBlue|currency:'USD':'symbol':'1.0-0'}}</ion-chip>
+          <ion-chip style="padding: 0 1.5rem 0 0.5rem;">{{formModulo.controls['precio'].value*precioDolarBlue|currency:'USD':'symbol':'1.0-0'}}</ion-chip>
         </ion-item>
 
 
-        <ion-item fill="outline" class="ion-margin">
+        <ion-item  class="ion-margin">
           <ion-select aria-label="fruit" placeholder="Selecciona el tipo" formControlName="tipo">>
             <ion-select-option *ngFor="let tipo of tipos" [value]="tipo">{{tipo}}</ion-select-option>
           </ion-select>
         </ion-item>
-        <ion-item fill="outline" class="ion-margin">
+        <ion-item  class="ion-margin">
           <ion-select aria-label="fruit" placeholder="Selecciona la calidad" formControlName="calidad">>
             <ion-select-option *ngFor="let calidad of calidades" [value]="calidad">{{calidad}}</ion-select-option>
           </ion-select>

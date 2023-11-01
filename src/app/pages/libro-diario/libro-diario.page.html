@@ -28,7 +28,7 @@
     </div>
     <ng-template #ingresarMontoInicial>
       <div>
-        <ion-item fill="outline" class="ion-margin">
+        <ion-item  class="ion-margin">
           <ion-label position="floating">Monto inicial</ion-label>
           <ion-input type="number" placeholder="Ingrese el monto de apertura" [(ngModel)]="montoIngresado"
             [ngModelOptions]="{standalone: true}"></ion-input>
@@ -67,7 +67,7 @@
         <ion-card-title style="margin: 1rem;">Cierre de caja</ion-card-title>
         <ion-card-subtitle>Ingrese el monto que hay en la caja</ion-card-subtitle>
         <ion-card-content>
-          <ion-item class="ion-margin" fill="outline">
+          <ion-item class="ion-margin" >
             <ion-label position="floating">Monto de caja</ion-label>
             <ion-input type="number" placeholder="Ingrese el monto total" [(ngModel)]="montoDeCaja"
               [ngModelOptions]="{standalone: true}"></ion-input>

@@ -32,7 +32,7 @@ export class ListaModulosProveedorPage implements OnInit {
     private authService: AuthService,
     public funcionesUtiles: FuncionesUtilesService,
     private modalController: ModalController,
-    private router:Router) {
+    private router: Router) {
 
     this.getCurrentUser();
     this.modulosAMostrar = [...this.modulos];
@@ -51,7 +51,7 @@ export class ListaModulosProveedorPage implements OnInit {
     return lista.sort((a, b) => a[criterio].localeCompare(b[criterio]) || a[criterio2] - b[criterio2]);
   }
 
-  async seleccionar(modulo: any) {
+  async seleccionar(modulo: any, index: number) {
     try {
       const modal = await this.modalController.create({
         component: DetalleModuloComponent,
@@ -65,6 +65,8 @@ export class ListaModulosProveedorPage implements OnInit {
         if (!result.data || !result.role) return;
 
         if (result.role == 'guardar') {
+          this.proveedor.modulos[index] = result.data;
+          this.modulosAMostrar=this.proveedor.modulos;
           this.guardarCambiosProeveedor();
         } else if (result.role == 'borrar') {
           let indexABorrar = this.proveedor.modulos.findIndex(modulo => JSON.stringify(modulo) == JSON.stringify(result.data));
@@ -89,9 +91,9 @@ export class ListaModulosProveedorPage implements OnInit {
 
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe((userRef: any) => {
-      if (!userRef||!userRef.uid) {
+      if (!userRef || !userRef.uid) {
         this.router.navigate(["/login"]);
-return;
+        return;
       }
       this.dataBase.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res: any) => {
         let usuario: any = res.payload.data();

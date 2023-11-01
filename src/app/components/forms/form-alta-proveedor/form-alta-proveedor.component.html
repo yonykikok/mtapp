@@ -11,25 +11,25 @@
     <ion-card-content>
 
       <form [formGroup]="formAltaProveedor" (ngSubmit)="mostrarConfirmacion()">
-        <ion-item class="ion-activated" fill="outline">
+        <ion-item class="ion-activated" >
           <ion-label position="floating">Nombre de empresa</ion-label>
           <ion-icon slot="end" name="person-outline"></ion-icon>
           <ion-input type="text" placeholder="MultiCell" formControlName="nombre"></ion-input>
         </ion-item>
 
-        <ion-item class="ion-activated" fill="outline">
+        <ion-item class="ion-activated" >
           <ion-label position="floating">Direccion</ion-label>
           <ion-icon slot="end" name="location-outline"></ion-icon>
           <ion-input type="text" placeholder="Av. Corrientes 5500" formControlName="direccion"></ion-input>
         </ion-item>
 
-        <ion-item class="ion-activated" fill="outline">
+        <ion-item class="ion-activated" >
           <ion-label position="floating">Telefono</ion-label>
           <ion-icon slot="end" name="logo-whatsapp"></ion-icon>
           <ion-input type="number" placeholder="1150604010" formControlName="telefono"></ion-input>
         </ion-item>
 
-        <ion-item class="ion-activated" fill="outline">
+        <ion-item class="ion-activated" >
           <ion-label position="floating">Telefono alternativo</ion-label>
           <ion-icon slot="end" name="phone-portrait-outline"> </ion-icon>
           <ion-input type="number" placeholder="1150604010" formControlName="telefonoAlternativo"></ion-input>

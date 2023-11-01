@@ -10,7 +10,7 @@
     </ion-card-header>
     <form [formGroup]="formGroupPago">
 
-      <ion-item fill="outline" class="ion-margin">
+      <ion-item  class="ion-margin">
         <ion-select aria-label="fruit" placeholder="Tipo de pago" [(ngModel)]="tipoDePagoSeleccionado" [ngModelOptions]="{standalone: true}" (ionChange)="cargarTipoDePago($event)">
           <ion-select-option *ngFor="let tipoDePago of ['efectivo','transferencia','otro']" [value]="tipoDePago">{{tipoDePago}}</ion-select-option>
         </ion-select>

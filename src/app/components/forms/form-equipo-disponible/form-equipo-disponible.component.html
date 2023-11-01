@@ -10,7 +10,7 @@
     </ion-card-header>
     <ion-card-content>
       <form [formGroup]="step1FormGroup">
-        <ion-item fill="outline" class="ion-margin">
+        <ion-item  class="ion-margin">
           <ion-label position="floating">DNI</ion-label>
           <ion-input formControlName="dni" placeholder="ingrese el dni" required></ion-input>
         </ion-item>
@@ -27,7 +27,7 @@
     <ion-card-content>
 
       <form [formGroup]="step2FormGroup">
-        <ion-item fill="outline" class="ion-margin">
+        <ion-item  class="ion-margin">
           <ion-select placeholder="Seleccione la marca" formControlName="marca">
             <ion-select-option
               *ngFor="let prioridad of ['apple', 'alcatel', 'huawei', 'lg', 'motorola',  'samsung','sony','xiaomi','otro']"
@@ -35,15 +35,15 @@
           </ion-select>
         </ion-item>
 
-        <ion-item fill="outline" class="ion-margin">
+        <ion-item  class="ion-margin">
           <ion-label position="floating">Modelo</ion-label>
           <ion-input formControlName="modelo" placeholder="Ingrese modelo del equipo" required></ion-input>
         </ion-item>
-        <ion-item fill="outline" class="ion-margin">
+        <ion-item  class="ion-margin">
           <ion-label position="floating">Imei</ion-label>
           <ion-input formControlName="imei" placeholder="Ingrese imei del equipo" required></ion-input>
         </ion-item>
-        <ion-item fill="outline" class="ion-margin">
+        <ion-item  class="ion-margin">
           <ion-label position="floating">Precio</ion-label>
           <ion-input formControlName="precio" placeholder="Ingrese precio del equipo" required></ion-input>
         </ion-item>
@@ -64,7 +64,7 @@
 
       <form [formGroup]="step3FormGroup">
 
-        <ion-item fill="outline" class="ion-margin">
+        <ion-item  class="ion-margin">
           <ion-select placeholder="Seleccione lo que lleva" formControlName="accesorios" [multiple]="true">
             <ion-select-option *ngFor="let prioridad of ['auriculares', 'caja', 'cargador', 'cable', 'film',  'funda']"
               [value]="prioridad">{{prioridad}}</ion-select-option>

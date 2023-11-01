@@ -11,7 +11,7 @@
         <b>( {{pedido.prioridad}} )</b></ion-chip>
       <ng-template #editar>
 
-        <ion-item fill="outline" class="ion-margin">
+        <ion-item  class="ion-margin">
           <ion-select placeholder="Seleccione la nueva prioridad" formControlName="prioridad"
             (ionChange)="mostrarConfirmacion($event)">
             <ion-select-option *ngFor="let prioridad of listaDePrioridades"

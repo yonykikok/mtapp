@@ -24,25 +24,25 @@
       </div>
 
       <form [formGroup]="formAltaReparacion" (ngSubmit)="mostrarConfirmacion()">
-        <ion-item class="ion-activated" fill="outline">
+        <ion-item class="ion-activated" >
           <ion-label position="floating">DNI cliente</ion-label>
           <ion-icon slot="end" name="card-outline"></ion-icon>
           <ion-input type="number" placeholder="40414243" formControlName="dniCliente"></ion-input>
         </ion-item>
 
-        <ion-item class="ion-activated" fill="outline">
+        <ion-item class="ion-activated" >
           <ion-label position="floating">Numero de boleta</ion-label>
           <ion-icon slot="end" name="document-outline"></ion-icon>
           <ion-input type="number" placeholder="4550" formControlName="nroBoleta"></ion-input>
         </ion-item>
 
-        <ion-item class="ion-activated" fill="outline">
+        <ion-item class="ion-activated" >
           <ion-label position="floating">Modelo del equipo</ion-label>
           <ion-icon slot="end" name="phone-portrait-outline"></ion-icon>
           <ion-input type="text" placeholder="J7 prime" formControlName="modelo"></ion-input>
         </ion-item>
 
-        <ion-item class="ion-activated" fill="outline">
+        <ion-item class="ion-activated" >
           <ion-label position="floating">Telefono del cliente</ion-label>
           <ion-icon slot="end" name="logo-whatsapp"> </ion-icon>
           <ion-input type="number" placeholder="1150604010" formControlName="telefono"></ion-input>

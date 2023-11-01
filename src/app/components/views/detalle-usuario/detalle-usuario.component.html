@@ -23,7 +23,7 @@
       </ion-card-title>
       <ng-template #editarRole>
 
-        <ion-item fill="outline">
+        <ion-item >
           <ion-label position="floating">Roles</ion-label>
           <ion-select [(ngModel)]="roleSeleccionado" (ionChange)="mostrarConfirmDialogRole()">
             <ion-select-option *ngFor="let role of roles" [value]="role">{{role}}</ion-select-option>
