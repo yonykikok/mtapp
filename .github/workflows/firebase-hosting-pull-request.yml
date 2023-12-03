@@ -13,5 +13,5 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MTAPP_D4E48 }}'
-          projectId: mtapp-d4e48
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MULTITASK_WEB }}'
+          projectId: multitask-web
