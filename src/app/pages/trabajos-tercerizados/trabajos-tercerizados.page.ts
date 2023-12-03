@@ -9,6 +9,7 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { environment } from 'src/environments/environment';
 
 export interface trabajoTercerizado {
+  responsable:string,
   fecha: number,
   modelo: string,
   trabajo: string,

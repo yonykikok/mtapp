@@ -12,7 +12,7 @@
       <ion-col><b>Boleta</b></ion-col>
     </ion-row>
     <ion-row *ngFor="let trabajo of trabajosTercerizados"
-      [ngStyle]="{'background':!trabajo.fechaRetiro?'lightgreen':''}" (click)="mostrarDetalle(trabajo)">
+      [ngStyle]="{'background':!trabajo.fechaRetiro||trabajo.fechaRetiro==-1?'lightgreen':''}" (click)="mostrarDetalle(trabajo)">
       <ion-col>{{trabajo.modelo|titlecase}}</ion-col>
       <ion-col>{{trabajo.trabajo|titlecase}}</ion-col>
       <ion-col>{{trabajo.boleta}}</ion-col>

@@ -99,12 +99,15 @@ export class LibroDiarioPage implements OnInit {
           return dia;
         }
       });
-
+      
       if (!diarioDeHoy) {
+        console.log(this.esteMes)
         this.esteMes['dias'] = [...this.esteMes['dias'], libroDiario];
       }
     }
+    await this.database.actualizar(environment.TABLAS.ingresosBrutos, this.esteMes, this.esteMes.id);
   }
+
   obtenerNuevoLibroDiario() {
     let hoy = new Date();
     hoy.setHours(0);

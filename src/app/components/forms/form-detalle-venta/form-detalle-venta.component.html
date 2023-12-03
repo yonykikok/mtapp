@@ -45,7 +45,8 @@
       <ion-chip class="flexBetweenCenter" style="width: 95%;" *ngFor="let item of items">
         <label>{{item.precio|currency}}</label>
         <b>{{item.descripcion}} </b>
-        <label class="flexCenterCenter" *ngIf="item.boleta">({{item.boleta}})
+        <label class="flexCenterCenter">
+          <ion-text *ngIf="item.boleta"> ({{item.boleta}}) </ion-text>
           <ion-icon color="danger" (click)="eliminarItem(item)" name="trash-outline"></ion-icon>
         </label>
       </ion-chip>

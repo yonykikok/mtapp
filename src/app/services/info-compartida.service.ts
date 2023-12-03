@@ -169,9 +169,9 @@ export class InfoCompartidaService {
   }
 
 
-  marcasTrabajadas = ['Samsung', 'LG', 'Motorola', 'Huawei', 'Apple', 'Alcatel', 'Xiaomi', 'Sony', 'otro'];
+  marcasTrabajadas = ['Samsung', 'LG', 'Motorola', 'Huawei', 'Apple', 'Alcatel', 'Xiaomi', 'Sony', 'Nokia', 'otro'];
 
-  marcasModulos = ['Samsung', 'LG', 'Motorola', 'Huawei', 'Apple', 'Alcatel', 'Xiaomi', 'Sony'];
+  marcasModulos = ['Samsung', 'LG', 'Motorola', 'Huawei', 'Apple', 'Alcatel', 'Xiaomi', 'Sony', 'Nokia'];
   calidadesModulos = ['AAA', 'GenMedCalidad', 'GenBueno', 'Estandar', 'Original Oled', 'Original Certificado'];
   calidadesModulosProveedores = ['AAA', 'Incell', 'GenBueno', 'Oled', 'Original'];
   calidadesFlexDecarga = ['AAA', 'Mechanic', 'Original', 'Original Certificado'];
@@ -185,7 +185,7 @@ export class InfoCompartidaService {
   marcasDisplay = ['Samsung', 'LG', 'Otro'];
   tiposDisplay = ['Tablet', 'Celular'];
 
-  marcasBaterias = ['Samsung', 'LG', 'Motorola', 'Huawei', 'Apple', 'Alcatel', 'Xiaomi', 'Sony', 'otro'];
+  marcasBaterias = ['Samsung', 'LG', 'Motorola', 'Huawei', 'Apple', 'Alcatel', 'Xiaomi', 'Sony', 'Nokia', 'otro'];
   calidadesBaterias = ['AAA', 'GenMedCalidad', 'GenBueno', 'Estandar', 'Original'];
   tiposBaterias = ['Tablet', 'Celular'];
 

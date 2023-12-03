@@ -4,7 +4,17 @@
 
 
 <ion-content *ngIf="loggedUser;">
-  <ion-card class="ion-padding ion-text-center">
+  <ion-card class="ion-text-center">
+    <ion-toolbar [ngStyle]="{'--background': trabajo.reparado?'#2dd36f':'#eb445a'}">
+
+      <ion-title class="ion-text-center">
+        <b> {{(this.trabajo.fechaRetiro&&this.trabajo.fechaRetiro!=-1)
+          ?"Retirado"
+          :"Falta retirar"}} </b>
+      </ion-title>
+    </ion-toolbar>
+
+    <ion-text class="ion-margin" *ngIf="trabajo.responsable">Responsable: <b>{{trabajo.responsable}}</b></ion-text>
     <ion-item-divider class="ion-no-padding">
       <ion-chip slot="start" style="flex-direction: column; " outline="true">
         <small>Fecha de entrega</small>
@@ -22,35 +32,48 @@
     </ion-item-divider>
 
     <ion-card-header>
-      <ion-card-title class="ion-text-center">
-        {{trabajo.modelo|titlecase}} ({{trabajo.boleta}})
+      <ion-card-title class="ion-text-center" style="padding-bottom: 0;">
+        <b>
+          {{trabajo.modelo|titlecase}} ({{trabajo.boleta}})
+        </b>
       </ion-card-title>
 
 
     </ion-card-header>
     <ion-card-content class="ion-no-padding">
 
-      <ion-item-divider style="flex-direction: column; text-align:center" class="ion-padding-bottom ion-padding-top">
+      <ion-item-divider style="flex-direction: column; text-align:center" class="ion-padding-bottom ">
         <ion-text color="primary">
           <b> Detalle del equipo</b>
         </ion-text>
-        {{trabajo.detallesDelEquipo|titlecase}}
+        <ion-text>
+          {{trabajo.detallesDelEquipo|titlecase}}
+        </ion-text>
       </ion-item-divider>
 
-      <ion-item-divider style="flex-direction: column; text-align:center" class="ion-padding-bottom">
+      <ion-item-divider class="ion-padding-bottom flexColumn">
         <ion-text color="primary"><b> Trabajo a realizar</b> </ion-text>
-        {{trabajo.trabajo|titlecase}}
+        <ion-text>
+          {{trabajo.trabajo|titlecase}}
+        </ion-text>
       </ion-item-divider>
 
-      <ion-item-divider style="flex-direction: column; text-align:center" class="ion-padding-bottom">
-        <ion-text color="primary"> <b>Costo de la reparación</b> </ion-text>
-        {{(trabajo.costo?trabajo.costo:0)|currency:'USD':'symbol':'1.0-0' }}
+      <ion-item-divider class="ion-padding-bottom ">
+        <div slot="start" class="flexColumn">
+          <ion-text color="primary"> <b>Costo reparación</b> </ion-text>
+          <label>{{(trabajo.costo?trabajo.costo:0)|currency:'USD':'symbol':'1.0-0' }}</label>
+        </div>
+
+        <div slot="end" class="flexColumn">
+          <ion-text color="secondary"> <b>Precio cliente</b> </ion-text>
+          <ion-text> <b>{{(trabajo.precio?trabajo.precio:0)|currency:'USD':'symbol':'1.0-0' }}</b></ion-text>
+        </div>
       </ion-item-divider>
 
-      <ion-item-divider style="flex-direction: column; text-align:center" class="ion-padding-bottom">
-        <ion-text color="primary"> <b>Precio para el cliente</b> </ion-text>
-        {{(trabajo.precio?trabajo.precio:0)|currency:'USD':'symbol':'1.0-0' }}
-      </ion-item-divider>
+      <!-- <ion-item-divider style="flex-direction: column; text-align:center" class="ion-padding-bottom">
+
+
+      </ion-item-divider> -->
 
     </ion-card-content>
 
