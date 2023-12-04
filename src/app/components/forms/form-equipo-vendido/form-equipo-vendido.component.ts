@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ModalController } from '@ionic/angular';
 import { DataBaseService } from 'src/app/services/database.service';
 import { EquipoVendido } from 'src/app/services/info-compartida.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
@@ -37,6 +38,7 @@ export class FormEquipoVendidoComponent implements OnInit {
 
   constructor(private _formBuilder: FormBuilder,
     private dataBase: DataBaseService,
+    private spinnerService: SpinnerService,
     // private snackBar: MatSnackBar,
     private storageService: StorageService,
     // private dialogRef: MatDialogRef<FormAltaEquipoVendidoComponent>
@@ -104,6 +106,7 @@ export class FormEquipoVendidoComponent implements OnInit {
     this.modalController.dismiss();
   }
   uploadImages(images: string[], imgPath: string) {
+    this.spinnerService.showLoading('Subiendo equipo');
     this.mostrarSpinner = true;
     let imgUrls: string[] = [];
     let contador = 0;
@@ -114,6 +117,7 @@ export class FormEquipoVendidoComponent implements OnInit {
         if (contador == images.length) {
           this.equipoVendido.images = imgUrls;
           this.dataBase.crear(environment.TABLAS.equipos_vendidos, this.equipoVendido).then(res => {
+            this.spinnerService.stopLoading();
             this.toastService.simpleMessage('Existo', 'Nueva venta de equipo generada', ToastColor.success);
             this.mostrarSpinner = false;
             this.cerrarFormulario();
