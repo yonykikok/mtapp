@@ -1,0 +1,52 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/articulos'" [title]="'Agregar articulo'"></app-clasic-toolbar>
+</ion-header>
+<ion-content>
+
+  <ion-card>
+
+    <ion-header class="accent-color">
+      <ion-toolbar>
+        <ion-title>Formulario de Alta de funda</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <form [formGroup]="articuloFormGroup" (ngSubmit)="guardarCargador()" class="ion-margin-top">
+
+      <ion-item>
+        <ion-input label="Marca" labelPlacement="floating" formControlName="marca" type="text"></ion-input>
+      </ion-item>
+      <small class="ion-margin-start"
+        *ngIf="articuloFormGroup.get('marca')?.hasError('required') && articuloFormGroup.get('marca')?.touched">
+        <ion-label color="danger">La marca es obligatoria.</ion-label>
+      </small>
+
+      <ion-item>
+        <ion-input label="Modelo" labelPlacement="floating" formControlName="modelo" type="text"></ion-input>
+      </ion-item>
+      <small class="ion-margin-start"
+        *ngIf="articuloFormGroup.get('modelo')?.hasError('required') && articuloFormGroup.get('modelo')?.touched">
+        <ion-label color="danger">El modelo es obligatorio.</ion-label>
+      </small>
+
+      <ion-item mode="md">
+        <ion-select multiple="true" label="Tipo de funda" labelPlacement="floating" placeholder="Seleccione un tipo"
+          formControlName="tipo">
+          <ion-select-option *ngFor="let tipo of tiposFundas" [value]="tipo">{{tipo}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+
+      <ion-item>
+        <ion-checkbox label="Marca" labelPlacement="floating" formControlName="resistenteGolpes"
+          labelPlacement="start">Resistente a golpes</ion-checkbox>
+      </ion-item>
+
+
+      <ion-button class="ion-padding" type="submit" expand="full"
+        [disabled]="articuloFormGroup.invalid">Siguiente</ion-button>
+    </form>
+
+
+  </ion-card>
+</ion-content>

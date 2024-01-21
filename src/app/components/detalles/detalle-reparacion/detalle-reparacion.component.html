@@ -16,7 +16,7 @@
         </label>
 
         <ng-template #mostrarSelect>
-          <ion-item  mode="md">
+          <ion-item fill="outline" mode="md">
             <ion-label position="floating">Estado de la reparación</ion-label>
             <ion-select placeholder="Seleccione el estado" [(ngModel)]="estadoSeleccionado"
               (ionChange)="cambiarEstado()">
@@ -108,7 +108,7 @@
               <b>Cambio realizado por </b>
               <label> {{estado.modificadoPor.displayName}} </label>
             </p>
-            <ion-chip style="background-color: white;" outline="true" color="tertiary"
+            <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario('ST',loggedUser)" style="background-color: white;" outline="true" color="tertiary"
               class="flexColumn flexCenterCenter">
               <b>Detalle <ion-icon style="position: absolute; right: 1rem; font-size: 1.2rem;" class="ion-margin-start"
                   name="create-outline" (click)="mostrarEditarDetalle(estado)"></ion-icon></b>

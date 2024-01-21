@@ -5,6 +5,7 @@ import { User } from 'src/app/clases/user';
 import { boleta } from 'src/app/pages/mis-reparaciones/mis-reparaciones.page';
 import { AlertService } from 'src/app/services/alert.service';
 import { DataBaseService } from 'src/app/services/database.service';
+import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { reparacionShortMessage } from 'src/app/services/info-compartida.service';
 import { boleta_estados, listaDeEstadosBoletas, reparacionIconName } from 'src/app/services/info-compartida.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
@@ -30,7 +31,8 @@ export class DetalleReparacionComponent implements OnInit {
     private alertService: AlertService,
     private actionSheetController: ActionSheetController,
     private database: DataBaseService,
-    private toastService: ToastService) {
+    private toastService: ToastService,
+    public funcionesUtiles:FuncionesUtilesService) {
 
   }
 

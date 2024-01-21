@@ -25,7 +25,7 @@ export const environment = {
     displays: "displays",
     equipos_vendidos: "equipos_vendidos",
     flexs: "flexs",
-    ingresosBrutos: "ingresosBrutos",
+    ingresos: "ingresos",
     modulos: "modulos",
     otrosRepuestos: "otrosRepuestos",
     pedidos: "pedidos",

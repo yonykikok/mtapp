@@ -10,9 +10,10 @@
       [(ngModel)]='textoABuscar'></ion-searchbar>
   </ion-item>
 
+  <ion-chip class="no-radius" [color]="itemsFiltrados.length<=0?'danger':'success'" *ngIf="itemsFiltrados"> {{itemsFiltrados.length}}</ion-chip>
 
   <ion-chip *ngFor="let item of itemsFiltrados" style="justify-content: space-between; width: 90%; margin-left: 5%; "
-    (click)="itemSeleccionado=item" >
+    (click)="itemSeleccionado=item">
     <label>{{item.descripcion}}</label>
     <label *ngIf="item.boleta; else mostrarFecha">{{item.boleta}}</label>
     <ng-template #mostrarFecha>

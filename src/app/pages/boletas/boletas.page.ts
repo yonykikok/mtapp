@@ -10,7 +10,6 @@ import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.servic
 import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 import { boleta } from '../mis-reparaciones/mis-reparaciones.page';
-import { Router } from '@angular/router';
 export const enum OrderByDireccions {
   ascendente = 'asc',
   descendente = 'desc'
@@ -35,8 +34,7 @@ export class BoletasPage implements OnInit {
     private dataBase: DataBaseService,
     private modalController: ModalController,
     private toastService: ToastService,
-    public funcionesUtiles: FuncionesUtilesService,
-    private router: Router) {
+    public funcionesUtiles: FuncionesUtilesService) {
     this.getCurrentUser();
 
   }
@@ -57,10 +55,6 @@ export class BoletasPage implements OnInit {
 
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe((userRef: any) => {
-      if (!userRef||!userRef.uid) {
-        this.router.navigate(["/login"]);
-return;
-      }
       this.dataBase.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res: any) => {
         let usuario: any = res.payload.data();
         usuario['uid'] = res.payload.id;

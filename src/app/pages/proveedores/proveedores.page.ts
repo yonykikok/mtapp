@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { DocumentChangeAction } from '@angular/fire/compat/firestore';
-import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { User } from 'src/app/clases/user';
 import { FormAltaProveedorComponent } from 'src/app/components/forms/form-alta-proveedor/form-alta-proveedor.component';
@@ -54,7 +53,7 @@ export class ProveedoresPage implements OnInit {
 
   loggedUser!: User
 
-  precioDolarBlue: number = 0;
+  precioDolarBlue: number=0;
   proveedores: Proveedor[] = [];
   productosAMostrar: any[] = [];
   textoABuscar: string = '';
@@ -62,8 +61,7 @@ export class ProveedoresPage implements OnInit {
   constructor(public funcionesUtiles: FuncionesUtilesService,
     private authService: AuthService,
     private dataBase: DataBaseService,
-    private modalController: ModalController,
-    private router: Router) {
+    private modalController: ModalController) {
 
     let producto: Modulo = {
       categoria: 'modulos',
@@ -175,10 +173,6 @@ export class ProveedoresPage implements OnInit {
 
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe((userRef: any) => {
-      if (!userRef.uid) {
-        this.router.navigate(["/login"]);
-        return;
-      }
       this.dataBase.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res: any) => {
         let usuario: any = res.payload.data();
         usuario['uid'] = res.payload.id;
@@ -263,7 +257,7 @@ export class ProveedoresPage implements OnInit {
 
 
 
-  asignarColor(lista: any[], index: number) {
+  asignarColor(lista:any[], index:number) {
     if (index == 0) {
       return 'success';
     } else if (index == lista.length - 1) {

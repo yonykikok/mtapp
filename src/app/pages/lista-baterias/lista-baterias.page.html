@@ -35,18 +35,21 @@
       <ion-col *ngIf="camposSeleccionados.includes('precio')"><b>Precio</b></ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('calidad')"><b>Calidad</b></ion-col>
     </ion-row>
-    <ion-row *ngFor="let bateria of bateriasAMostrar" (click)="seleccionar(bateria)">
+    <ion-row *ngFor="let bateria of bateriasAMostrar"
+      (click)="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)?seleccionar(bateria):''">
       <ion-col *ngIf="camposSeleccionados.includes('marca')">{{bateria.marca|titlecase}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('modelo')">{{bateria.modelo|titlecase}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('codigo')">{{bateria.codigo|titlecase}}</ion-col>
-      <ion-col *ngIf="camposSeleccionados.includes('precio')">{{bateria.precio*precioDolarBlue|currency:'USD':'symbol':'1.0-0'
+      <ion-col
+        *ngIf="camposSeleccionados.includes('precio')">{{bateria.precio*precioDolarBlue|currency:'USD':'symbol':'1.0-0'
         }}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('calidad')">{{bateria.calidad}}</ion-col>
     </ion-row>
   </ion-grid>
 
 
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end" (click)="abrirFormModulo()">
+  <ion-fab *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)" slot="fixed" vertical="bottom"
+    horizontal="end" (click)="abrirFormModulo()">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

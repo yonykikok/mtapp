@@ -4,7 +4,7 @@
 <ion-content *ngIf="loggedUser">
 
   <div style="text-align: center; margin-bottom: 4rem;">
-    <div *ngIf=" libroDiarioHoy && libroDiarioHoy.montoInicial; else ingresarMontoInicial">
+    <div *ngIf=" libroDiarioHoy && libroDiarioHoy.montoInicial && libroDiarioHoy.montoInicial>=0; else ingresarMontoInicial">
 
       <ion-toggle [(ngModel)]="mostrarMontoInicial"
         *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)"></ion-toggle>
@@ -28,7 +28,7 @@
     </div>
     <ng-template #ingresarMontoInicial>
       <div>
-        <ion-item  class="ion-margin">
+        <ion-item fill="outline" class="ion-margin">
           <ion-label position="floating">Monto inicial</ion-label>
           <ion-input type="number" placeholder="Ingrese el monto de apertura" [(ngModel)]="montoIngresado"
             [ngModelOptions]="{standalone: true}"></ion-input>
@@ -36,7 +36,7 @@
         <div>
           <ion-button *ngIf="libroDiarioHoy && !libroDiarioHoy.montoInicial" color="secondary"
             (click)="libroDiarioHoy.montoInicial=montoInicialOriginal">Cancelar</ion-button>
-          <ion-button color="primary" (click)="showConfirmDialog()" [disabled]="!montoIngresado">Guardar</ion-button>
+          <ion-button color="primary" (click)="showConfirmDialog()" >Guardar</ion-button>
         </div>
       </div>
     </ng-template>
@@ -67,7 +67,7 @@
         <ion-card-title style="margin: 1rem;">Cierre de caja</ion-card-title>
         <ion-card-subtitle>Ingrese el monto que hay en la caja</ion-card-subtitle>
         <ion-card-content>
-          <ion-item class="ion-margin" >
+          <ion-item class="ion-margin" fill="outline">
             <ion-label position="floating">Monto de caja</ion-label>
             <ion-input type="number" placeholder="Ingrese el monto total" [(ngModel)]="montoDeCaja"
               [ngModelOptions]="{standalone: true}"></ion-input>

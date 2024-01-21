@@ -3,6 +3,8 @@ import { AlertController, ModalController, ViewDidEnter } from '@ionic/angular';
 import { User } from 'src/app/clases/user';
 import { BarcodeScannerComponent } from 'src/app/components/barcode-scanner/barcode-scanner.component';
 import { CargarCorreoComponent } from 'src/app/components/cargar-correo/cargar-correo.component';
+import { CargarDniComponent } from 'src/app/components/cargar-dni/cargar-dni.component';
+import { CargarFechaNacimientoComponent } from 'src/app/components/cargar-fecha-nacimiento/cargar-fecha-nacimiento.component';
 import { CargarTelefonoComponent } from 'src/app/components/cargar-telefono/cargar-telefono.component';
 import { GenerarClaveComponent } from 'src/app/components/generar-clave/generar-clave.component';
 import { AuthService } from 'src/app/services/auth.service';
@@ -17,6 +19,7 @@ import { environment } from 'src/environments/environment';
 })
 export class MiCuentaPage implements OnInit, ViewDidEnter {
   loggedUser!: User;
+  modoEditar: boolean = false;
   constructor(private modalController: ModalController,
     private database: DataBaseService,
     private authService: AuthService,
@@ -25,6 +28,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
   ) { }
 
   ngOnInit() {
+    // this.mostrarScannerComponent();
     this.getCurrentUser();
   }
 
@@ -93,6 +97,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       const modal = await this.modalController.create({
         component: CargarCorreoComponent,
         componentProps: {
+          isModal: true,
           correo: this.loggedUser?.email
         },
       })
@@ -105,14 +110,64 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
             this.actualizarUsuario();
             this.toastService.simpleMessage("Correo guardado", "Se cargó el correo a su cuenta.", ToastColor.success);
 
-            if (!this.loggedUser.phoneNumber) {
-              this.mostrarPopupNumeroTelefonico();
-            }
             break;
           case 'update':
 
             break;
         }
+
+      })
+      return await modal.present();
+    } catch (err) {
+    }
+
+  }
+  async mostrarPopupDni() {
+
+    if (this.loggedUser.dni) {
+      this.toastService.simpleMessage("DNI cargado", "No puedes cambiar tu numero de DNI, comunicate con Multitask para que puedan ayudarte.", ToastColor.danger);
+      return;
+    }
+
+    try {
+      const modal = await this.modalController.create({
+        component: CargarDniComponent,
+        componentProps: {
+          isModal: true,
+          dni: this.loggedUser?.dni
+        },
+      })
+
+      modal.onDidDismiss().then((result: any) => {
+        if (!result.data || !result.role) return;
+
+        this.loggedUser.dni = result.data;
+        this.actualizarUsuario();
+        this.toastService.simpleMessage("Correo guardado", "Se cargó el correo a su cuenta.", ToastColor.success);
+
+      })
+      return await modal.present();
+    } catch (err) {
+    }
+
+  }
+  async mostrarPopupFNacimiento() {
+    try {
+      const modal = await this.modalController.create({
+        component: CargarFechaNacimientoComponent,
+        componentProps: {
+          isModal: true,
+          fNacimiento: this.loggedUser?.fNacimiento
+        },
+      })
+
+      modal.onDidDismiss().then((result: any) => {
+        if (!result.data || !result.role) return;
+
+        this.loggedUser.fNacimiento = result.data;
+        console.log(this.loggedUser)
+        this.actualizarUsuario();
+        this.toastService.simpleMessage("Correo guardado", "Se cargó el correo a su cuenta.", ToastColor.success);
 
       })
       return await modal.present();
@@ -130,8 +185,15 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       this.loggedUser.activo = true;//TODO:ver porque este codigo no es valido en esta app, not enemos el campo activo.
       this.toastService.simpleMessage("Cuenta activada", "Se activó con éxito su cuenta, ya puede comenzar a utilizar la App", ToastColor.success);
     }
-    if (this.loggedUser.dni)
-      this.database.actualizar('users', this.loggedUser, this.loggedUser.dni.toString());
+
+    console.log(this.loggedUser)
+    this.database.actualizar('users', this.loggedUser, this.loggedUser.uid)?.then(res => {
+      console.log("res", res);
+    }).catch((errr) => {
+      console.error(errr)
+    }).finally(() => {
+      console.log("TRMINO")
+    });
   }
 
   async mostrarPopupNumeroTelefonico() {
@@ -139,6 +201,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       const modal = await this.modalController.create({
         component: CargarTelefonoComponent,
         componentProps: {
+          isModal: true,
           telefono: this.loggedUser.phoneNumber
         },
       })
@@ -213,6 +276,8 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
     return info;
   }
   async generarClave() {
+    this.mostrarPopupGenerarClave();
+    return;
     if (!this.loggedUser.activo) {
       const alert = await this.alertController.create({
         mode: 'ios',
@@ -239,7 +304,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
   }
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe(userRef => {
-      if(!userRef) return; //TODO:notificar
+      if (!userRef) return; //TODO:notificar
       this.database.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res) => {
         let usuario: any = res.payload.data();
         usuario['uid'] = res.payload.id;
@@ -251,9 +316,14 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
           emailVerified: usuario['emailVerified'],
           photoURL: usuario['photoURL'],
           role: usuario['role'],
-          securityCode: usuario['securityCode'],
-          dni: usuario['dni']
+          securityCode: usuario['securityCode'] ? usuario['securityCode'] : '',
+          dni: usuario['dni'],
+          fNacimiento: usuario['fNacimiento']?usuario['fNacimiento']:'',
+          phoneNumber: usuario['phoneNumber']
         } as User;
+
+        // this.verSiTieneLaInfoCompleta();
+
         // this.verSiTieneLaInfoCompleta();
 
       })

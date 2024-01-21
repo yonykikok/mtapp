@@ -28,7 +28,8 @@
       <ion-col *ngIf="camposSeleccionados.includes('calidad')"><b>Calidad</b></ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('tipo')"><b>Tipo</b></ion-col>
     </ion-row>
-    <ion-row *ngFor="let modulo of modulosAMostrar" (click)="seleccionar(modulo)">
+    <ion-row *ngFor="let modulo of modulosAMostrar"
+      (click)=" funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)?seleccionar(modulo):''">
       <ion-col *ngIf="camposSeleccionados.includes('marca')">{{modulo.marca|titlecase}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('modelo')">{{modulo.modelo|titlecase}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('precio')">
@@ -39,7 +40,7 @@
   </ion-grid>
 
 
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end" (click)="abrirFormModulo()">
+  <ion-fab *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)" slot="fixed" vertical="bottom" horizontal="end" (click)="abrirFormModulo()">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

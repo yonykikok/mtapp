@@ -11,6 +11,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { CargarCorreoComponent } from 'src/app/components/cargar-correo/cargar-correo.component';
 import { CargarTelefonoComponent } from 'src/app/components/cargar-telefono/cargar-telefono.component';
 import { GenerarClaveComponent } from 'src/app/components/generar-clave/generar-clave.component';
+import { BarcodeScannerComponent } from 'src/app/components/barcode-scanner/barcode-scanner.component';
+import { CargarDniComponent } from 'src/app/components/cargar-dni/cargar-dni.component';
+import { CargarFechaNacimientoComponent } from 'src/app/components/cargar-fecha-nacimiento/cargar-fecha-nacimiento.component';
 
 @NgModule({
 
@@ -23,6 +26,9 @@ import { GenerarClaveComponent } from 'src/app/components/generar-clave/generar-
   declarations: [MiCuentaPage,
     CargarCorreoComponent,
     CargarTelefonoComponent,
-    GenerarClaveComponent]
+    CargarDniComponent,
+    CargarFechaNacimientoComponent,
+    GenerarClaveComponent,
+    BarcodeScannerComponent]
 })
 export class MiCuentaPageModule { }

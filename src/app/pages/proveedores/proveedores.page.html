@@ -11,7 +11,7 @@
     <ion-item-divider class="ion-no-padding ion-margin-bottom ion-padding-bottom ion-padding-top"
       *ngFor="let prod of productosAMostrar" style="flex-direction: column;">
       <div class="flexCenterCenter" style="flex-direction: column;">
-        <ion-text slot="start"> {{prod.marca}} {{prod.modelo}} ( {{prod.calidad}} )
+        <ion-text slot="start"> {{prod.marca}} {{prod.modelo}} ( {{prod.calidad}} ) 
           <label [ngClass]="prod.tipo=='Simple' ? 'left' : 'right' ">{{prod.tipo}}</label> </ion-text>
         <ion-text slot="end">
           Precio promedio: {{prod.precioPromedio|currency:'USD'}}
@@ -35,13 +35,10 @@
 
     <ion-card *ngFor="let proveedor of proveedores" (click)="mostrarDetalleProveedor(proveedor)">
       <ion-card-header>
-        <p class="ion-no-margin"> Proveedor: <b>{{proveedor.nombre}} </b></p>
-        <p class="ion-no-margin">Direccion: <b> {{proveedor.direccion}}</b></p>
-        <p class="ion-no-margin">Telefono: <b> {{proveedor.telefono}}</b></p>
-        <p class="ion-no-margin">Telefono alternativo: <b>{{proveedor.telefonoAlternativo?proveedor.telefonoAlternativo:'NO'}}</b></p>
-        
-        
-        
+        Proveedor: <b>{{proveedor.nombre}} <br></b>
+        Direccion: <b> {{proveedor.direccion}}</b> <br>
+        Telefono: <b> {{proveedor.telefono}}</b> <br>
+        Telefono alternativo: <b>{{proveedor.telefonoAlternativo?proveedor.telefonoAlternativo:'NO'}}</b> <br>
       </ion-card-header>
 
     </ion-card>

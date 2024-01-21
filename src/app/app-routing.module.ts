@@ -121,7 +121,11 @@ const routes: Routes = [
   {
     path: 'proveedores/lista-modulos-proveedor',
     loadChildren: () => import('./pages/lista-modulos-proveedor/lista-modulos-proveedor.module').then( m => m.ListaModulosProveedorPageModule)
+  },  {
+    path: 'articulos',
+    loadChildren: () => import('./pages/articulos/articulos.module').then( m => m.ArticulosPageModule)
   },
+
 
 
 

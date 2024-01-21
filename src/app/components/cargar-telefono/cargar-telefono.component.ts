@@ -12,7 +12,7 @@ export class CargarTelefonoComponent implements OnInit {
   formTelefono = new FormGroup({
     telefono: new FormControl('', [Validators.required])
   })
-  constructor(private modalController:ModalController) { }
+  constructor(public modalController:ModalController) { }
 
   ngOnInit() {}
 

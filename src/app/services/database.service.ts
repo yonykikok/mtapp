@@ -35,13 +35,30 @@ export class DataBaseService {
   public actualizar(coleccion: string, data: any, id: string) {
     console.log(coleccion, data, id);
     try {
-      return this.firestore.collection(coleccion).doc(id).set(data);
+      return this.firestore.collection(coleccion).doc(id).update(data);
     } catch (err) {
-      return;
       console.log(err);
+      return;
     }
   }
 
+
+   async getDiasSinVentas() {
+      let collectionRef = this.firestore.collection('ingresos').ref;
+    
+      try {
+        const respuesta = await collectionRef
+          .where('ventas', '==', [])  // Utilizamos '==' para comparar con un array vacío
+          .get();
+    
+        if (respuesta.empty) return null;
+    
+        return respuesta.docs;
+      } catch (err) {
+        console.error('Error al realizar la consulta:', err);
+        return null;
+      }
+    }
   public eliminar(collection: string, id: string) {
     return this.firestore.collection(collection).doc(id).delete();
   }
@@ -108,7 +125,7 @@ export class DataBaseService {
       return null;
     }
   }
-  async paginatorPrevious(collection: string, interval: number, firstDoc:any, orderByAtributo: string, orderByDirection: OrderByDireccions) {
+  async paginatorPrevious(collection: string, interval: number, firstDoc: any, orderByAtributo: string, orderByDirection: OrderByDireccions) {
     let collectionRef = this.firestore.collection(collection).ref;
     try {
       const respuesta = await collectionRef.
@@ -163,9 +180,50 @@ export class DataBaseService {
   //   }
   // }
 
+  async getLibrosDiariosMensual(fechaInput: any) {
+    let collectionRef = this.firestore.collection(environment.TABLAS.ingresos).ref;
 
+    try {
+      const fecha = new Date(fechaInput);
+      const primerDiaMes = new Date(fecha.getFullYear(), fecha.getMonth(), 1);
+      const ultimoDiaMes = new Date(fecha.getFullYear(), fecha.getMonth() + 1, 0);
 
-  async getBoletasModificadasHoy(fechaInicio:any, fechaFin:any) {
+      const respuesta = await collectionRef
+        .where('fecha', '>=', primerDiaMes.getTime())
+        .where('fecha', '<=', ultimoDiaMes.getTime())
+        .get();
+
+      if (respuesta.empty) return null;
+
+      return respuesta.docs;
+    } catch (err) {
+      console.error('Error al realizar la consulta:', err);
+      return null;
+    }
+  }
+
+  async getLibrosDiariosEnIntervalo(fechaInicio: any, fechaFin: any) {
+    let collectionRef = this.firestore.collection(environment.TABLAS.ingresos).ref;
+  
+    try {
+      const inicio = new Date(fechaInicio);
+      const fin = new Date(fechaFin);
+  
+      const respuesta = await collectionRef
+        .where('fecha', '>=', inicio.getTime())
+        .where('fecha', '<=', fin.getTime())
+        .get();
+  
+      if (respuesta.empty) return null;
+  
+      return respuesta.docs;
+    } catch (err) {
+      console.error('Error al realizar la consulta:', err);
+      return null;
+    }
+  }
+  
+  async getBoletasModificadasHoy(fechaInicio: any, fechaFin: any) {
     let collectionRef = this.firestore.collection(environment.TABLAS.boletasReparacion).ref;
     try {
       const respuesta = await collectionRef
@@ -183,7 +241,7 @@ export class DataBaseService {
     }
   }
 
-  async getBoletasPorIntervaloDeFecha(fechaInicio:any, fechaFin:any) {
+  async getBoletasPorIntervaloDeFecha(fechaInicio: any, fechaFin: any) {
     let collectionRef = this.firestore.collection(environment.TABLAS.boletasReparacion).ref;
     try {
       const respuesta = await collectionRef
@@ -202,7 +260,7 @@ export class DataBaseService {
   }
 
 
-  async obtenerBoletaPorNroBoleta(coleccion:any, nroBoleta:any) {
+  async obtenerBoletaPorNroBoleta(coleccion: any, nroBoleta: any) {
     let collectionRef = this.firestore.collection(coleccion).ref;
     try {
       const respuesta = await collectionRef.where('nroBoleta', '==', nroBoleta).get();
@@ -216,7 +274,7 @@ export class DataBaseService {
       return null;
     }
   }
-  async obtenerBoletaPorDni(coleccion:any, dniCliente:any) {
+  async obtenerBoletaPorDni(coleccion: any, dniCliente: any) {
     let collectionRef = this.firestore.collection(coleccion).ref;
     try {
       const respuesta = await collectionRef.where('dniCliente', '==', dniCliente).get();

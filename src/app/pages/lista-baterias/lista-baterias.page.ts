@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/clases/user';
@@ -18,25 +17,25 @@ import { environment } from 'src/environments/environment';
 })
 export class ListaBateriasPage implements OnInit {
 
-  loggedUser: User | null = null;
+  loggedUser!: User;
   camposSeleccionados = ['modelo', 'calidad', 'precio'];
   baterias: any = [];
   bateriasAMostrar: any = [];
 
-  precioDolarBlue: number = 0;
+  precioDolarBlue: number=0;
   mostrarFormModulo = true;
 
   dolarObservable$: Observable<number> | null = null;
   constructor(private dataBase: DataBaseService,
     private authService: AuthService,
     public funcionesUtiles: FuncionesUtilesService,
-    private modalController: ModalController,
-    private router: Router) {
+    private modalController: ModalController) {
 
     this.getCurrentUser();
     this.bateriasAMostrar = [...this.baterias];
   }
   ngOnInit(): void {
+
     if (this.funcionesUtiles.customDolar) {
       this.precioDolarBlue = this.funcionesUtiles.customDolar;
     }
@@ -85,10 +84,6 @@ export class ListaBateriasPage implements OnInit {
 
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe((userRef: any) => {
-      if (!userRef||!userRef.uid) {
-        this.router.navigate(["/login"]);
-return;
-      }
       this.dataBase.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res: any) => {
         let usuario: any = res.payload.data();
         usuario['uid'] = res.payload.id;

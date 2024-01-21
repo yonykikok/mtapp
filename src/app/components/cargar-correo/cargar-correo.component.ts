@@ -15,7 +15,7 @@ export class CargarCorreoComponent implements OnInit {
     correo: new FormControl('', [Validators.required, Validators.email])
   })
 
-  constructor(private modalController: ModalController) {
+  constructor(public modalController: ModalController) {
   }
 
   ngOnInit() {

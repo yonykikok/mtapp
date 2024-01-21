@@ -71,6 +71,7 @@ export class MisReparacionesPage implements OnInit, ViewWillEnter {
           securityCode: usuario['securityCode'],
           dni: usuario['dni']
         };
+        console.log(this.loggedUser)
         this.obtenerReparaciones();
       })
     })
@@ -84,31 +85,48 @@ export class MisReparacionesPage implements OnInit, ViewWillEnter {
       return;
     }
 
-    try {
-      let documentListRef: any = await this.database.getBoletasPorDni(this.loggedUser.dni);
-      if (!documentListRef) { return; };
+    console.log(this.loggedUser.dni)
+    this.database.obtenerBoletaPorDni(environment.TABLAS.boletasReparacion, this.loggedUser.dni.toString()).then((res: any) => {
+      console.log(res)
+      if (!res) {
+        return;
+      }
 
-      this.reparaciones = documentListRef.map((documentRef: any) => {
-        let reparacion = documentRef.data();
-        reparacion['id'] = documentRef.id;
-        return reparacion;
+      this.reparaciones = res.map((element: any) => {
+        let boleta = element.data();
+        boleta['id'] = element.id;
+        return boleta;
       });
       this.reparacionesAMostrar = [...this.reparaciones];
 
-      this.reparaciones.sort((a: any, b: any) => {
-        if (a.estado > b.estado) {
-          return -1
-        } else if (a.estado < b.estado) {
-          return 1
-        } else {
-          return 0
-        }
-      });
-      if (e) { e.target.complete(); }
-      ;
-    } catch (err) {
-      console.error(err);
-    }
+    });
+    // try {
+
+
+    //   let documentListRef: any = await this.database.getBoletasPorDni(this.loggedUser.dni);
+    //   if (!documentListRef) { return; };
+
+    //   this.reparaciones = documentListRef.map((documentRef: any) => {
+    //     let reparacion = documentRef.data();
+    //     reparacion['id'] = documentRef.id;
+    //     return reparacion;
+    //   });
+    //   this.reparacionesAMostrar = [...this.reparaciones];
+
+    //   this.reparaciones.sort((a: any, b: any) => {
+    //     if (a.estado > b.estado) {
+    //       return -1
+    //     } else if (a.estado < b.estado) {
+    //       return 1
+    //     } else {
+    //       return 0
+    //     }
+    //   });
+    //   if (e) { e.target.complete(); }
+    //   ;
+    // } catch (err) {
+    //   console.error(err);
+    // }
 
   }
 
@@ -118,6 +136,7 @@ export class MisReparacionesPage implements OnInit, ViewWillEnter {
       const modal = await this.modalController.create({
         component: DetalleReparacionComponent,
         componentProps: {
+          loggedUser:this.loggedUser,
           reparacion,
           ruta: '/mis-reparaciones'
         },

@@ -199,6 +199,7 @@ export class ListaPedidosPage implements OnInit {
 
   }
   filtrarPorTexto(event: any) {
+    if(!event) return;
     let texto = event.target['value'];
     const query = !texto ? "" : texto.toLowerCase();
     this.pedidosAMostrar = this.pedidos[this.listaSeleccionada].filter((ped: Pedido) => ped.modelo.toLowerCase().indexOf(query) > -1 || ped.tipo.toLowerCase().indexOf(query) > -1);

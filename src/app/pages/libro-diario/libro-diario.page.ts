@@ -23,6 +23,7 @@ export class LibroDiarioPage implements OnInit {
   resultadoDeCaja: number = 0;
   montoDeCaja = null;
   libroDiarioHoy: LibroDiario = {
+    id: '',
     fecha: -1,
     ventas: [],
     montoInicial: 0,
@@ -37,13 +38,10 @@ export class LibroDiarioPage implements OnInit {
   mostrarMontoInicial = true;
   montoIngresado: number = 0;
   loggedUser!: User;
-  esteMes!: { dias: any[], id: string };
 
   constructor(private authService: AuthService,
     private database: DataBaseService,
     public funcionesUtiles: FuncionesUtilesService,
-    // private dialog: MatDialog,
-    // private confirmDialog: ConfirmDialogService
     private modalController: ModalController,
     private toastService: ToastService,
     private alertService: AlertService
@@ -53,68 +51,35 @@ export class LibroDiarioPage implements OnInit {
   }
 
   ngOnInit(): void {
-    const months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
-    let newDate = new Date();
-    let month = months[newDate.getMonth()];
-    let year = newDate.getFullYear();
+    const fechaActual = new Date();
+    const idDiaActual = fechaActual.toISOString().split('T')[0];
 
-    let subscripcion = this.database.obtenerPorId(environment.TABLAS.ingresosBrutos, `${month}${year}`).subscribe(async (res) => {
+    this.database.obtenerPorId(environment.TABLAS.ingresos, idDiaActual).subscribe(res => {
       if (!res.payload.exists) {
-        await this.database.actualizar(environment.TABLAS.ingresosBrutos, {}, `${month}${year}`);
-        subscripcion.unsubscribe();
-        return;
-      }
-
-      this.esteMes = res.payload.data() as { dias: any[], id: string };
-      this.esteMes.id = res.payload.id;
-
-      let hoy = new Date();
-      hoy.setHours(0);
-      hoy.setMinutes(0);
-      hoy.setSeconds(0);
-      let libroDiarioDeHoy = this.esteMes.dias?.find((dia: any) => new Date(dia.fecha).toString() == hoy.toString());
-      if (libroDiarioDeHoy) {
-        this.libroDiarioHoy = libroDiarioDeHoy;
+        this.libroDiarioHoy = this.obtenerNuevoLibroDiario(idDiaActual);//aca debe estar el problema
+        this.database.crearConCustomId(environment.TABLAS.ingresos, this.libroDiarioHoy.id, this.libroDiarioHoy);
       } else {
-        let nuevoLibroDiario = this.obtenerNuevoLibroDiario();//aca debe estar el problema
-        if (Array.isArray(this.esteMes.dias)) {
-          this.esteMes.dias = [...this.esteMes.dias, nuevoLibroDiario];
-          this.database.actualizar(environment.TABLAS.ingresosBrutos, this.esteMes, this.esteMes.id);
-        }
+        this.libroDiarioHoy = res.payload.data() as LibroDiario;
+        this.libroDiarioHoy['id'] = res.payload.id;
       }
-      this.montoInicialOriginal = this.libroDiarioHoy.montoInicial || 0;
-      this.libroDiarioHoy.montoTotalEfectivo = this.obtenerMontoTotalPorMedioDePago(this.libroDiarioHoy, MediosDePago.Efectivo);
+
     });
+
 
   }
   async cargarMontoInicial() {
     this.libroDiarioHoy.montoInicial = Number(this.montoIngresado);
-    let libroDiario = this.obtenerNuevoLibroDiario();
-    if (!this.esteMes.dias) {
-      this.esteMes['dias'] = [libroDiario];
-      await this.database.actualizar(environment.TABLAS.ingresosBrutos, this.esteMes, this.esteMes.id);
-    } else {
-      let diarioDeHoy = this.esteMes.dias.find((dia: any) => {
-        if (libroDiario.fecha && (new Date(dia.fecha).toString() == new Date(libroDiario.fecha).toString())) {
-          return dia;
-        }
-      });
-      
-      if (!diarioDeHoy) {
-        console.log(this.esteMes)
-        this.esteMes['dias'] = [...this.esteMes['dias'], libroDiario];
-      }
-    }
-    await this.database.actualizar(environment.TABLAS.ingresosBrutos, this.esteMes, this.esteMes.id);
+    await this.database.actualizar(environment.TABLAS.ingresos, this.libroDiarioHoy, this.libroDiarioHoy.id);
   }
 
-  obtenerNuevoLibroDiario() {
+  obtenerNuevoLibroDiario(id: string) {
     let hoy = new Date();
     hoy.setHours(0);
     hoy.setMinutes(0);
     hoy.setSeconds(0);
 
     let libroDiario: LibroDiario = {
+      id,
       fecha: hoy.getTime(),
       fechaString: hoy.toString(),
       ventas: [],
@@ -122,6 +87,7 @@ export class LibroDiarioPage implements OnInit {
       montoTotal: Number(this.montoIngresado) | 0,
       cuadra: false
     }
+    this.montoIngresado = 0;//ver si resuelve la apertura de caja erronea, sino eliminar.
     return libroDiario;
   }
 
@@ -176,18 +142,13 @@ export class LibroDiarioPage implements OnInit {
           this.libroDiarioHoy.montoTotalMercadoPago = this.obtenerMontoTotalPorMedioDePago(this.libroDiarioHoy, MediosDePago.MercadoPago);//total en efectivo
           this.libroDiarioHoy.montoTotalNegativo = this.obtenerMontoTotalPorNegativo(this.libroDiarioHoy);//total negativo
 
-          this.database.actualizar(environment.TABLAS.ingresosBrutos, this.esteMes, this.esteMes.id);
+          this.database.actualizar(environment.TABLAS.ingresos, this.libroDiarioHoy, this.libroDiarioHoy.id);
         }
 
       })
       return await modal.present();
     } catch (err) {
     }
-
-
-
-
-
   }
 
   obtenerMontoTotalPorMedioDePago(libroDiarioHoy: any, medioDePago: MediosDePago) {
@@ -204,7 +165,6 @@ export class LibroDiarioPage implements OnInit {
     if (this.libroDiarioHoy.montoTotalEfectivo && this.libroDiarioHoy.montoInicial && this.montoDeCaja) {
 
       this.resultadoDeCaja = (this.libroDiarioHoy.montoTotalEfectivo + this.libroDiarioHoy.montoInicial) - this.montoDeCaja;
-
 
       let mensaje = '';
       if (this.resultadoDeCaja > 0) {//(falta plata en la caja)
@@ -228,7 +188,7 @@ export class LibroDiarioPage implements OnInit {
         resultadoDeCaja: this.montoDeCaja - (this.libroDiarioHoy.montoTotalEfectivo + this.libroDiarioHoy.montoInicial),
       });
 
-      this.database.actualizar(environment.TABLAS.ingresosBrutos, this.esteMes, this.esteMes.id);
+      this.database.actualizar(environment.TABLAS.ingresos, this.libroDiarioHoy, this.libroDiarioHoy.id);
     }
 
   }
@@ -282,7 +242,7 @@ export class LibroDiarioPage implements OnInit {
           this.libroDiarioHoy.montoTotalMercadoPago = this.obtenerMontoTotalPorMedioDePago(this.libroDiarioHoy, MediosDePago.MercadoPago);//total en efectivo
           this.libroDiarioHoy.montoTotalNegativo = this.obtenerMontoTotalPorNegativo(this.libroDiarioHoy);//total negativo
 
-          this.database.actualizar(environment.TABLAS.ingresosBrutos, this.esteMes, this.esteMes.id)?.then(res => {
+          this.database.actualizar(environment.TABLAS.ingresos, this.libroDiarioHoy, this.libroDiarioHoy.id)?.then(res => {
             this.toastService.simpleMessage('Exito', 'Se modifico la venta', ToastColor.success);
           });
         }

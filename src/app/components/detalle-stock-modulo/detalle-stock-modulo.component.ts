@@ -18,7 +18,7 @@ export class DetalleStockModuloComponent implements OnInit {
   editarTitulo = false;
   panelOpenState = false;
   loggedUser!: User;
-  calidades = this.infoConpatida.calidadesModulos;
+
   agregarColor = false;
   colores = this.infoConpatida.coloresModulos;
   cantidades = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];

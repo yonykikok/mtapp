@@ -1,0 +1,62 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/articulos'" [title]="'Agregar articulo'"></app-clasic-toolbar>
+</ion-header>
+<ion-content>
+
+  <ion-card>
+
+    <ion-header class="accent-color">
+      <ion-toolbar>
+        <ion-title>Formulario de Alta de Cargador</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <form [formGroup]="articuloFormGroup" (ngSubmit)="guardarCargador()" class="ion-margin-top">
+
+      <ion-item>
+        <ion-input label="Marca" labelPlacement="floating" formControlName="marca" type="text"></ion-input>
+      </ion-item>
+      <small class="ion-margin-start"
+        *ngIf="articuloFormGroup.get('marca')?.hasError('required') && articuloFormGroup.get('marca')?.touched">
+        <ion-label color="danger">La marca es obligatoria.</ion-label>
+      </small>
+      
+      <ion-item mode="md">
+        <ion-select multiple="true" label="Conexión" labelPlacement="floating" placeholder="Seleccione una conexión"
+          formControlName="conexion">
+          <ion-select-option *ngFor="let conexion of conexiones" [value]="conexion">{{conexion}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <small class="ion-margin-start"
+        *ngIf="articuloFormGroup.get('velocidad')?.hasError('required') && articuloFormGroup.get('velocidad')?.touched">
+        <ion-label color="danger">La velocidad es obligatoria.</ion-label>
+      </small>
+
+
+      <ion-item>
+        <ion-checkbox label="Marca" labelPlacement="floating" formControlName="cancelacionRuido"
+          labelPlacement="start">Cancelación de ruido</ion-checkbox>
+      </ion-item>
+      <small class="ion-margin-start"
+        *ngIf="articuloFormGroup.get('marca')?.hasError('required') && articuloFormGroup.get('marca')?.touched">
+        <ion-label color="danger">La marca es obligatoria.</ion-label>
+      </small>
+
+      <ion-item mode="md">
+        <ion-checkbox label="Micrófono" labelPlacement="floating" formControlName="microfono"
+          labelPlacement="start">Micrófono</ion-checkbox>
+      </ion-item>
+
+      <small class="ion-margin-start"
+        *ngIf="articuloFormGroup.get('tipo')?.hasError('required') && articuloFormGroup.get('tipo')?.touched">
+        <ion-label color="danger">El tipo es obligatorio.</ion-label>
+      </small>
+
+      <ion-button class="ion-padding" type="submit" expand="full"
+        [disabled]="articuloFormGroup.invalid">Siguiente</ion-button>
+    </form>
+
+
+  </ion-card>
+</ion-content>

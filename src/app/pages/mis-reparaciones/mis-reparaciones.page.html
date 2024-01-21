@@ -5,13 +5,22 @@
 <ion-content *ngIf="loggedUser && loggedUser.dni">
 
 
+  <div *ngIf="reparacionesAMostrar&& reparacionesAMostrar.length>0; else sinReparaciones">
 
-  <ion-searchbar class="ion-margin-top" show-cancel-button="focus" placeholder="Ingrese numero de boleta"
-    [(ngModel)]="textoABuscar" (ionChange)="buscarBoleta()"></ion-searchbar>
+    <ion-searchbar *ngIf="reparacionesAMostrar.length>5" class="ion-margin-top" show-cancel-button="focus"
+      placeholder="Ingrese numero de boleta" [(ngModel)]="textoABuscar" (ionChange)="buscarBoleta()"></ion-searchbar>
 
 
-  <app-custom-ion-sliding *ngFor="let reparacion of reparacionesAMostrar" [reparacion]="reparacion"
-    (mostrarDetalleEvent)="mostrarDetalle($event)"></app-custom-ion-sliding>
+    <app-custom-ion-sliding *ngFor="let reparacion of reparacionesAMostrar" [reparacion]="reparacion"
+      (mostrarDetalleEvent)="mostrarDetalle($event)"></app-custom-ion-sliding>
+  </div>
+
+  <ng-template #sinReparaciones>
+    <ion-chip color="primary" class="no-radius ion-margin ion-text-center">
+      Aun no hay reparaciones asignadas a tu DNI subidas al sistema, puede que demore hasta 24hs despues de haber dejado
+      el equipo para que se suba al sistema.
+    </ion-chip>
+  </ng-template>
 
 
   <!-- <ion-refresher slot="fixed" (ionRefresh)="obtenerReparaciones($event)">

@@ -1,5 +1,5 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/home'" [title]="'Ingresar correo'"></app-clasic-toolbar>
+  <app-clasic-toolbar (click)="modalController.dismiss()" [title]="'Ingresar correo'"></app-clasic-toolbar>
 </ion-header>
 
 <ion-content>
@@ -29,30 +29,6 @@
         </ion-button>
       </form>
 
-      <!-- //TODO: actualizar correo -->
-      <!-- <form [formGroup]="formCorreo" (ngSubmit)="guardar()" *ngIf="modoActualizar">
-
-
-        <ion-item disabled >
-          <ion-label position="floating" class="text1 bold">Actual</ion-label>
-          <ion-input type="email" [value]="correo" placeholder="ingrese su correo"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="floating" class="text1 bold">Nuevo</ion-label>
-          <ion-input type="email" formControlName="correo" placeholder="ingrese su correo"></ion-input>
-        </ion-item>
-
-
-
-        <ion-item>
-          <ion-label position="floating" class="text1 bold">Repetir nuevo</ion-label>
-          <ion-input type="email" formControlName="correo" placeholder="ingrese su correo"></ion-input>
-        </ion-item>
-
-        <ion-button expand="block" class="ion-margin-top" [disabled]="!formCorreo.valid" type="submit">Guardar correo
-        </ion-button>
-      </form> -->
     </ion-card-content>
   </ion-card>
 

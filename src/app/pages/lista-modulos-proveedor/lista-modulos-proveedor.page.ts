@@ -11,7 +11,6 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { environment } from 'src/environments/environment';
 import { Proveedor } from '../proveedores/proveedores.page';
-import { Router } from '@angular/router';
 
 
 @Component({
@@ -26,13 +25,12 @@ export class ListaModulosProveedorPage implements OnInit {
   modulosAMostrar: any[] = [];
   proveedor!: Proveedor;
   mostrarFormModulo = true;
-  precioDolarBlue: number = 0;
+  precioDolarBlue: number=0;
 
   constructor(private dataBase: DataBaseService,
     private authService: AuthService,
     public funcionesUtiles: FuncionesUtilesService,
-    private modalController: ModalController,
-    private router: Router) {
+    private modalController: ModalController) {
 
     this.getCurrentUser();
     this.modulosAMostrar = [...this.modulos];
@@ -51,7 +49,7 @@ export class ListaModulosProveedorPage implements OnInit {
     return lista.sort((a, b) => a[criterio].localeCompare(b[criterio]) || a[criterio2] - b[criterio2]);
   }
 
-  async seleccionar(modulo: any, index: number) {
+  async seleccionar(modulo: any) {
     try {
       const modal = await this.modalController.create({
         component: DetalleModuloComponent,
@@ -65,8 +63,6 @@ export class ListaModulosProveedorPage implements OnInit {
         if (!result.data || !result.role) return;
 
         if (result.role == 'guardar') {
-          this.proveedor.modulos[index] = result.data;
-          this.modulosAMostrar=this.proveedor.modulos;
           this.guardarCambiosProeveedor();
         } else if (result.role == 'borrar') {
           let indexABorrar = this.proveedor.modulos.findIndex(modulo => JSON.stringify(modulo) == JSON.stringify(result.data));
@@ -86,15 +82,11 @@ export class ListaModulosProveedorPage implements OnInit {
 
   guardarCambiosProeveedor() {
     if (!this.proveedor || !this.proveedor.id) return; //TODO: notificar.
-    this.dataBase.actualizar(environment.TABLAS.proveedores, this.proveedor, this.proveedor.id);
+      this.dataBase.actualizar(environment.TABLAS.proveedores, this.proveedor, this.proveedor.id);
   }
 
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe((userRef: any) => {
-      if (!userRef || !userRef.uid) {
-        this.router.navigate(["/login"]);
-        return;
-      }
       this.dataBase.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res: any) => {
         let usuario: any = res.payload.data();
         usuario['uid'] = res.payload.id;

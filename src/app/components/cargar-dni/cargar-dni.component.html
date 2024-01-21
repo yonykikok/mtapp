@@ -1,0 +1,38 @@
+<ion-header>
+  <app-clasic-toolbar (click)="modalController.dismiss()" [title]="'Ingresar dni'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-chip style="text-align: center;" color="success" class="ion-margin no-radius">
+    Tener el dni correcto es necesario para poder ver tus reparaciones
+  </ion-chip>
+  <ion-chip style="text-align: center;" color="warning" class="ion-margin no-radius ">
+    Recorda que no lo podras modificar, asegurate de escribirlo bien.
+  </ion-chip>
+
+  <ion-card>
+
+    <div class="ion-text-center">
+
+      <ion-chip class="ion-margin no-radius" color="primary"
+        *ngIf="formDni.controls.dni.value && formDni.controls.dni.value.length>7">
+        Verifica que este correcto tu DNI <br>
+        {{formDni.controls.dni.value}}
+      </ion-chip>
+    </div>
+    <ion-card-content>
+      <form [formGroup]="formDni" (ngSubmit)="guardar()" *ngIf="!modoActualizar">
+
+        <ion-item>
+          <ion-label position="floating" class="text1 bold">Dni </ion-label>
+          <ion-input type="number" formControlName="dni" placeholder="ingrese su dni"></ion-input>
+        </ion-item>
+
+        <ion-button expand="block" class="ion-margin-top" [disabled]="!formDni.valid" type="submit">Guardar DNI
+        </ion-button>
+      </form>
+
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

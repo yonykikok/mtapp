@@ -21,7 +21,7 @@ export class BusquedaPorTextoComponent implements OnInit {
   applyFilter() {
     let items: any[] = [];
 
-    this.mesSeleccionado.dias.forEach((dia: any) => {
+    this.mesSeleccionado.dias?.forEach((dia: any) => {
       dia.ventas.forEach((venta: any) => {
         if (venta.descripcion.toLowerCase().includes(this.textoABuscar.toLowerCase()) ||
           venta?.boleta?.toString()?.includes(this.textoABuscar.toLowerCase())) {

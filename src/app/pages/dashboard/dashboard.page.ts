@@ -9,7 +9,6 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { environment } from 'src/environments/environment';
 import { boleta } from '../mis-reparaciones/mis-reparaciones.page';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -32,12 +31,14 @@ export class DashboardPage implements OnInit {
     // { titulo: 'Baterias', color: '#ffc107', ruta: "/lista-baterias", role: 'CLIENTE' },
     // { titulo: 'Flex de carga', color: '#d34fb2', ruta: "/lista-flex-de-carga", role: 'CLIENTE' },
     { titulo: 'Libro diario', color: '#dc70fd', ruta: "/libro-diario", role: 'EMPLEADO', img: '/assets/svg/icons/librodiario.svg' },
+    { titulo: 'Articulos', color: '#dc70fd', ruta: "/articulos", role: 'EMPLEADO', img: '/assets/svg/icons/articulos.png' },
     { titulo: 'Repuestos', color: 'rgb(79 132 211)', ruta: "/repuestos", role: 'CLIENTE', img: '/assets/svg/icons/btnRepuestos.png' },
     { titulo: 'Pedidos', color: '#007bff', ruta: "/lista-pedidos", role: 'EMPLEADO', img: '/assets/svg/icons/pedidos.svg' },
     { titulo: 'Historial', color: 'rgb(113 112 253)', ruta: "/historial-caja", role: 'ADMIN', img: '/assets/svg/icons/historial.svg' },
     { titulo: 'Stock Modulos', color: 'rgb(103 102 102)', ruta: "/stock-modulos", role: 'EMPLEADO', img: '/assets/svg/icons/stock.svg' },
     { titulo: 'Boletas', color: 'rgb(149 157 126)', ruta: "/boletas", role: 'EMPLEADO', img: '/assets/svg/icons/boletas.svg' },
     { titulo: 'Ventas', color: '#7fbdc7', ruta: "/equipos-vendidos", role: 'EMPLEADO', img: '/assets/svg/icons/ventas.svg' },
+    { titulo: 'Servicios', color: 'rgb(29 189 215)', ruta: "/servicios", role: 'EMPLEADO', img: '/assets/svg/icons/servicios.svg' },
     { titulo: 'Cuentas clientes', color: '#dc3545', ruta: "/cuentas-clientes", role: 'ADMIN', img: '/assets/svg/icons/deudores2.svg' },
     { titulo: 'Mis reparaciones', color: '#d34fb2', ruta: "/mis-reparaciones", role: 'CLIENTE', img: '/assets/svg/icons/reparaciones.svg' },
     { titulo: 'Trabajos tercerizados', color: 'rgb(141 205 119)', ruta: "/trabajos-tercerizados", role: 'ADMIN', img: '/assets/svg/icons/delegar.svg' },
@@ -51,8 +52,7 @@ export class DashboardPage implements OnInit {
     // private barcodeScanner: BarcodeScanner,
     private alertService: AlertService,
     public funcionesUtiles: FuncionesUtilesService,
-    private authService: AuthService,
-    private router: Router) { }
+    private authService: AuthService) { }
 
   ngOnInit() {
     this.getCurrentUser();
@@ -83,10 +83,6 @@ export class DashboardPage implements OnInit {
 
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe((userRef: any) => {
-      if (!userRef||!userRef.uid) {
-        this.router.navigate(["/login"]);
-return;
-      }
       this.database.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res: any) => {
         let usuario: any = res.payload.data();
         usuario['uid'] = res.payload.id;
@@ -135,80 +131,5 @@ return;
     //   console.error('Error', err);
     // });
 
-  }
-
-  ejecutarBackup() {
-    // return;
-    // let sus = this.database.obtenerTodos(environment.TABLAS.ingresosBrutos).subscribe(mesListRef => {
-    //   sus.unsubscribe();
-    //   let meses: any = mesListRef.map(mesRef => {
-    //     let mes = mesRef.payload.doc.data();
-    //     mes['id'] = mesRef.payload.doc.id;
-    //     return mes;
-    //   });
-    //   //console.log(meses)
-    //   meses.forEach(mes => {
-    //     this.database.actualizar(environment.TABLAS.backUps, mes, mes.id);
-    //   })
-
-    // })
-  }
-
-
-  AgregarBackUpDiario() {
-    const months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
-    let newDate = new Date();
-    let month = months[newDate.getMonth()];
-    let year = newDate.getFullYear();
-    let haceFaltaActualizarElBackUp = false;
-
-    let subscripcion = this.database.obtenerPorId(environment.TABLAS.ingresosBrutos, `${month}${year}`).subscribe(async (res) => {
-      subscripcion.unsubscribe();
-      let mes: any = res.payload.data();
-      mes['id'] = res.payload.id;
-      //console.log(mes)
-      let subscripcion2 = this.database.obtenerPorId(environment.TABLAS.backUps, `${month}${year}`).subscribe(async (res) => {
-        subscripcion2.unsubscribe();
-        if (res.payload.exists) {
-          let mesBackUp: any = res.payload.data();
-          mesBackUp['id'] = res.payload.id;
-          //console.log(mesBackUp)
-
-          if (mes.dias && mesBackUp.dias) {
-
-            if (mes.dias.length > mesBackUp.dias.length) {
-              haceFaltaActualizarElBackUp = true;
-            } else if (mes.dias.length == mesBackUp.dias.length) {
-              if ((mes.dias[mes.dias.length - 1].ventas.length > mesBackUp.dias[mesBackUp.dias.length - 1].ventas.length)) {
-                haceFaltaActualizarElBackUp = true;
-              }
-            }
-            else {
-              //console.log("NO ACTUALIZAMOS!");
-            }
-          }
-
-        } else {
-          //console.log("creamos el backup de ese mes")
-          haceFaltaActualizarElBackUp = true;
-        }
-
-        if (haceFaltaActualizarElBackUp) {
-          this.database.actualizar(environment.TABLAS.backUps, mes, mes.id);
-        }
-      })
-
-    });
-
-
-  }
-
-  confirmarBackUpDiario() {
-    this.alertService.alertConfirmacion('Confirmación',
-      '¿Quiere hacer la copia de seguridad ahora? <br><br> <b>SIEMPRE HACER AL FINAL DEL DIA</b>',
-      'Si, Hacer ahora',
-      () => {
-        this.AgregarBackUpDiario();
-      });
   }
 }

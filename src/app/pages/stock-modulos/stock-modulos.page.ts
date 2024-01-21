@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { User } from 'src/app/clases/user';
 import { DetalleStockModuloComponent } from 'src/app/components/detalle-stock-modulo/detalle-stock-modulo.component';
@@ -41,7 +40,6 @@ export class StockModulosPage implements OnInit {
     private alertService: AlertService,
     public funcionesUtiles: FuncionesUtilesService,
     private authService: AuthService,
-    private router: Router
   ) {
 
     this.getCurrentUser();
@@ -138,10 +136,6 @@ export class StockModulosPage implements OnInit {
 
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe((userRef: any) => {
-      if (!userRef||!userRef.uid) {
-        this.router.navigate(["/login"]);
-return;
-      }
       this.dataBase.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res: any) => {
         let usuario: any = res.payload.data();
         usuario['uid'] = res.payload.id;
@@ -228,7 +222,7 @@ return;
   mostrarStockBajo() {
     let listaStockBajo: any = [];
 
-    this.listaDeModulos.forEach((modulo: StockModulo) => {
+    this.listaDeModulos?.forEach((modulo: StockModulo) => {
       modulo.stock.sinMarco.forEach((stock: any) => {
         if (stock.cantidad <= 0) {
           listaStockBajo.push({
@@ -253,8 +247,8 @@ return;
       });
 
     });
-
-    this.listaDeModulosAMostrar = listaStockBajo.sort((a: any, b: any) => {
+    
+    this.listaDeModulosAMostrar = listaStockBajo.sort((a:any, b:any) => {
       if (a.modelo < b.modelo) return -1;
       if (a.modelo > b.modelo) return 1;
       if (a.tipo < b.tipo) return -1;

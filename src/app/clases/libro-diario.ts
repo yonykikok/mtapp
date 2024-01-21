@@ -7,6 +7,7 @@ interface historialCaja {
 }
 
 export class LibroDiario {
+    id!: string;
     cuadra?: boolean;
     fecha?: number;
     fechaString?: string;

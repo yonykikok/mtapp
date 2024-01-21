@@ -1,0 +1,45 @@
+.item-avatar {
+    img {
+        border-radius: 100%;
+    }
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 70px !important; //any size
+    max-height: 70px !important; //any size
+    border-radius: 100%;
+}
+
+p {
+    font-family: Surfer;
+}
+ion-title {
+    font-family: Audiowide;
+}
+
+ion-searchbar {
+    --border-radius: 10px;
+    width: 90%;
+    margin-left: 5%;
+}
+
+.card-content-container {
+    display: flex;
+    align-items: stretch; /* Ajusta la altura de los elementos */
+}
+
+.left-content {
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 30; /* Ocupa el 30% del ancho */
+    img {
+        width: 100%;
+    }
+}
+
+.right-content {
+    flex: 70; /* Ocupa el 70% del ancho */
+    padding: 20px 20px 20px 5px;
+}
+

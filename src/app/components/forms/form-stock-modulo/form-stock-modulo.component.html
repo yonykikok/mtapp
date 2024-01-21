@@ -15,7 +15,7 @@
       <ion-card-content>
 
 
-        <ion-item  class="ion-margin">
+        <ion-item fill="outline" class="ion-margin">
           <ion-input type="text" placeholder="Escriba el modelo" aria-label="Modulo" formControlName="modelo">
           </ion-input>
         </ion-item>
@@ -29,7 +29,7 @@
       </mat-autocomplete>
     </div> -->
 
-        <ion-item  class="ion-margin">
+        <ion-item fill="outline" class="ion-margin">
           <ion-select placeholder="Seleccione la marca" formControlName="marca">>
             <ion-select-option *ngFor="let marca of marcas" [value]="marca">{{marca}}</ion-select-option>
           </ion-select>
@@ -37,7 +37,7 @@
 
 
 
-        <ion-item  class="ion-margin">
+        <ion-item fill="outline" class="ion-margin">
           <ion-select aria-label="fruit" placeholder="Select fruit" formControlName="calidad">>
             <ion-select-option *ngFor="let calidad of calidades" [value]="calidad">{{calidad}}</ion-select-option>
           </ion-select>

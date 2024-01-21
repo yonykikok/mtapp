@@ -1,0 +1,36 @@
+<ion-header>
+  <app-clasic-toolbar (click)="modalController.dismiss()" [title]="'Ingresar fNacimiento'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-chip style="text-align: center;" color="success" class="ion-margin">
+    Tener el fecha de nacimiento es necesario para poder acceder a sorteos mensuales donde participaras solo con tener
+    este dato cargado.
+  </ion-chip>
+
+  <ion-card>
+
+    <div class="ion-text-center">
+
+      <ion-chip class="ion-margin" color="primary" *ngIf="formFNacimiento.controls.fNacimiento.value">
+        Tendremos en cuenta la siguiente fecha para los sorteos mensuales<br>
+        {{formFNacimiento.controls.fNacimiento.value}}
+      </ion-chip>
+    </div>
+    <ion-card-content>
+      <form [formGroup]="formFNacimiento" (ngSubmit)="guardar()" *ngIf="!modoActualizar">
+
+        <ion-item>
+          <ion-label position="floating" class="text1 bold">Fecha de nacimiento</ion-label>
+          <ion-input type="date" formControlName="fNacimiento" placeholder="ingrese su fNacimiento"></ion-input>
+        </ion-item>
+
+        <ion-button expand="block" class="ion-margin-top" [disabled]="!formFNacimiento.valid" type="submit">Guardar
+          Fecha
+        </ion-button>
+      </form>
+
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

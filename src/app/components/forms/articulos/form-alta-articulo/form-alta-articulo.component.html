@@ -1,0 +1,67 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/articulos'" [title]="'Agregar articulo'"></app-clasic-toolbar>
+</ion-header>
+<ion-content>
+
+  <ion-card>
+
+    <ion-header class="accent-color">
+      <ion-toolbar>
+        <ion-title>Formulario de articulo</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
+    <form [formGroup]="articuloFormGroup" (ngSubmit)="guardarCargador()" class="ion-margin-top">
+
+      <ion-item fill="outline" mode="md">
+        <ion-label position="floating">Categoria</ion-label>
+        <ion-select placeholder="Seleccione una categoria" formControlName="categoria">
+          <ion-select-option *ngFor="let categoria of categorias"
+            [value]="categoria">{{categoria}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- <ion-item>
+        <ion-input label="Categoria" labelPlacement="floating" formControlName="categoria" type="text"></ion-input>
+      </ion-item> -->
+      <small class="ion-margin-start"
+        *ngIf="articuloFormGroup.get('categoria')?.hasError('required') && articuloFormGroup.get('categoria')?.touched">
+        <ion-label color="danger">La categoría es obligatoria.</ion-label>
+      </small>
+
+      <ion-item>
+        <ion-input label="Nombre" labelPlacement="floating" formControlName="nombre" type="text"></ion-input>
+      </ion-item>
+      <small class="ion-margin-start"
+        *ngIf="articuloFormGroup.get('nombre')?.hasError('required') && articuloFormGroup.get('nombre')?.touched">
+        <ion-label color="danger">La categoría es obligatoria.</ion-label>
+      </small>
+
+      <ion-item>
+        <ion-input label="Precio" labelPlacement="floating" formControlName="precio" type="number"></ion-input>
+      </ion-item>
+      <small class="ion-margin-start"
+        *ngIf="articuloFormGroup.get('precio')?.hasError('required') && articuloFormGroup.get('precio')?.touched">
+        <ion-label color="danger">La categoría es obligatoria.</ion-label>
+      </small>
+      <small class="ion-margin-start"
+        *ngIf="articuloFormGroup.get('precio')?.hasError('min') && articuloFormGroup.get('precio')?.touched">
+        <ion-label color="danger">El precio minimo es de 0.</ion-label>
+      </small>
+
+      <ion-item>
+        <ion-input label="Codigo de barra" labelPlacement="floating" formControlName="codigoDeBarra"
+          type="string"></ion-input>
+      </ion-item>
+      <small class="ion-margin-start"
+        *ngIf="articuloFormGroup.get('codigoDeBarra')?.hasError('required') && articuloFormGroup.get('codigoDeBarra')?.touched">
+        <ion-label color="danger">La categoría es obligatoria.</ion-label>
+      </small>
+
+      <ion-button class="ion-padding" type="submit" expand="full"
+        [disabled]="articuloFormGroup.invalid">Siguiente</ion-button>
+    </form>
+
+
+  </ion-card>
+</ion-content>

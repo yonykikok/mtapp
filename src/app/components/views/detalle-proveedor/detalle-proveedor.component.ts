@@ -25,12 +25,6 @@ export class DetalleProveedorComponent implements OnInit {
         proveedor
       }
     });
-
-    modal.onDidDismiss().then((result: any) => {
-
-      if (!result.data || !result.role) return;
-
-    })
     modal.present();
 
 

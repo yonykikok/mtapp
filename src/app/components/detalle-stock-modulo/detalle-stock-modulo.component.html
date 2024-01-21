@@ -99,15 +99,15 @@
       <ion-grid>
         <ion-row>
           <ion-col>
-            <ion-item >
+            <ion-item fill="outline">
               <ion-label position="floating">Color del modulo</ion-label>
-              <ion-select  placeholder="Seleccione el color" [(ngModel)]="color">>
+              <ion-select placeholder="Seleccione el color" [(ngModel)]="color">>
                 <ion-select-option *ngFor="let color of colores" [value]="color">{{color}}</ion-select-option>
               </ion-select>
             </ion-item>
           </ion-col>
           <ion-col>
-            <ion-item >
+            <ion-item fill="outline">
               <ion-label position="floating">Cantidad</ion-label>
               <ion-select placeholder="Seleccione la cantidad" [(ngModel)]="cantidad">>
                 <ion-select-option *ngFor="let cantidad of cantidades"
@@ -118,7 +118,7 @@
         </ion-row>
       </ion-grid>
 
-      <ion-item  class="ion-margin">
+      <ion-item fill="outline" class="ion-margin">
         <ion-label position="floating">Tipo de modulo</ion-label>
         <ion-select placeholder="Seleccione el tipo" [(ngModel)]="tipo">>
           <ion-select-option *ngFor="let tipo of tipos" [value]="tipo">{{tipo}}</ion-select-option>
@@ -143,14 +143,9 @@
       <ion-card-content>
 
 
-        <ion-item  class="ion-margin">
+        <ion-item fill="outline" class="ion-margin">
           <ion-label position="floating">Modelo</ion-label>
           <ion-input [(ngModel)]="repuesto.modelo" placeholder="Ingrese modelo del equipo" required></ion-input>
-        </ion-item>
-        <ion-item  class="ion-margin">
-          <ion-select aria-label="fruit" placeholder="Select fruit" [(ngModel)]="repuesto.calidad">
-            <ion-select-option *ngFor="let calidad of calidades" [value]="calidad">{{calidad}}</ion-select-option>
-          </ion-select>
         </ion-item>
 
 

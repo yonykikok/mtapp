@@ -52,7 +52,7 @@ ion-toolbar {
     --background: var(--main-bg-color);
     color: var(--main-light-color);
 }
-.flexColumn{
+.flexColumn {
     display: flex;
     flex-direction: column;
 }
@@ -72,7 +72,7 @@ ion-toolbar {
     align-items: center;
 }
 
-.customModal{
+.customModal {
     position: fixed;
     left: 0;
     top: 0;
@@ -86,8 +86,10 @@ ion-toolbar {
 ion-chip {
     height: auto;
 }
+.no-radius {
+    border-radius: 0;
+}
 
-
-ion-toolbar{
+ion-toolbar {
     text-align: center;
 }

@@ -6,70 +6,93 @@
 <ion-content>
   <div *ngIf="loggedUser">
 
-    <div class="ion-text-center flexCenterCenter" >
+    <div class="ion-text-center flexCenterCenter" style="flex-wrap: wrap;">
+      <ion-toggle [checked]="true" [(ngModel)]="buscarPorRangoDeFechas">Buscador de rango</ion-toggle><br /><br />
+      <h2 *ngIf="fechaSeleccionadaDate && fechaSeleccionadaDateFin">
+        {{fechaSeleccionadaDate|date:'dd/MM/yyyy'}} - {{fechaSeleccionadaDateFin|date:'dd/MM/yyyy'}}</h2>
       <ion-card style="width: 350px; max-width: 400px;">
-        <ion-datetime presentation="date" [(ngModel)]="fechaSeleccionadaDate"
-          (ionChange)="updateCalcs($event)"></ion-datetime>
 
+        <ion-accordion-group>
+          <ion-accordion value="first">
+            <!-- <ion-item slot="header" color="light"> -->
+            <ion-toolbar color="secondary" class="header" slot="header">
+              <ion-icon style="font-size: 2rem;" class="ion-margin" slot="start" name="calendar-outline"></ion-icon>
+              <ion-title class="ion-text-center">
+                <b> Fecha de inicio </b>
+              </ion-title>
+              <ion-icon slot="end" class="ion-padding"> </ion-icon>
+            </ion-toolbar>
+            <!-- </ion-item> -->
+            <div slot="content">
+              <ion-datetime min="2022-07-01T00:00:00" [max]="maxFechaActual" presentation="date" [preferWheel]="true"
+                locale="es-ES" [(ngModel)]="fechaSeleccionadaDate" (ionChange)="updateCalcs($event)"> </ion-datetime>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
       </ion-card>
+
+      <ion-card style="width: 350px; max-width: 400px;" *ngIf="buscarPorRangoDeFechas">
+
+        <ion-accordion-group>
+          <ion-accordion value="first">
+            <!-- <ion-item slot="header" color="light"> -->
+            <ion-toolbar class="header" slot="header">
+              <ion-icon style="font-size: 2rem;" class="ion-margin" slot="start" name="calendar-outline"></ion-icon>
+              <ion-title class="ion-text-center">
+                <b> Fecha de fin </b>
+              </ion-title>
+              <ion-icon slot="end" class="ion-padding"> </ion-icon>
+            </ion-toolbar>
+            <!-- </ion-item> -->
+            <div slot="content">
+              <ion-datetime [min]="fechaSeleccionadaDate" [max]="maxFechaActual" presentation="date"
+                [preferWheel]="true" locale="es-ES" [(ngModel)]="fechaSeleccionadaDateFin"
+                (ionChange)="updateCalcsFin($event)">
+              </ion-datetime>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
+      </ion-card>
+
+
+      <!-- <ion-card style="width: 350px; max-width: 400px;">
+        <ion-toolbar class="header">
+          <ion-icon style="font-size: 2rem;" class="ion-margin" slot="start" name="calendar-outline"></ion-icon>
+          <ion-title class="ion-text-center">
+            <b> Fecha de inicio</b>
+          </ion-title>
+          <ion-icon slot="end" class="ion-padding"> </ion-icon>
+        </ion-toolbar>
+        <ion-datetime min="2023-10-01T00:00:00" [max]="maxFechaActual" presentation="date" [preferWheel]="true"
+          locale="es-ES" [(ngModel)]="fechaSeleccionadaDate" (ionChange)="updateCalcs($event)"> </ion-datetime>
+
+      </ion-card> -->
     </div>
 
-    <div style="display: flex; flex-direction: column;" *ngIf="mostrarAcciones">
+    <div style="display: flex; flex-direction: column;" *ngIf="!buscarPorRangoDeFechas
+      ? mostrarAcciones
+      :fechaSeleccionadaDate && fechaSeleccionadaDateFin">
 
-      <ion-button color="warning" (click)="mostrarMesCompleto(true)"
+      <ion-button *ngIf="!buscarPorRangoDeFechas" color="secondary" (click)="mostrarDiaSeleccionado()"
+        (click)="scrollToElement($event,'#filtroBusquedaHistorial')">
+        Dia seleccionado
+      </ion-button>
+
+      <ion-button color="primary" (click)="mostrarMesCompleto(false)"
+        *ngIf="!buscarPorRangoDeFechas && funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)">
+        Mes completo
+      </ion-button>
+
+      <ion-button color="warning" (click)="!buscarPorRangoDeFechas?mostrarMesCompleto(true):mostrarIntervaloDeTiempo(true)"
         (click)="scrollToElement($event,'#filtroBusquedaHistorial')">
         Busqueda por texto
       </ion-button>
 
-    
-      <ion-button color="primary" (click)="mostrarMesCompleto(false)"
-        *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)">
-        Mostrar mes completo
-      </ion-button>
+
+
 
 
     </div>
-
-    <!-- <div style="text-align: center; width: 100vw;" *ngIf="mostrarBuscador && mesSeleccionado">
-      <ion-item>
-        <ion-label>Buscar</ion-label>
-        <ion-searchbar animated="true" (ionChange)="applyFilter()" placeholder="Buscador"
-          [(ngModel)]='textoABuscar'></ion-searchbar>
-      </ion-item>
-
-      <div>
-        <ion-button color="warning" (click)="mostrarBuscador=false" (click)="mesSeleccionado=null">Cerrar
-          buscador</ion-button>
-      </div>
-      <div style="display: flex; flex-direction: column; width: 100%; margin: 1rem;">
-        <ion-chip *ngFor="let item of itemsFiltrados" style="justify-content: space-between;"
-          (click)="itemSeleccionado=item">
-          <label>{{item.descripcion}}</label>
-          <label *ngIf="item.boleta; else mostrarFecha">{{item.boleta}}</label>
-          <ng-template #mostrarFecha>
-            <label>{{item.fecha|date}}</label>
-          </ng-template>
-        </ion-chip>
-      </div>
-
-      <div *ngIf="itemSeleccionado">
-
-        <ion-card>
-          <ion-card-content style="text-align: start;">
-            <p> <b>Fecha:</b> {{itemSeleccionado.fecha| date: 'dd/MM/yyyy'}}</p>
-            <p *ngIf="itemSeleccionado.boleta"> <b>Boleta: </b>({{itemSeleccionado.boleta}}) </p>
-            <p> <b>Precio: </b>{{itemSeleccionado.precio|currency}} </p>
-            <p> <b>Descripcion: </b>{{itemSeleccionado.descripcion}} </p>
-            <div>
-              <ion-button color="warning" (click)="itemSeleccionado=null">Cerrar</ion-button>
-            </div>
-          </ion-card-content>
-        </ion-card>
-      </div>
-
-    </div> -->
-
-
 
     <ion-card *ngIf="mesSeleccionado && mesSeleccionado.dias && !libroDiario && !mostrarBuscador">
       <ion-card-header>
@@ -120,9 +143,6 @@
         <label>{{libroDiario.montoTotalEfectivo|currency}}</label>
       </ion-chip>
     </ion-card>
-
-    <!-- <app-detalle-ventas-del-dia (cerrarDetalleEvent)="dataLibroDiarioDialog=false;" *ngIf="dataLibroDiarioDialog"
-      [libroDiario]="dataLibroDiarioDialog"></app-detalle-ventas-del-dia> -->
 
   </div>
 </ion-content>
