@@ -53,6 +53,7 @@ export class HistorialCajaPage implements OnInit {
   }
 
   ngOnInit(): void {
+    this.mostrarIntervaloDeTiempo(false);
     if (this.funcionesUtiles.customDolar) {
       this.precioDolarBlue = this.funcionesUtiles.customDolar;
     }
@@ -167,6 +168,8 @@ export class HistorialCajaPage implements OnInit {
         if (!result.data || !result.role) return;
 
 
+
+
       })
       return await modal.present();
     } catch (err) {
@@ -184,13 +187,16 @@ export class HistorialCajaPage implements OnInit {
       this.mostrarDialogLibroDiario(libroDiarioDelDia);
     })
   }
-  mostrarIntervaloDeTiempo(mostrarBuscador:boolean) {
+  mostrarIntervaloDeTiempo(mostrarBuscador: boolean) {
     if (!this.mesSeleccionado) {
       this.mesSeleccionado = { dias: [] };
     }
-    console.log("this.fechaSeleccionada", this.fechaSeleccionada)
-    console.log("this.fechaSeleccionadaFin", this.fechaSeleccionadaFin)
+    // console.log("this.fechaSeleccionada", this.fechaSeleccionada)
+    // console.log("this.fechaSeleccionadaFin", this.fechaSeleccionadaFin)
     this.database.getLibrosDiariosEnIntervalo(this.fechaSeleccionada, this.fechaSeleccionadaFin).then(diasListRef => {
+      // this.database.getLibrosDiariosEnIntervalo('Sat Jul 09 2022 00:00:00 GMT-0300 (Argentina Standard Time)',
+      //   'Fri Jan 19 2024 00:00:00 GMT-0300 (Argentina Standard Time)').then(diasListRef => {
+
       this.mesSeleccionado.dias = diasListRef?.map(diaRef => {
         let dia: LibroDiario = diaRef.data() as LibroDiario;
         dia['id'] = diaRef.id;
@@ -211,7 +217,7 @@ export class HistorialCajaPage implements OnInit {
       });
       // this.mesSeleccionado.dias = this.mesSeleccionado.dias.filter((dia: LibroDiario) => dia.ventas.length <= 0);
       console.log(this.mesSeleccionado)
-      
+
       mostrarBuscador ? this.mostrarBuscadorPorTexto() : null;
     })
   }

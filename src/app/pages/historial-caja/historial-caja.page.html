@@ -94,14 +94,14 @@
 
     </div>
 
-    <ion-card *ngIf="mesSeleccionado && mesSeleccionado.dias && !libroDiario && !mostrarBuscador">
-      <ion-card-header>
+    <ion-card *ngIf="mesSeleccionado && mesSeleccionado.dias && !libroDiario && !mostrarBuscador &&loggedUser.role=='OWNER'">
+      <!-- <ion-card-header>
         <ion-card-title style="text-align: center; width: 100%; margin-top: 1rem;">Ingresos
           {{mesSeleccionado.id}}</ion-card-title>
-      </ion-card-header>
+      </ion-card-header> -->
 
       <ion-card-content>
-        <ion-card *ngIf="loggedUser.role=='OWNER'" class="ion-text-center">
+        <ion-card class="ion-text-center">
 
           <table style="width: 100%; text-align: start;">
             <tbody>

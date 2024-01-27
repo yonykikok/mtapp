@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { LibroDiario } from 'src/app/clases/libro-diario';
 import { FormDetalleVentaComponent } from '../forms/form-detalle-venta/form-detalle-venta.component';
+import { environment } from 'src/environments/environment';
+import { DataBaseService } from 'src/app/services/database.service';
+import { ToastColor, ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-detalle-ventas-del-dia',
@@ -11,7 +14,9 @@ import { FormDetalleVentaComponent } from '../forms/form-detalle-venta/form-deta
 export class DetalleVentasDelDiaComponent implements OnInit {
 
   libroDiario!: LibroDiario;
-  constructor(private modalController: ModalController) { }
+  constructor(private modalController: ModalController,
+    private database: DataBaseService,
+    private toastService: ToastService) { }
 
   ngOnInit(): void {
   }
@@ -20,9 +25,16 @@ export class DetalleVentasDelDiaComponent implements OnInit {
     let modal = await this.modalController.create({
       component: FormDetalleVentaComponent,
     });
-    modal.onDidDismiss().then(res => {
-      console.log(res)
-      this.libroDiario.ventas = [...this.libroDiario.ventas, ...res.data];
+    modal.onDidDismiss().then(result => {
+
+      if (result.role == "guardarItems") {
+        this.libroDiario.ventas = [...this.libroDiario.ventas, ...result.data];
+
+        this.database.actualizar(environment.TABLAS.ingresos, this.libroDiario, this.libroDiario.id)?.then(res => {
+          console.log(res);
+          this.toastService.simpleMessage('Exito', 'Se agregaron las ventas al dia seleccionado', ToastColor.success);
+        });
+      }
     });
     modal.present();
   }

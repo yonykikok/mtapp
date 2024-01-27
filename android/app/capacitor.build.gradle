@@ -2,13 +2,14 @@
 
 android {
   compileOptions {
-      sourceCompatibility JavaVersion.VERSION_X
-      targetCompatibility JavaVersion.VERSION_X
+      sourceCompatibility JavaVersion.VERSION_17
+      targetCompatibility JavaVersion.VERSION_17
   }
 }
 
 apply from: "../capacitor-cordova-android-plugins/cordova.variables.gradle"
 dependencies {
+    implementation project(':capacitor-mlkit-barcode-scanning')
     implementation project(':capacitor-app')
     implementation project(':capacitor-camera')
     implementation project(':capacitor-haptics')
