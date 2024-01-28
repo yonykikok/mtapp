@@ -101,6 +101,7 @@ export interface EquipoVendido {
   modelo: string;
   precio: number;
   id: string;
+  imgUrlsRef: string[],
   [key: string]: any;
 }
 export interface Modulo {

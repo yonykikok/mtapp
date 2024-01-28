@@ -9,6 +9,7 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { environment } from 'src/environments/environment';
 import { boleta } from '../mis-reparaciones/mis-reparaciones.page';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,11 +26,6 @@ export class DashboardPage implements OnInit {
     codigo: "7798113301765",
   }];
   modulos: { titulo: string, color: string, ruta: string, role: Roles, img?: string }[] = [
-    // { titulo: 'Tactiles', color: '#42688a', ruta: "/lista-tactiles", role: 'CLIENTE' },
-    // { titulo: 'Display', color: '#238386', ruta: "/lista-displays", role: 'CLIENTE' },
-    // { titulo: 'Modulos', color: '#28a745', ruta: "/lista-modulos", role: 'CLIENTE' },
-    // { titulo: 'Baterias', color: '#ffc107', ruta: "/lista-baterias", role: 'CLIENTE' },
-    // { titulo: 'Flex de carga', color: '#d34fb2', ruta: "/lista-flex-de-carga", role: 'CLIENTE' },
     { titulo: 'Libro diario', color: '#dc70fd', ruta: "/libro-diario", role: 'EMPLEADO', img: '/assets/svg/icons/librodiario.svg' },
     { titulo: 'Articulos', color: '#dc70fd', ruta: "/articulos", role: 'EMPLEADO', img: '/assets/svg/icons/articulos.png' },
     { titulo: 'Repuestos', color: 'rgb(79 132 211)', ruta: "/repuestos", role: 'CLIENTE', img: '/assets/svg/icons/btnRepuestos.png' },
@@ -51,6 +47,7 @@ export class DashboardPage implements OnInit {
     private database: DataBaseService,
     // private barcodeScanner: BarcodeScanner,
     private alertService: AlertService,
+    private storageService: StorageService,
     public funcionesUtiles: FuncionesUtilesService,
     private authService: AuthService) { }
 
@@ -131,5 +128,13 @@ export class DashboardPage implements OnInit {
     //   console.error('Error', err);
     // });
 
+  }
+
+  borrarimagen() {
+    this.storageService.borrarImagen('equipos_vendidos/apple-37755134-353535353535365').then(res => {
+      console.log(res)
+    }).catch(err => {
+      console.error(err)
+    })
   }
 }

@@ -3,9 +3,12 @@ import { ModalController } from '@ionic/angular';
 import { User } from 'src/app/clases/user';
 import { FormEquipoVendidoComponent } from 'src/app/components/forms/form-equipo-vendido/form-equipo-vendido.component';
 import { VisualizadorDeImagenComponent } from 'src/app/components/views/visualizador-de-imagen/visualizador-de-imagen.component';
+import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { EquipoVendido } from 'src/app/services/info-compartida.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
+import { StorageService } from 'src/app/services/storage.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -27,9 +30,12 @@ export class EquiposVendidosPage implements OnInit {
 
   constructor(
     // private dialog: MatDialog,
+    private storageService: StorageService,
     private database: DataBaseService,
     private authService: AuthService,
-    private modalController: ModalController) { }
+    private modalController: ModalController,
+    private spinnerService: SpinnerService,
+    private alertService: AlertService) { }
 
   ngOnInit(): void {
     this.getCurrentUser();
@@ -123,5 +129,25 @@ export class EquiposVendidosPage implements OnInit {
     this.moduloSeleccionado = modulo;
     this.listaAMostrar = this.listaEquipos[modulo];
     // this.ordenarLista(this.listaAMostrar);
+  }
+
+  async eliminarVenta(equipo: EquipoVendido) {
+
+    this.alertService.alertConfirmacion("Confirmación", '¿Seguro de borrar esta venta?', "Si, borrar", () => {
+      this.spinnerService.showLoading("Eliminando venta...");
+      equipo.imgUrlsRef?.forEach(async (imgRef) => {
+        try {
+          let result = await this.storageService.borrarImagen(imgRef);
+          console.log(result);
+
+        } catch (error) {
+          console.error(error);
+        } finally {
+          this.database.eliminar(environment.TABLAS.equipos_vendidos, equipo.id).finally(() => {
+            this.spinnerService.stopLoading();
+          });
+        }
+      });
+    });
   }
 }

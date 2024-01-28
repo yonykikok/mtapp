@@ -3,7 +3,7 @@
 </ion-header>
 
 
-<ion-content *ngIf="flexDeCargas">
+<ion-content *ngIf="flexDeCargas && loggedUser">
   <app-precio-dolar [loggedUser]="loggedUser"
     *ngIf="loggedUser && funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)"></app-precio-dolar>
 

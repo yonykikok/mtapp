@@ -102,13 +102,16 @@ export class FormEquipoDisponibleComponent implements OnInit {
   uploadImages(images: any[], imgPath: string) {
     this.mostrarSpinner = true;
     let imgUrls: string[] = [];
+    let imgUrlsRef: string[] = [];//referencia para eliminar
     let contador = 0;
-    images.forEach(imgBase64 => {
-      this.storageService.subirImagenEquiposVenta(imgPath + Date.now(), imgBase64).then((urlImagen) => {
+    images.forEach((imgBase64, index) => {
+      this.storageService.subirImagenEquiposVenta(imgPath + `${this.equipoVendido.marca}-${this.equipoVendido.dni}-${this.equipoVendido.imei}-${index}`, imgBase64).then((urlImagen) => {
         imgUrls.push(urlImagen as string);
+        imgUrlsRef.push(imgPath + `${this.equipoVendido.fecha}-${this.equipoVendido.marca}-${this.equipoVendido.imei}-${index}`);//referencia para eliminar
         contador++;
         if (contador == images.length) {
           this.equipoVendido.images = imgUrls;
+          this.equipoVendido.imgUrlsRef = imgUrlsRef;//referencia para eliminar
           this.dataBase.crear(environment.TABLAS.equipos_vendidos, this.equipoVendido).then(res => {
             this.toastService.simpleMessage('Existo', 'Nueva venta de equipo generada', ToastColor.success);
             this.mostrarSpinner = false;

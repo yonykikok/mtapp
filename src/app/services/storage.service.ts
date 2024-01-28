@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/storage';
 import { ToastColor, ToastService } from './toast.service';
+import { getStorage, ref, deleteObject } from "firebase/storage";
 
 @Injectable({
   providedIn: 'root'
@@ -12,25 +13,25 @@ export class StorageService {
     private toastService: ToastService
   ) { }
 
-  async subirImagen(name: string, imgBase64: any) {
-    try {
-      let respuesta = await this.storageRef.child('tienda/productos/' + name).putString(imgBase64, 'data_url');
-      return await respuesta.ref.getDownloadURL();
-    } catch (err) {
-      this.toastService.simpleMessage('Error', 'al subir la imagen a firebase  ocurrio un error', ToastColor.danger);
-      return null;
-    }
-  }
-  async subirImagenfullPath(fullPath: string, imgBase64: any) {
-    try {
-      let respuesta = await this.storageRef.child(fullPath).putString(imgBase64, 'data_url');
-      return await respuesta.ref.getDownloadURL();
-    } catch (err) {
-      this.toastService.simpleMessage('Error', 'al subir la imagen a firebase  ocurrio un error', ToastColor.danger);
-      return null;
-    }
-  }
-
+  // async subirImagen(name: string, imgBase64: any) {
+  //   try {
+  //     let respuesta = await this.storageRef.child('tienda/productos/' + name).putString(imgBase64, 'data_url');
+  //     return await respuesta.ref.getDownloadURL();
+  //   } catch (err) {
+  //     this.toastService.simpleMessage('Error', 'al subir la imagen a firebase  ocurrio un error', ToastColor.danger);
+  //     return null;
+  //   }
+  // }
+  // async subirImagenfullPath(fullPath: string, imgBase64: any) {
+  //   try {
+  //     let respuesta = await this.storageRef.child(fullPath).putString(imgBase64, 'data_url');
+  //     return await respuesta.ref.getDownloadURL();
+  //   } catch (err) {
+  //     this.toastService.simpleMessage('Error', 'al subir la imagen a firebase  ocurrio un error', ToastColor.danger);
+  //     return null;
+  //   }
+  // }
+  
   async subirImagenEquiposVenta(ruta: string, imgBase64: any) {
     try {
       let respuesta = await this.storageRef.child(ruta).putString(imgBase64, 'data_url');
@@ -41,36 +42,52 @@ export class StorageService {
       return null;
     }
   }
-  
+
   async borrarImagen(ruta: string): Promise<boolean> {
     try {
       // Obtén una referencia al archivo que deseas borrar
       const archivoRef = this.storageRef.child(ruta);
-  
+
       // Borra el archivo
       await archivoRef.delete();
-  
+
       // El archivo se ha borrado exitosamente
       return true;
     } catch (error) {
       console.error(error);
-      
+
       // Maneja el error aquí, puedes mostrar un mensaje de error o realizar otra acción.
       return false; // Devuelve false en caso de error
     }
   }
-  
 
 
-  async subirImagenEquiposTercerizados(ruta: string, imgBase64: any) {
-    try {
-      let respuesta = await this.storageRef.child(ruta).putString(imgBase64, 'data_url');
-      return await respuesta.ref.getDownloadURL();
-    } catch (err) {
-      this.toastService.simpleMessage('Error', 'al subir la imagen a firebase  ocurrio un error', ToastColor.danger);
-      return null;
-    }
+
+  // async subirImagenEquiposTercerizados(ruta: string, imgBase64: any) {
+  //   try {
+  //     let respuesta = await this.storageRef.child(ruta).putString(imgBase64, 'data_url');
+  //     return await respuesta.ref.getDownloadURL();
+  //   } catch (err) {
+  //     this.toastService.simpleMessage('Error', 'al subir la imagen a firebase  ocurrio un error', ToastColor.danger);
+  //     return null;
+  //   }
+  // }
+
+  eliminar() {
+    const storage = getStorage();
+    const desertRef = ref(storage, 'images/desert.jpg');
+
+
+    // Create a reference to the file to delete
+
+    // Delete the file
+    deleteObject(desertRef).then(() => {
+      // File deleted successfully
+    }).catch((error) => {
+      // Uh-oh, an error occurred!
+    });
   }
+
 
 
 }

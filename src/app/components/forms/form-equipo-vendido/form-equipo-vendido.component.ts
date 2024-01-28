@@ -21,25 +21,25 @@ export class FormEquipoVendidoComponent implements OnInit {
   mostrarSpinner = false;
 
   step1FormGroup: FormGroup = new FormGroup({
-    dni: new FormControl(['', Validators.required]),
+    dni: new FormControl('', [Validators.required]),
   });
   step2FormGroup: FormGroup = new FormGroup({
-    marca: new FormControl(['', Validators.required]),
-    modelo: new FormControl(['', Validators.required]),
-    imei: new FormControl(['', [Validators.required, Validators.minLength(15), Validators.maxLength(17)]]),
-    precio: new FormControl(['', Validators.required]),
+    marca: new FormControl('', [Validators.required]),
+    modelo: new FormControl('', [Validators.required]),
+    imei: new FormControl('', [Validators.required, Validators.minLength(15), Validators.maxLength(17)]),
+    precio: new FormControl('', [Validators.required]),
   });
   step3FormGroup: FormGroup = new FormGroup({
-    accesorios: new FormControl(['']),
+    accesorios: new FormControl([]),
   });
   step4FormGroup: FormGroup = new FormGroup({
-    images: new FormControl(['']),
+    images: new FormControl([]),
   });
 
   constructor(private _formBuilder: FormBuilder,
     private dataBase: DataBaseService,
     // private snackBar: MatSnackBar,
-    private spinnerService:SpinnerService,
+    private spinnerService: SpinnerService,
     private storageService: StorageService,
     // private dialogRef: MatDialogRef<FormAltaEquipoVendidoComponent>
     private toastService: ToastService,
@@ -109,13 +109,17 @@ export class FormEquipoVendidoComponent implements OnInit {
     this.spinnerService.showLoading('Subiendo equipo');
     this.mostrarSpinner = true;
     let imgUrls: string[] = [];
+    let imgUrlsRef: string[] = [];
     let contador = 0;
-    images.forEach(imgBase64 => {
-      this.storageService.subirImagenEquiposVenta(imgPath + Date.now(), imgBase64).then((urlImagen: any) => {
+    images.forEach((imgBase64, index) => {
+      this.storageService.subirImagenEquiposVenta(imgPath + `${this.equipoVendido.fecha}-${this.equipoVendido.marca}-${this.equipoVendido.imei}-${index}`, imgBase64).then((urlImagen: any) => {
         imgUrls.push(urlImagen);
+        imgUrlsRef.push(imgPath + `${this.equipoVendido.fecha}-${this.equipoVendido.marca}-${this.equipoVendido.imei}-${index}`);
         contador++;
         if (contador == images.length) {
           this.equipoVendido.images = imgUrls;
+          this.equipoVendido.imgUrlsRef = imgUrlsRef;
+          console.log(this.equipoVendido);
           this.dataBase.crear(environment.TABLAS.equipos_vendidos, this.equipoVendido).then(res => {
             this.spinnerService.stopLoading();
             this.toastService.simpleMessage('Existo', 'Nueva venta de equipo generada', ToastColor.success);
