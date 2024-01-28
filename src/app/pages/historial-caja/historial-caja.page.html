@@ -83,9 +83,16 @@
         Mes completo
       </ion-button>
 
-      <ion-button color="warning" (click)="!buscarPorRangoDeFechas?mostrarMesCompleto(true):mostrarIntervaloDeTiempo(true)"
+      <ion-button color="warning"
+        (click)="!buscarPorRangoDeFechas?mostrarMesCompleto(true):mostrarIntervaloDeTiempo(true)"
         (click)="scrollToElement($event,'#filtroBusquedaHistorial')">
         Busqueda por texto
+      </ion-button>
+
+      <ion-button color="primary"
+        *ngIf="buscarPorRangoDeFechas && funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)"
+        (click)="mostrarIntervaloDeTiempo(false)" (click)="scrollToElement($event,'#filtroBusquedaHistorial')">
+        MostrarResultados
       </ion-button>
 
 
@@ -94,10 +101,11 @@
 
     </div>
 
-    <ion-card *ngIf="mesSeleccionado && mesSeleccionado.dias && !libroDiario && !mostrarBuscador &&loggedUser.role=='OWNER'">
+    <ion-card
+      *ngIf="intervaloSeleccionado && intervaloSeleccionado.dias && !libroDiario && !mostrarBuscador &&loggedUser.role=='OWNER'">
       <!-- <ion-card-header>
         <ion-card-title style="text-align: center; width: 100%; margin-top: 1rem;">Ingresos
-          {{mesSeleccionado.id}}</ion-card-title>
+          {{intervaloSeleccionado.id}}</ion-card-title>
       </ion-card-header> -->
 
       <ion-card-content>
@@ -105,40 +113,41 @@
 
           <table style="width: 100%; text-align: start;">
             <tbody>
-              <tr *ngIf="mesSeleccionado.montoTotalMensualEfectivo>0">
+              <tr *ngIf="intervaloSeleccionado.montoTotalMensualEfectivo>0">
                 <th>Efectivo</th>
-                <td>{{mesSeleccionado.montoTotalMensualEfectivo|currency}}</td>
+                <td>{{intervaloSeleccionado.montoTotalMensualEfectivo|currency}}</td>
               </tr>
 
-              <tr *ngIf="mesSeleccionado.montoTotalMensualTransferencia>0">
+              <tr *ngIf="intervaloSeleccionado.montoTotalMensualTransferencia>0">
                 <th>Transferencia</th>
-                <td>{{mesSeleccionado.montoTotalMensualTransferencia|currency}}</td>
+                <td>{{intervaloSeleccionado.montoTotalMensualTransferencia|currency}}</td>
               </tr>
 
-              <tr *ngIf="mesSeleccionado.montoTotalMensualMercadoPago>0">
+              <tr *ngIf="intervaloSeleccionado.montoTotalMensualMercadoPago>0">
                 <th>Mercado pago</th>
-                <td>{{mesSeleccionado.montoTotalMensualMercadoPago|currency}}</td>
+                <td>{{intervaloSeleccionado.montoTotalMensualMercadoPago|currency}}</td>
               </tr>
-              <tr *ngIf="mesSeleccionado.montoNegativoTotalMensualEfectivo<0">
+              <tr *ngIf="intervaloSeleccionado.montoNegativoTotalMensualEfectivo<0">
                 <th>Retiros de dinero</th>
-                <td><ion-text color="danger">{{mesSeleccionado.montoNegativoTotalMensualEfectivo|currency}}</ion-text>
+                <td><ion-text
+                    color="danger">{{intervaloSeleccionado.montoNegativoTotalMensualEfectivo|currency}}</ion-text>
                 </td>
               </tr>
               <tr>
                 <th>TOTAL:</th>
-                <td><ion-text color="success">{{mesSeleccionado.montoTotalMensualEfectivo+
-                    mesSeleccionado.montoTotalMensualTransferencia+
-                    mesSeleccionado.montoTotalMensualMercadoPago|currency}}</ion-text></td>
+                <td><ion-text color="success">{{intervaloSeleccionado.montoTotalMensualEfectivo+
+                    intervaloSeleccionado.montoTotalMensualTransferencia+
+                    intervaloSeleccionado.montoTotalMensualMercadoPago|currency}}</ion-text></td>
               </tr>
             </tbody>
           </table>
         </ion-card>
       </ion-card-content>
 
-      <h2 style="text-align: center; width: 100%;">({{mesSeleccionado.dias.length}}) dias trabajados</h2>
+      <h2 style="text-align: center; width: 100%;">({{intervaloSeleccionado.dias.length}}) dias trabajados</h2>
 
       <ion-chip style="width: 100%; justify-content: space-between;" (click)="mostrarDialogLibroDiario(libroDiario)"
-        *ngFor="let libroDiario of mesSeleccionado.dias">
+        *ngFor="let libroDiario of intervaloSeleccionado.dias">
         <label>{{libroDiario.fecha|date}}</label>
         <label>{{libroDiario.montoTotalEfectivo|currency}}</label>
       </ion-chip>

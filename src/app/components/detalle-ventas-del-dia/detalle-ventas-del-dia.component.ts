@@ -5,6 +5,7 @@ import { FormDetalleVentaComponent } from '../forms/form-detalle-venta/form-deta
 import { environment } from 'src/environments/environment';
 import { DataBaseService } from 'src/app/services/database.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
+import { AlertService } from 'src/app/services/alert.service';
 
 @Component({
   selector: 'app-detalle-ventas-del-dia',
@@ -12,15 +13,23 @@ import { ToastColor, ToastService } from 'src/app/services/toast.service';
   styleUrls: ['./detalle-ventas-del-dia.component.scss'],
 })
 export class DetalleVentasDelDiaComponent implements OnInit {
-
+  montoIngresado = 0;
   libroDiario!: LibroDiario;
   constructor(private modalController: ModalController,
     private database: DataBaseService,
-    private toastService: ToastService) { }
+    private toastService: ToastService,
+    private alertService: AlertService) { }
 
   ngOnInit(): void {
   }
+  async cargarMontoInicial() {
+    this.libroDiario.montoInicial = Number(this.montoIngresado);
+    await this.database.actualizar(environment.TABLAS.ingresos, this.libroDiario, this.libroDiario.id);
+  }
 
+  showConfirmDialog() {
+    this.alertService.alertConfirmacion('Confirmación', `La caja inicial es: $${this.montoIngresado}?`, 'Si, confirmo', this.cargarMontoInicial.bind(this));
+  }
   async abrirFormularioDeVenta() {
     let modal = await this.modalController.create({
       component: FormDetalleVentaComponent,

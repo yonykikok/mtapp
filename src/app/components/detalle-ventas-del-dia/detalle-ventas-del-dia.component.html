@@ -9,11 +9,21 @@
     <ion-card-header>
       <ion-card-title class="ion-text-center">
         Cierre de caja
-        <ion-button (click)="abrirFormularioDeVenta()">Editar</ion-button>
+        <ion-button expand="block" (click)="abrirFormularioDeVenta()">Editar</ion-button>
       </ion-card-title>
     </ion-card-header>
 
     <ion-card-content>
+      <div>
+        <ion-item fill="outline" class="ion-margin">
+          <ion-label position="floating">Cambiar monto inicial</ion-label>
+          <ion-input type="number" placeholder="Ingrese el monto de apertura" [(ngModel)]="montoIngresado"
+            [ngModelOptions]="{standalone: true}"></ion-input>
+        </ion-item>
+        <div>
+          <ion-button color="primary" (click)="showConfirmDialog()">Guardar</ion-button>
+        </div>
+      </div>
       <table style="width: 100%;">
         <tbody>
           <tr>

@@ -20,7 +20,7 @@ export const enum OrderByDireccions {
   styleUrls: ['./boletas.page.scss'],
 })
 export class BoletasPage implements OnInit {
-
+  textoABuscar: string = "";
   boletas: boleta[] = [];
   loggedUser: User | null = null;
   sinCoincidencias = false;
@@ -117,56 +117,81 @@ export class BoletasPage implements OnInit {
   }
 
 
-  applyFilter(event: Event) {
-    this.sinCoincidencias = false;
-    let textoABuscar = (event.target as HTMLInputElement).value;
-    if (textoABuscar.length == 4 || textoABuscar.length == 5 || textoABuscar.length == 8) {
-
-      if ((textoABuscar.length == 4 || textoABuscar.length == 5)) {
-        console.log(textoABuscar)
-        this.dataBase.obtenerBoletaPorNroBoleta(environment.TABLAS.boletasReparacion, textoABuscar).then((res: any) => {
-          if (!res) {
-            this.sinCoincidencias = true;
-            return;
-          }
-
-          let boletas = res.map((element: any) => {
-            let boleta = element.data();
-            boleta['id'] = element.id;
-            return boleta;
-          });
-          this.boletas = boletas;
-
-        });
+  applyFilter() {
+    if (Number(this.textoABuscar)) {
+      if ((this.textoABuscar.length >= 2 && this.textoABuscar.length <= 5)) {
+        this.busquedaPorNroBoleta(this.textoABuscar);
       }
-      else {
-        this.dataBase.obtenerBoletaPorDni(environment.TABLAS.boletasReparacion, textoABuscar).then((res: any) => {
-          if (!res) {
-            this.sinCoincidencias = true;
-            return;
-          }
-
-          let boletas = res.map((element: any) => {
-            let boleta = element.data();
-            boleta['id'] = element.id;
-            return boleta;
-          });
-          this.boletas = boletas;
-
-        });
+      else if (this.textoABuscar.length == 8) {
+        this.busquedaPorDni();
+      }
+    } else {//busqueda por texto.
+      console.log("busqueda por texto")
+      if(this.textoABuscar.length>=3){
+        this.busquedaPorTexto();
       }
     }
   }
+  busquedaPorTexto() {
+    this.dataBase.obtenerBoletaPorModelo(environment.TABLAS.boletasReparacion, this.textoABuscar).then((res: any) => {
+      if (!res) {
+        this.sinCoincidencias = true;
+        return;
+      }
+
+      let boletas = res.map((element: any) => {
+        let boleta = element.data();
+        boleta['id'] = element.id;
+        return boleta;
+      });
+      this.boletas = boletas;
+
+    });
+  }
+  busquedaPorDni() {
+    this.dataBase.obtenerBoletaPorDni(environment.TABLAS.boletasReparacion, this.textoABuscar).then((res: any) => {
+      if (!res) {
+        this.sinCoincidencias = true;
+        return;
+      }
+
+      let boletas = res.map((element: any) => {
+        let boleta = element.data();
+        boleta['id'] = element.id;
+        return boleta;
+      });
+      this.boletas = boletas;
+
+    });
+  }
+  busquedaPorNroBoleta(textoABuscar: string) {
+    console.log(this.textoABuscar)
+    this.dataBase.obtenerBoletaPorNroBoleta(environment.TABLAS.boletasReparacion, this.textoABuscar).then((res: any) => {
+      if (!res) {
+        this.sinCoincidencias = true;
+        return;
+      }
+
+      let boletas = res.map((element: any) => {
+        let boleta = element.data();
+        boleta['id'] = element.id;
+        return boleta;
+      });
+      this.boletas = boletas;
+
+    });
+  }
+
   applyFilter2(event: Event) {
     this.sinCoincidencias = false;
     let textoABuscar = (event.target as HTMLInputElement).value;
-    if (textoABuscar.length == 4 || textoABuscar.length == 5 || textoABuscar.length == 8) {
+    if (this.textoABuscar.length == 4 || this.textoABuscar.length == 5 || this.textoABuscar.length == 8) {
 
-      let metodoALlamar: any = (textoABuscar.length == 4 || textoABuscar.length == 5)
+      let metodoALlamar: any = (this.textoABuscar.length == 4 || this.textoABuscar.length == 5)
         ? this.dataBase.obtenerBoletaPorNroBoleta
         : this.dataBase.obtenerBoletaPorDni;
 
-      metodoALlamar(environment.TABLAS.boletasReparacion, textoABuscar).then((res: any) => {
+      metodoALlamar(environment.TABLAS.boletasReparacion, this.textoABuscar).then((res: any) => {
         if (!res) {
           this.sinCoincidencias = true;
           return;

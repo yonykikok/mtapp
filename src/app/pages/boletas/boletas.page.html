@@ -4,10 +4,18 @@
 
 <ion-content *ngIf="loggedUser">
 
-  <ion-searchbar show-clear-button="focus" placeholder="3885 o 40141516" (ionInput)="applyFilter($event)"></ion-searchbar>
+  <ion-item lines="none">
+    <ion-searchbar show-clear-button="focus" placeholder="3885 o 40141516 o G7 power"
+      [(ngModel)]="textoABuscar"></ion-searchbar>
+    <ion-button style="width: 3rem; height: 2rem;" slot="end" (click)="applyFilter()">
+      <ion-icon name="search"></ion-icon>
+    </ion-button>
+  </ion-item>
+
+  <!-- (ionInput)="applyFilter($event)" -->
 
   <ion-chip style="width: 80%; left: 10%;" color="secondary" outline="true" class="ion-text-center"
-    *ngIf="sinCoincidencias">No se encontraron boletas con ese numero.</ion-chip>
+    *ngIf="sinCoincidencias">No se encontraron boletas con ese dato.</ion-chip>
   <div *ngIf="loggedUser && boletas">
 
 

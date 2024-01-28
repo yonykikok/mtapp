@@ -39,7 +39,7 @@ export class HistorialCajaPage implements OnInit {
 
   libroDiario: any;
   loggedUser!: User;
-  mesSeleccionado: any;
+  intervaloSeleccionado: any;
   dataLibroDiarioDialog: any;
 
   precioDolarBlue: number = 0;
@@ -85,7 +85,7 @@ export class HistorialCajaPage implements OnInit {
     //tenemos coincidencias por texto y/o boleta falta generar una vista para estos items.
     let items: any[] = [];
 
-    this.mesSeleccionado.dias.forEach((dia: any) => {
+    this.intervaloSeleccionado.dias.forEach((dia: any) => {
       dia.ventas.forEach((venta: any) => {
         if (venta.descripcion.toLowerCase().includes(this.textoABuscar.toLowerCase()) ||
           venta.boleta == this.textoABuscar) {
@@ -120,41 +120,7 @@ export class HistorialCajaPage implements OnInit {
       })
     })
   }
-  // mostrarHistorial() {
-  //   this.mesSeleccionado = null;
-  //   if (!this.fechaSeleccionada) {
-  //     this.toastService.simpleMessage('', 'Seleccione una fecha', ToastColor.warning);
-  //     return
-  //   };
 
-  //   let documentId = this.obtenerMesId();
-
-  //   let subscripcion = this.database.obtenerPorId(environment.TABLAS.ingresos, documentId).subscribe(async (res) => {
-  //     if (!res.payload.exists) {
-  //       this.toastService.simpleMessage('Sin datos', 'Este dia no tiene datos', ToastColor.secondary);
-  //       subscripcion.unsubscribe();
-  //       return;
-  //     }
-  //     this.mesSeleccionado = res.payload.data();
-  //     this.mesSeleccionado['id'] = res.payload.id;
-
-  //     let libroDiarioSeleccionado = this.mesSeleccionado.dias?.find((dia: any) =>
-  //       new Date(dia.fecha).toString() == this.fechaSeleccionada.toString());
-
-
-  //     if (libroDiarioSeleccionado && libroDiarioSeleccionado.ventas && libroDiarioSeleccionado.ventas.length > 0) {
-  //       this.libroDiario = libroDiarioSeleccionado;
-  //     } else {
-  //       this.toastService.simpleMessage('', 'El dia seleccionado no tiene vetas', ToastColor.warning);
-  //       this.libroDiario = null;
-  //       this.mesSeleccionado = null;
-  //       return;
-  //     }
-
-  //     this.mostrarDialogLibroDiario(this.libroDiario);
-
-  //   });
-  // }
   async mostrarDialogLibroDiario(libroDiario: any) {
     try {
       const modal = await this.modalController.create({
@@ -188,25 +154,21 @@ export class HistorialCajaPage implements OnInit {
     })
   }
   mostrarIntervaloDeTiempo(mostrarBuscador: boolean) {
-    if (!this.mesSeleccionado) {
-      this.mesSeleccionado = { dias: [] };
+    if (!this.intervaloSeleccionado) {
+      this.intervaloSeleccionado = { dias: [] };
     }
-    // console.log("this.fechaSeleccionada", this.fechaSeleccionada)
-    // console.log("this.fechaSeleccionadaFin", this.fechaSeleccionadaFin)
     this.database.getLibrosDiariosEnIntervalo(this.fechaSeleccionada, this.fechaSeleccionadaFin).then(diasListRef => {
-      // this.database.getLibrosDiariosEnIntervalo('Sat Jul 09 2022 00:00:00 GMT-0300 (Argentina Standard Time)',
-      //   'Fri Jan 19 2024 00:00:00 GMT-0300 (Argentina Standard Time)').then(diasListRef => {
 
-      this.mesSeleccionado.dias = diasListRef?.map(diaRef => {
+      this.intervaloSeleccionado.dias = diasListRef?.map(diaRef => {
         let dia: LibroDiario = diaRef.data() as LibroDiario;
         dia['id'] = diaRef.id;
         return dia
       });
-      this.mesSeleccionado['montoTotalMensualEfectivo'] = this.getMontoTotalMensual(MediosDePago.Efectivo);
-      this.mesSeleccionado['montoTotalMensualTransferencia'] = this.getMontoTotalMensual(MediosDePago.Transferencia);
-      this.mesSeleccionado['montoTotalMensualMercadoPago'] = this.getMontoTotalMensual(MediosDePago.MercadoPago);
-      this.mesSeleccionado['montoNegativoTotalMensualEfectivo'] = this.getMontoTotalMensualNegativo();
-      this.mesSeleccionado['dias'] = this.mesSeleccionado.dias?.sort((diaA: any, diaB: any) => {
+      this.intervaloSeleccionado['montoTotalMensualEfectivo'] = this.getMontoTotalMensual(MediosDePago.Efectivo);
+      this.intervaloSeleccionado['montoTotalMensualTransferencia'] = this.getMontoTotalMensual(MediosDePago.Transferencia);
+      this.intervaloSeleccionado['montoTotalMensualMercadoPago'] = this.getMontoTotalMensual(MediosDePago.MercadoPago);
+      this.intervaloSeleccionado['montoNegativoTotalMensualEfectivo'] = this.getMontoTotalMensualNegativo();
+      this.intervaloSeleccionado['dias'] = this.intervaloSeleccionado.dias?.sort((diaA: any, diaB: any) => {
         if (diaA.fecha > diaB.fecha) {
           return 1
         } else if (diaA.fecha < diaB.fecha) {
@@ -215,29 +177,29 @@ export class HistorialCajaPage implements OnInit {
           return 0;
         }
       });
-      // this.mesSeleccionado.dias = this.mesSeleccionado.dias.filter((dia: LibroDiario) => dia.ventas.length <= 0);
-      console.log(this.mesSeleccionado)
+      // this.intervaloSeleccionado.dias = this.intervaloSeleccionado.dias.filter((dia: LibroDiario) => dia.ventas.length <= 0);
+      console.log(this.intervaloSeleccionado)
 
       mostrarBuscador ? this.mostrarBuscadorPorTexto() : null;
     })
   }
 
   mostrarMesCompleto(mostrarBuscador: boolean) {
-    if (!this.mesSeleccionado) {
-      this.mesSeleccionado = { dias: [] };
+    if (!this.intervaloSeleccionado) {
+      this.intervaloSeleccionado = { dias: [] };
     }
 
     this.database.getLibrosDiariosMensual(this.fechaSeleccionada).then(diasListRef => {
-      this.mesSeleccionado.dias = diasListRef?.map(diaRef => {
+      this.intervaloSeleccionado.dias = diasListRef?.map(diaRef => {
         let dia: LibroDiario = diaRef.data() as LibroDiario;
         dia['id'] = diaRef.id;
         return dia
       });
-      this.mesSeleccionado['montoTotalMensualEfectivo'] = this.getMontoTotalMensual(MediosDePago.Efectivo);
-      this.mesSeleccionado['montoTotalMensualTransferencia'] = this.getMontoTotalMensual(MediosDePago.Transferencia);
-      this.mesSeleccionado['montoTotalMensualMercadoPago'] = this.getMontoTotalMensual(MediosDePago.MercadoPago);
-      this.mesSeleccionado['montoNegativoTotalMensualEfectivo'] = this.getMontoTotalMensualNegativo();
-      this.mesSeleccionado['dias'] = this.mesSeleccionado.dias?.sort((diaA: any, diaB: any) => {
+      this.intervaloSeleccionado['montoTotalMensualEfectivo'] = this.getMontoTotalMensual(MediosDePago.Efectivo);
+      this.intervaloSeleccionado['montoTotalMensualTransferencia'] = this.getMontoTotalMensual(MediosDePago.Transferencia);
+      this.intervaloSeleccionado['montoTotalMensualMercadoPago'] = this.getMontoTotalMensual(MediosDePago.MercadoPago);
+      this.intervaloSeleccionado['montoNegativoTotalMensualEfectivo'] = this.getMontoTotalMensualNegativo();
+      this.intervaloSeleccionado['dias'] = this.intervaloSeleccionado.dias?.sort((diaA: any, diaB: any) => {
         if (diaA.fecha > diaB.fecha) {
           return 1
         } else if (diaA.fecha < diaB.fecha) {
@@ -246,18 +208,9 @@ export class HistorialCajaPage implements OnInit {
           return 0;
         }
       });
-      console.log(this.mesSeleccionado)
+      console.log(this.intervaloSeleccionado)
       mostrarBuscador ? this.mostrarBuscadorPorTexto() : null;
     })
-
-
-    // // this.obtenerCotizacionDelDolarActual();
-    // this.libroDiario = null;
-    // if (!this.fechaSeleccionada) {
-    //   this.toastService.simpleMessage('', 'Seleccione una fecha', ToastColor.warning);
-    //   return
-    // };
-    // let documentId = this.obtenerMesId();
 
   }
   obtenerMesId() {
@@ -268,7 +221,7 @@ export class HistorialCajaPage implements OnInit {
   }
 
   getMontoTotalMensualNegativo() {
-    return this.mesSeleccionado.dias?.reduce((monto: number, dia: any) => {
+    return this.intervaloSeleccionado.dias?.reduce((monto: number, dia: any) => {
       // console.log(dia)
       if (dia.montoTotalNegativo && dia.montoTotalNegativo <= 0) {
         return monto += dia.montoTotalNegativo ? dia.montoTotalNegativo : 0;
@@ -280,7 +233,7 @@ export class HistorialCajaPage implements OnInit {
   }
 
   getMontoTotalMensual(medioDePago: MediosDePago) {
-    return this.mesSeleccionado.dias?.reduce((monto: number, dia: any) => {
+    return this.intervaloSeleccionado.dias?.reduce((monto: number, dia: any) => {
       // console.log(dia.montoTotalEfectivo)  
       switch (medioDePago) {
         case MediosDePago.Transferencia:
@@ -297,18 +250,6 @@ export class HistorialCajaPage implements OnInit {
     }, 0);
   }
 
-  // reajustarMontos(mostrarBuscador) {
-  //   mostrarBuscador ? this.mostrarBuscador = true : this.mostrarBuscador = false;
-
-  //   // this.obtenerCotizacionDelDolarActual();
-  //   this.libroDiario = null;
-  //   if (!this.fechaSeleccionada) {
-  //     this.snackBar.open('Seleccione una fecha', 'Cerrar', { duration: 5000, panelClass: ['warnSnackBar'] });
-  //     return
-  //   };
-  //   let documentId = this.obtenerMesId();
-
-
   scrollToElement(e: any, id: any) {
     e?.preventDefault();
     setTimeout(() => {
@@ -317,12 +258,12 @@ export class HistorialCajaPage implements OnInit {
   }
 
   async mostrarBuscadorPorTexto() {
-    console.log(this.mesSeleccionado)
+    console.log(this.intervaloSeleccionado)
     try {
       const modal = await this.modalController.create({
         component: BusquedaPorTextoComponent,
         componentProps: {
-          mesSeleccionado: this.mesSeleccionado,
+          intervaloSeleccionado: this.intervaloSeleccionado,
         },
       })
 

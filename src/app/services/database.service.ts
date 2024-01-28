@@ -43,22 +43,22 @@ export class DataBaseService {
   }
 
 
-   async getDiasSinVentas() {
-      let collectionRef = this.firestore.collection('ingresos').ref;
-    
-      try {
-        const respuesta = await collectionRef
-          .where('ventas', '==', [])  // Utilizamos '==' para comparar con un array vacío
-          .get();
-    
-        if (respuesta.empty) return null;
-    
-        return respuesta.docs;
-      } catch (err) {
-        console.error('Error al realizar la consulta:', err);
-        return null;
-      }
+  async getDiasSinVentas() {
+    let collectionRef = this.firestore.collection('ingresos').ref;
+
+    try {
+      const respuesta = await collectionRef
+        .where('ventas', '==', [])  // Utilizamos '==' para comparar con un array vacío
+        .get();
+
+      if (respuesta.empty) return null;
+
+      return respuesta.docs;
+    } catch (err) {
+      console.error('Error al realizar la consulta:', err);
+      return null;
     }
+  }
   public eliminar(collection: string, id: string) {
     return this.firestore.collection(collection).doc(id).delete();
   }
@@ -204,25 +204,25 @@ export class DataBaseService {
 
   async getLibrosDiariosEnIntervalo(fechaInicio: any, fechaFin: any) {
     let collectionRef = this.firestore.collection(environment.TABLAS.ingresos).ref;
-  
+
     try {
       const inicio = new Date(fechaInicio);
       const fin = new Date(fechaFin);
-  
+
       const respuesta = await collectionRef
         .where('fecha', '>=', inicio.getTime())
         .where('fecha', '<=', fin.getTime())
         .get();
-  
+
       if (respuesta.empty) return null;
-  
+
       return respuesta.docs;
     } catch (err) {
       console.error('Error al realizar la consulta:', err);
       return null;
     }
   }
-  
+
   async getBoletasModificadasHoy(fechaInicio: any, fechaFin: any) {
     let collectionRef = this.firestore.collection(environment.TABLAS.boletasReparacion).ref;
     try {
@@ -288,6 +288,27 @@ export class DataBaseService {
       return null;
     }
   }
+  async obtenerBoletaPorModelo(coleccion: any, textoABuscar: string) {
+    let collectionRef = this.firestore.collection(coleccion).ref;
+    try {
+      const respuesta = await collectionRef
+        .orderBy('modelo')
+        .startAt(textoABuscar)
+        .endAt(textoABuscar + '\uf8ff')
+        .get();
+  
+      if (respuesta.empty) return null;
+  
+      return respuesta.docs;
+  
+    } catch (err) {
+      // Manejo de errores, por ejemplo, mostrar un mensaje de error
+      // this.snackBar.open(`Error al buscar boletas por modelo: ${textoABuscar}`, 'Cerrar', { duration: 5000, panelClass: ['dangerSnackBar'] });
+      return null;
+    }
+  }
+  
+  
 
 
 }
