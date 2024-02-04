@@ -10,6 +10,15 @@ import { AlertService } from 'src/app/services/alert.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 
+
+export interface PlacaDecarga {
+  calidad: string,
+  modelo: string,
+  marca: string,
+  precio: number,
+  version?: string,
+  stock: number
+}
 @Component({
   selector: 'app-form-flex-de-carga',
   templateUrl: './form-flex-de-carga.component.html',
@@ -27,7 +36,7 @@ export class FormFlexDeCargaComponent implements OnInit {
   }
 
 
-  precioDolarBlue: number=0;
+  precioDolarBlue: number = 0;
   //auto complete
   modelosExistentes: any[] = [];
   flexDeCargasFiltrados: Observable<string[]> = new Observable<string[]>();

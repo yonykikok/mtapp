@@ -1,8 +1,8 @@
 <ion-app>
-  <ion-menu side="start" menuId="first" contentId="main">
+  <!-- <ion-menu side="start" menuId="home-menu" contentId="main">
     <ion-header>
       <ion-toolbar color="secondary" mode="md">
-        <!-- TODO: constante color -->
+      
         <ion-grid class="ion-padding">
           <ion-row>
 
@@ -11,7 +11,7 @@
             </ion-col>
 
             <ion-col size="9">
-              <ion-title class="ion-no-padding ion-margin-start">Multitask</ion-title><!-- //TODO:constante mainname -->
+              <ion-title class="ion-no-padding ion-margin-start">Multitask</ion-title>
               <ion-text style="display: block;" class="ion-margin-start">Hola Usuario!</ion-text>
               <ion-menu-toggle auto-hide="true">
                 <ion-button size="small" class="ion-margin-start" [routerLink]="['/login']"
@@ -39,27 +39,15 @@
             <ion-icon slot="end" name="arrow-forward"></ion-icon>
           </ion-item>
 
-          <!-- <ion-item [routerLink]="['/mis-reparaciones']" routerLinkActive="router-link-active">
-            <ion-icon name="file-tray-full"></ion-icon>
-            <ion-text class="ion-margin-start ion-text-capitalize"> <b> Mis reparaciones</b></ion-text>
-            <ion-icon slot="end" name="arrow-forward"></ion-icon>
-          </ion-item>
-
-          <ion-item [routerLink]="['/tienda']" routerLinkActive="router-link-active">
-            <ion-icon name="storefront-outline"></ion-icon>
-            <ion-text class="ion-margin-start ion-text-capitalize"> <b> Tienda</b></ion-text>
-            <ion-icon slot="end" name="arrow-forward"></ion-icon>
-          </ion-item>
-
-          <ion-item [routerLink]="['/ayuda']" routerLinkActive="router-link-active">
-            <ion-icon name="help-circle"></ion-icon>
-            <ion-text class="ion-margin-start ion-text-capitalize"> <b> Ayuda</b></ion-text>
-            <ion-icon slot="end" name="arrow-forward"></ion-icon>
-          </ion-item>
-          -->
           <ion-item [routerLink]="['/dashboard']" routerLinkActive="router-link-active">
             <ion-icon name="options-outline"></ion-icon>
             <ion-text class="ion-margin-start ion-text-capitalize"> <b> Panel de control</b></ion-text>
+            <ion-icon slot="end" name="arrow-forward"></ion-icon>
+          </ion-item> 
+          
+          <ion-item  *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',userLogged)" [routerLink]="['/ajustes-de-repuestos']" routerLinkActive="router-link-active">
+            <ion-icon name="settings-outline"></ion-icon>
+            <ion-text class="ion-margin-start ion-text-capitalize"> <b> Ajustes de repuestos</b></ion-text>
             <ion-icon slot="end" name="arrow-forward"></ion-icon>
           </ion-item> 
       
@@ -67,6 +55,6 @@
         </ion-menu-toggle>
       </ion-list>
     </ion-content>
-  </ion-menu>
+  </ion-menu> -->
   <ion-router-outlet id="main"></ion-router-outlet>
 </ion-app>

@@ -125,6 +125,14 @@ const routes: Routes = [
     path: 'articulos',
     loadChildren: () => import('./pages/articulos/articulos.module').then( m => m.ArticulosPageModule)
   },
+  {
+    path: 'ajustes-de-repuestos',
+    loadChildren: () => import('./pages/ajustes-de-repuestos/ajustes-de-repuestos.module').then( m => m.AjustesDeRepuestosPageModule)
+  },
+  {
+    path: 'equipos-disponibles',
+    loadChildren: () => import('./pages/equipos-disponibles/equipos-disponibles.module').then( m => m.EquiposDisponiblesPageModule)
+  },
 
 
 

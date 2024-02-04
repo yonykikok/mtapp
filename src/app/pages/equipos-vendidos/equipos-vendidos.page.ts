@@ -53,6 +53,7 @@ export class EquiposVendidosPage implements OnInit {
         return equipoVendido;
       });
 
+      console.log(this.listaEquiposVendidos)
       this.listaEquiposVendidos.sort((equipoA, equipoB) => {
         if (equipoA['fecha'] > equipoB['fecha']) {
           return -1;

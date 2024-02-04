@@ -1,0 +1,21 @@
+.card-content-container {
+    display: flex;
+    align-items: stretch; /* Ajusta la altura de los elementos */
+}
+
+.left-content {
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 30; /* Ocupa el 30% del ancho */
+    img {
+        width: 100%;
+        max-height: 150px;
+    }
+}
+
+.right-content {
+    flex: 70; /* Ocupa el 70% del ancho */
+    padding: 20px 20px 20px 5px;
+}

@@ -3,6 +3,7 @@ import { AuthService } from './services/auth.service';
 import { DataBaseService } from './services/database.service';
 import { environment } from 'src/environments/environment';
 import { LibroDiario } from './clases/libro-diario';
+import { FuncionesUtilesService } from './services/funciones-utiles.service';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,8 @@ import { LibroDiario } from './clases/libro-diario';
 export class AppComponent implements OnInit {
   userLogged;
   constructor(private authService: AuthService,
-    private database: DataBaseService) {
+    private database: DataBaseService,
+    public funcionesUtiles: FuncionesUtilesService) {
     this.userLogged = this.authService.currentUser;
   }
 
@@ -49,39 +51,61 @@ export class AppComponent implements OnInit {
   }
 
 
-
   ngOnInit(): void {
+    // this.agregarALaDBDiasNoCargados();
+    this.getCurrentUser();
+  }
 
+
+  getCurrentUser() {
+    this.authService.getCurrentUser().subscribe((userRef: any) => {
+      this.database.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res: any) => {
+        let usuario: any = res.payload.data();
+        usuario['uid'] = res.payload.id;
+
+        this.userLogged = {
+          uid: usuario['uid'],
+          email: usuario['email'],
+          displayName: usuario['displayName'],
+          emailVerified: usuario['emailVerified'],
+          photoURL: usuario['photoURL'],
+          role: usuario['role'],
+          securityCode: usuario['securityCode']
+        };
+      })
+    })
+  }
+
+  agregarALaDBDiasNoCargados() {
     // Uso del método
-    // const desde = "Fri Jul 01 2022 00:00:00 GMT-0300 (Argentina Standard Time)";
-    // const hasta = new Date(); // Esto representará la fecha actual
+    const desde = "Fri Jul 01 2022 00:00:00 GMT-0300 (Argentina Standard Time)";
+    const hasta = new Date(); // Esto representará la fecha actual
 
-    // const arrayDias = this.generarArrayDeDias(desde, hasta);
-    // console.log(arrayDias);
-    // let susb=this.database.obtenerTodos('ingresos').subscribe(res => {
-    //   susb.unsubscribe();
-    //   let dias = res.map(diaref => {
-    //     let dia: LibroDiario = diaref.payload.doc.data() as LibroDiario;
-    //     dia['id'] = diaref.payload.doc.id
-    //     return dia;
-    //   })
+    const arrayDias = this.generarArrayDeDias(desde, hasta);
+    console.log(arrayDias);
+    let susb = this.database.obtenerTodos('ingresos').subscribe(res => {
+      susb.unsubscribe();
+      let dias = res.map(diaref => {
+        let dia: LibroDiario = diaref.payload.doc.data() as LibroDiario;
+        dia['id'] = diaref.payload.doc.id
+        return dia;
+      })
 
-    //   let contador = 0;
+      let contador = 0;
 
-    //   let diasNoCargados = arrayDias.filter(dia => {
-    //     if (!dias.find(diaReal => diaReal.id === dia.id)) {
-    //       return dia;
-    //     }
-    //   })
+      let diasNoCargados = arrayDias.filter(dia => {
+        if (!dias.find(diaReal => diaReal.id === dia.id)) {
+          return dia;
+        }
+      })
 
-    //   diasNoCargados.forEach(dia => {
-    //     this.database.crearConCustomId('ingresos', dia.id, dia);
-    //   })
+      diasNoCargados.forEach(dia => {
+        this.database.crearConCustomId('ingresos', dia.id, dia);
+      })
 
 
-    //   console.log(diasNoCargados)
-    // })
-
+      console.log(diasNoCargados)
+    })
   }
 
 

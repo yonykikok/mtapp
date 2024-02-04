@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { DataBaseService } from 'src/app/services/database.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
@@ -15,12 +16,9 @@ export class FormEquipoDisponibleComponent implements OnInit {
 
   step = 2;
   imagenes: any[] = [];
-  equipoVendido: any;
+  equipoDisponible: any;
   mostrarSpinner = false;
 
-  step1FormGroup: FormGroup = new FormGroup({
-    dni: new FormControl(['', Validators.required]),
-  });
   step2FormGroup: FormGroup = new FormGroup({
     marca: new FormControl(['', Validators.required]),
     modelo: new FormControl(['', Validators.required]),
@@ -36,11 +34,10 @@ export class FormEquipoDisponibleComponent implements OnInit {
 
   constructor(private _formBuilder: FormBuilder,
     private dataBase: DataBaseService,
-    // private snackBar: MatSnackBar,
     private storageService: StorageService,
-    // private dialogRef: MatDialogRef<FormAltaEquipoVendidoComponent>
     private toastService: ToastService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private spinnerService:SpinnerService
   ) { }
 
   ngOnInit(): void {
@@ -85,14 +82,13 @@ export class FormEquipoDisponibleComponent implements OnInit {
   }
 
   procesarVenta() {
-    this.equipoVendido = {
-      ...this.step1FormGroup.value,
+    this.equipoDisponible = {
       ...this.step2FormGroup.value,
       ...this.step3FormGroup.value,
       ...this.step4FormGroup.value,
       fecha: Date.now()
     }
-    this.uploadImages(this.equipoVendido.images, `equipos_vendidos/`);
+    this.uploadImages(this.equipoDisponible.images, `equipos_disponibles/`);
 
 
   }
@@ -100,30 +96,30 @@ export class FormEquipoDisponibleComponent implements OnInit {
     this.modalController.dismiss();
   }
   uploadImages(images: any[], imgPath: string) {
-    this.mostrarSpinner = true;
+    this.spinnerService.showLoading('Subiendo equipo');
     let imgUrls: string[] = [];
     let imgUrlsRef: string[] = [];//referencia para eliminar
     let contador = 0;
     images.forEach((imgBase64, index) => {
-      this.storageService.subirImagenEquiposVenta(imgPath + `${this.equipoVendido.marca}-${this.equipoVendido.dni}-${this.equipoVendido.imei}-${index}`, imgBase64).then((urlImagen) => {
+      this.storageService.subirImagenEquiposVenta(imgPath + `${this.equipoDisponible.fecha}-${this.equipoDisponible.marca}-${this.equipoDisponible.imei}-${index}`, imgBase64).then((urlImagen) => {
         imgUrls.push(urlImagen as string);
-        imgUrlsRef.push(imgPath + `${this.equipoVendido.fecha}-${this.equipoVendido.marca}-${this.equipoVendido.imei}-${index}`);//referencia para eliminar
+        imgUrlsRef.push(imgPath + `${this.equipoDisponible.fecha}-${this.equipoDisponible.marca}-${this.equipoDisponible.imei}-${index}`);//referencia para eliminar
         contador++;
         if (contador == images.length) {
-          this.equipoVendido.images = imgUrls;
-          this.equipoVendido.imgUrlsRef = imgUrlsRef;//referencia para eliminar
-          this.dataBase.crear(environment.TABLAS.equipos_vendidos, this.equipoVendido).then(res => {
-            this.toastService.simpleMessage('Existo', 'Nueva venta de equipo generada', ToastColor.success);
-            this.mostrarSpinner = false;
+          this.equipoDisponible.images = imgUrls;
+          this.equipoDisponible.imgUrlsRef = imgUrlsRef;//referencia para eliminar
+          this.dataBase.crear(environment.TABLAS.equipos_disponibles, this.equipoDisponible).then(res => {
+            this.spinnerService.stopLoading();
+            this.toastService.simpleMessage('Existo', 'Nuevo equipo añadido a disponibles', ToastColor.success);
             this.cerrarFormulario();
 
 
           }).catch(err => {
-            this.toastService.simpleMessage('Error', 'No se pudo generar la venta', ToastColor.danger);
+            this.toastService.simpleMessage('Error', 'No se pudo agregar el equipo a "equipos disponibles"', ToastColor.danger);
           })
         }
       }).catch(err => {
-        this.toastService.simpleMessage('Error', 'al subir la image ocurrio un error', ToastColor.danger);
+        this.toastService.simpleMessage('Error', 'al subir la image ocurrio un error ("equipos disponibles")', ToastColor.danger);
       });
     });
   }

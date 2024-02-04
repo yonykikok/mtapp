@@ -91,6 +91,32 @@ export enum roles {
 }
 
 
+export interface EquipoEspecificaciones {
+  pantalla: number,
+  resolucion: string,
+  camaraPrincipal: number,
+  camaraFrontal: number,
+  procesador: string,
+  memoria: number,
+  almacenamiento: number
+}
+export interface EquipoDisponible {
+  accesorios: string[];
+  fecha: number;
+  images: string[];
+  imei: string;
+  marca: string;
+  modelo: string;
+  precio: number;
+  id: string;
+  imgUrlsRef?: string[];
+  [key: string]: any;
+  mostrarImagenes?: boolean;
+  tiempoTranscurrido?: number;
+  especificaciones?: EquipoEspecificaciones;
+}
+
+
 export interface EquipoVendido {
   accesorios: [string];
   dni: string;

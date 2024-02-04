@@ -11,11 +11,14 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./repuestos.page.scss'],
 })
 export class RepuestosPage implements OnInit {
-  loggedUser!:User;
-  modulos: { titulo: string, color: string, ruta: string, role: Roles }[] = [
-    { titulo: 'Modulos', color: '#28a745', ruta: "/lista-modulos", role: 'CLIENTE' },
-    { titulo: 'Baterias', color: '#ffc107', ruta: "/lista-baterias", role: 'CLIENTE' },
-    { titulo: 'Flex de carga', color: '#d34fb2', ruta: "/lista-flex-de-carga", role: 'CLIENTE' },
+  loggedUser!: User;
+  modulos: { titulo: string, color: string, ruta: string, role: Roles, img: string }[] = [
+    { titulo: 'Modulos', color: '#28a745', ruta: "/repuestos/lista-modulos", role: 'CLIENTE', img: '/assets/svg/icons/modulos.png' },
+    { titulo: 'Baterias', color: '#ffc107', ruta: "/repuestos/lista-baterias", role: 'CLIENTE', img: '/assets/svg/icons/baterias.png' },
+    { titulo: 'Flex de carga', color: '#d34fb2', ruta: "/repuestos/lista-flex-de-carga", role: 'CLIENTE', img: '/assets/svg/icons/placaDeCarga.png' },
+
+
+
     // { titulo: 'Tactiles', color: '#42688a', ruta: "/lista-tactiles", role: 'CLIENTE' },
     // { titulo: 'Display', color: '#238386', ruta: "/lista-displays", role: 'CLIENTE' },
 

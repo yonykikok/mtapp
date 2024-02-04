@@ -10,7 +10,6 @@ import { EquiposVendidosPage } from './equipos-vendidos.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { VisualizadorDeImagenComponent } from 'src/app/components/views/visualizador-de-imagen/visualizador-de-imagen.component';
 import { FormEquipoVendidoComponent } from 'src/app/components/forms/form-equipo-vendido/form-equipo-vendido.component';
-import { FormEquipoDisponibleComponent } from 'src/app/components/forms/form-equipo-disponible/form-equipo-disponible.component';
 
 @NgModule({
   imports: [
@@ -20,6 +19,6 @@ import { FormEquipoDisponibleComponent } from 'src/app/components/forms/form-equ
     EquiposVendidosPageRoutingModule,
     SharedModule
   ],
-  declarations: [EquiposVendidosPage,VisualizadorDeImagenComponent,FormEquipoVendidoComponent,FormEquipoDisponibleComponent]
+  declarations: [EquiposVendidosPage,VisualizadorDeImagenComponent,FormEquipoVendidoComponent]
 })
 export class EquiposVendidosPageModule {}

@@ -1,0 +1,49 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Equipos disponibles</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card *ngFor="let equipo of equipos">
+    <ion-card-content class="ion-no-padding">
+      <div class="card-content-container">
+        <div class="left-content">
+          <!-- Contenido del lado izquierdo (30%) -->
+          <img height="300px" [src]="equipo.images[0]" />
+          <p style="font-size: 1.3rem;">
+            <b style="color: green;">{{equipo.precio|currency:'USD':'symbol':'1.0-0'}}</b>
+          </p>
+        </div>
+        <div class="right-content">
+          <p style="font-size: 1.2rem;">
+            <b> {{equipo.marca|titlecase}} {{equipo.modelo|uppercase}}</b>
+          </p>
+
+          <p *ngIf="equipo.accesorios && equipo.accesorios.length>0">
+            <b>
+              Incluye:
+            </b>
+            <ion-label *ngFor="let accesorio of equipo.accesorios;let index=index">
+              {{accesorio|titlecase}}{{index!=(equipo.accesorios.length-1)?', ':'.'}}
+            </ion-label>
+          </p>
+
+          <p *ngIf="equipo.imei">
+            <b>
+              Imei:
+            </b>
+            {{equipo.imei}}
+          </p>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" (click)="openDialog()">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

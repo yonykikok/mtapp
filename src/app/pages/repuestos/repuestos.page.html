@@ -7,9 +7,10 @@
   <div class="grid-container">
     <div *ngFor='let modulo of modulos'>
       <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario(modulo.role,loggedUser)" class=" flexCenterCenter"
-        [routerLink]="'/repuestos'+modulo.ruta" routerLinkActive="router-link-active" [ngStyle]="{'background-color': modulo.color}">
-        <ion-text class="ion-text-center" style="color: white;"><b>{{modulo.titulo}}</b></ion-text>
-      </ion-chip>
+      [routerLink]="modulo.ruta" routerLinkActive="router-link-active" [ngStyle]="{'background-color':modulo.color}">
+      <ion-text class="ion-text-center title" style="color: white; font-size: 1.5rem;"><b>{{modulo.titulo}}</b></ion-text>
+      <img *ngIf="modulo.img" [src]="modulo.img" alt="">
+    </ion-chip>
     </div>   
   </div>
 

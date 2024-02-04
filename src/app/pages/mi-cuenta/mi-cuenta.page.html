@@ -27,13 +27,15 @@
 
             <p class="bold" style="color: gray;">
                 <ion-icon name="person-circle-outline" slot="start" color="grey"></ion-icon> DNI
-                <ion-icon color="primary" *ngIf="modoEditar" slot="end" name="create-outline" (click)="mostrarPopupDni()"></ion-icon>
+                <ion-icon color="primary" *ngIf="modoEditar" slot="end" name="create-outline"
+                    (click)="mostrarPopupDni()"></ion-icon>
                 <ion-text class="displayBlock ion-padding-start">{{loggedUser.dni?loggedUser.dni:'--'}}</ion-text>
             </p>
 
             <p class="bold" style="color: gray;">
                 <ion-icon name="time-outline" slot="start"></ion-icon> Fecha de Nacimiento
-                <ion-icon color="primary" *ngIf="modoEditar" slot="end" name="create-outline" (click)="mostrarPopupFNacimiento()"></ion-icon>
+                <ion-icon color="primary" *ngIf="modoEditar" slot="end" name="create-outline"
+                    (click)="mostrarPopupFNacimiento()"></ion-icon>
                 <ion-text class="displayBlock ion-padding-start">
                     {{loggedUser.fNacimiento?loggedUser.fNacimiento:'--'}}
                 </ion-text>
@@ -48,14 +50,16 @@
 
             <p class="bold" style="color: gray;">
                 <ion-icon name="person-circle-outline" slot="start" color="grey"></ion-icon> Correo
-                <ion-icon color="primary" *ngIf="modoEditar" slot="end" name="create-outline" (click)="mostrarPopupCorreo()"></ion-icon>
+                <ion-icon color="primary" *ngIf="modoEditar" slot="end" name="create-outline"
+                    (click)="mostrarPopupCorreo()"></ion-icon>
                 <ion-text class="displayBlock ion-padding-start">{{loggedUser.email?loggedUser.email:'--'}}
                 </ion-text>
             </p>
 
             <p class="bold" style="color: gray;">
                 <ion-icon name="phone-portrait-outline" slot="start"></ion-icon> Celular
-                <ion-icon color="primary" *ngIf="modoEditar" slot="end" name="create-outline" (click)="mostrarPopupNumeroTelefonico()"></ion-icon>
+                <ion-icon color="primary" *ngIf="modoEditar" slot="end" name="create-outline"
+                    (click)="mostrarPopupNumeroTelefonico()"></ion-icon>
                 <ion-text class="displayBlock ion-padding-start">
                     {{loggedUser.phoneNumber?loggedUser.phoneNumber:'--'}}
                 </ion-text>
@@ -65,38 +69,4 @@
     </ion-item>
 
 
-    <!-- <ion-item class="ion-padding-top ion-padding-bottom" lines="none">
-
-        <ion-chip class="cambiarClave" color="success" outline
-            *ngIf="loggedUser.activo && loggedUser.password; else genPassword">
-            <ion-icon name="key-outline"></ion-icon>
-            <ion-label>Cambiar clave</ion-label>
-        </ion-chip>
-
-        <ng-template #genPassword>
-            <ion-chip class="cambiarClave" color="success" outline (click)="generarClave()">
-                <ion-icon name="keypad-outline"></ion-icon>
-                <ion-label>Generar clave</ion-label>
-            </ion-chip>
-        </ng-template>
-
-    </ion-item> -->
-
 </ion-content>
-
-<!-- <ion-content *ngIf="loggedUser ">
-    <ion-item>
-        <ion-thumbnail slot="start">
-            <ion-skeleton-text></ion-skeleton-text>
-        </ion-thumbnail>
-        <ion-label class="ion-padding-start ion-padding-bottom">
-            <ion-text class="bold">
-                <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
-            </ion-text>
-            <p>
-                <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
-            </p>
-            <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
-        </ion-label>
-    </ion-item>
-</ion-content> -->
