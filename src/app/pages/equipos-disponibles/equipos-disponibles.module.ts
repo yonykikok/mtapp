@@ -9,6 +9,7 @@ import { EquiposDisponiblesPageRoutingModule } from './equipos-disponibles-routi
 import { EquiposDisponiblesPage } from './equipos-disponibles.page';
 import { FormEquipoDisponibleComponent } from 'src/app/components/forms/form-equipo-disponible/form-equipo-disponible.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { FormEspecificacionesEquipoComponent } from 'src/app/components/forms/form-especificaciones-equipo/form-especificaciones-equipo.component';
 
 @NgModule({
   imports: [
@@ -16,9 +17,10 @@ import { SharedModule } from 'src/app/shared/shared.module';
     FormsModule,
     IonicModule,
     EquiposDisponiblesPageRoutingModule,
-    SharedModule
+    SharedModule,
   ],
   declarations: [EquiposDisponiblesPage,
+    FormEspecificacionesEquipoComponent,
     FormEquipoDisponibleComponent
   ]
 })

@@ -10,6 +10,7 @@ import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.servic
 import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 import { boleta } from '../mis-reparaciones/mis-reparaciones.page';
+import { boleta_estados } from 'src/app/services/info-compartida.service';
 export const enum OrderByDireccions {
   ascendente = 'asc',
   descendente = 'desc'
@@ -20,8 +21,14 @@ export const enum OrderByDireccions {
   styleUrls: ['./boletas.page.scss'],
 })
 export class BoletasPage implements OnInit {
+  busquedaPorInput: boolean = true;
+  estadoSeleccionado!: boleta_estados;
+  camposSeleccionados = ['nroBoleta', 'dniCliente', 'estado'];
+
+
   textoABuscar: string = "";
   boletas: boleta[] = [];
+  boletasAMostrar: boleta[] = [];
   loggedUser: User | null = null;
   sinCoincidencias = false;
 
@@ -39,6 +46,22 @@ export class BoletasPage implements OnInit {
 
   }
   ngOnInit(): void {//obtenemos las boletas modificadas del dia.
+    //buscamos todas las boletas y pasamos a lowercase el modelo para el filtro por modelo.
+    // let subs = this.dataBase.obtenerTodos(environment.TABLAS.boletasReparacion).subscribe(res => {
+    //   subs.unsubscribe();
+    //   let boletas = res.map(boletaRef => {
+    //     let boleta: boleta = boletaRef.payload.doc.data() as boleta;
+    //     boleta['id'] = boletaRef.payload.doc.id;
+    //     return boleta;
+    //   });
+    //   console.log(boletas)
+    //   boletas.forEach(boleta => {
+    //     if (boleta.modelo && boleta.id) {
+    //       boleta.modelo = boleta.modelo.toLowerCase();
+    //       this.dataBase.actualizar(environment.TABLAS.boletasReparacion, boleta, boleta.id);
+    //     }
+    //   });
+    // })
     // const fechaHoy = new Date().getTime();
     // const fechaAyer = fechaHoy - 24 * 60 * 60 * 1000; // Restamos un día
     // this.dataBase.getBoletasModificadasHoy(fechaAyer, fechaHoy).then(boletasListRef => {
@@ -116,8 +139,13 @@ export class BoletasPage implements OnInit {
 
   }
 
+  limpiarFiltro() {
+
+    console.log("limpiar")
+  }
 
   applyFilter() {
+    this.sinCoincidencias = false;
     if (Number(this.textoABuscar)) {
       if ((this.textoABuscar.length >= 2 && this.textoABuscar.length <= 5)) {
         this.busquedaPorNroBoleta(this.textoABuscar);
@@ -127,13 +155,13 @@ export class BoletasPage implements OnInit {
       }
     } else {//busqueda por texto.
       console.log("busqueda por texto")
-      if(this.textoABuscar.length>=3){
+      if (this.textoABuscar.length >= 2) {
         this.busquedaPorTexto();
       }
     }
   }
   busquedaPorTexto() {
-    this.dataBase.obtenerBoletaPorModelo(environment.TABLAS.boletasReparacion, this.textoABuscar).then((res: any) => {
+    this.dataBase.obtenerBoletaPorModelo(environment.TABLAS.boletasReparacion, this.textoABuscar.toLocaleLowerCase()).then((res: any) => {
       if (!res) {
         this.sinCoincidencias = true;
         return;
@@ -144,7 +172,10 @@ export class BoletasPage implements OnInit {
         boleta['id'] = element.id;
         return boleta;
       });
+      boletas.sort((a: boleta, b: boleta) => b.nroBoleta.localeCompare(a.nroBoleta));
       this.boletas = boletas;
+      this.boletasAMostrar = this.funcionesUtiles.clonarObjeto(boletas);
+      console.log(boletas)
 
     });
   }
@@ -161,6 +192,7 @@ export class BoletasPage implements OnInit {
         return boleta;
       });
       this.boletas = boletas;
+      this.boletasAMostrar = this.funcionesUtiles.clonarObjeto(boletas);
 
     });
   }
@@ -178,6 +210,7 @@ export class BoletasPage implements OnInit {
         return boleta;
       });
       this.boletas = boletas;
+      this.boletasAMostrar = this.funcionesUtiles.clonarObjeto(boletas);
 
     });
   }
@@ -207,6 +240,26 @@ export class BoletasPage implements OnInit {
       });
     }
   }
+  buscarPorEstado() {
+    this.sinCoincidencias = false;
+    
+    this.dataBase.obtenerBoletaPorEstadoBoleta(environment.TABLAS.boletasReparacion, this.estadoSeleccionado).then(res => {
+      if (!res) {
+        this.sinCoincidencias = true;
+        return;
+      }
 
+      let boletas = res.map((element: any) => {
+        let boleta = element.data();
+        boleta['id'] = element.id;
+        return boleta;
+      });
+      boletas.sort((a: boleta, b: boleta) => b.nroBoleta.localeCompare(a.nroBoleta));
+      this.boletas = boletas;
+      this.boletasAMostrar = this.funcionesUtiles.clonarObjeto(boletas);
+      console.log(boletas)
+
+    });
+  }
 
 }

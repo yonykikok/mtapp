@@ -25,8 +25,14 @@
       src="{{selectedImg?selectedImg:imagenes[3]}}" alt="">
   </div>
 </ion-card>
-<div class="flexCenterCenter">
+<div class="flexCenterCenter" style="flex-direction: column;">
+
+
   <ion-button *ngIf="imagenes.length<=3" class="ion-margin" (click)="compressFile()" id="uploadImagesComponent">
     Agregar imagen <ion-icon slot="end" name="image-outline"></ion-icon>
+  </ion-button>
+
+  <ion-button size="small" *ngIf="isModal" (click)="continuar()" color="success">
+    Guardar
   </ion-button>
 </div>

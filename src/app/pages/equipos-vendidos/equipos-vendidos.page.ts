@@ -40,7 +40,7 @@ export class EquiposVendidosPage implements OnInit {
   ngOnInit(): void {
     this.getCurrentUser();
     // this.openDialog();
-    this.database.obtenerTodos(environment.TABLAS.equipos_vendidos).subscribe(listRef => {
+    this.database.obtenerUltimos60dias(environment.TABLAS.equipos_vendidos).subscribe(listRef => {
       let currentDay = new Date();
       this.listaEquiposVendidos = listRef.map((equipoRef: any) => {
         let equipoVendido = equipoRef.payload.doc.data() as EquipoVendido;
@@ -69,6 +69,37 @@ export class EquiposVendidosPage implements OnInit {
     });
   }
 
+  cargarTodasLasVentas() {
+    this.listaEquiposVendidos = [];
+    this.database.obtenerTodos(environment.TABLAS.equipos_vendidos).subscribe(listRef => {
+      let currentDay = new Date();
+      this.listaEquiposVendidos = listRef.map((equipoRef: any) => {
+        let equipoVendido = equipoRef.payload.doc.data() as EquipoVendido;
+        equipoVendido['id'] = equipoRef.payload.doc.id;
+        equipoVendido['mostrarImagenes'] = false;
+        let diferenciaEnMilisegundos = Math.abs(Number(currentDay) - Number(equipoVendido['fecha']));
+        let diferenciaEnDias = Math.ceil(diferenciaEnMilisegundos / (1000 * 60 * 60 * 24));
+        equipoVendido['tiempoTranscurrido'] = diferenciaEnDias;
+
+        console.log(equipoVendido.precio," ",equipoVendido.id)
+        return equipoVendido;
+      });
+
+      console.log(this.listaEquiposVendidos)
+      this.listaEquiposVendidos.sort((equipoA, equipoB) => {
+        if (equipoA['fecha'] > equipoB['fecha']) {
+          return -1;
+        }
+        else if (equipoA['fecha'] < equipoB['fecha']) {
+          return 1;
+        }
+        else {
+          return 0;
+        }
+      });
+      //TODO sort fecha mas reciente.      
+    });
+  }
   async openDialog() {
 
     try {

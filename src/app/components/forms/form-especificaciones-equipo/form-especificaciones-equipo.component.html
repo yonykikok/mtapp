@@ -1,0 +1,53 @@
+<!-- form-especificaciones-equipo.component.html -->
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Especificaciones
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrarModal()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+
+    <form [formGroup]="equipoForm" (ngSubmit)="onSubmit()">
+      <ion-item>
+        <ion-input placeholder="Ej: 5.5, 6.0" label="Pantalla" labelPlacement="floating" formControlName="pantalla" type="number"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input placeholder="Ej: 1080x2400" label="Resolución maxima de pantalla" labelPlacement="floating" formControlName="resolucion" type="text"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input placeholder="24" label="Cámara Principal" labelPlacement="floating" formControlName="camaraPrincipal"
+          type="number"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input placeholder="2" label="Cámara Frontal" labelPlacement="floating" formControlName="camaraFrontal"
+          type="number"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input placeholder="Snapdragon 720G Octa Core (hasta 2.3 GHz)" label="Procesador" labelPlacement="floating" formControlName="procesador" type="text"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input placeholder="4" label="Memoria" labelPlacement="floating" formControlName="memoria" type="number"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input placeholder="128" label="Almacenamiento" labelPlacement="floating" formControlName="almacenamiento"
+          type="number"></ion-input>
+      </ion-item>
+
+      <ion-button class="ion-margin" type="submit" expand="full" [disabled]="equipoForm.invalid">Guardar</ion-button>
+    </form>
+  </ion-card>
+
+  <ion-button expand="block" (click)="buscarEnInternet()" color="secondary">Buscar caracteristicas en internet</ion-button>
+</ion-content>

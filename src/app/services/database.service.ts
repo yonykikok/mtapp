@@ -3,6 +3,7 @@ import { AngularFirestore } from "@angular/fire/compat/firestore";
 import { boleta_estados } from 'src/app/services/info-compartida.service';
 import { environment } from 'src/environments/environment';
 import { OrderByDireccions } from '../pages/boletas/boletas.page';
+import { Observable } from 'rxjs';
 
 
 @Injectable({
@@ -274,6 +275,21 @@ export class DataBaseService {
       return null;
     }
   }
+
+  async obtenerBoletaPorEstadoBoleta(coleccion: any, estado: boleta_estados) {
+    let collectionRef = this.firestore.collection(coleccion).ref;
+    try {
+      const respuesta = await collectionRef.where('estado', '==', estado).get();
+
+      if (respuesta.empty) return null;
+
+      return respuesta.docs;
+
+    } catch (err) {
+      // this.snackBar.open(`Error, al traer las boletas con numero ${nroBoleta} `, 'Cerrar', { duration: 5000, panelClass: ['dangerSnackBar'] });
+      return null;
+    }
+  }
   async obtenerBoletaPorDni(coleccion: any, dniCliente: any) {
     let collectionRef = this.firestore.collection(coleccion).ref;
     try {
@@ -296,19 +312,33 @@ export class DataBaseService {
         .startAt(textoABuscar)
         .endAt(textoABuscar + '\uf8ff')
         .get();
-  
+
       if (respuesta.empty) return null;
-  
+
       return respuesta.docs;
-  
+
     } catch (err) {
       // Manejo de errores, por ejemplo, mostrar un mensaje de error
       // this.snackBar.open(`Error al buscar boletas por modelo: ${textoABuscar}`, 'Cerrar', { duration: 5000, panelClass: ['dangerSnackBar'] });
       return null;
     }
   }
-  
-  
 
+
+
+
+
+
+
+  public obtenerUltimos60dias(coleccion: string): Observable<any[]> {
+ // Obtén la fecha actual y la fecha de hace 60 días en milisegundos
+ const fechaActualEnMillis = new Date().getTime();
+ const fecha60DiasAtrasEnMillis = fechaActualEnMillis - (60 * 24 * 60 * 60 * 1000);
+
+ // Realiza la consulta con el rango de fechas
+ return this.firestore.collection(coleccion, ref =>
+   ref.where('fecha', '>=', fecha60DiasAtrasEnMillis).where('fecha', '<=', fechaActualEnMillis)
+ ).snapshotChanges();
+}
 
 }

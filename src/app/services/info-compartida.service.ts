@@ -91,6 +91,13 @@ export enum roles {
 }
 
 
+export interface ReservaEquipo {
+  reservado: boolean,
+  dni: number | null,
+  fecha: number | null,
+  adelanto: number
+}
+
 export interface EquipoEspecificaciones {
   pantalla: number,
   resolucion: string,
@@ -101,6 +108,8 @@ export interface EquipoEspecificaciones {
   almacenamiento: number
 }
 export interface EquipoDisponible {
+  reserva?: ReservaEquipo;
+  dni?: string;
   accesorios: string[];
   fecha: number;
   images: string[];
@@ -109,7 +118,7 @@ export interface EquipoDisponible {
   modelo: string;
   precio: number;
   id: string;
-  imgUrlsRef?: string[];
+  imgUrlsRef: string[];
   [key: string]: any;
   mostrarImagenes?: boolean;
   tiempoTranscurrido?: number;

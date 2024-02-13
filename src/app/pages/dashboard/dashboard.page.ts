@@ -33,7 +33,7 @@ export class DashboardPage implements OnInit {
     { titulo: 'Historial', color: 'rgb(113 112 253)', ruta: "/historial-caja", role: 'ADMIN', img: '/assets/svg/icons/historial.svg' },
     { titulo: 'Stock Modulos', color: 'rgb(103 102 102)', ruta: "/stock-modulos", role: 'EMPLEADO', img: '/assets/svg/icons/stock.svg' },
     { titulo: 'Boletas', color: 'rgb(149 157 126)', ruta: "/boletas", role: 'EMPLEADO', img: '/assets/svg/icons/boletas.svg' },
-    { titulo: 'Ventas', color: '#7fbdc7', ruta: "/equipos-vendidos", role: 'EMPLEADO', img: '/assets/svg/icons/ventas.svg' },
+    { titulo: 'Ventas', color: '#7fbdc7', ruta: "/equipos", role: 'EMPLEADO', img: '/assets/svg/icons/ventas.svg' },
     { titulo: 'Servicios', color: 'rgb(29 189 215)', ruta: "/servicios", role: 'EMPLEADO', img: '/assets/svg/icons/servicios.svg' },
     { titulo: 'Cuentas clientes', color: '#dc3545', ruta: "/cuentas-clientes", role: 'ADMIN', img: '/assets/svg/icons/deudores2.svg' },
     { titulo: 'Mis reparaciones', color: '#d34fb2', ruta: "/mis-reparaciones", role: 'CLIENTE', img: '/assets/svg/icons/reparaciones.svg' },

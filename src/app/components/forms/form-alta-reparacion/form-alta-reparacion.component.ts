@@ -116,7 +116,7 @@ export class FormAltaReparacionComponent implements OnInit {
             completa: false,
             images: [photo],
             dniCliente: dniCliente.toString(),
-            modelo: modelo.toString(),
+            modelo: modelo.toString().toLowerCase(),
             nroBoleta: nroBoleta.toString(),
             fechaAlta: new Date().getTime(),
             estado: boleta_estados.PENDIENTE,

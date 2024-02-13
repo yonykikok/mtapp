@@ -1,14 +1,14 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Equipos vendidos'"></app-clasic-toolbar>
+  <app-clasic-toolbar [ruta]="'/equipos'" [title]="'Equipos vendidos'"></app-clasic-toolbar>
 </ion-header>
 
 
 <ion-content>
+  
   <div *ngIf="listaEquiposVendidos&& listaEquiposVendidos.length>0;else informacion">
-    <ion-item-divider class="ion-no-margin ion-no-padding" *ngFor="let equipo of listaEquiposVendidos">
-      <ion-item-sliding class="ion-no-padding">
-        <ion-item class="ion-no-padding">
-          <ion-accordion-group style="width: 100%;">
+    <!-- <div class="ion-no-margin ion-no-padding" > -->
+      <ion-item-sliding style="margin-bottom: 0.1rem;" class="ion-no-padding" *ngFor="let equipo of listaEquiposVendidos">
+          <ion-accordion-group style="width: 100%;" >
             <ion-accordion value="first">
               <!-- [ngStyle]="{'background-color': equipo.fecha<='retirado'?'#f2e60f2e':''}" //TODO: retomar esto en el ion-item -->
               <ion-item slot="header" color="light">
@@ -56,13 +56,14 @@
               </div>
             </ion-accordion>
           </ion-accordion-group>
-        </ion-item>
 
         <ion-item-options>
           <ion-item-option color="danger" (click)="eliminarVenta(equipo)">Eliminar</ion-item-option>
         </ion-item-options>
       </ion-item-sliding>
-    </ion-item-divider>
+    <!-- </div> -->
+    <ion-button color="warning" expand="block" (click)="cargarTodasLasVentas()"> Ver todas las ventas</ion-button>
+
 
   </div>
   <ng-template #informacion>

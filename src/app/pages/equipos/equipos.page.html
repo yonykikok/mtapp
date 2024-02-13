@@ -1,0 +1,31 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Equipos'"></app-clasic-toolbar>
+</ion-header>
+
+
+<ion-content class="fullscreen-container">
+
+  <ion-card class="ion-text-center"  color="success" routerLink="/equipos-disponibles">
+    <ion-card-header>
+      <ion-card-title>Equipos disponibles </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <div>
+        <img style="height: 12rem;" src="assets/svg/icons/disponibles.svg" alt="">
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="ion-text-center" color="secondary" routerLink="/equipos-vendidos">
+    <ion-card-header>
+      <ion-card-title>Equipos vendidos </ion-card-title>
+
+    </ion-card-header>
+    <ion-card-content>
+      <div>
+        <img style="height: 12rem;" src="assets/svg/icons/vendidos.svg" alt="">
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

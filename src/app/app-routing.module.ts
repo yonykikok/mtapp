@@ -133,6 +133,10 @@ const routes: Routes = [
     path: 'equipos-disponibles',
     loadChildren: () => import('./pages/equipos-disponibles/equipos-disponibles.module').then( m => m.EquiposDisponiblesPageModule)
   },
+  {
+    path: 'equipos',
+    loadChildren: () => import('./pages/equipos/equipos.module').then( m => m.EquiposPageModule)
+  },
 
 
 

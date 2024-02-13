@@ -1,41 +1,133 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Equipos disponibles</ion-title>
-  </ion-toolbar>
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/equipos'" [title]="'Equipos disponibles'"></app-clasic-toolbar>
 </ion-header>
 
+
 <ion-content [fullscreen]="true">
-  <ion-card *ngFor="let equipo of equipos">
-    <ion-card-content class="ion-no-padding">
-      <div class="card-content-container">
-        <div class="left-content">
-          <!-- Contenido del lado izquierdo (30%) -->
-          <img height="300px" [src]="equipo.images[0]" />
-          <p style="font-size: 1.3rem;">
-            <b style="color: green;">{{equipo.precio|currency:'USD':'symbol':'1.0-0'}}</b>
-          </p>
-        </div>
-        <div class="right-content">
+  <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Actions" [buttons]="actionSheetButtons"
+    (didDismiss)="setOpen(false)"></ion-action-sheet>
+  <div *ngIf="equipos && equipos.length>0; else sinEquiposDisponibles">
+
+    <ion-card *ngFor="let equipo of equipos">
+      <ion-card-content class="ion-no-padding">
+        <div class="titleModel">
           <p style="font-size: 1.2rem;">
             <b> {{equipo.marca|titlecase}} {{equipo.modelo|uppercase}}</b>
           </p>
-
-          <p *ngIf="equipo.accesorios && equipo.accesorios.length>0">
-            <b>
-              Incluye:
-            </b>
-            <ion-label *ngFor="let accesorio of equipo.accesorios;let index=index">
-              {{accesorio|titlecase}}{{index!=(equipo.accesorios.length-1)?', ':'.'}}
-            </ion-label>
-          </p>
-
-          <p *ngIf="equipo.imei">
-            <b>
-              Imei:
-            </b>
-            {{equipo.imei}}
-          </p>
         </div>
+        <div class="card-content-container">
+          <div class="left-content">
+            <!-- Contenido del lado izquierdo (30%) -->
+            <img style="object-fit: contain;" height="300px" [src]="equipo.images[0]" />
+            <p style="font-size: 1.3rem;" *ngIf="equipo.reserva&& equipo.reserva.reservado; else disponible">
+              <ion-text class="ion-margin-start" color="warning"> <b>RESERVADO</b></ion-text>
+              <ion-button size="small" color="danger" (click)="solicitarConfirmacionCancelarReserva(equipo)">Cancelar
+                reserva</ion-button>
+            </p>
+            <ng-template #disponible>
+              <p style="font-size: 1.3rem;">
+                <b style="color: green;">{{equipo.precio|currency:'USD':'symbol':'1.0-0'}}</b>
+              </p>
+            </ng-template>
+          </div>
+          <div class="right-content">
+            <div>
+
+              <ion-icon (click)="equipoSeleccionado=equipo" (click)="setOpen(true)" color="primary"
+                style="position: absolute; right: 0.2rem; top: 0.2rem; font-size: 1.4rem;"
+                name="ellipsis-vertical-outline"></ion-icon>
+
+              <p *ngIf="equipo.especificaciones"> <b> Camara principal: </b>
+                {{equipo.especificaciones.camaraPrincipal}}MP
+              </p>
+              <p *ngIf="equipo.especificaciones"> <b> Camara fronta: </b>
+                {{equipo.especificaciones.camaraFrontal}}MP</p>
+              <p *ngIf="equipo.especificaciones"> <b> Memoria: </b> {{equipo.especificaciones.memoria}}GB</p>
+              <p *ngIf="equipo.especificaciones"> <b> Almacenamiento: </b> {{equipo.especificaciones.almacenamiento}}GB
+              </p>
+              <p *ngIf="equipo.accesorios && equipo.accesorios.length>0">
+                <b>
+                  Incluye:
+                </b>
+                <ion-label *ngFor="let accesorio of equipo.accesorios;let index=index">
+                  {{accesorio|titlecase}}{{index!=(equipo.accesorios.length-1)?', ':'.'}}
+                </ion-label>
+              </p>
+              <!-- <p *ngIf="equipo.imei"> <b> Imei: </b> {{equipo.imei}} </p> -->
+            </div>
+            <div *ngIf="equipo.reserva&& equipo.reserva.reservado; else accionDisponible"
+              style="position: absolute; bottom: 0; right: 0; display: flex; justify-content: space-evenly; flex-direction: column;">
+              <!-- <ion-text color="danger"><small>Vencimiento de reserva: {{equipo.reserva.fecha|date}}</small></ion-text> -->
+              <ion-button color="success" size="small" (click)="venderEquipo(equipo)">Completar venta</ion-button>
+            </div>
+            <ng-template #accionDisponible>
+              <div style="position: absolute; bottom: 0; right: 0; display: flex; justify-content: space-evenly;">
+                <ion-button color="warning" size="small" (click)="mostrarAlertaReserva(equipo)">Reservar</ion-button>
+                <ion-button color="success" size="small" (click)="venderEquipo(equipo)">Vender</ion-button>
+              </div>
+            </ng-template>
+
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <ng-template #sinEquiposDisponibles>
+    <ion-chip class="ion-margin ion-text-center" color="warning">No tienes equipos disponibles cargados en el
+      sistema</ion-chip>
+  </ng-template>
+
+  <ion-card *ngIf="mostrarConfirmacionDeVenta" class="modalConfirmacion">
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">Revisa los datos</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+
+      <ul>
+        <li><b>Fecha de venta: </b> {{equipoSeleccionado.fecha|date}}
+        <li><b>Dni: </b> {{equipoSeleccionado.dni}}
+          <ion-icon name="create-outline" (click)="venderEquipo(equipoSeleccionado) " color="warning"
+            style="font-size: 1.3rem;"></ion-icon>
+        </li>
+        <li><b>Marca: </b>{{equipoSeleccionado.marca}}</li>
+        <li><b>Modelo: </b>{{equipoSeleccionado.modelo}}</li>
+        <li><b>Imei: </b>{{equipoSeleccionado.imei}}</li>
+        <li><b>Precio: </b> {{equipoSeleccionado.precio}}</li>
+        <li><b>Accesorios: </b><br>
+          [ <b style="font-weight: 400;" *ngFor="let accesorio of equipoSeleccionado.accesorios; let index = index">
+            <!-- para quitar la ',' del ultimo lugar -->
+            {{accesorio }}{{((index+1)==equipoSeleccionado.accesorios.length)?'':', '}}
+          </b> ]
+          <ion-icon name="create-outline" (click)="modificarAccesorios=!modificarAccesorios" color="warning"
+            style="font-size: 1.3rem;"></ion-icon>
+
+
+          <ion-select *ngIf="modificarAccesorios" (ionChange)="cargarNuevosAccesorios(equipoSeleccionado)"
+            [(ngModel)]="accesoriosSeleccionados" placeholder="Seleccione lo que incluye" [multiple]="true">
+            <ion-select-option *ngFor="let prioridad of ['auriculares', 'caja', 'cargador', 'cable', 'film',  'funda']"
+              [value]="prioridad">{{prioridad}}</ion-select-option>
+          </ion-select>
+        </li>
+        <li *ngIf="equipoSeleccionado.images.length > 0">
+          <b>imagenes:</b>
+          <div class="image-grid" style="display: flex; align-items: center;">
+            <img width="40px" height="40px" *ngFor="let img of equipoSeleccionado.images; let index = index" [src]="img"
+              alt="imagen celular">
+
+
+            <ion-fab style="position: relative; " (click)="abrirModalImagenes();">
+              <ion-fab-button size="small" color="success">
+                <ion-icon name="add"></ion-icon>
+              </ion-fab-button>
+            </ion-fab>
+          </div>
+        </li>
+
+      </ul>
+      <div class="ion-text-center">
+        <ion-button (click)="mostrarConfirmacionDeVenta=false" color="light">Volver</ion-button>
+        <ion-button [disabled]="!equipoSeleccionado.dni" (click)="confirmarVenta()">Finalizar</ion-button>
       </div>
     </ion-card-content>
   </ion-card>

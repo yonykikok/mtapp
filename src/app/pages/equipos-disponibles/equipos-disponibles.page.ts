@@ -1,115 +1,64 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { FormControl, FormGroup } from '@angular/forms';
+import { AlertController, ModalController } from '@ionic/angular';
 import { FormEquipoDisponibleComponent } from 'src/app/components/forms/form-equipo-disponible/form-equipo-disponible.component';
+import { FormEspecificacionesEquipoComponent } from 'src/app/components/forms/form-especificaciones-equipo/form-especificaciones-equipo.component';
+import { UploadImagesComponent } from 'src/app/components/upload-images/upload-images.component';
+import { AlertService } from 'src/app/services/alert.service';
 import { DataBaseService } from 'src/app/services/database.service';
-import { EquipoDisponible } from 'src/app/services/info-compartida.service';
+import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
+import { EquipoDisponible, ReservaEquipo } from 'src/app/services/info-compartida.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
+import { StorageService } from 'src/app/services/storage.service';
+import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
-// const equipos: EquipoDisponible[] = [
-//   {
-//     imei: "354001963001268",
-//     imgUrlsRef: [
-//       "equipos_vendidos/1706982391566-motorola-354001963001268-2",
-//       "equipos_vendidos/1706982391566-motorola-354001963001268-0",
-//       "equipos_vendidos/1706982391566-motorola-354001963001268-1"
-//     ],
-//     marca: "motorola",
-//     images: [
-//       "https://firebasestorage.googleapis.com/v0/b/multitask-web.appspot.com/o/equipos_vendidos%2F1706982391566-motorola-354001963001268-2?alt=media&token=bfdbec07-3318-4dd5-8fdc-0cdaf7783dfd",
-//       "https://firebasestorage.googleapis.com/v0/b/multitask-web.appspot.com/o/equipos_vendidos%2F1706982391566-motorola-354001963001268-0?alt=media&token=f8560a25-2e92-4bda-b7a2-fb7af51441d9",
-//       "https://firebasestorage.googleapis.com/v0/b/multitask-web.appspot.com/o/equipos_vendidos%2F1706982391566-motorola-354001963001268-1?alt=media&token=ae6b33be-a955-45c0-bd6f-d706812bdff6"
-//     ],
-//     modelo: "g20",
-//     fecha: 1706982391566,
-//     precio: 69500,
-//     accesorios: [
-//       "film"
-//     ],
-//     id: "MKZpLhG74NR1xFAFG3Zb",
-//     mostrarImagenes: false,
-//     tiempoTranscurrido: 1
-//   },
-//   {
-//     marca: "motorola",
-//     modelo: "e5",
-//     images: [
-//       "https://firebasestorage.googleapis.com/v0/b/multitask-web.appspot.com/o/equipos_vendidos%2F1706912433034?alt=media&token=e9fd3ba8-ea42-4570-befd-dee12c965a54",
-//       "https://firebasestorage.googleapis.com/v0/b/multitask-web.appspot.com/o/equipos_vendidos%2F1706912433063?alt=media&token=406425f9-97e2-4f82-993a-dcf055cbd819",
-//       "https://firebasestorage.googleapis.com/v0/b/multitask-web.appspot.com/o/equipos_vendidos%2F1706912433067?alt=media&token=16a474ae-553d-4f97-a24c-e9f827084187"
-//     ],
-//     precio: 40000,
-//     imei: "355549093952593",
-//     accesorios: [
-//       ""
-//     ],
-//     fecha: 1706912433021,
-//     id: "leYrP4EgpXg4S1DcCS2T",
-//     mostrarImagenes: false,
-//     tiempoTranscurrido: 2
-//   },
-//   {
-//     modelo: "z play",
-//     imei: "358196070325919",
-//     fecha: 1706296678470,
-//     images: [
-//       "https://firebasestorage.googleapis.com/v0/b/multitask-web.appspot.com/o/equipos_vendidos%2F1706296678520?alt=media&token=0cb461a7-0719-4dfb-b50e-2c12dc573a08",
-//       "https://firebasestorage.googleapis.com/v0/b/multitask-web.appspot.com/o/equipos_vendidos%2F1706296678473?alt=media&token=24b570e0-c3da-4cb2-8d25-dab0cad46953",
-//       "https://firebasestorage.googleapis.com/v0/b/multitask-web.appspot.com/o/equipos_vendidos%2F1706296678524?alt=media&token=7994fa34-52c6-426d-b660-3026902019b7",
-//       "https://firebasestorage.googleapis.com/v0/b/multitask-web.appspot.com/o/equipos_vendidos%2F1706296678511?alt=media&token=822fef46-dd2e-48d5-9e0d-a084edb49e94"
-//     ],
-//     accesorios: [
-//       "film"
-//     ],
-//     marca: "motorola",
-//     precio: 48000,
-//     id: "mt9RRvmAsNYwQZRNuMEv",
-//     mostrarImagenes: false,
-//     tiempoTranscurrido: 9
-//   },
-//   {
-//     modelo: "a02",
-//     marca: "samsung",
-//     images: [
-//       "https://firebasestorage.googleapis.com/v0/b/multitask-web.appspot.com/o/equipos_vendidos%2F1706218149412?alt=media&token=788fe7d3-870b-4ec7-84ee-587c163d365a",
-//       "https://firebasestorage.googleapis.com/v0/b/multitask-web.appspot.com/o/equipos_vendidos%2F1706218149407?alt=media&token=1144332c-05fe-424d-80f9-f898e5b0edc0",
-//       "https://firebasestorage.googleapis.com/v0/b/multitask-web.appspot.com/o/equipos_vendidos%2F1706218149374?alt=media&token=14601bba-2f06-4c54-8f21-35d02352a585"
-//     ],
-//     imei: "351127334843816",
-//     precio: 58000,
-//     accesorios: [
-//       "film"
-//     ],
-//     fecha: 1706218149372,
-//     id: "SWSfkFQjzUfmVjXvKBgC",
-//     mostrarImagenes: false,
-//     tiempoTranscurrido: 10
-//   },
-//   {
-//     modelo: "a03 core",
-//     images: [
-//       "https://firebasestorage.googleapis.com/v0/b/multitask-web.appspot.com/o/equipos_vendidos%2F1706131188747?alt=media&token=b0e55416-1087-48e9-bcfc-55b0a89293f9",
-//       "https://firebasestorage.googleapis.com/v0/b/multitask-web.appspot.com/o/equipos_vendidos%2F1706131188729?alt=media&token=916d3802-fa24-4743-a92c-599cb0a6975e",
-//       "https://firebasestorage.googleapis.com/v0/b/multitask-web.appspot.com/o/equipos_vendidos%2F1706131188757?alt=media&token=6fd6f38b-4a35-4342-baa3-5dc3b32177a0"
-//     ],
-//     imei: "351517231288711",
-//     marca: "samsung",
-//     precio: 52000,
-//     accesorios: [],
-//     fecha: 1706131188728,
-//     id: "h7yWrsQQSpRmoRHecpkp",
-//     mostrarImagenes: false,
-//     tiempoTranscurrido: 11
-//   },
-// ]
+
 @Component({
   selector: 'app-equipos-disponibles',
   templateUrl: './equipos-disponibles.page.html',
   styleUrls: ['./equipos-disponibles.page.scss'],
 })
 export class EquiposDisponiblesPage implements OnInit {
-
+  mostrarConfirmacionDeVenta: boolean = false;
   equipos!: EquipoDisponible[];
+  equipoSeleccionado!: EquipoDisponible;
+  isActionSheetOpen = false;
+  accesoriosSeleccionados = [];
+  modificarAccesorios = false;
+  actionSheetButtons = [
+    {
+      text: 'Completar',
+      icon: 'checkmark',
+      handler: () => this.realizarAccion('completar'),
+    },
+    {
+      text: 'Modificar',
+      icon: 'create',
+      handler: () => this.realizarAccion('modificar'),
+    },
+    {
+      text: 'Eliminar',
+      role: 'destructive',
+      icon: 'trash',
+      handler: () => this.realizarAccion('delete'),
+    },
+    {
+      text: 'Cancelar',
+      role: 'cancel',
+      icon: 'close',
+      handler: () => this.realizarAccion('cancel'),
+    },
+  ];
+
+
   constructor(private modalController: ModalController,
-    private database: DataBaseService) { }
+    private alertService: AlertService,
+    private database: DataBaseService,
+    private alertController: AlertController,
+    private funcionesUtiles: FuncionesUtilesService,
+    private spinnerService: SpinnerService,
+    private toastService: ToastService,
+    private storageService: StorageService) { }
 
   ngOnInit() {
     this.database.obtenerTodos(environment.TABLAS.equipos_disponibles).subscribe(listRef => {
@@ -120,7 +69,37 @@ export class EquiposDisponiblesPage implements OnInit {
 
         return equipoDisponible;
       });
+      console.log(this.equipos)
     });
+  }
+
+  realizarAccion(accion: string) {
+    // Implementa las acciones correspondientes para cada botón
+    switch (accion) {
+      case 'completar':
+        // Lógica para la acción Completar
+        this.confirmarElCompletadoDeinformacion(this.equipoSeleccionado);
+        break;
+      case 'modificar':
+        // Lógica para la acción Modificar
+        break;
+      case 'delete':
+        this.confirmarEliminacion(this.equipoSeleccionado);
+        // Lógica para la acción Eliminar
+        break;
+      case 'cancel':
+        // Lógica para la acción Cancelar
+        break;
+      default:
+        // Manejar otros casos si es necesario
+        break;
+    }
+
+    // Cierra el actionSheet después de realizar la acción
+    this.setOpen(false);
+  }
+  setOpen(isOpen: boolean) {
+    this.isActionSheetOpen = isOpen;
   }
   async openDialog() {
 
@@ -141,4 +120,200 @@ export class EquiposDisponiblesPage implements OnInit {
     }
 
   }
+
+  async confirmarElCompletadoDeinformacion(equipo: EquipoDisponible) {
+    this.alertService.alertConfirmacion('Confirmación', '¿Quiere completar la informacion del dispositivo ahora?', 'Si, Completar', () => {
+      this.abrirModal(equipo);
+    });
+  }
+  async mostrarAlertaReserva(equipo: EquipoDisponible) {
+    const alert = await this.alertController.create({
+      header: 'Confirmar Reserva',
+      inputs: [{ name: 'adelanto', type: 'number', placeholder: 'Adelanto', }, { name: 'dni', type: 'text', placeholder: 'DNI' }],
+      buttons: [{
+        text: 'Cancelar', role: 'cancel', cssClass: 'secondary', handler: () => {
+          console.log('Cancelado');
+        }
+      }, {
+        text: 'Confirmar', handler: (data) => {
+          this.spinnerService.showLoading('Reservando equipo');
+          // Aquí puedes trabajar con los datos ingresados
+          let reserva: ReservaEquipo = {
+            dni: data.dni,
+            adelanto: data.adelanto,
+            fecha: Date.now(),
+            reservado: true
+          }
+          equipo.reserva = reserva;
+          this.database.actualizar(environment.TABLAS.equipos_disponibles, equipo, equipo.id)?.finally(() => {
+            this.spinnerService.stopLoading();
+          })
+        }
+      }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async abrirModal(equipo: EquipoDisponible) {
+    const modal = await this.modalController.create({
+      component: FormEspecificacionesEquipoComponent,
+      componentProps: {
+        equipo
+      }
+    });
+
+    modal.onDidDismiss().then(result => {
+      if (result.role == 'guardar') {
+        this.database.actualizar(environment.TABLAS.equipos_disponibles, { ...equipo, especificaciones: result.data }, equipo.id);
+      }
+    })
+
+    await modal.present();
+  }
+
+  async venderEquipo(equipo: EquipoDisponible) {
+    this.equipoSeleccionado = this.funcionesUtiles.clonarObjeto(equipo);
+    const alert = await this.alertController.create({
+      header: 'Confirmar Venta',
+      inputs: [{ name: 'dni', type: 'text', placeholder: 'DNI del comprador' }],
+      buttons: [{
+        text: 'Cancelar', role: 'cancel', cssClass: 'secondary', handler: () => {
+          console.log('Cancelado');
+        }
+      }, {
+        text: 'Confirmar', handler: (data) => {
+          this.mostrarConfirmacionDeVenta = true;
+
+          this.equipoSeleccionado.dni = data.dni;
+          console.log(data)
+        }
+      }
+      ]
+    });
+
+    await alert.present();
+  }
+  confirmarVenta() {
+    this.alertService.alertConfirmacion('Confirmar venta', '¿Seguro de proceder con la venta?', 'Si', () => {
+      let nuevaVenta = this.funcionesUtiles.clonarObjeto(this.equipoSeleccionado);
+      delete nuevaVenta.id;
+      nuevaVenta.fecha = Date.now();
+      console.log(this.equipoSeleccionado)
+      console.log(nuevaVenta)
+
+      this.database.crear(environment.TABLAS.equipos_vendidos, nuevaVenta).then(res => {
+        this.database.eliminar(environment.TABLAS.equipos_disponibles, this.equipoSeleccionado.id).then(res => {
+          this.mostrarConfirmacionDeVenta = false;
+        });
+      });
+    })
+  }
+
+  confirmarEliminacion(equipo: EquipoDisponible) {
+    this.alertService.alertConfirmacion('Confirmar eliminacion', '¿Quiere eliminar este equipo?', 'Si', () => {
+      this.database.eliminar(environment.TABLAS.equipos_disponibles, equipo.id).then(res => {
+        console.log(res);
+      });
+    })
+  }
+
+  solicitarConfirmacionCancelarReserva(equipo: EquipoDisponible) {
+    this.alertService.alertConfirmacion('Confirmación', '¿Seguro de cancelar esta reserva?', 'Si', () => {
+      this.spinnerService.showLoading('Cancelando reserva');
+      equipo.reserva = {
+        adelanto: 0,
+        dni: null,
+        fecha: null,
+        reservado: false
+      }
+      // equipo.modelo = "J7 prime 32312"
+      // delete equipo.reserva;
+      this.database.actualizar(environment.TABLAS.equipos_disponibles, equipo, equipo.id)?.finally(() => {
+        this.spinnerService.stopLoading();
+      })
+    })
+  }
+  cargarNuevosAccesorios(equipo: EquipoDisponible) {
+    equipo.accesorios = this.accesoriosSeleccionados;
+    this.modificarAccesorios = false;
+    console.log(equipo)
+  }
+
+  async abrirModalImagenes() {
+    const modal = await this.modalController.create({
+      component: UploadImagesComponent,
+      componentProps: {
+        imagenes: [...this.equipoSeleccionado.images],
+        imagenesRef: [...this.equipoSeleccionado.imgUrlsRef],
+        isModal: true
+        // Puedes pasar propiedades adicionales al componente si es necesario
+      },
+    });
+
+    modal.onDidDismiss().then(res => {
+
+      let data: {
+        images: string[]
+        imagesRef: string[]
+        posicionesDiponibles: number[]
+      } = res.data;
+      this.uploadImages(data, `equipos_disponibles/`);
+
+    })
+    await modal.present();
+  }
+
+
+  uploadImages(data: { images: string[], imagesRef: string[], posicionesDiponibles: number[] }, imgPath: string) {
+    console.log(data);
+    let imgUrls: string[] = [];
+    let imgUrlsRef: string[] = [];//referencia para eliminar
+    let contador = 0;
+    data.images.forEach((imgBase64, index) => {
+      if (!imgBase64.includes("https://firebasestorage")) {
+        let posicionDisponible = Number(data.posicionesDiponibles.shift());
+        this.storageService.subirImagenEquiposVenta(imgPath + `${this.equipoSeleccionado.fecha}-${this.equipoSeleccionado.marca}-${this.equipoSeleccionado.imei}-${posicionDisponible}`, imgBase64).then((urlImagen) => {
+          imgUrls.push(urlImagen as string);
+          imgUrlsRef.push(imgPath + `${this.equipoSeleccionado.fecha}-${this.equipoSeleccionado.marca}-${this.equipoSeleccionado.imei}-${posicionDisponible}`);//referencia para eliminar
+          contador++;
+         
+          if (index == data.images.length - 1) {
+            this.equipoSeleccionado.images = imgUrls;
+            this.equipoSeleccionado.imgUrlsRef = imgUrlsRef;//referencia para eliminar
+            console.log(`imgUrls: `, imgUrls)
+            console.log(`imgUrlsRef: `, imgUrlsRef)
+        
+            this.database.actualizar(environment.TABLAS.equipos_disponibles, this.equipoSeleccionado, this.equipoSeleccionado.id)?.then((res: any) => {
+              // this.spinnerService.stopLoading();
+              this.toastService.simpleMessage('Existo', 'Nuevo equipo añadido a disponibles', ToastColor.success);
+
+            }).catch(err => {
+              this.toastService.simpleMessage('Error', 'No se pudo agregar el equipo a "equipos disponibles"', ToastColor.danger);
+            })
+          }
+        }).catch(err => {
+          this.toastService.simpleMessage('Error', 'al subir la image ocurrio un error ("equipos disponibles")', ToastColor.danger);
+        });
+      } else {
+        imgUrls.push(imgBase64);
+        imgUrlsRef.push(data.imagesRef[index]);
+        if (index == data.images.length - 1) {
+          this.equipoSeleccionado.images = imgUrls;
+          this.equipoSeleccionado.imgUrlsRef = imgUrlsRef;//referencia para eliminar
+          this.database.actualizar(environment.TABLAS.equipos_disponibles, this.equipoSeleccionado, this.equipoSeleccionado.id)?.then((res: any) => {
+            // this.spinnerService.stopLoading();
+            this.toastService.simpleMessage('Existo', 'Nuevo equipo añadido a disponibles', ToastColor.success);
+
+          }).catch(err => {
+            this.toastService.simpleMessage('Error', 'No se pudo agregar el equipo a "equipos disponibles"', ToastColor.danger);
+          })
+        }
+      }
+
+    });
+   
+  }
 }
+

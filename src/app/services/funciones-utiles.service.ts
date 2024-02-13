@@ -29,12 +29,14 @@ export class FuncionesUtilesService {
         this.customDolar = res.payload.data()['price'];
       }
 
-      if ((this.customDolar && this.dolar) && this.customDolar > this.dolar) {
-        this.dolar$.next(this.customDolar);
-      } else {
-        if (this.dolar)
-          this.dolar$.next(this.dolar);
-      }
+      // if ((this.customDolar && this.dolar) && this.customDolar > this.dolar) {
+      //   this.dolar$.next(this.customDolar);
+      // } else {
+      //   if (this.dolar)
+      //     this.dolar$.next(this.dolar);
+      // }
+
+      this.dolar$.next(res.payload.data()['price']);//obligamos a usar el dolar de firebase
     });
   }
 

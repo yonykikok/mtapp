@@ -3,14 +3,51 @@
 </ion-header>
 
 <ion-content *ngIf="loggedUser">
+  <ion-item>
+    <ion-select label="Campos visibles" label-placement="floating" placeholder="Selecciona los campos que quieres ver"
+      [multiple]="true" [(ngModel)]="camposSeleccionados">
+      <ion-select-option value="nroBoleta">Boleta</ion-select-option>
+      <ion-select-option value="dniCliente">Cliente</ion-select-option>
+      <ion-select-option value="estado">Estado</ion-select-option>
+      <ion-select-option value="modelo">Modelo</ion-select-option>
+      <ion-select-option value="telefono">Telefono</ion-select-option>
+      <ion-select-option value="fechaUltimoCambioDeEstado">Ultimo cambio de estado</ion-select-option>
+    </ion-select>
+  </ion-item>
 
-  <ion-item lines="none">
-    <ion-searchbar show-clear-button="focus" placeholder="3885 o 40141516 o G7 power"
+  <ion-chip [color]="busquedaPorInput?'success':'primary'" style="flex-direction: column; width: 90%;" class="ion-margin">
+    <b>{{busquedaPorInput?'Busqueda por texto':'Busqueda por estados'}}</b>
+    <ion-toggle [(ngModel)]="busquedaPorInput"> </ion-toggle>
+  </ion-chip>
+
+  <ion-item lines="none" *ngIf="busquedaPorInput;else busquedaPorEstados">
+    <ion-searchbar (ionClear)="boletasAMostrar=[]" show-clear-button="focus" placeholder="3885 o 40141516 o G7 power"
       [(ngModel)]="textoABuscar"></ion-searchbar>
-    <ion-button style="width: 3rem; height: 2rem;" slot="end" (click)="applyFilter()">
+    <ion-button type="submit" style="width: 3rem; height: 2rem;" slot="end" (click)="applyFilter()">
       <ion-icon name="search"></ion-icon>
     </ion-button>
   </ion-item>
+  <ng-template #busquedaPorEstados>
+    <ion-item>
+      <ion-select label="Estado seleccionado" label-placement="floating" placeholder="Selecciona el estado que quieres buscar"
+        [(ngModel)]="estadoSeleccionado">
+        <ion-select-option value="PENDIENTE">Pendiente</ion-select-option>
+        <ion-select-option value="EN_REVISION">En revision</ion-select-option>
+        <ion-select-option value="CANCELADO_POR_EL_USUARIO">Cancelado por el usuario</ion-select-option>
+        <ion-select-option value="EN_PROCESO">En proceso</ion-select-option>
+        <ion-select-option value="ESPERADO_RESPUESTA">Esperado respuesta</ion-select-option>
+        <ion-select-option value="PAUSADO">Pausado</ion-select-option>
+        <ion-select-option value="NO_REPARADO">No reparado</ion-select-option>
+        <ion-select-option value="REPARADO">Reparado</ion-select-option>
+        <ion-select-option value="PARA_NOTIFICAR">Para notificar</ion-select-option>
+        <ion-select-option value="PARA_ENTREGAR">Para entregar</ion-select-option>
+        <ion-select-option value="RETIRADO">Retirado</ion-select-option>
+      </ion-select>
+      <ion-button type="submit" style="width: 3rem; height: 2rem;" slot="end" (click)="buscarPorEstado()">
+        <ion-icon name="search"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ng-template>
 
   <!-- (ionInput)="applyFilter($event)" -->
 
@@ -18,11 +55,34 @@
     *ngIf="sinCoincidencias">No se encontraron boletas con ese dato.</ion-chip>
   <div *ngIf="loggedUser && boletas">
 
-
+ 
+    <ion-grid class="ion-text-center">
+      <ion-row>
+        <ion-col *ngIf="camposSeleccionados.includes('nroBoleta')"><b>Boleta</b></ion-col>
+        <ion-col *ngIf="camposSeleccionados.includes('dniCliente')"><b>Cliente</b></ion-col>
+        <ion-col *ngIf="camposSeleccionados.includes('estado')"><b>Estado</b></ion-col>
+        <ion-col *ngIf="camposSeleccionados.includes('modelo')"><b>Modelo</b></ion-col>
+        <ion-col *ngIf="camposSeleccionados.includes('telefono')"><b>Telefono</b></ion-col>
+        <ion-col *ngIf="camposSeleccionados.includes('fechaUltimoCambioDeEstado')"><b>Actualizado</b></ion-col>
+      </ion-row>
+      <ion-row *ngFor="let boletas of boletasAMostrar"
+        (click)=" funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)?seleccionar(boletas):''">
+        <ion-col *ngIf="camposSeleccionados.includes('nroBoleta')">{{boletas.nroBoleta}}</ion-col>
+        <ion-col *ngIf="camposSeleccionados.includes('dniCliente')">{{boletas.dniCliente}}</ion-col>
+        <ion-col *ngIf="camposSeleccionados.includes('estado')">{{boletas.estado| estadoReparacion:'short'}}</ion-col>
+        <ion-col *ngIf="camposSeleccionados.includes('modelo')">{{boletas.modelo}}</ion-col>
+        <ion-col *ngIf="camposSeleccionados.includes('telefono')">{{boletas.telefono}}</ion-col>
+        <ion-col
+          *ngIf="camposSeleccionados.includes('fechaUltimoCambioDeEstado')">{{ boletas.fechaUltimoCambioDeEstado | date:'dd-MM-yyyy' }}
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <!-- 
     <ion-grid class="ion-text-center">
       <ion-row>
         <ion-col><b>Numero de boleta</b></ion-col>
         <ion-col><b>Dni cliente</b></ion-col>
+        <ion-col><b>Estado</b></ion-col>
 
       </ion-row>
       <ion-row
@@ -30,8 +90,9 @@
         *ngFor="let boleta of boletas">
         <ion-col>{{boleta.nroBoleta}}</ion-col>
         <ion-col>{{boleta.dniCliente}}</ion-col>
+        <ion-col>{{boleta.estado}}</ion-col>
       </ion-row>
-    </ion-grid>
+    </ion-grid> -->
 
   </div>
 
