@@ -213,6 +213,22 @@ export class EquiposDisponiblesPage implements OnInit {
 
   confirmarEliminacion(equipo: EquipoDisponible) {
     this.alertService.alertConfirmacion('Confirmar eliminacion', '¿Quiere eliminar este equipo?', 'Si', () => {
+      this.spinnerService.showLoading("Eliminando venta...");
+      console.log(equipo)
+      equipo.imgUrlsRef?.forEach(async (imgRef) => {
+        try {
+          let result = await this.storageService.borrarImagen(imgRef);
+          console.log(result);
+
+        } catch (error) {
+          console.error(error);
+        } finally {
+          this.database.eliminar(environment.TABLAS.equipos_disponibles, equipo.id).finally(() => {
+            this.spinnerService.stopLoading();
+          });
+        }
+      });
+
       this.database.eliminar(environment.TABLAS.equipos_disponibles, equipo.id).then(res => {
         console.log(res);
       });
@@ -278,13 +294,13 @@ export class EquiposDisponiblesPage implements OnInit {
           imgUrls.push(urlImagen as string);
           imgUrlsRef.push(imgPath + `${this.equipoSeleccionado.fecha}-${this.equipoSeleccionado.marca}-${this.equipoSeleccionado.imei}-${posicionDisponible}`);//referencia para eliminar
           contador++;
-         
+
           if (index == data.images.length - 1) {
             this.equipoSeleccionado.images = imgUrls;
             this.equipoSeleccionado.imgUrlsRef = imgUrlsRef;//referencia para eliminar
             console.log(`imgUrls: `, imgUrls)
             console.log(`imgUrlsRef: `, imgUrlsRef)
-        
+
             this.database.actualizar(environment.TABLAS.equipos_disponibles, this.equipoSeleccionado, this.equipoSeleccionado.id)?.then((res: any) => {
               // this.spinnerService.stopLoading();
               this.toastService.simpleMessage('Existo', 'Nuevo equipo añadido a disponibles', ToastColor.success);
@@ -313,7 +329,7 @@ export class EquiposDisponiblesPage implements OnInit {
       }
 
     });
-   
+
   }
 }
 

@@ -24,6 +24,7 @@ export const environment = {
     deudores: "deudores",
     displays: "displays",
     equipos_vendidos: "equipos_vendidos",
+    equipos_disponibles: "equipos_disponibles",
     flexs: "flexs",
     ingresos: "ingresos",
     modulos: "modulos",
