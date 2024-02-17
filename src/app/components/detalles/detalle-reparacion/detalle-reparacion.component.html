@@ -41,7 +41,8 @@
         </label>
         <label style="margin-bottom: 0.2rem;">
           <b>Telefono: </b>{{reparacion.telefono?reparacion.telefono:'NO TIENE'}}
-          <ion-icon name="pencil-outline" (click)="mostrarFormularioEditarinformacion('telefono','telefono')"></ion-icon>
+          <ion-icon name="pencil-outline"
+            (click)="mostrarFormularioEditarinformacion('telefono','telefono')"></ion-icon>
         </label>
         <label style="margin-bottom: 0.2rem;">
           <b>Modelo: </b>{{(reparacion.modelo?reparacion.modelo:'NO TIENE')|uppercase}}
@@ -93,28 +94,37 @@
             <ion-label>{{obtenerMensajeDelEstado(estado.estadoActual)}}</ion-label>
           </ion-item>
           <div class="ion-padding" slot="content">
-            <small style="position: absolute; right: 1rem; top: 3rem;">{{estado.fecha|date:'dd/MM/yyyy hh:mm:ss'
-              }}</small>
-            <ion-chip class="flexCenterCenter" style="background-color: white;">
-              <label style="text-decoration: line-through; color: #ee8d8d; margin-right: 0.5rem;">
-                {{obtenerMensajeDelEstado(estado.estadoAnterior)}}
-              </label>
-              <ion-icon name="arrow-forward-outline"></ion-icon>
-              <b style="color: #8383eb; margin-left: 0.5rem;">
-                {{obtenerMensajeDelEstado(estado.estadoActual)}}
-              </b>
-            </ion-chip>
-            <p class="flexColumn flexCenterCenter " style="margin: 0.7rem;">
-              <b>Cambio realizado por </b>
-              <label> {{estado.modificadoPor.displayName}} </label>
-            </p>
-            <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario('ST',loggedUser)" style="background-color: white;" outline="true" color="tertiary"
-              class="flexColumn flexCenterCenter">
-              <b>Detalle <ion-icon style="position: absolute; right: 1rem; font-size: 1.2rem;" class="ion-margin-start"
-                  name="create-outline" (click)="mostrarEditarDetalle(estado)"></ion-icon></b>
-              <p style="margin-top: 1rem;">{{estado.detalle}}</p>
-            </ion-chip>
+            <ion-item-sliding>
+              <ion-item>
 
+                <small style="position: absolute; right: 1rem; top: 3rem;">{{estado.fecha|date:'dd/MM/yyyy hh:mm:ss'
+                  }}</small>
+                <ion-chip class="flexCenterCenter" style="background-color: white;">
+                  <label style="text-decoration: line-through; color: #ee8d8d; margin-right: 0.5rem;">
+                    {{obtenerMensajeDelEstado(estado.estadoAnterior)}}
+                  </label>
+                  <ion-icon name="arrow-forward-outline"></ion-icon>
+                  <b style="color: #8383eb; margin-left: 0.5rem;">
+                    {{obtenerMensajeDelEstado(estado.estadoActual)}}
+                  </b>
+                </ion-chip>
+                <p class="flexColumn flexCenterCenter " style="margin: 0.7rem;">
+                  <b>Cambio realizado por </b>
+                  <label> {{estado.modificadoPor.displayName}} </label>
+                </p>
+                <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario('ST',loggedUser)" style="background-color: white;"
+                  outline="true" color="tertiary" class="flexColumn flexCenterCenter">
+                  <b>Detalle <ion-icon style="position: absolute; right: 1rem; font-size: 1.2rem;"
+                      class="ion-margin-start" name="create-outline"
+                      (click)="mostrarEditarDetalle(estado)"></ion-icon></b>
+                  <p style="margin-top: 1rem;">{{estado.detalle}}</p>
+                </ion-chip>
+              </ion-item>
+
+              <ion-item-options>
+                <ion-item-option color="danger">Eliminar</ion-item-option>
+              </ion-item-options>
+            </ion-item-sliding>
           </div>
         </ion-accordion>
       </ion-accordion-group>

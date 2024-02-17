@@ -6,6 +6,7 @@ import { VisualizadorDeImagenComponent } from 'src/app/components/views/visualiz
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
+import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { EquipoVendido } from 'src/app/services/info-compartida.service';
 import { SpinnerService } from 'src/app/services/spinner.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -35,6 +36,7 @@ export class EquiposVendidosPage implements OnInit {
     private authService: AuthService,
     private modalController: ModalController,
     private spinnerService: SpinnerService,
+    private funcionesUtiles:FuncionesUtilesService,
     private alertService: AlertService) { }
 
   ngOnInit(): void {
@@ -81,7 +83,7 @@ export class EquiposVendidosPage implements OnInit {
         let diferenciaEnDias = Math.ceil(diferenciaEnMilisegundos / (1000 * 60 * 60 * 24));
         equipoVendido['tiempoTranscurrido'] = diferenciaEnDias;
 
-        console.log(equipoVendido.precio," ",equipoVendido.id)
+        console.log(equipoVendido.precio, " ", equipoVendido.id)
         return equipoVendido;
       });
 
@@ -181,5 +183,21 @@ export class EquiposVendidosPage implements OnInit {
         }
       });
     });
+  }
+
+  cancelarVenta(equipo: EquipoVendido) {
+    this.alertService.alertConfirmacion('Confirmar', '¿Seguro que quiere parasar este equipo a disponible?', 'Si', () => {
+      let ventaCancelada = this.funcionesUtiles.clonarObjeto(equipo);
+      delete ventaCancelada.id;
+      delete ventaCancelada.dni;
+      ventaCancelada.fecha = Date.now();
+      console.log(equipo)
+      console.log(ventaCancelada)
+
+      this.database.crear(environment.TABLAS.equipos_disponibles, ventaCancelada).then(res => {
+        this.database.eliminar(environment.TABLAS.equipos_vendidos, equipo.id).then(res => {
+        });
+      });
+    })
   }
 }

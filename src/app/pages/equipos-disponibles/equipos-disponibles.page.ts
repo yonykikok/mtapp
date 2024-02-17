@@ -172,7 +172,26 @@ export class EquiposDisponiblesPage implements OnInit {
 
     await modal.present();
   }
+  async actualizarPrecio(equipo: EquipoDisponible) {
+    this.equipoSeleccionado = this.funcionesUtiles.clonarObjeto(equipo);
+    const alert = await this.alertController.create({
+      header: 'Confirma el nuevo precio',
+      inputs: [{ name: 'precio', type: 'number', placeholder: 'Precio de venta' }],
+      buttons: [{
+        text: 'Cancelar', role: 'cancel', cssClass: 'secondary', handler: () => {
+          console.log('Cancelado');
+        }
+      }, {
+        text: 'Confirmar', handler: (data) => {
+          this.equipoSeleccionado.precio = data.precio;
+          console.log(data)
+        }
+      }
+      ]
+    });
 
+    await alert.present();
+  }
   async venderEquipo(equipo: EquipoDisponible) {
     this.equipoSeleccionado = this.funcionesUtiles.clonarObjeto(equipo);
     const alert = await this.alertController.create({

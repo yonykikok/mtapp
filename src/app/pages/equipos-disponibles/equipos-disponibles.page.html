@@ -93,7 +93,9 @@
         <li><b>Marca: </b>{{equipoSeleccionado.marca}}</li>
         <li><b>Modelo: </b>{{equipoSeleccionado.modelo}}</li>
         <li><b>Imei: </b>{{equipoSeleccionado.imei}}</li>
-        <li><b>Precio: </b> {{equipoSeleccionado.precio}}</li>
+        <li><b>Precio: </b> {{equipoSeleccionado.precio}}
+          <ion-icon name="create-outline" (click)="actualizarPrecio(equipoSeleccionado) " color="warning"
+          style="font-size: 1.3rem;"></ion-icon></li>
         <li><b>Accesorios: </b><br>
           [ <b style="font-weight: 400;" *ngFor="let accesorio of equipoSeleccionado.accesorios; let index = index">
             <!-- para quitar la ',' del ultimo lugar -->
