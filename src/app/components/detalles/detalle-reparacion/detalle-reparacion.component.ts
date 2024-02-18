@@ -8,6 +8,7 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { reparacionShortMessage } from 'src/app/services/info-compartida.service';
 import { boleta_estados, listaDeEstadosBoletas, reparacionIconName } from 'src/app/services/info-compartida.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 @Component({
@@ -32,7 +33,8 @@ export class DetalleReparacionComponent implements OnInit {
     private actionSheetController: ActionSheetController,
     private database: DataBaseService,
     private toastService: ToastService,
-    public funcionesUtiles:FuncionesUtilesService) {
+    public funcionesUtiles: FuncionesUtilesService,
+    private spinnerService: SpinnerService) {
 
   }
 
@@ -264,5 +266,25 @@ export class DetalleReparacionComponent implements OnInit {
     });
 
     await alert.present();
+  }
+
+  async solicitarConfirmacionEliminar(reparacion: boleta, estado: { detalle: string, estadoActual: boleta_estados, estadoAnterior: boleta_estados, fecha: string, modificadoPor: { displayName: string, id: string } }) {
+    this.alertService.alertConfirmacion('Confirmacion', '¿Seguro de eliminar este estado?', 'Si', () => {
+      this.spinnerService.showLoading('Eliminando estado...');
+      if (reparacion.id && reparacion.historial) {
+
+        const index = reparacion.historial.findIndex(item => item.fecha === estado.fecha);
+
+        if (index !== -1) {
+          reparacion.estado = estado.estadoAnterior;
+          reparacion.historial.splice(index, 1);
+        }
+        console.log(reparacion)
+        this.database.actualizar(environment.TABLAS.boletasReparacion, reparacion, reparacion.id)?.finally(() => {
+          this.spinnerService.stopLoading();
+        });
+      }
+
+    });
   }
 }

@@ -88,14 +88,15 @@
 
 
       <ion-accordion-group [multiple]="true" *ngIf="mostrarHistorial">
-        <ion-accordion [value]="estado.fecha" [appEstadoReparacionBgcolor]="estado.estadoActual"
-          *ngFor="let estado of reparacion.historial">
-          <ion-item slot="header" color="light">
-            <ion-label>{{obtenerMensajeDelEstado(estado.estadoActual)}}</ion-label>
-          </ion-item>
-          <div class="ion-padding" slot="content">
-            <ion-item-sliding>
-              <ion-item>
+        <ion-item-sliding *ngFor="let estado of reparacion.historial; let index =index">
+          <ion-item>
+
+            <ion-accordion [value]="estado.fecha" [appEstadoReparacionBgcolor]="estado.estadoActual">
+              <ion-item slot="header" color="light">
+                <ion-label>{{obtenerMensajeDelEstado(estado.estadoActual)}}</ion-label>
+              </ion-item>
+              <div class="ion-padding" slot="content">
+
 
                 <small style="position: absolute; right: 1rem; top: 3rem;">{{estado.fecha|date:'dd/MM/yyyy hh:mm:ss'
                   }}</small>
@@ -119,15 +120,18 @@
                       (click)="mostrarEditarDetalle(estado)"></ion-icon></b>
                   <p style="margin-top: 1rem;">{{estado.detalle}}</p>
                 </ion-chip>
-              </ion-item>
 
-              <ion-item-options>
-                <ion-item-option color="danger">Eliminar</ion-item-option>
-              </ion-item-options>
-            </ion-item-sliding>
-          </div>
-        </ion-accordion>
+              </div>
+            </ion-accordion>
+          </ion-item>
+
+          <ion-item-options *ngIf="reparacion.historial&&index == reparacion.historial.length-1">
+            <ion-item-option color="danger"
+              (click)="solicitarConfirmacionEliminar(reparacion,estado)">Eliminar</ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
       </ion-accordion-group>
+
     </ion-card-content>
   </ion-card>
 
