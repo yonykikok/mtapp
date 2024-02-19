@@ -10,25 +10,28 @@ import { boleta_estados } from 'src/app/services/info-compartida.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 
+export interface boletaHistorialEstado {
+  images?: string[],
+  imgUrlsRef?: string[],
+  detalle: string,
+  estadoActual: boleta_estados,
+  estadoAnterior: boleta_estados,
+  fecha: string,
+  modificadoPor: { displayName: string, id: string }
+}
 export interface boleta {
   completa: boolean,
   dniCliente: string,
   estado: boleta_estados,
   fechaAlta: number,
   fechaId: string,
-  historial?: [{
-    detalle: string,
-    estadoActual: boleta_estados,
-    estadoAnterior: boleta_estados,
-    fecha: string,
-    modificadoPor: { displayName: string, id: string }
-  }],
+  historial?: boletaHistorialEstado[],
   id?: string,
   images: string[],
   modelo: string,
   nroBoleta: string,
   telefono: string,
-  fechaUltimoCambioDeEstado?:number,
+  fechaUltimoCambioDeEstado?: number,
   [key: string]: any;
 }
 @Component({
@@ -136,7 +139,7 @@ export class MisReparacionesPage implements OnInit, ViewWillEnter {
       const modal = await this.modalController.create({
         component: DetalleReparacionComponent,
         componentProps: {
-          loggedUser:this.loggedUser,
+          loggedUser: this.loggedUser,
           reparacion,
           ruta: '/mis-reparaciones'
         },

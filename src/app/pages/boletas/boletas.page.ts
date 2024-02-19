@@ -9,8 +9,11 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
-import { boleta } from '../mis-reparaciones/mis-reparaciones.page';
+import { boleta, boletaHistorialEstado } from '../mis-reparaciones/mis-reparaciones.page';
 import { boleta_estados } from 'src/app/services/info-compartida.service';
+import { AlertService } from 'src/app/services/alert.service';
+import { StorageService } from 'src/app/services/storage.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 export const enum OrderByDireccions {
   ascendente = 'asc',
   descendente = 'desc'
@@ -39,7 +42,10 @@ export class BoletasPage implements OnInit {
   constructor(
     private authService: AuthService,
     private dataBase: DataBaseService,
+    private storageService: StorageService,
     private modalController: ModalController,
+    private alertService: AlertService,
+    private spinnerService: SpinnerService,
     private toastService: ToastService,
     public funcionesUtiles: FuncionesUtilesService) {
     this.getCurrentUser();
@@ -242,7 +248,7 @@ export class BoletasPage implements OnInit {
   }
   buscarPorEstado() {
     this.sinCoincidencias = false;
-    
+
     this.dataBase.obtenerBoletaPorEstadoBoleta(environment.TABLAS.boletasReparacion, this.estadoSeleccionado).then(res => {
       if (!res) {
         this.sinCoincidencias = true;
@@ -262,4 +268,59 @@ export class BoletasPage implements OnInit {
     });
   }
 
+  async eliminarBoleta(event: Event, boleta: boleta,indiceAEliminar:number) {
+    event.stopPropagation();
+    let refImagen = `boletas/${boleta.fechaId}-${boleta.nroBoleta}-${boleta.dniCliente}`;
+    
+    this.alertService.alertConfirmacion('Confirmación', "¿Seguro de eliminar esta boleta?", 'Si', () => {
+      if (boleta.id) {
+
+        this.dataBase.eliminar(environment.TABLAS.boletasReparacion, boleta.id)
+          .then(() => {
+            this.boletasAMostrar.splice(indiceAEliminar,1);
+            // Eliminación en la base de datos completada
+            const eliminarImagenesPromesas = [];
+
+            if (boleta.historial) {
+              // Eliminar imágenes en el historial
+              boleta.historial.forEach((boletaHistorial: boletaHistorialEstado) => {
+                if (boletaHistorial.imgUrlsRef) {
+                  
+                  boletaHistorial.imgUrlsRef.forEach((imgRef: string) => {
+                    eliminarImagenesPromesas.push(this.eliminarImagen(imgRef));
+                    console.log(imgRef);
+                  });
+                }
+              });
+            }
+
+            // Eliminar la imagen de la boleta física
+            eliminarImagenesPromesas.push(this.eliminarImagen(refImagen));
+
+            // Utilizar Promise.all para esperar a que se completen todas las eliminaciones de imágenes
+            Promise.all(eliminarImagenesPromesas)
+              .then(() => {
+                console.log('Todas las imágenes eliminadas correctamente.');
+              })
+              .catch((error) => {
+                console.error('Error al eliminar imágenes:', error);
+              });
+          })
+          .catch((error) => {
+            console.error('Error al eliminar en la base de datos:', error);
+          });
+      }
+    });
+  }
+
+  async eliminarImagen(imgRef: string): Promise<void> {
+    try {
+      let result = await this.storageService.borrarImagen(imgRef);
+      console.log(result);
+    } catch (error) {
+      console.error(`Error al eliminar la imagen ${imgRef}:`, error);
+      // Lanza el error nuevamente para que pueda ser manejado por el bloque catch del caller si es necesario
+      throw error;
+    }
+  }
 }

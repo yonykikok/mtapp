@@ -120,6 +120,14 @@
                       (click)="mostrarEditarDetalle(estado)"></ion-icon></b>
                   <p style="margin-top: 1rem;">{{estado.detalle}}</p>
                 </ion-chip>
+                <div class="ion-text-center">
+                  <div *ngIf="estado.images && estado.images.length>0">
+                    <img (click)="mostrarImagen(imagen)" style="width: 40px;height: 40px;margin: 0.2rem;" *ngFor="let imagen of estado.images"
+                      [src]="imagen" alt="imagen de detalle">
+                  </div>
+                  <ion-button *ngIf="!estado.images ||estado.images.length<2" size="small" color="secondary"
+                    (click)="agregarImagen(reparacion,estado)">Agregar imagen</ion-button>
+                </div>
 
               </div>
             </ion-accordion>
