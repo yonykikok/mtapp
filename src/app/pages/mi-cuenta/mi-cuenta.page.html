@@ -36,9 +36,12 @@
                 <ion-icon name="time-outline" slot="start"></ion-icon> Fecha de Nacimiento
                 <ion-icon color="primary" *ngIf="modoEditar" slot="end" name="create-outline"
                     (click)="mostrarPopupFNacimiento()"></ion-icon>
-                <ion-text class="displayBlock ion-padding-start">
-                    {{loggedUser.fNacimiento?loggedUser.fNacimiento:'--'}}
+                <ion-text class="displayBlock ion-padding-start" *ngIf="loggedUser.fNacimiento; else sinFecha">
+                    {{loggedUser.fNacimiento|date:'dd/MM/yyyy'}}
                 </ion-text>
+                <ng-template #sinFecha>
+                    <ion-text class="displayBlock ion-padding-start"> -- </ion-text>
+                </ng-template>
             </p>
 
         </ion-text>
