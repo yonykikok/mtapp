@@ -4,7 +4,7 @@
       <ion-header>
         <ion-toolbar>
           <ion-buttons slot="start">
-            <ion-menu-button ></ion-menu-button>
+            <ion-menu-button></ion-menu-button>
           </ion-buttons>
           <ion-title>Ajustes de repuestos</ion-title>
         </ion-toolbar>
@@ -13,7 +13,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content *ngIf="loggedUser">
+<ion-content *ngIf="loggedUser" >
   <ion-menu menuId="ajustes-menu" contentId="main-ajustes-repuestos">
     <ion-header>
       <ion-toolbar>
@@ -67,11 +67,11 @@
             <div slot="content">
 
               <ion-list>
-                <ion-item>
+                <ion-item (click)="seleccionar('baterias','marcas')">
                   <ion-label>Marcas</ion-label>
                   <ion-icon slot="end" name="arrow-forward-outline" color="primary"></ion-icon>
                 </ion-item>
-                <ion-item>
+                <ion-item (click)="seleccionar('baterias','marcas')">
                   <ion-label>Calidades</ion-label>
                   <ion-icon slot="end" name="arrow-forward-outline" color="primary"></ion-icon>
                 </ion-item>
@@ -88,13 +88,13 @@
             <div slot="content">
 
               <ion-list>
-                <ion-item>
+                <ion-item (click)="seleccionar('placas de carga','marcas')">
                   <ion-label>Marcas</ion-label>
                   <ion-icon slot="end" name="arrow-forward-outline" color="primary"></ion-icon>
                 </ion-item>
 
                 <ion-item>
-                  <ion-label>Calidades</ion-label>
+                  <ion-label (click)="seleccionar('placas de carga','marcas')">Calidades</ion-label>
                   <ion-icon slot="end" name="arrow-forward-outline" color="primary"></ion-icon>
                 </ion-item>
 
@@ -105,6 +105,15 @@
 
 
       </ion-list>
+      
     </ion-content>
   </ion-menu>
+
+
+  <ion-fab slot="fixed" horizontal="end" vertical="bottom">
+    <ion-fab-button color="danger">
+      <ion-icon name="add" (click)="agregarNuevoRepuesto()"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
 </ion-content>

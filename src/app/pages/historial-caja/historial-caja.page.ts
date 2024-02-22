@@ -154,6 +154,7 @@ export class HistorialCajaPage implements OnInit {
     })
   }
   mostrarIntervaloDeTiempo(mostrarBuscador: boolean) {
+    console.log("por aca")
     if (!this.intervaloSeleccionado) {
       this.intervaloSeleccionado = { dias: [] };
     }
@@ -244,7 +245,7 @@ export class HistorialCajaPage implements OnInit {
           if (dia.montoTotalEfectivo > 0) {
             return monto += dia.montoTotalEfectivo ? dia.montoTotalEfectivo : 0;
           }
-          console.log(`dia no calculado`, dia)
+          // console.log(`dia no calculado`, dia)
           return monto;
       }
     }, 0);
