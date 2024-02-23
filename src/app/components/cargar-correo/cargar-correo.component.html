@@ -21,8 +21,8 @@
       <form [formGroup]="formCorreo" (ngSubmit)="guardar()" *ngIf="!modoActualizar">
 
         <ion-item>
-          <ion-label position="floating" class="text1 bold">Email Anterior</ion-label>
-          <ion-input type="email" formControlName="correo" placeholder="ingrese su correo"></ion-input>
+          <ion-input labelPlacement="floating" label="Email Anterior" type="email" formControlName="correo"
+            placeholder="ingrese su correo"></ion-input>
         </ion-item>
 
         <ion-button expand="block" class="ion-margin-top" [disabled]="!formCorreo.valid" type="submit">Guardar correo

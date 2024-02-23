@@ -37,10 +37,15 @@
             <ion-icon slot="end" name="arrow-forward"></ion-icon>
           </ion-item>
 
-          <ion-item *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',userLogged)"
-           (click)="irAajustesDeRepuestos()">
+          <ion-item *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',userLogged)" (click)="irAajustesDeRepuestos()">
             <ion-icon name="settings-outline"></ion-icon>
             <ion-text class="ion-margin-start ion-text-capitalize"> <b> Ajustes de repuestos</b></ion-text>
+            <ion-icon slot="end" name="arrow-forward"></ion-icon>
+          </ion-item>
+
+          <ion-item [routerLink]="['/login']" routerLinkActive="router-link-active">
+            <ion-icon color="danger" name="exit-outline"></ion-icon>
+            <ion-text class="ion-margin-start ion-text-capitalize"> <b> Cerrar sesión</b></ion-text>
             <ion-icon slot="end" name="arrow-forward"></ion-icon>
           </ion-item>
 

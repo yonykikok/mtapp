@@ -13,25 +13,20 @@
         <ion-card-title class="ion-text-center">Datos de contacto</ion-card-title>
       </ion-card-header>
       <form [formGroup]="formGroupDatosCliente">
-        <ion-item class="ion-margin-bottom" fill="outline">
-          <ion-label position="floating">Nombre</ion-label>
-          <ion-input type="text" formControlName="nombre" required></ion-input>
+        <ion-item class="ion-margin-bottom" >
+          <ion-input label="Nombre" labelPlacement="floating" type="text" formControlName="nombre" required></ion-input>
         </ion-item>
-        <ion-item class="ion-margin-bottom" fill="outline">
-          <ion-label position="floating">Apellido</ion-label>
-          <ion-input type="text" formControlName="apellido" required></ion-input>
+        <ion-item class="ion-margin-bottom" >
+          <ion-input label="Apellido" labelPlacement="floating" type="text" formControlName="apellido" required></ion-input>
         </ion-item>
-        <ion-item class="ion-margin-bottom" fill="outline">
-          <ion-label position="floating">Dni</ion-label>
-          <ion-input type="number" formControlName="dni" required></ion-input>
+        <ion-item class="ion-margin-bottom" >
+          <ion-input label="Dni" labelPlacement="floating" type="number" formControlName="dni" required></ion-input>
         </ion-item>
-        <ion-item class="ion-margin-bottom" fill="outline">
-          <ion-label position="floating">Direccion</ion-label>
-          <ion-input type="text" formControlName="direccion" required></ion-input>
+        <ion-item class="ion-margin-bottom" >
+          <ion-input label="Direccion" labelPlacement="floating" type="text" formControlName="direccion" required></ion-input>
         </ion-item>
-        <ion-item class="ion-margin-bottom" fill="outline">
-          <ion-label position="floating">Telefono</ion-label>
-          <ion-input type="number" formControlName="telefono" required></ion-input>
+        <ion-item class="ion-margin-bottom" >
+          <ion-input label="Telefono" labelPlacement="floating" type="number" formControlName="telefono" required></ion-input>
         </ion-item>
         <ion-item-divider>
           <ion-button slot="start" (click)="cerrarForm()">Cancelar</ion-button>
@@ -48,13 +43,11 @@
         <ion-card-title class="ion-text-center">Detalle de compra</ion-card-title>
       </ion-card-header>
       <form [formGroup]="formGroupItem">
-        <ion-item class="ion-margin-bottom" fill="outline">
-          <ion-label position="floating">Producto</ion-label>
-          <ion-input type="text" formControlName="producto" required></ion-input>
+        <ion-item class="ion-margin-bottom" >
+          <ion-input label="Producto" labelPlacement="floating" type="text" formControlName="producto" required></ion-input>
         </ion-item>
-        <ion-item class="ion-margin-bottom" fill="outline">
-          <ion-label position="floating">Precio</ion-label>
-          <ion-input type="number" type="number" formControlName="precio" required></ion-input>
+        <ion-item class="ion-margin-bottom" >
+          <ion-input label="Precio" labelPlacement="floating" type="number" type="number" formControlName="precio" required></ion-input>
         </ion-item>
         <div>
           <ion-item-divider>
@@ -87,13 +80,11 @@
         <ion-card-title class="ion-text-center">Agregar pago</ion-card-title>
       </ion-card-header>
       <form [formGroup]="formGroupPago">
-        <ion-item class="ion-margin-bottom" fill="outline">
-          <ion-label position="floating">Tipo de pago</ion-label>
-          <ion-input type="text" formControlName="concepto"></ion-input>
+        <ion-item class="ion-margin-bottom" >
+          <ion-input label="Tipo de pago" labelPlacement="floating" type="text" formControlName="concepto"></ion-input>
         </ion-item>
-        <ion-item class="ion-margin-bottom" fill="outline">
-          <ion-label position="floating">Monto</ion-label>
-          <ion-input type="number" formControlName="monto"></ion-input>
+        <ion-item class="ion-margin-bottom" >
+          <ion-input label="Monto" labelPlacement="floating" type="number" formControlName="monto"></ion-input>
         </ion-item>
         <div>
           <ion-item-divider>

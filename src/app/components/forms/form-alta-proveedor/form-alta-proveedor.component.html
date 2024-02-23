@@ -11,28 +11,28 @@
     <ion-card-content>
 
       <form [formGroup]="formAltaProveedor" (ngSubmit)="mostrarConfirmacion()">
-        <ion-item class="ion-activated" fill="outline">
-          <ion-label position="floating">Nombre de empresa</ion-label>
+        <ion-item class="ion-activated">
           <ion-icon slot="end" name="person-outline"></ion-icon>
-          <ion-input type="text" placeholder="MultiCell" formControlName="nombre"></ion-input>
+          <ion-input label="Nombre de empresa" labelPlacement="floating" type="text" placeholder="MultiCell"
+            formControlName="nombre"></ion-input>
         </ion-item>
 
-        <ion-item class="ion-activated" fill="outline">
-          <ion-label position="floating">Direccion</ion-label>
+        <ion-item class="ion-activated">
           <ion-icon slot="end" name="location-outline"></ion-icon>
-          <ion-input type="text" placeholder="Av. Corrientes 5500" formControlName="direccion"></ion-input>
+          <ion-input label="Direccion" labelPlacement="floating" type="text" placeholder="Av. Corrientes 5500"
+            formControlName="direccion"></ion-input>
         </ion-item>
 
-        <ion-item class="ion-activated" fill="outline">
-          <ion-label position="floating">Telefono</ion-label>
+        <ion-item class="ion-activated">
           <ion-icon slot="end" name="logo-whatsapp"></ion-icon>
-          <ion-input type="number" placeholder="1150604010" formControlName="telefono"></ion-input>
+          <ion-input label="Telefono" labelPlacement="floating" type="number" placeholder="1150604010"
+            formControlName="telefono"></ion-input>
         </ion-item>
 
-        <ion-item class="ion-activated" fill="outline">
-          <ion-label position="floating">Telefono alternativo</ion-label>
+        <ion-item class="ion-activated">
           <ion-icon slot="end" name="phone-portrait-outline"> </ion-icon>
-          <ion-input type="number" placeholder="1150604010" formControlName="telefonoAlternativo"></ion-input>
+          <ion-input label="Telefono alternativo" labelPlacement="floating" type="number" placeholder="1150604010"
+            formControlName="telefonoAlternativo"></ion-input>
         </ion-item>
 
         <ion-button expand="block" class="ion-margin-top" type="submit" [disabled]="!formAltaProveedor.valid">

@@ -277,7 +277,6 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
   }
   async generarClave() {
     this.mostrarPopupGenerarClave();
-    return;
     if (!this.loggedUser.activo) {
       const alert = await this.alertController.create({
         mode: 'ios',

@@ -24,8 +24,7 @@
       <form [formGroup]="formDni" (ngSubmit)="guardar()" *ngIf="!modoActualizar">
 
         <ion-item>
-          <ion-label position="floating" class="text1 bold">Dni </ion-label>
-          <ion-input type="number" formControlName="dni" placeholder="ingrese su dni"></ion-input>
+          <ion-input labelPlacement="floating" label="DNI" type="number" formControlName="dni" placeholder="ingrese su dni"></ion-input>
         </ion-item>
 
         <ion-button expand="block" class="ion-margin-top" [disabled]="!formDni.valid" type="submit">Guardar DNI

@@ -13,8 +13,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content *ngIf="loggedUser" >
-  <ion-menu menuId="ajustes-menu" contentId="main-ajustes-repuestos">
+<ion-content *ngIf="loggedUser">
+  <ion-menu  menuId="ajustes-menu" contentId="main-ajustes-repuestos">
     <ion-header>
       <ion-toolbar>
         <ion-icon (click)="volverAlHome()" slot="start" name="arrow-back-outline" style="font-size: 150%;"
@@ -28,28 +28,28 @@
         <ion-accordion-group>
           <ion-accordion value="condicion">
             <ion-item slot="header" color="light">
-              <ion-label><b>Modulos</b></ion-label>
+              <ion-text><b>Modulos</b></ion-text>
             </ion-item>
             <div slot="content">
 
               <ion-list>
                 <ion-item (click)="seleccionar('modulos','marcas')">
-                  <ion-label>Marcas</ion-label>
+                  <ion-text>Marcas</ion-text>
                   <ion-icon slot="end" name="arrow-forward-outline" color="primary"></ion-icon>
                 </ion-item>
 
                 <ion-item>
-                  <ion-label>Calidades</ion-label>
+                  <ion-text>Calidades</ion-text>
                   <ion-icon slot="end" name="arrow-forward-outline" color="primary"></ion-icon>
                 </ion-item>
 
                 <ion-item>
-                  <ion-label>Tipos</ion-label>
+                  <ion-text>Tipos</ion-text>
                   <ion-icon slot="end" name="arrow-forward-outline" color="primary"></ion-icon>
                 </ion-item>
 
                 <ion-item>
-                  <ion-label>Colores</ion-label>
+                  <ion-text>Colores</ion-text>
                   <ion-icon slot="end" name="arrow-forward-outline" color="primary"></ion-icon>
                 </ion-item>
 
@@ -62,17 +62,17 @@
         <ion-accordion-group>
           <ion-accordion value="condicion">
             <ion-item slot="header" color="light">
-              <ion-label><b>Baterias</b></ion-label>
+              <ion-text><b>Baterias</b></ion-text>
             </ion-item>
             <div slot="content">
 
               <ion-list>
                 <ion-item (click)="seleccionar('baterias','marcas')">
-                  <ion-label>Marcas</ion-label>
+                  <ion-text>Marcas</ion-text>
                   <ion-icon slot="end" name="arrow-forward-outline" color="primary"></ion-icon>
                 </ion-item>
                 <ion-item (click)="seleccionar('baterias','marcas')">
-                  <ion-label>Calidades</ion-label>
+                  <ion-text>Calidades</ion-text>
                   <ion-icon slot="end" name="arrow-forward-outline" color="primary"></ion-icon>
                 </ion-item>
               </ion-list>
@@ -83,18 +83,18 @@
         <ion-accordion-group>
           <ion-accordion value="condicion">
             <ion-item slot="header" color="light">
-              <ion-label><b>Placas de carga</b></ion-label>
+              <ion-text><b>Placas de carga</b></ion-text>
             </ion-item>
             <div slot="content">
 
               <ion-list>
                 <ion-item (click)="seleccionar('placas de carga','marcas')">
-                  <ion-label>Marcas</ion-label>
+                  <ion-text>Marcas</ion-text>
                   <ion-icon slot="end" name="arrow-forward-outline" color="primary"></ion-icon>
                 </ion-item>
 
                 <ion-item>
-                  <ion-label (click)="seleccionar('placas de carga','marcas')">Calidades</ion-label>
+                  <ion-text (click)="seleccionar('placas de carga','marcas')">Calidades</ion-text>
                   <ion-icon slot="end" name="arrow-forward-outline" color="primary"></ion-icon>
                 </ion-item>
 
@@ -105,7 +105,7 @@
 
 
       </ion-list>
-      
+
     </ion-content>
   </ion-menu>
 

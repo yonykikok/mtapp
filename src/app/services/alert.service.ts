@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, IonicSafeString } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +29,7 @@ export class AlertService {
     const alert = await this.alertController.create({
       mode: 'ios',
       header,
-      message,
+      message:new IonicSafeString(message),
       buttons: [
         {
           text: 'Cancelar',

@@ -30,7 +30,7 @@
     <ion-accordion-group *ngIf="repuesto.stock.conMarco.length>0">
       <ion-accordion value="conMarco">
         <ion-item slot="header" color="light">
-          <ion-label>Con marco</ion-label>
+          <ion-text>Con marco</ion-text>
         </ion-item>
 
         <ion-card style="display: flex; justify-content: space-between;" class="ion-padding" slot="content"
@@ -58,7 +58,7 @@
     <ion-accordion-group *ngIf="repuesto.stock.sinMarco.length>0">
       <ion-accordion value="sinMarco">
         <ion-item slot="header" color="light">
-          <ion-label>Sin marco</ion-label>
+          <ion-text>Sin marco</ion-text>
         </ion-item>
         <ion-card style="display: flex; justify-content: space-between;" class="ion-padding" slot="content"
           *ngFor="let stock of repuesto.stock.sinMarco; index as index">
@@ -99,17 +99,15 @@
       <ion-grid>
         <ion-row>
           <ion-col>
-            <ion-item fill="outline">
-              <ion-label position="floating">Color del modulo</ion-label>
-              <ion-select placeholder="Seleccione el color" [(ngModel)]="color">>
+            <ion-item >
+              <ion-select label="Color del modulo" labelPlacement="floating"  placeholder="Seleccione el color" [(ngModel)]="color">>
                 <ion-select-option *ngFor="let color of colores" [value]="color">{{color}}</ion-select-option>
               </ion-select>
             </ion-item>
           </ion-col>
           <ion-col>
-            <ion-item fill="outline">
-              <ion-label position="floating">Cantidad</ion-label>
-              <ion-select placeholder="Seleccione la cantidad" [(ngModel)]="cantidad">>
+            <ion-item >
+              <ion-select  label="Cantidad" labelPlacement="floating" placeholder="Seleccione la cantidad" [(ngModel)]="cantidad">>
                 <ion-select-option *ngFor="let cantidad of cantidades"
                   [value]="cantidad">{{cantidad}}</ion-select-option>
               </ion-select>
@@ -118,9 +116,8 @@
         </ion-row>
       </ion-grid>
 
-      <ion-item fill="outline" class="ion-margin">
-        <ion-label position="floating">Tipo de modulo</ion-label>
-        <ion-select placeholder="Seleccione el tipo" [(ngModel)]="tipo">>
+      <ion-item  class="ion-margin">
+        <ion-select label="Tipo de modulo" labelPlacement="floating" placeholder="Seleccione el tipo" [(ngModel)]="tipo">>
           <ion-select-option *ngFor="let tipo of tipos" [value]="tipo">{{tipo}}</ion-select-option>
         </ion-select>
       </ion-item>
@@ -143,9 +140,8 @@
       <ion-card-content>
 
 
-        <ion-item fill="outline" class="ion-margin">
-          <ion-label position="floating">Modelo</ion-label>
-          <ion-input [(ngModel)]="repuesto.modelo" placeholder="Ingrese modelo del equipo" required></ion-input>
+        <ion-item  class="ion-margin">
+          <ion-input labelPlacement="floating" label="Modelo" [(ngModel)]="repuesto.modelo" placeholder="Ingrese modelo del equipo" required></ion-input>
         </ion-item>
 
 

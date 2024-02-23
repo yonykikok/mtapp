@@ -16,9 +16,8 @@
         </label>
 
         <ng-template #mostrarSelect>
-          <ion-item fill="outline" mode="md">
-            <ion-label position="floating">Estado de la reparación</ion-label>
-            <ion-select placeholder="Seleccione el estado" [(ngModel)]="estadoSeleccionado"
+          <ion-item  mode="md">
+            <ion-select label="Estado de la reparación" labelPlacement="floating" placeholder="Seleccione el estado" [(ngModel)]="estadoSeleccionado"
               (ionChange)="cambiarEstado()">
               <ion-select-option *ngFor="let estado of estadosPosibles"
                 [value]="estado.variable">{{estado.mensaje}}</ion-select-option>
@@ -93,7 +92,7 @@
 
             <ion-accordion [value]="estado.fecha" [appEstadoReparacionBgcolor]="estado.estadoActual">
               <ion-item slot="header" color="light">
-                <ion-label>{{obtenerMensajeDelEstado(estado.estadoActual)}}</ion-label>
+                <ion-text>{{obtenerMensajeDelEstado(estado.estadoActual)}}</ion-text>
               </ion-item>
               <div class="ion-padding" slot="content">
 

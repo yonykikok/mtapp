@@ -9,9 +9,8 @@
 
 
 
-    <ion-item fill="outline" class="ion-margin" placeholder="Selecciona los campos que quieres ver">
-      <ion-label position="floating">Mostrar</ion-label>
-      <ion-select [(ngModel)]="camposSeleccionados" multiple>
+    <ion-item  class="ion-margin" placeholder="Selecciona los campos que quieres ver">
+      <ion-select label="Mostrar" labelPlacement="floating" [(ngModel)]="camposSeleccionados" multiple>
         <ion-select-option value="photoURL">Imagen</ion-select-option>
         <ion-select-option value="role">Role</ion-select-option>
         <ion-select-option value="displayName">Nombre</ion-select-option>

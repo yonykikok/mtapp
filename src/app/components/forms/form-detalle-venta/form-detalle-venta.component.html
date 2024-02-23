@@ -15,21 +15,18 @@
     <form *ngIf="step==1">
       <div class="input-container">
         <ion-item >
-          <ion-label position="floating">Precio</ion-label>
-          <ion-input type="number" placeholder="Ej: 1500" [(ngModel)]="item.precio"
+          <ion-input label="Precio" labelPlacement="floating" type="number" placeholder="Ej: 1500" [(ngModel)]="item.precio"
             [ngModelOptions]="{standalone: true}"></ion-input>
         </ion-item>
 
         <ion-item >
-          <ion-label position="floating">Numero de boleta</ion-label>
-          <ion-input type="number" placeholder="Ej: 2955" [(ngModel)]="item.boleta"
+          <ion-input label="Numero de boleta" labelPlacement="floating" type="number" placeholder="Ej: 2955" [(ngModel)]="item.boleta"
             [ngModelOptions]="{standalone: true}"></ion-input>
         </ion-item>
       </div>
 
       <ion-item >
-        <ion-label position="floating">Descripción</ion-label>
-        <ion-textarea placeholder="Cargador 5.1 Innova tipo C" [(ngModel)]="item.descripcion"
+        <ion-textarea label="Descripción" labelPlacement="floating" placeholder="Cargador 5.1 Innova tipo C" [(ngModel)]="item.descripcion"
           [ngModelOptions]="{standalone: true}"></ion-textarea>
       </ion-item>
 
@@ -96,23 +93,11 @@
 
 
       <ion-item  *ngIf="medioDePago=='efectivo';else pagoDigital">
-        <ion-label position="floating">Paga con:</ion-label>
-        <ion-input type="number" placeholder="Ingrese con cuanto paga" [(ngModel)]="montoAbonado"
+        <ion-input label="Paga con:" labelPlacement="floating" type="number" placeholder="Ingrese con cuanto paga" [(ngModel)]="montoAbonado"
           [ngModelOptions]="{standalone: true}"></ion-input>
       </ion-item>
 
       <ng-template #pagoDigital>
-
-        <!-- <ion-item  mode="md">
-          <ion-label position="floating">Alias/CBU de la cuenta</ion-label>
-          <ion-select placeholder="Seleccione el estado" [(ngModel)]="titularDeCuenta"
-            [ngModelOptions]="{standalone: true}">
-            <ion-select-option *ngFor="let cuenta of cuentasBancarias" [value]="cuenta.alias">
-              <small>({{cuenta.titular}})</small>
-              <small>{{cuenta.alias?cuenta.alias:cuenta.CBU}}</small>
-            </ion-select-option>
-          </ion-select>
-        </ion-item> -->
 
         <ion-text class="ion-margin" slot="start"
           style="display: flex; align-items: center; justify-content: space-between;">
@@ -124,9 +109,8 @@
           <ion-chip color="danger">Estas por cobrar sin recargo en "{{medioDePago}}"</ion-chip>
         </div>
 
-        <ion-item >
-          <ion-label position="floating">Alias de la cuenta</ion-label>
-          <ion-input type="text" placeholder="Ej: Disco.choza.escudo" [(ngModel)]="titularDeCuenta"
+        <ion-item >         
+          <ion-input label="Alias de la cuenta" labelPlacement="floating" type="text" placeholder="Ej: Disco.choza.escudo" [(ngModel)]="titularDeCuenta"
             [ngModelOptions]="{standalone: true}"></ion-input>
         </ion-item>
       </ng-template>

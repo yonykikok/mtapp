@@ -8,23 +8,19 @@
     <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
 
       <ion-item>
-        <ion-label position="floating">Modelo del equipo</ion-label>
-        <ion-input formControlName="modelo" placeholder="J7 prime"></ion-input>
+        <ion-input label="Modelo del equipo" labelPlacement="floating" formControlName="modelo" placeholder="J7 prime"></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label position="floating">Trabajo a realizar</ion-label>
-        <ion-input formControlName="trabajo" placeholder="Liberacion, Flasheo, etc."></ion-input>
+        <ion-input label="Trabajo a realizar" labelPlacement="floating" formControlName="trabajo" placeholder="Liberacion, Flasheo, etc."></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label position="floating">Boleta del equipo</ion-label>
-        <ion-input type="number" formControlName="boleta" placeholder="4848"></ion-input>
+        <ion-input label="Boleta del equipo" labelPlacement="floating" type="number" formControlName="boleta" placeholder="4848"></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label position="floating">Detalles del equipo</ion-label>
-        <ion-textarea formControlName="detallesDelEquipo" placeholder="El equipo lo mandamos con la tapa despegada, y el equipo astillado"></ion-textarea>
+        <ion-textarea label="Detalles del equipo" labelPlacement="floating" formControlName="detallesDelEquipo" placeholder="El equipo lo mandamos con la tapa despegada, y el equipo astillado"></ion-textarea>
       </ion-item>
 
       <ion-button class="ion-margin" expand="full" type="submit" [disabled]="formulario.invalid">

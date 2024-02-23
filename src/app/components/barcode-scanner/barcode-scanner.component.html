@@ -1,4 +1,4 @@
-<ion-header>
+<!-- <ion-header>
   <ion-toolbar>
     <ion-title>Barcode Scanner</ion-title>
   </ion-toolbar>
@@ -7,8 +7,8 @@
 <ion-content>
   <ion-list>
     <ion-item *ngFor="let barcode of barcodes">
-      <ion-label position="stacked">{{ barcode.format }}</ion-label>
-      <ion-input type="text" [value]="barcode.rawValue"></ion-input>
+      <ion-input labelPlacement="floating" [label]="{{ barcode.format }}" type="text"
+        [value]="barcode.rawValue"></ion-input>
     </ion-item>
   </ion-list>
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
@@ -16,35 +16,4 @@
       <ion-icon name="scan"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-</ion-content>
-<!-- <div style="display: flex; flex-direction: column; 
-  justify-content: center; 
-  align-items: center; 
-  position: fixed; 
-  left: 0; top: 0; 
-  z-index: 199999; width: 100%; height: 100%;
-   background-color: rgb(217, 217, 255);">
-
-  <div style="text-align: center;">
-    <h6 style="padding: 0 2rem;">
-      Tendras que escanear con tu camara el codigo QR de tu documento(DNI)
-    </h6>
-  </div>
-
-  <div class="containerDni">
-    <img src="../../../assets/svg/dniScann.svg" alt="como escanear el dni">
-
-    <div class="focusScanner"> </div>
-  </div>
-
-  <div class="ion-text-center">
-    <ion-button style="display: block;" fill="outline" size="small" class="ion-margin-top" color="success"
-      (click)="abrirScanner()">
-      ESCANEAR AHORA
-    </ion-button>
-    <ion-button fill="outline" size="small" class="ion-margin-top" color="secondary" (click)="cerrarScanner()">
-      Cancelar
-    </ion-button>
-  </div>
-
-</div> -->
+</ion-content> -->
