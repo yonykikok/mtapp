@@ -1,8 +1,11 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/equipos-vendidos'" [title]="'Imagen completa'"></app-clasic-toolbar>
+  <app-clasic-toolbar [isModal]="false" (opcionesClick)="mostrarOpciones()" [mostrarOpciones]="true" [ruta]="'/equipos-vendidos'"
+    [title]="'Imagen completa'"></app-clasic-toolbar>
 </ion-header>
 
 
 <ion-content>
+  <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Actions" [buttons]="actionSheetButtons"
+  (didDismiss)="setOpen(false)"></ion-action-sheet>
   <ion-img [src]="imagen" alt="equipo vendido"></ion-img>
 </ion-content>
