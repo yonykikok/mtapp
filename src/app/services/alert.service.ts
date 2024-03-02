@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, IonicSafeString } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class AlertService {
     const alert = await this.alertController.create({
       mode: 'ios',
       header,
-      message,
+      message: new IonicSafeString(message),
       buttons: [
         {
           text: textButton,
@@ -29,7 +29,7 @@ export class AlertService {
     const alert = await this.alertController.create({
       mode: 'ios',
       header,
-      message,
+      message: new IonicSafeString(message),
       buttons: [
         {
           text: 'Cancelar',
@@ -50,7 +50,7 @@ export class AlertService {
     const alert = await this.alertController.create({
       mode: 'ios',
       header,
-      message,
+      message: new IonicSafeString(message),
       buttons: [{
         text: acceptText,
         cssClass: 'primary',
@@ -101,7 +101,7 @@ export class AlertService {
 
     return new Promise<string | null>((resolve) => { });
   }
-  async mostrarAlertaConTextPrompt(header: string, placeholder: string, cancelText: string, confirmText: string, handlerAcceptButton:any, handlerCancelButton:any) {
+  async mostrarAlertaConTextPrompt(header: string, placeholder: string, cancelText: string, confirmText: string, handlerAcceptButton: any, handlerCancelButton: any) {
     const alert = await this.alertController.create({
       header,
       inputs: [

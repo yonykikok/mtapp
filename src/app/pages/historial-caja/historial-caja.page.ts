@@ -21,7 +21,9 @@ import { environment } from 'src/environments/environment';
 export class HistorialCajaPage implements OnInit {
   buscarPorRangoDeFechas = false;
   // Asignar la fecha actual al atributo max
-  maxFechaActual = new Date().toISOString().split('T')[0];;
+  // maxFechaActual = new Date().toISOString().split('T')[0];;
+  maxFechaActual = new Date(new Date().getTime() + 86400000).toISOString().split('T')[0];
+
 
 
   // mostarSideBar=false;

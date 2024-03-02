@@ -18,7 +18,9 @@ import { ServiceWorkerModule } from '@angular/service-worker';
   // entryComponents: [],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot({
+      innerHTMLTemplatesEnabled: true
+    }),
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     ServiceWorkerModule.register('ngsw-worker.js', {

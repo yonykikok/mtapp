@@ -19,7 +19,9 @@
           <div class="left-content">
             <!-- Contenido del lado izquierdo (30%) -->
             <img style="object-fit: contain;" height="300px" [src]="equipo.images[0]" />
-            <p style="font-size: 1.3rem;" *ngIf="equipo.reserva&& equipo.reserva.reservado; else disponible">
+            <p style="font-size: 1.3rem; 
+            flex-direction: column;
+            display: flex;" *ngIf="equipo.reserva&& equipo.reserva.reservado; else disponible">
               <ion-text class="ion-margin-start" color="warning"> <b>RESERVADO</b></ion-text>
               <ion-button size="small" color="danger" (click)="solicitarConfirmacionCancelarReserva(equipo)">Cancelar
                 reserva</ion-button>

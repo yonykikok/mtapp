@@ -6,11 +6,11 @@
 <ion-content>
   <div *ngIf="loggedUser">
 
-    <div class="ion-text-center flexCenterCenter" style="flex-wrap: wrap;">
+    <div class="ion-text-center flexCenterCenter" style="flex-wrap: wrap; flex-direction: column;">
       <ion-toggle [checked]="true" [(ngModel)]="buscarPorRangoDeFechas">Buscador de rango</ion-toggle><br /><br />
       <h2 *ngIf="fechaSeleccionadaDate && fechaSeleccionadaDateFin">
         {{fechaSeleccionadaDate|date:'dd/MM/yyyy'}} - {{fechaSeleccionadaDateFin|date:'dd/MM/yyyy'}}</h2>
-      <ion-card style="width: 350px; max-width: 400px;">
+      <ion-card style="width: 350px; max-width: 400px; margin: 0; margin-bottom: 1rem;">
 
         <ion-accordion-group>
           <ion-accordion value="first">
@@ -31,7 +31,7 @@
         </ion-accordion-group>
       </ion-card>
 
-      <ion-card style="width: 350px; max-width: 400px;" *ngIf="buscarPorRangoDeFechas">
+      <ion-card style="width: 350px; max-width: 400px; margin: 0;" *ngIf="buscarPorRangoDeFechas">
 
         <ion-accordion-group>
           <ion-accordion value="first">

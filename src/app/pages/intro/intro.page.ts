@@ -1,6 +1,10 @@
 import { Component, OnInit, ElementRef, HostListener, Input, Renderer2, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AnimationController, ViewDidEnter } from '@ionic/angular';
+import { User } from 'src/app/clases/user';
+import { AuthService } from 'src/app/services/auth.service';
+import { DataBaseService } from 'src/app/services/database.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-intro',
@@ -8,6 +12,7 @@ import { AnimationController, ViewDidEnter } from '@ionic/angular';
   styleUrls: ['./intro.page.scss'],
 })
 export class IntroPage implements OnInit, ViewDidEnter {
+  loggedUser!: User;
   @ViewChild('svgTapa', { static: false }) svgTapaRef!: ElementRef;
   @ViewChild('svgBateria', { static: false }) svgBateriaRef!: ElementRef;
   @ViewChild('svgCamPincipal', { static: false }) svgCamPincipalRef!: ElementRef;
@@ -23,6 +28,8 @@ export class IntroPage implements OnInit, ViewDidEnter {
 
   constructor(
     private animationCtrl: AnimationController,
+    private authService: AuthService,
+    private database: DataBaseService,
     private router: Router) { }
 
 
@@ -45,15 +52,7 @@ export class IntroPage implements OnInit, ViewDidEnter {
         { offset: 0.5, transform: `scale(1.5) translate(50%, 50%)`, opacity: '0.5' },
         { offset: 1, transform: `scale(1) translate(0px,0px)`, opacity: '1' }
       ]);
-    // const animacionSvgTapa = this.animationCtrl.create()
-    //   .addElement(this.svgTapaRef.nativeElement)
-    //   .fill('none')
-    //   .duration(2500)
-    //   .keyframes([
-    //     { offset: 0, transform: `scale(1) translate(200px, 200px)`, opacity: `0.5` },
-    //     { offset: 0.5, transform: `scale(1.5) translate(50px,50px)`, opacity: `0.5` },
-    //     { offset: 1, transform: `scale(1) translate(0px,0px)` }
-    //   ]);
+
 
     const svgBateria = this.animationCtrl.create()
       .addElement(this.svgBateriaRef.nativeElement)
@@ -120,9 +119,36 @@ export class IntroPage implements OnInit, ViewDidEnter {
     animacionSvgTapa.play();
     await svgCubreLente.play();
 
-    setTimeout(() => this.router.navigate(['/login']), 500);
+    setTimeout(() => {
+      this.getCurrentUser();
+      
+    }, 500);
   }
 
+  getCurrentUser() {
+    this.authService.getCurrentUser().subscribe((userRef: any) => {
+      this.database.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res: any) => {
+        let usuario: any = res.payload.data();
+        usuario['uid'] = res.payload.id;
+
+        this.loggedUser = {
+          uid: usuario['uid'],
+          email: usuario['email'],
+          displayName: usuario['displayName'],
+          emailVerified: usuario['emailVerified'],
+          photoURL: usuario['photoURL'],
+          role: usuario['role'],
+          securityCode: usuario['securityCode']
+        };
+        if(this.loggedUser){
+          this.router.navigate(['/home'])
+        }else{
+          this.router.navigate(['/login'])
+        }
+
+      })
+    })
+  }
   ngOnInit(): void {
   }
 
