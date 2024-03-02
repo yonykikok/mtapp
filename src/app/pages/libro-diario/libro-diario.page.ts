@@ -2,12 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { LibroDiario } from 'src/app/clases/libro-diario';
 import { User } from 'src/app/clases/user';
+import { AperturaDeCajaComponent } from 'src/app/components/apertura-de-caja/apertura-de-caja.component';
 import { FormActualizarItemLibroDiarioComponent } from 'src/app/components/forms/form-actualizar-item-libro-diario/form-actualizar-item-libro-diario.component';
 import { FormDetalleVentaComponent, MediosDePago } from 'src/app/components/forms/form-detalle-venta/form-detalle-venta.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 
@@ -17,6 +19,8 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./libro-diario.page.scss'],
 })
 export class LibroDiarioPage implements OnInit {
+  isActionSheetOpen = false;
+  actionSheetButtons: any = [];
 
   montoInicialOriginal: number = 0;
   mostrarModalCierreDeCaja = false;
@@ -43,8 +47,9 @@ export class LibroDiarioPage implements OnInit {
     private database: DataBaseService,
     public funcionesUtiles: FuncionesUtilesService,
     private modalController: ModalController,
+    private spinnerService: SpinnerService,
     private toastService: ToastService,
-    private alertService: AlertService
+    private alertService: AlertService,
   ) {
     this.getCurrentUser();
 
@@ -64,12 +69,64 @@ export class LibroDiarioPage implements OnInit {
       }
 
     });
+  }
 
 
+  async mostrarModalAbrirCaja() {
+    try {
+      const modal = await this.modalController.create({
+        component: AperturaDeCajaComponent,
+        componentProps: {
+          isModal: false,
+          libroDiarioHoy: this.libroDiarioHoy
+        },
+      })
+
+      modal.onDidDismiss().then(async (result: any) => {
+        if (!result.data == undefined || !result.role) return;
+
+
+        console.log("Guardando")
+        if (result.role == 'guardar') {
+          this.spinnerService.showLoading("Cargando monto...");
+          this.libroDiarioHoy.montoInicial = Number(result.data);
+          await this.database.actualizar(environment.TABLAS.ingresos, this.libroDiarioHoy, this.libroDiarioHoy.id)?.then(res => {
+            this.spinnerService.stopLoading();
+          });
+        }
+
+      })
+      return await modal.present();
+    } catch (err) {
+    }
+  }
+  cargarActionSheet() {
+    this.actionSheetButtons = [];
+
+    if (this.funcionesUtiles.roleMinimoNecesario('EMPLEADO', this.loggedUser)) {
+      this.actionSheetButtons.unshift({
+        text: (this.libroDiarioHoy.montoInicial && this.libroDiarioHoy.montoInicial > 0)
+          ? 'Cambiar monto inicial' : 'Iniciar Caja',
+        icon: 'calculator-outline',
+        handler: () => {
+          this.mostrarModalAbrirCaja();
+        },
+      });
+    }   
+    this.actionSheetButtons.push({
+      text: 'Cancelar',
+      role: 'cancel',
+      icon: 'close',
+      handler: () => { },
+    })
+  }
+  setOpen(isOpen: boolean) {
+    this.isActionSheetOpen = isOpen;
   }
   async cargarMontoInicial() {
     this.libroDiarioHoy.montoInicial = Number(this.montoIngresado);
     await this.database.actualizar(environment.TABLAS.ingresos, this.libroDiarioHoy, this.libroDiarioHoy.id);
+    this.cargarActionSheet();
   }
 
   obtenerNuevoLibroDiario(id: string) {
@@ -112,6 +169,8 @@ export class LibroDiarioPage implements OnInit {
           role: usuario['role'],
           securityCode: usuario['securityCode']
         };
+
+        this.cargarActionSheet();
       })
     })
   }
@@ -252,5 +311,10 @@ export class LibroDiarioPage implements OnInit {
     } catch (err) {
     }
 
+  }
+
+
+  mostrarOpciones() {
+    this.setOpen(true);
   }
 }

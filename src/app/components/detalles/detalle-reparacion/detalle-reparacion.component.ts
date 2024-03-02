@@ -1,13 +1,16 @@
 
 import { Component, OnInit } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
+import { NgxImageCompressService } from 'ngx-image-compress';
 import { User } from 'src/app/clases/user';
-import { boleta } from 'src/app/pages/mis-reparaciones/mis-reparaciones.page';
+import { boleta, boletaHistorialEstado } from 'src/app/pages/mis-reparaciones/mis-reparaciones.page';
 import { AlertService } from 'src/app/services/alert.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { reparacionShortMessage } from 'src/app/services/info-compartida.service';
 import { boleta_estados, listaDeEstadosBoletas, reparacionIconName } from 'src/app/services/info-compartida.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
+import { StorageService } from 'src/app/services/storage.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 @Component({
@@ -31,8 +34,11 @@ export class DetalleReparacionComponent implements OnInit {
     private alertService: AlertService,
     private actionSheetController: ActionSheetController,
     private database: DataBaseService,
+    private imageCompress: NgxImageCompressService,
     private toastService: ToastService,
-    public funcionesUtiles:FuncionesUtilesService) {
+    public funcionesUtiles: FuncionesUtilesService,
+    private storageService: StorageService,
+    private spinnerService: SpinnerService) {
 
   }
 
@@ -264,5 +270,124 @@ export class DetalleReparacionComponent implements OnInit {
     });
 
     await alert.present();
+  }
+
+  async solicitarConfirmacionEliminar(reparacion: boleta, estado: boletaHistorialEstado) {
+    this.alertService.alertConfirmacion('Confirmacion', '¿Seguro de eliminar este estado?', 'Si', () => {
+      this.spinnerService.showLoading('Eliminando estado...');
+      if (reparacion.id && reparacion.historial) {
+
+        const index = reparacion.historial.findIndex(item => item.fecha === estado.fecha);
+
+        if (index !== -1) {
+          if (estado.imgUrlsRef) {
+            let imgUrlRefCopia = this.funcionesUtiles.clonarObjeto(estado.imgUrlsRef);
+            imgUrlRefCopia.forEach(async (imgRef: any) => {
+              try {
+                let result = await this.storageService.borrarImagen(imgRef);
+                console.log(result);
+
+              } catch (error) {
+                console.error(error);
+              }
+            });
+          }
+
+          reparacion.estado = estado.estadoAnterior;
+          reparacion.historial.splice(index, 1);
+        }
+
+        console.log(reparacion)
+        this.database.actualizar(environment.TABLAS.boletasReparacion, reparacion, reparacion.id)?.finally(() => {
+          this.spinnerService.stopLoading();
+        });
+      }
+
+    });
+  }
+
+  agregarImagen(reparacion: boleta, estado: boletaHistorialEstado) {
+    const MAX_MEGABYTE = 0.5;
+    let posicionDisponible = this.obtenerPosicionDisponibles(estado);
+    console.log(posicionDisponible)
+    if (posicionDisponible != undefined) {
+      console.log(posicionDisponible);
+      let imgName = `${new Date(estado.fecha).getTime()}-${reparacion.dniCliente}-${reparacion.nroBoleta}-${posicionDisponible}`
+      this.imageCompress
+        .uploadAndGetImageWithMaxSize(MAX_MEGABYTE) // this function can provide debug information using (MAX_MEGABYTE,true) parameters
+        .then(
+          (result: string) => {//caso de que comprima
+            this.subirImagen(reparacion, estado, `estados_reparacion/`, imgName, result);
+          },
+          (result: string) => {//caso de que NO comprima
+            this.subirImagen(reparacion, estado, `estados_reparacion/`, imgName, result);
+          });
+    }
+  }
+
+
+  subirImagen(reparacion: boleta, estado: boletaHistorialEstado, imgPath: string, imgName: string, imgBase64: string) {
+
+    this.storageService.subirImagenEquiposVenta(imgPath + imgName, imgBase64).then((urlImagen) => {
+
+      let urlRef = imgPath + imgName;
+
+      console.log(`imgUrls: `, urlImagen)
+      console.log(`imgUrlsRef: `, urlRef)
+      if (urlImagen) {
+        if (!estado.images || !estado.imgUrlsRef) {
+          estado.imgUrlsRef = [];
+          estado.images = [];
+        }
+        estado.imgUrlsRef.push(urlRef);
+        estado.images.push(urlImagen);
+      }
+      if (reparacion.id) {
+        this.database.actualizar(environment.TABLAS.boletasReparacion, reparacion, reparacion.id)?.then((res: any) => {
+          // this.spinnerService.stopLoading();
+          this.toastService.simpleMessage('Existo', 'Nueva imagen añadida', ToastColor.success);
+
+        }).catch(err => {
+          this.toastService.simpleMessage('Error', 'No se pudo agregar la imagen', ToastColor.danger);
+        })
+      }
+    }).catch(err => {
+      this.toastService.simpleMessage('Error', 'al subir la image ocurrio un error ("equipos disponibles")', ToastColor.danger);
+    });
+  }
+
+  obtenerPosicionDisponibles(estado: boletaHistorialEstado) {
+    let posicionesDiponibles: number[] = [];
+    const imagenesRefSinRepetidos = Array.from(new Set(estado.imgUrlsRef));
+    console.log(imagenesRefSinRepetidos);
+    let posiblesPosiciones = [0, 1];
+
+    posiblesPosiciones.forEach(posicion => {
+      let existe = false;
+      imagenesRefSinRepetidos.forEach(imgRef => {
+
+        const partes = imgRef.split('-');
+        const obtenerUltimoDigito = parseInt(partes[partes.length - 1], 10);
+
+        if (posicion == obtenerUltimoDigito) {
+          existe = true
+        }
+      });
+      if (existe) {
+
+      } else {
+        posicionesDiponibles.push(posicion);
+        console.log("disponible: ", posicion)
+
+      }
+
+    });
+    console.log("posiciones disponible: ", posicionesDiponibles)
+    return posicionesDiponibles[0];
+
+  }
+
+  mostrarImagen(img:string) {
+    this.funcionesUtiles.mostrarImagenCompleta(img);
   }
 }

@@ -7,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BusquedaPorTextoComponent implements OnInit {
   textoABuscar = "";
+  intervaloSeleccionado: any;
   mesSeleccionado: any;
   itemsFiltrados: any;
   mostrarBuscador: any;
@@ -20,19 +21,24 @@ export class BusquedaPorTextoComponent implements OnInit {
 
   applyFilter() {
     let items: any[] = [];
+    if (this.intervaloSeleccionado) {
+      this.mesSeleccionado=this.intervaloSeleccionado;
+    }
+    if (this.mesSeleccionado) {
+      this.mesSeleccionado.dias?.forEach((dia: any) => {
 
-    this.mesSeleccionado.dias?.forEach((dia: any) => {
-      dia.ventas.forEach((venta: any) => {
-        if (venta.descripcion.toLowerCase().includes(this.textoABuscar.toLowerCase()) ||
-          venta?.boleta?.toString()?.includes(this.textoABuscar.toLowerCase())) {
-          let auxVenta = { ...venta };
-          auxVenta['fecha'] = dia.fecha;
-          auxVenta['fechaString'] = dia.fechaString;
+        dia.ventas.forEach((venta: any) => {
+          if (venta.descripcion.toLowerCase().includes(this.textoABuscar.toLowerCase()) ||
+            venta?.boleta?.toString()?.includes(this.textoABuscar.toLowerCase())) {
+            let auxVenta = { ...venta };
+            auxVenta['fecha'] = dia.fecha;
+            auxVenta['fechaString'] = dia.fechaString;
 
-          items.push(auxVenta)
-        }
+            items.push(auxVenta)
+          }
+        });
       });
-    });
+    }
     //console.log(items)
     this.itemsFiltrados = items.sort((a: any, b: any) => {
       if (a.fecha > b.fecha) {

@@ -1,7 +1,7 @@
 <ion-toolbar class="header">
-  <ion-icon (click)="emitirDismissEvent()" [routerLink]="[ruta]" routerLinkActive="router-link-active" routerLinkActive="router-link-active"
-    slot="start" name="arrow-back-outline" style="font-size: 150%;" class="ion-margin-start"
-    ></ion-icon>
+  <ion-icon (click)="emitirDismissEvent()" [routerLink]="[ruta]" routerLinkActive="router-link-active"
+    routerLinkActive="router-link-active" slot="start" name="arrow-back-outline" style="font-size: 150%;"
+    class="ion-margin-start"></ion-icon>
   <!-- <ion-buttons slot="start">
       <ion-back-button defaultHref="/" [routerLink]="['/home']"></ion-back-button>
     </ion-buttons> -->
@@ -9,5 +9,5 @@
     <b> {{title}} </b> <!-- //TODO:  -->
 
   </ion-title>
-  <ion-icon slot="end" class="ion-padding"> </ion-icon>
+  <ion-icon (click)="emitirOpcionesEvent()" slot="end" class="ion-padding" [name]="mostrarOpciones?'ellipsis-vertical-outline':''"> </ion-icon>
 </ion-toolbar>

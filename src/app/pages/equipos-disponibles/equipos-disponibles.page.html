@@ -51,9 +51,9 @@
                 <b>
                   Incluye:
                 </b>
-                <ion-label *ngFor="let accesorio of equipo.accesorios;let index=index">
+                <ion-text *ngFor="let accesorio of equipo.accesorios;let index=index">
                   {{accesorio|titlecase}}{{index!=(equipo.accesorios.length-1)?', ':'.'}}
-                </ion-label>
+                </ion-text>
               </p>
               <!-- <p *ngIf="equipo.imei"> <b> Imei: </b> {{equipo.imei}} </p> -->
             </div>

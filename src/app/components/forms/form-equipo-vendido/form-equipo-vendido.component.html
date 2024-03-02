@@ -10,9 +10,9 @@
     </ion-card-header>
     <ion-card-content>
       <form [formGroup]="step1FormGroup">
-        <ion-item fill="outline" class="ion-margin">
-          <ion-label position="floating">DNI</ion-label>
-          <ion-input formControlName="dni" placeholder="ingrese el dni" required></ion-input>
+        <ion-item class="ion-margin">
+          <ion-input label="DNI" labelPlacement="floating" formControlName="dni" placeholder="ingrese el dni"
+            required></ion-input>
         </ion-item>
         <div class="ion-text-center">
           <ion-button color="primary" (click)="step=step+1" [disabled]="!step1FormGroup.valid">Siguiente</ion-button>
@@ -27,7 +27,7 @@
     <ion-card-content>
 
       <form [formGroup]="step2FormGroup">
-        <ion-item fill="outline" class="ion-margin">
+        <ion-item class="ion-margin">
           <ion-select placeholder="Seleccione la marca" formControlName="marca">
             <ion-select-option
               *ngFor="let prioridad of ['apple', 'alcatel', 'huawei', 'lg', 'motorola',  'samsung','sony','xiaomi','otro']"
@@ -35,17 +35,17 @@
           </ion-select>
         </ion-item>
 
-        <ion-item fill="outline" class="ion-margin">
-          <ion-label position="floating">Modelo</ion-label>
-          <ion-input formControlName="modelo" placeholder="Ingrese modelo del equipo" required></ion-input>
+        <ion-item class="ion-margin">
+          <ion-input label="Modelo" labelPlacement="floating" formControlName="modelo"
+            placeholder="Ingrese modelo del equipo" required></ion-input>
         </ion-item>
-        <ion-item fill="outline" class="ion-margin">
-          <ion-label position="floating">Imei</ion-label>
-          <ion-input formControlName="imei" placeholder="Ingrese imei del equipo" required></ion-input>
+        <ion-item class="ion-margin">
+          <ion-input label="Imei" labelPlacement="floating" formControlName="imei" placeholder="Ingrese imei del equipo"
+            required></ion-input>
         </ion-item>
-        <ion-item fill="outline" class="ion-margin">
-          <ion-label position="floating">Precio</ion-label>
-          <ion-input formControlName="precio" placeholder="Ingrese precio del equipo" required></ion-input>
+        <ion-item class="ion-margin">
+          <ion-input label="Precio" labelPlacement="floating" formControlName="precio"
+            placeholder="Ingrese precio del equipo" required></ion-input>
         </ion-item>
         <div class="ion-text-center">
           <ion-button color="warning" (click)="step=step-1">Atras</ion-button>
@@ -64,7 +64,7 @@
 
       <form [formGroup]="step3FormGroup">
 
-        <ion-item fill="outline" class="ion-margin">
+        <ion-item class="ion-margin">
           <ion-select placeholder="Seleccione lo que lleva" formControlName="accesorios" [multiple]="true">
             <ion-select-option *ngFor="let prioridad of ['auriculares', 'caja', 'cargador', 'cable', 'film',  'funda']"
               [value]="prioridad">{{prioridad}}</ion-select-option>
@@ -123,8 +123,9 @@
         <li *ngIf="step4FormGroup.controls['images'].value.length > 0">
           <b>imagenes:</b>
           <div class="image-grid">
-            <img width="40px" height="40px" *ngFor="let img of step4FormGroup.controls['images'].value; let index = index"
-              [src]="img" alt="imagen celular">
+            <img width="40px" height="40px"
+              *ngFor="let img of step4FormGroup.controls['images'].value; let index = index" [src]="img"
+              alt="imagen celular">
           </div>
         </li>
 

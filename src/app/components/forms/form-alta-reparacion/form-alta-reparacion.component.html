@@ -24,28 +24,28 @@
       </div>
 
       <form [formGroup]="formAltaReparacion" (ngSubmit)="mostrarConfirmacion()">
-        <ion-item class="ion-activated" fill="outline">
-          <ion-label position="floating">DNI cliente</ion-label>
+        <ion-item class="ion-activated">
           <ion-icon slot="end" name="card-outline"></ion-icon>
-          <ion-input type="number" placeholder="40414243" formControlName="dniCliente"></ion-input>
+          <ion-input label="DNI cliente" labelPlacement="floating" type="number" placeholder="40414243"
+            formControlName="dniCliente"></ion-input>
         </ion-item>
 
-        <ion-item class="ion-activated" fill="outline">
-          <ion-label position="floating">Numero de boleta</ion-label>
+        <ion-item class="ion-activated">
           <ion-icon slot="end" name="document-outline"></ion-icon>
-          <ion-input type="text" placeholder="4550" formControlName="nroBoleta"></ion-input>
+          <ion-input label="Numero de boleta" labelPlacement="floating" type="text" placeholder="4550"
+            formControlName="nroBoleta"></ion-input>
         </ion-item>
 
-        <ion-item class="ion-activated" fill="outline">
-          <ion-label position="floating">Modelo del equipo</ion-label>
+        <ion-item class="ion-activated">
           <ion-icon slot="end" name="phone-portrait-outline"></ion-icon>
-          <ion-input type="text" placeholder="J7 prime" formControlName="modelo"></ion-input>
+          <ion-input label="Modelo del equipo" labelPlacement="floating" type="text" placeholder="J7 prime"
+            formControlName="modelo"></ion-input>
         </ion-item>
 
-        <ion-item class="ion-activated" fill="outline">
-          <ion-label position="floating">Telefono del cliente</ion-label>
+        <ion-item class="ion-activated">
           <ion-icon slot="end" name="logo-whatsapp"> </ion-icon>
-          <ion-input type="number" placeholder="1150604010" formControlName="telefono"></ion-input>
+          <ion-input label="Telefono del cliente" labelPlacement="floating" type="number" placeholder="1150604010"
+            formControlName="telefono"></ion-input>
         </ion-item>
 
         <ion-button expand="block" class="ion-margin-top" type="submit"

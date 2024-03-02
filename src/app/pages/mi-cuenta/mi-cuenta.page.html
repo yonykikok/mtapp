@@ -8,7 +8,7 @@
             ?loggedUser.photoURL
             :'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png'" />
 
-        <ion-label class="ion-padding-start ion-padding-bottom">
+        <ion-text class="ion-padding-start ion-padding-bottom">
             <ion-text class="bold">{{
                 loggedUser.displayName
                 ?loggedUser.displayName
@@ -17,9 +17,9 @@
             <ion-chip class="ion-no-margin" style="height: 25px;" [color]="modoEditar?'danger':'success'" outline
                 (click)="modoEditar=!modoEditar">
                 <ion-icon [name]="modoEditar?'close-outline':'create-outline'"></ion-icon>
-                <ion-label>{{modoEditar?'Cancelar edicion':'Actualizar información'}}</ion-label>
+                <ion-text>{{modoEditar?'Cancelar edicion':'Actualizar información'}}</ion-text>
             </ion-chip>
-        </ion-label>
+        </ion-text>
     </ion-item>
     <ion-item class="">
         <ion-text>
@@ -36,9 +36,12 @@
                 <ion-icon name="time-outline" slot="start"></ion-icon> Fecha de Nacimiento
                 <ion-icon color="primary" *ngIf="modoEditar" slot="end" name="create-outline"
                     (click)="mostrarPopupFNacimiento()"></ion-icon>
-                <ion-text class="displayBlock ion-padding-start">
-                    {{loggedUser.fNacimiento?loggedUser.fNacimiento:'--'}}
+                <ion-text class="displayBlock ion-padding-start" *ngIf="loggedUser.fNacimiento; else sinFecha">
+                    {{loggedUser.fNacimiento|date:'dd/MM/yyyy'}}
                 </ion-text>
+                <ng-template #sinFecha>
+                    <ion-text class="displayBlock ion-padding-start"> -- </ion-text>
+                </ng-template>
             </p>
 
         </ion-text>

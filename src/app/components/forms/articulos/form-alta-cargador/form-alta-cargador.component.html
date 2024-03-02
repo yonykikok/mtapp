@@ -18,7 +18,7 @@
       </ion-item>
       <small class="ion-margin-start"
         *ngIf="articuloFormGroup.get('marca')?.hasError('required') && articuloFormGroup.get('marca')?.touched">
-        <ion-label color="danger">La marca es obligatoria.</ion-label>
+        <ion-text color="danger">La marca es obligatoria.</ion-text>
       </small>
 
 
@@ -31,7 +31,7 @@
 
       <small class="ion-margin-start"
         *ngIf="articuloFormGroup.get('velocidad')?.hasError('required') && articuloFormGroup.get('velocidad')?.touched">
-        <ion-label color="danger">La velocidad es obligatoria.</ion-label>
+        <ion-text color="danger">La velocidad es obligatoria.</ion-text>
       </small>
 
       <ion-item mode="md">
@@ -44,11 +44,11 @@
 
       <small class="ion-margin-start"
         *ngIf="articuloFormGroup.get('precio')?.hasError('required') && articuloFormGroup.get('precio')?.touched">
-        <ion-label color="danger">La categoría es obligatoria.</ion-label>
+        <ion-text color="danger">La categoría es obligatoria.</ion-text>
       </small>
       <small class="ion-margin-start"
         *ngIf="articuloFormGroup.get('precio')?.hasError('min') && articuloFormGroup.get('precio')?.touched">
-        <ion-label color="danger">El precio minimo es de 0.</ion-label>
+        <ion-text color="danger">El precio minimo es de 0.</ion-text>
       </small>
 
       <ion-item mode="md">
@@ -59,7 +59,7 @@
 
       <small class="ion-margin-start"
         *ngIf="articuloFormGroup.get('tipo')?.hasError('required') && articuloFormGroup.get('tipo')?.touched">
-        <ion-label color="danger">El tipo es obligatorio.</ion-label>
+        <ion-text color="danger">El tipo es obligatorio.</ion-text>
       </small>
 
       <ion-button class="ion-padding" type="submit" expand="full"

@@ -7,22 +7,19 @@
   <ion-card class="ion-padding">
     <form>
       <div class="input-container">
-        <ion-item fill="outline">
-          <ion-label position="floating">Precio</ion-label>
-          <ion-input type="number" placeholder="Ej: 1500" [(ngModel)]="item.precio"
+        <ion-item >
+          <ion-input label="Precio" labelPlacement="floating" type="number" placeholder="Ej: 1500" [(ngModel)]="item.precio"
             [ngModelOptions]="{standalone: true}"></ion-input>
         </ion-item>
 
-        <ion-item fill="outline" class="ion-margin-top ion-margin-bottom">
-          <ion-label position="floating">Numero de boleta</ion-label>
-          <ion-input type="number" placeholder="Ej: 2955" [(ngModel)]="item.boleta"
+        <ion-item  class="ion-margin-top ion-margin-bottom">
+          <ion-input label="Numero de boleta" labelPlacement="floating" type="number" placeholder="Ej: 2955" [(ngModel)]="item.boleta"
             [ngModelOptions]="{standalone: true}"></ion-input>
         </ion-item>
       </div>
 
-      <ion-item fill="outline">
-        <ion-label position="floating">Descripción</ion-label>
-        <ion-textarea placeholder="Cargador 5.1 Innova tipo C" [(ngModel)]="item.descripcion"
+      <ion-item >
+        <ion-textarea label="Descripción" labelPlacement="floating" placeholder="Cargador 5.1 Innova tipo C" [(ngModel)]="item.descripcion"
           [ngModelOptions]="{standalone: true}"></ion-textarea>
       </ion-item>
 

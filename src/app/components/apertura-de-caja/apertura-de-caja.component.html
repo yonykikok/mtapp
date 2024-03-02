@@ -1,0 +1,17 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/libro-diario'" [title]="'Libro diario'"></app-clasic-toolbar>
+</ion-header>
+<ion-content>
+  <div *ngIf="libroDiarioHoy">
+    <ion-item class="ion-margin">
+      <ion-input labelPlacement="floating" label="Monto inicial" type="number"
+        placeholder="Ingrese el monto de apertura" [(ngModel)]="montoIngresado"
+        [ngModelOptions]="{standalone: true}"></ion-input>
+    </ion-item>
+    <div>
+      <ion-button expand="block" color="ligth"
+        (click)="libroDiarioHoy.montoInicial=montoInicialOriginal">Cancelar</ion-button>
+      <ion-button expand="block" color="primary" (click)="showConfirmDialog()" class="ion-margin">Guardar</ion-button>
+    </div>
+  </div>
+</ion-content>

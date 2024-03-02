@@ -26,9 +26,9 @@
         <ion-accordion-group>
           <ion-accordion value="categorias">
             <ion-item slot="header" color="light">
-              <ion-label>Categorias</ion-label>
+              <ion-text>Categorias</ion-text>
             </ion-item>
-            <div  slot="content">
+            <div slot="content">
               <ion-item *ngFor="let categoria of categorias">
                 <ion-label>{{ categoria }}</ion-label>
                 <ion-checkbox slot="start" [(ngModel)]="categoria.seleccionada"></ion-checkbox>
@@ -42,17 +42,17 @@
         <ion-accordion-group>
           <ion-accordion value="precio">
             <ion-item slot="header" color="light">
-              <ion-label>Rango de precios</ion-label>
+              <ion-text>Rango de precios</ion-text>
             </ion-item>
             <div slot="content">
               <ion-item lines="none">
                 <ion-item>
-                  <ion-label position="floating">Mínimo</ion-label>
-                  <ion-input placeholder="Ej: 1500" type="number" [(ngModel)]="precioMin"></ion-input>
+                  <ion-input labelPlacement="floating" label="Mínimo" placeholder="Ej: 1500" type="number"
+                    [(ngModel)]="precioMin"></ion-input>
                 </ion-item>
                 <ion-item>
-                  <ion-label position="floating">Máximo</ion-label>
-                  <ion-input placeholder="Ej: 20000" type="number" [(ngModel)]="precioMax"></ion-input>
+                  <ion-input labelPlacement="floating" label="Máximo" placeholder="Ej: 20000" type="number"
+                    [(ngModel)]="precioMax"></ion-input>
                 </ion-item>
               </ion-item>
             </div>
@@ -63,13 +63,12 @@
         <ion-accordion-group>
           <ion-accordion value="condicion">
             <ion-item slot="header" color="light">
-              <ion-label>Condición</ion-label>
+              <ion-text>Condición</ion-text>
             </ion-item>
             <div slot="content">
-              
-              <ion-item fill="outline">
-                <ion-label position="floating">Condición</ion-label>
-                <ion-select placeholder="Seleccione la cantidad">
+
+              <ion-item>
+                <ion-select label="Condición" labelPlacement="floating" placeholder="Seleccione la cantidad">
                   <ion-select-option *ngFor="let condicion of ['usado','nuevo','reacondicionado']"
                     [value]="condicion">{{condicion|titlecase}}</ion-select-option>
                 </ion-select>
@@ -147,41 +146,8 @@
         </ion-card-content>
       </ion-card>
 
-      <!-- <ion-item *ngFor="let accesorio of filtrarAccesoriosPorCategoria(categoria)" class="ion-no-padding"
-        style="width: 100%;">
-        <ion-avatar slot="start" class="item-avatar">
-          <img [src]="accesorio.imagen" />
-        </ion-avatar>
-        <ion-label>
-          <p>
-            <b> {{accesorio.nombre}}</b>
-          </p>
-          <p>
-            marca: {{accesorio.marca}}
-          </p>
-          <p>
-            precio: {{accesorio.precio|currency:'USD':'symbol':'1.0-0'}}
-          </p>
-          <p>
-            tipo: {{accesorio.tipo}}
-          </p>
-          <p>
-            compatibilidad: {{accesorio.compatibilidad}}
-          </p>
-        </ion-label>
-      </ion-item> -->
+     
     </ion-item-divider>
-    <!-- <ion-item>
-      <ion-avatar slot="start" class="item-avatar">
-        <img src="https://http2.mlstatic.com/D_NQ_NP_970700-MLA44940777575_022021-O.jpg" />
-      </ion-avatar>
-      <ion-label>
-        <h3>Cargador inova 5.1mAh</h3>
-        <p>{{1500|currency:'USD':'symbol':'1.0-0'}}</p>
-        <p>Cargador de carga rapida de primera calidad</p>
-      </ion-label>
-    </ion-item> -->
-
   </ion-list>
 
 </ion-content>

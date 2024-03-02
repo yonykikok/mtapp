@@ -20,7 +20,8 @@ ion-col {
 }
 
 ion-grid ion-row:nth-child(odd) {
-    background-color: #f2f2f2; /* Color de fila para filas impares */
+    background-color: #f2f2f2;
+    /* Color de fila para filas impares */
 }
 
 
@@ -29,4 +30,8 @@ ion-row:first-child {
     height: 2.6rem;
     background-color: var(--main-bg-color) !important;
     color: white;
+}
+
+.ion_item {
+    --inner-padding-end: none !important;
 }

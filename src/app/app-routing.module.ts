@@ -12,7 +12,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'home',//intro
+    redirectTo: 'intro',//intro
     pathMatch: 'full'
   },
   {
@@ -121,7 +121,8 @@ const routes: Routes = [
   {
     path: 'proveedores/lista-modulos-proveedor',
     loadChildren: () => import('./pages/lista-modulos-proveedor/lista-modulos-proveedor.module').then( m => m.ListaModulosProveedorPageModule)
-  },  {
+  },
+  {
     path: 'articulos',
     loadChildren: () => import('./pages/articulos/articulos.module').then( m => m.ArticulosPageModule)
   },

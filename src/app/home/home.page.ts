@@ -6,6 +6,7 @@ import { EncuestaCalificacionComponent } from '../components/encuesta-calificaci
 import { FuncionesUtilesService } from '../services/funciones-utiles.service';
 import { environment } from 'src/environments/environment';
 import { User } from '../clases/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -28,6 +29,7 @@ export class HomePage {
     public funcionesUtiles: FuncionesUtilesService,
     private authService: AuthService,
     private database: DataBaseService,
+    private router:Router,
     private menuController: MenuController) {
 
     this.getCurrentUser();
@@ -41,7 +43,7 @@ export class HomePage {
   ngOnInit(): void {
     // this.agregarALaDBDiasNoCargados();
   }
-  
+
 
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe((userRef: any) => {
@@ -62,7 +64,12 @@ export class HomePage {
     })
   }
 
-
+  irAajustesDeRepuestos() {
+    this.router.navigate(['/ajustes-de-repuestos'], { skipLocationChange: true }).then(() => {
+      // Navega a '/home' nuevamente para recargar la página
+      this.router.navigate(['/ajustes-de-repuestos']);
+    });
+  }
   async mostrarFormulario() {
     let modal = this.modalController.create({
       component: EncuestaCalificacionComponent

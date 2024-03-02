@@ -15,9 +15,8 @@
 
     <ion-card-content>
       <div>
-        <ion-item fill="outline" class="ion-margin">
-          <ion-label position="floating">Cambiar monto inicial</ion-label>
-          <ion-input type="number" placeholder="Ingrese el monto de apertura" [(ngModel)]="montoIngresado"
+        <ion-item  class="ion-margin">
+          <ion-input labelPlacement="floating" label="Cambiar monto inicial" type="number" placeholder="Ingrese el monto de apertura" [(ngModel)]="montoIngresado"
             [ngModelOptions]="{standalone: true}"></ion-input>
         </ion-item>
         <div>
@@ -45,7 +44,7 @@
       <ion-accordion-group *ngIf="libroDiario.historialDeCierre">
         <ion-accordion value="first">
           <ion-item slot="header">
-            <ion-label>Historial de cierre</ion-label>
+            <ion-text>Historial de cierre</ion-text>
           </ion-item>
           <div class="ion-padding" slot="content">
             <ion-chip style="flex-direction: column;"

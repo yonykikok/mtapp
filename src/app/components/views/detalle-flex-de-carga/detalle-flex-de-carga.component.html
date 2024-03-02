@@ -34,7 +34,7 @@
 
       
       <!-- EDIT MARCA -->
-      <ion-item fill="outline" *ngIf="editMarca" class="ion-margin">
+      <ion-item  *ngIf="editMarca" class="ion-margin">
         <ion-select aria-label="fruit" placeholder="Select fruit" [(ngModel)]="clonRepuesto.marca">
           <ion-select-option *ngFor="let marca of marcas" [value]="marca">{{marca}}</ion-select-option>
         </ion-select>
@@ -42,20 +42,20 @@
       <!-- FIN EDIT MARCA -->
 
       <!-- EDIT MODELO -->
-      <ion-item fill="outline" *ngIf="editModelo" class="ion-margin">
+      <ion-item  *ngIf="editModelo" class="ion-margin">
         <ion-input type="text" placeholder="Escriba el modelo" aria-label="Modulo" [(ngModel)]="clonRepuesto.modelo">
         </ion-input>
       </ion-item>
       <!-- FIN EDIT MODELO -->
 
       <!-- EDIT PRECIO -->
-      <ion-item fill="outline" *ngIf="editPrecio" class="ion-margin">
+      <ion-item  *ngIf="editPrecio" class="ion-margin">
         <ion-input type="number" placeholder="precio en dolares" [(ngModel)]="clonRepuesto.precio"></ion-input>
       </ion-item>
       <!-- FIN EDIT PRECIO -->
 
       <!-- EDIT CALIDAD -->
-      <ion-item fill="outline" *ngIf="editCalidad" class="ion-margin">
+      <ion-item  *ngIf="editCalidad" class="ion-margin">
         <ion-select aria-label="fruit" placeholder="Select fruit" [(ngModel)]="clonRepuesto.calidad">
           <ion-select-option *ngFor="let calidad of calidades" [value]="calidad">{{calidad}}</ion-select-option>
         </ion-select>

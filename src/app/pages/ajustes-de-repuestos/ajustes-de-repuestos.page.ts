@@ -24,7 +24,7 @@ export class AjustesDeRepuestosPage implements OnInit, OnDestroy {
 
   volverAlHome() {
     this.router.navigate(['/home']);
-    this.menuController.toggle('first-menu')
+    this.menuController.toggle('first-menu');
     this.menuController.enable(true, 'first-menu');
   }
   seleccionar(categoria: string, subCategoria: string) {
@@ -50,5 +50,10 @@ export class AjustesDeRepuestosPage implements OnInit, OnDestroy {
         };
       })
     })
+  }
+
+
+  async agregarNuevoRepuesto(){
+
   }
 }

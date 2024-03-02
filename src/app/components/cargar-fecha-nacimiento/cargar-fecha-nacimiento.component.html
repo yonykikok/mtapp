@@ -21,8 +21,8 @@
       <form [formGroup]="formFNacimiento" (ngSubmit)="guardar()" *ngIf="!modoActualizar">
 
         <ion-item>
-          <ion-label position="floating" class="text1 bold">Fecha de nacimiento</ion-label>
-          <ion-input type="date" formControlName="fNacimiento" placeholder="ingrese su fNacimiento"></ion-input>
+          <ion-input labelPlacement="floating" label="Fecha de nacimiento" type="date" formControlName="fNacimiento"
+            placeholder="ingrese su fNacimiento"></ion-input>
         </ion-item>
 
         <ion-button expand="block" class="ion-margin-top" [disabled]="!formFNacimiento.valid" type="submit">Guardar

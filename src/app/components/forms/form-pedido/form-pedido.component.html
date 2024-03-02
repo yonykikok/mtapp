@@ -6,32 +6,31 @@
   <ion-card class="mt-3">
     <form class="example-form" [formGroup]="formgroupPedido">
 
-      <ion-item fill="outline" class="ion-margin">
-        <ion-label position="floating">Tipo de Repuesto</ion-label>
-        <ion-input type="text" placeholder="Bateria, Modulo, Tactil, etc." formControlName="tipo">
+      <ion-item class="ion-margin">
+        <ion-input label="Tipo de Repuesto" labelPlacement="floating" type="text"
+          placeholder="Bateria, Modulo, Tactil, etc." formControlName="tipo">
         </ion-input>
       </ion-item>
 
-      <ion-item fill="outline" class="ion-margin">
-        <ion-label position="floating">Modelo</ion-label>
-        <ion-input type="text" placeholder="J7 prime" formControlName="modelo">
+      <ion-item class="ion-margin">
+        <ion-input label="Modelo" labelPlacement="floating" type="text" placeholder="J7 prime" formControlName="modelo">
         </ion-input>
       </ion-item>
 
-      <ion-item fill="outline" class="ion-margin">
-        <ion-label position="floating">Cantidad a traer</ion-label>
-        <ion-input type="text" placeholder="20" formControlName="cantidad">
+      <ion-item class="ion-margin">
+        <ion-input label="Cantidad a traer" labelPlacement="floating" type="text" placeholder="20"
+          formControlName="cantidad">
         </ion-input>
       </ion-item>
 
-      <ion-item fill="outline" class="ion-margin">
-        <ion-label position="floating">Detalle del pedido</ion-label>
-        <ion-input type="text" placeholder="J7 prime original oled blanco" formControlName="detalle">
+      <ion-item class="ion-margin">
+        <ion-input label="Detalle del pedido" labelPlacement="floating" type="text"
+          placeholder="J7 prime original oled blanco" formControlName="detalle">
         </ion-input>
       </ion-item>
 
 
-      <ion-item fill="outline" class="ion-margin">
+      <ion-item class="ion-margin">
         <ion-select aria-label="fruit" placeholder="Seleccione la prioridad" formControlName="prioridad">>
           <ion-select-option *ngFor="let prioridad of listaDePrioridades"
             [value]="prioridad">{{prioridad}}</ion-select-option>
@@ -49,31 +48,31 @@
       <!-- PEDIDO POR CLIENTE -->
       <ion-card *ngIf="pedidoPorCliente" class="ion-padding">
         <form [formGroup]="clienteFormGroup">
-          <ion-item fill="outline">
-            <ion-label position="floating">Nombre</ion-label>
-            <ion-input type="text" formControlName="nombre" placeholder="Ej:Jorge"></ion-input>
+          <ion-item>
+            <ion-input label="Nombre" labelPlacement="floating" type="text" formControlName="nombre"
+              placeholder="Ej:Jorge"></ion-input>
           </ion-item>
 
-          <ion-item fill="outline">
-            <ion-label position="floating">Teléfono</ion-label>
-            <ion-input type="tel" formControlName="telefono" placeholder="Ej:1140506030"></ion-input>
+          <ion-item>
+            <ion-input label="Teléfono" labelPlacement="floating" type="tel" formControlName="telefono"
+              placeholder="Ej:1140506030"></ion-input>
           </ion-item>
 
-          <ion-item fill="outline">
-            <ion-label position="floating">Número de Boleta</ion-label>
-            <ion-input type="text" formControlName="boleta" placeholder="Ej:4510"></ion-input>
+          <ion-item>
+            <ion-input label="Número de Boleta" labelPlacement="floating" type="text" formControlName="boleta"
+              placeholder="Ej:4510"></ion-input>
           </ion-item>
 
-          <ion-item fill="outline">
-            <ion-label position="floating">Precio Máximo</ion-label>
-            <ion-input type="number" formControlName="precio" placeholder="Ej:7500"></ion-input>
+          <ion-item>
+            <ion-input label="Precio Máximo" labelPlacement="floating" type="number" formControlName="precio"
+              placeholder="Ej:7500"></ion-input>
           </ion-item>
 
         </form>
       </ion-card>
       <!-- FIN PEDIDO POR CLIENTE -->
 
-      <!-- <ion-item *ngIf="pedidoPorCliente" fill="outline" class="ion-margin">
+      <!-- <ion-item *ngIf="pedidoPorCliente"  class="ion-margin">
         <ion-label position="floating">Informacion del cliente</ion-label>
         <ion-textarea placeholder="Jorge: 1151256116, precio maximo $1500" formControlName="cliente"></ion-textarea>
       </ion-item> -->

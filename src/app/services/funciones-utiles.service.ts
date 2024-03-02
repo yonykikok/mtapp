@@ -4,6 +4,8 @@ import { DataBaseService } from './database.service';
 import { Observable, Subject } from 'rxjs';
 import { ImportanciaRoles, Roles, User } from '../clases/user';
 import { MediosDePago } from '../components/forms/form-detalle-venta/form-detalle-venta.component';
+import { VisualizadorDeImagenComponent } from '../components/views/visualizador-de-imagen/visualizador-de-imagen.component';
+import { ModalController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +20,8 @@ export class FuncionesUtilesService {
 
   constructor(
     // private snackBar: MatSnackBar,
-    private database: DataBaseService) {
+    private database: DataBaseService,
+    private modalController:ModalController) {
     this.dolar$ = new Subject();
     this.database.obtenerPorId(environment.TABLAS.cotizacion_dolar, 'dolarBlue').subscribe(async (res: any) => {
       await this.obtenerCotizacionDelDolarActual();
@@ -118,5 +121,29 @@ export class FuncionesUtilesService {
     }
     )
   }
+
+
+
+  async mostrarImagenCompleta(imagen: string) {
+    try {
+      const modal = await this.modalController.create({
+        component: VisualizadorDeImagenComponent,
+        componentProps: {
+          imagen
+        },
+      })
+
+      modal.onDidDismiss().then((result: any) => {
+        if (!result.data || !result.role) return;
+
+
+      })
+      return await modal.present();
+    } catch (err) {
+    }
+  }
+
+
+  
 
 }

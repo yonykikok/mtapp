@@ -16,9 +16,8 @@
         </label>
 
         <ng-template #mostrarSelect>
-          <ion-item fill="outline" mode="md">
-            <ion-label position="floating">Estado de la reparación</ion-label>
-            <ion-select placeholder="Seleccione el estado" [(ngModel)]="estadoSeleccionado"
+          <ion-item  mode="md">
+            <ion-select label="Estado de la reparación" labelPlacement="floating" placeholder="Seleccione el estado" [(ngModel)]="estadoSeleccionado"
               (ionChange)="cambiarEstado()">
               <ion-select-option *ngFor="let estado of estadosPosibles"
                 [value]="estado.variable">{{estado.mensaje}}</ion-select-option>
@@ -88,14 +87,15 @@
 
 
       <ion-accordion-group [multiple]="true" *ngIf="mostrarHistorial">
-        <ion-accordion [value]="estado.fecha" [appEstadoReparacionBgcolor]="estado.estadoActual"
-          *ngFor="let estado of reparacion.historial">
-          <ion-item slot="header" color="light">
-            <ion-label>{{obtenerMensajeDelEstado(estado.estadoActual)}}</ion-label>
-          </ion-item>
-          <div class="ion-padding" slot="content">
-            <ion-item-sliding>
-              <ion-item>
+        <ion-item-sliding *ngFor="let estado of reparacion.historial; let index =index">
+          <ion-item>
+
+            <ion-accordion [value]="estado.fecha" [appEstadoReparacionBgcolor]="estado.estadoActual">
+              <ion-item slot="header" color="light">
+                <ion-text>{{obtenerMensajeDelEstado(estado.estadoActual)}}</ion-text>
+              </ion-item>
+              <div class="ion-padding" slot="content">
+
 
                 <small style="position: absolute; right: 1rem; top: 3rem;">{{estado.fecha|date:'dd/MM/yyyy hh:mm:ss'
                   }}</small>
@@ -119,15 +119,26 @@
                       (click)="mostrarEditarDetalle(estado)"></ion-icon></b>
                   <p style="margin-top: 1rem;">{{estado.detalle}}</p>
                 </ion-chip>
-              </ion-item>
+                <div class="ion-text-center">
+                  <div *ngIf="estado.images && estado.images.length>0">
+                    <img (click)="mostrarImagen(imagen)" style="width: 40px;height: 40px;margin: 0.2rem;" *ngFor="let imagen of estado.images"
+                      [src]="imagen" alt="imagen de detalle">
+                  </div>
+                  <ion-button *ngIf="!estado.images ||estado.images.length<2" size="small" color="secondary"
+                    (click)="agregarImagen(reparacion,estado)">Agregar imagen</ion-button>
+                </div>
 
-              <ion-item-options>
-                <ion-item-option color="danger">Eliminar</ion-item-option>
-              </ion-item-options>
-            </ion-item-sliding>
-          </div>
-        </ion-accordion>
+              </div>
+            </ion-accordion>
+          </ion-item>
+
+          <ion-item-options *ngIf="reparacion.historial&&index == reparacion.historial.length-1">
+            <ion-item-option color="danger"
+              (click)="solicitarConfirmacionEliminar(reparacion,estado)">Eliminar</ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
       </ion-accordion-group>
+
     </ion-card-content>
   </ion-card>
 
