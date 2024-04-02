@@ -98,6 +98,16 @@ export interface ReservaEquipo {
   adelanto: number
 }
 
+export interface Servicio {
+  id?: string,
+  nombre: string,
+  tipo: 'fijo' | 'rango',
+  desde: number,
+  hasta: number,
+  precioDesdeST: number,
+  precioHastaST: number,
+  descripcion: string,
+}
 export interface EquipoEspecificaciones {
   pantalla: number,
   resolucion: string,
@@ -113,6 +123,7 @@ export interface EquipoDisponible {
   accesorios: string[];
   fecha: number;
   images: string[];
+  detalles?: string;
   imei: string;
   marca: string;
   modelo: string;

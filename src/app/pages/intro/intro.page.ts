@@ -121,12 +121,15 @@ export class IntroPage implements OnInit, ViewDidEnter {
 
     setTimeout(() => {
       this.getCurrentUser();
-      
+
     }, 500);
   }
 
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe((userRef: any) => {
+      if (!userRef) {
+        this.router.navigate(['/login'])
+      }
       this.database.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res: any) => {
         let usuario: any = res.payload.data();
         usuario['uid'] = res.payload.id;
@@ -140,9 +143,9 @@ export class IntroPage implements OnInit, ViewDidEnter {
           role: usuario['role'],
           securityCode: usuario['securityCode']
         };
-        if(this.loggedUser){
+        if (this.loggedUser) {
           this.router.navigate(['/home'])
-        }else{
+        } else {
           this.router.navigate(['/login'])
         }
 

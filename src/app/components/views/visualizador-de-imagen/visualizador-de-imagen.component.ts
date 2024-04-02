@@ -18,7 +18,7 @@ export class VisualizadorDeImagenComponent implements OnInit {
       try {
         await Share.share({
           title: 'Imagen tomada al equipo',
-          text: 'Te adjunto esta imagen para que puedas verlo tu mismo',
+          text: 'Esta es una imagen de tu equipo',
           url: this.imagen,
           dialogTitle: 'Compartir al cliente',
         });

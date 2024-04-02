@@ -4,8 +4,10 @@ import { User } from 'src/app/clases/user';
 import { FormPedidoComponent } from 'src/app/components/forms/form-pedido/form-pedido.component';
 import { DetallePedidoComponent } from 'src/app/components/views/detalle-pedido/detalle-pedido.component';
 import { AlertService } from 'src/app/services/alert.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
-import { Pedido } from 'src/app/services/info-compartida.service';
+import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
+import { Pedido, roles } from 'src/app/services/info-compartida.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 export interface PeriodicElement {
@@ -35,17 +37,31 @@ export class ListaPedidosPage implements OnInit {
   textoABuscar: string = '';
 
 
+  isActionSheetOpen: boolean = false;
+  actionSheetButtons: any[] = [{
+    text: 'Borrar lista pedidos sin cliente',
+    icon: 'trash-outline',
+    handler: async () => {
+      this.borarPedidosConseguidos();
+    },
+  }, {
+    text: 'Cancelar',
+    role: 'cancel',
+    icon: 'close',
+    handler: () => { },
+  }];
   constructor(
     private database: DataBaseService,
     private alerService: AlertService,
     private toastService: ToastService,
     private modalController: ModalController,
-    private actionSheetController: ActionSheetController
+    private actionSheetController: ActionSheetController,
+    public funcionesUtiles: FuncionesUtilesService,
+    private authService:AuthService
   ) { }
   ngOnInit(): void {
-    // this.pedidosAMostrar = [...this.pedidos.pendientes];
-    //   this.pedidosAMostrar?.sort(this.compare.bind(this))
-    // return;
+    this.getCurrentUser();
+   
     let sus = this.database.obtenerTodos(environment.TABLAS.pedidos).subscribe((pedidosRef: any) => {
       this.pedidos = {
         conseguidos: [],
@@ -55,7 +71,6 @@ export class ListaPedidosPage implements OnInit {
       pedidosRef.forEach((pedidoRef: any) => {
         let pedido: any = pedidoRef.payload.doc.data();
         pedido['id'] = pedidoRef.payload.doc.id;
-        //console.log(pedido)
 
         if (pedido['conseguido'] && !pedido['notificado']) {
           this.pedidos.conseguidos.push(pedido);
@@ -74,6 +89,34 @@ export class ListaPedidosPage implements OnInit {
     });
   }
 
+  setOpen(isOpen: boolean) {
+    this.isActionSheetOpen = isOpen;
+  }
+  mostrarOpciones() {
+    console.log("Entra",this.loggedUser)
+    if (this.funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)) {
+      this.setOpen(true);
+    }
+  }
+
+  getCurrentUser() {
+    this.authService.getCurrentUser().subscribe((userRef: any) => {
+      this.database.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res: any) => {
+        let usuario: any = res.payload.data();
+        usuario['uid'] = res.payload.id;
+
+        this.loggedUser = {
+          uid: usuario['uid'],
+          email: usuario['email'],
+          displayName: usuario['displayName'],
+          emailVerified: usuario['emailVerified'],
+          photoURL: usuario['photoURL'],
+          role: usuario['role'],
+          securityCode: usuario['securityCode']
+        };
+      })
+    })
+  }
 
 
   showSaveDialog(pedido: Pedido, campo: string, message: string) {
@@ -186,6 +229,21 @@ export class ListaPedidosPage implements OnInit {
 
   }
 
+  borarPedidosConseguidos() {
+    let auxLista = this.pedidos.conseguidos.filter((ped: Pedido) => {
+      if (ped.conseguido) {
+        return ped;
+      }
+      return;
+    });
+    console.log(auxLista)
+    auxLista.forEach((element: Pedido) => {
+      this.database.eliminar(environment.TABLAS.pedidos, element.id).finally(() => {
+      });
+    });
+
+  }
+
   borarPedidosConseguidosSinClientes() {
     let auxLista = this.pedidos.conseguidos.filter((ped: Pedido) => {
       if (ped.conseguido && !ped.cliente) {
@@ -193,6 +251,7 @@ export class ListaPedidosPage implements OnInit {
       }
       return;
     });
+    console.log(auxLista)
     auxLista.forEach((element: Pedido) => {
       this.database.eliminar(environment.TABLAS.pedidos, element.id).finally(() => {
       });

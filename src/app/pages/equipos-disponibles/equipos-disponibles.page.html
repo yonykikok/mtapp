@@ -35,7 +35,7 @@
           <div class="right-content">
             <div>
 
-              <ion-icon (click)="equipoSeleccionado=equipo" (click)="setOpen(true)" color="primary"
+              <ion-icon *ngIf="funcionesUtilesService.roleMinimoNecesario(roles.EMPLEADO,loggedUser)" (click)="equipoSeleccionado=equipo" (click)="setOpen(true)" color="primary"
                 style="position: absolute; right: 0.2rem; top: 0.2rem; font-size: 1.4rem;"
                 name="ellipsis-vertical-outline"></ion-icon>
 
@@ -55,6 +55,8 @@
                   {{accesorio|titlecase}}{{index!=(equipo.accesorios.length-1)?', ':'.'}}
                 </ion-text>
               </p>
+              <p *ngIf="equipo.detalles"> <b> Detalles: </b> {{equipo.detalles}}
+              </p>
               <!-- <p *ngIf="equipo.imei"> <b> Imei: </b> {{equipo.imei}} </p> -->
             </div>
             <div *ngIf="equipo.reserva&& equipo.reserva.reservado; else accionDisponible"
@@ -63,7 +65,7 @@
               <ion-button color="success" size="small" (click)="venderEquipo(equipo)">Completar venta</ion-button>
             </div>
             <ng-template #accionDisponible>
-              <div style="position: absolute; bottom: 0; right: 0; display: flex; justify-content: space-evenly;">
+              <div *ngIf="funcionesUtilesService.roleMinimoNecesario(roles.EMPLEADO,loggedUser)" style="position: absolute; bottom: 0; right: 0; display: flex; justify-content: space-evenly;">
                 <ion-button color="warning" size="small" (click)="mostrarAlertaReserva(equipo)">Reservar</ion-button>
                 <ion-button color="success" size="small" (click)="venderEquipo(equipo)">Vender</ion-button>
               </div>
@@ -120,7 +122,7 @@
               alt="imagen celular">
 
 
-            <ion-fab style="position: relative; " (click)="abrirModalImagenes();">
+            <ion-fab style="position: relative; " *ngIf="funcionesUtilesService.roleMinimoNecesario(roles.EMPLEADO,loggedUser)" (click)="abrirModalImagenes();">
               <ion-fab-button size="small" color="success">
                 <ion-icon name="add"></ion-icon>
               </ion-fab-button>
@@ -137,7 +139,7 @@
   </ion-card>
 
 
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end" (click)="openDialog()">
+  <ion-fab *ngIf="funcionesUtilesService.roleMinimoNecesario(roles.EMPLEADO,loggedUser)" slot="fixed" vertical="bottom" horizontal="end" (click)="openDialog()">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

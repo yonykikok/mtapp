@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AlertController, ModalController } from '@ionic/angular';
+import { User } from 'src/app/clases/user';
 import { FormEquipoDisponibleComponent } from 'src/app/components/forms/form-equipo-disponible/form-equipo-disponible.component';
 import { FormEspecificacionesEquipoComponent } from 'src/app/components/forms/form-especificaciones-equipo/form-especificaciones-equipo.component';
 import { UploadImagesComponent } from 'src/app/components/upload-images/upload-images.component';
 import { AlertService } from 'src/app/services/alert.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
-import { EquipoDisponible, ReservaEquipo } from 'src/app/services/info-compartida.service';
+import { EquipoDisponible, ReservaEquipo, roles } from 'src/app/services/info-compartida.service';
 import { SpinnerService } from 'src/app/services/spinner.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
@@ -50,8 +52,11 @@ export class EquiposDisponiblesPage implements OnInit {
     },
   ];
 
-
-  constructor(private modalController: ModalController,
+  roles = roles;
+  loggedUser!: User;
+  constructor(public funcionesUtilesService: FuncionesUtilesService,
+    private authService: AuthService,
+    private modalController: ModalController,
     private alertService: AlertService,
     private database: DataBaseService,
     private alertController: AlertController,
@@ -61,6 +66,7 @@ export class EquiposDisponiblesPage implements OnInit {
     private storageService: StorageService) { }
 
   ngOnInit() {
+    this.getCurrentUser();
     this.database.obtenerTodos(environment.TABLAS.equipos_disponibles).subscribe(listRef => {
       this.equipos = listRef.map((equipoRef: any) => {
         let equipoDisponible = equipoRef.payload.doc.data() as EquipoDisponible;
@@ -73,6 +79,25 @@ export class EquiposDisponiblesPage implements OnInit {
     });
   }
 
+  
+  getCurrentUser() {
+    this.authService.getCurrentUser().subscribe((userRef: any) => {
+      this.database.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res: any) => {
+        let usuario: any = res.payload.data();
+        usuario['uid'] = res.payload.id;
+
+        this.loggedUser = {
+          uid: usuario['uid'],
+          email: usuario['email'],
+          displayName: usuario['displayName'],
+          emailVerified: usuario['emailVerified'],
+          photoURL: usuario['photoURL'],
+          role: usuario['role'],
+          securityCode: usuario['securityCode']
+        };
+      })
+    })
+  }
   realizarAccion(accion: string) {
     // Implementa las acciones correspondientes para cada botón
     switch (accion) {

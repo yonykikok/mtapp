@@ -16,9 +16,9 @@
         </label>
 
         <ng-template #mostrarSelect>
-          <ion-item  mode="md">
-            <ion-select label="Estado de la reparación" labelPlacement="floating" placeholder="Seleccione el estado" [(ngModel)]="estadoSeleccionado"
-              (ionChange)="cambiarEstado()">
+          <ion-item mode="md">
+            <ion-select label="Estado de la reparación" labelPlacement="floating" placeholder="Seleccione el estado"
+              [(ngModel)]="estadoSeleccionado" (ionChange)="cambiarEstado()">
               <ion-select-option *ngFor="let estado of estadosPosibles"
                 [value]="estado.variable">{{estado.mensaje}}</ion-select-option>
             </ion-select>
@@ -36,21 +36,24 @@
       <ion-chip outline="true" class="flexColumn" style="justify-content: center; align-items: start;">
         <label style="margin-bottom: 0.2rem;">
           <b>DNI cliente: </b>{{reparacion.dniCliente}}
-          <ion-icon name="pencil-outline" (click)="mostrarFormularioEditarinformacion('dni','dniCliente')"> </ion-icon>
+          <ion-icon *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)" name="pencil-outline"
+            (click)="mostrarFormularioEditarinformacion('dni','dniCliente')"> </ion-icon>
         </label>
         <label style="margin-bottom: 0.2rem;">
           <b>Telefono: </b>{{reparacion.telefono?reparacion.telefono:'NO TIENE'}}
-          <ion-icon name="pencil-outline"
+          <ion-icon *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)" name="pencil-outline"
             (click)="mostrarFormularioEditarinformacion('telefono','telefono')"></ion-icon>
         </label>
         <label style="margin-bottom: 0.2rem;">
           <b>Modelo: </b>{{(reparacion.modelo?reparacion.modelo:'NO TIENE')|uppercase}}
-          <ion-icon name="pencil-outline" (click)="mostrarFormularioEditarinformacion('modelo','modelo')"></ion-icon>
+          <ion-icon *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)" name="pencil-outline"
+            (click)="mostrarFormularioEditarinformacion('modelo','modelo')"></ion-icon>
         </label>
 
-        <ion-chip color="success" class="ion-no-margin" style="position: absolute; right: 1rem; ">
-          <ion-icon (click)="solicitarConfirmacion($event,reparacion)" *ngIf="reparacion.telefono"
-            style=" font-size: 2rem; margin: 0;" color="success" name="logo-whatsapp"></ion-icon>
+        <ion-chip color="success" class="ion-no-margin" style="position: absolute; right: 1rem; "
+          *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)&&reparacion.telefono">
+          <ion-icon (click)="solicitarConfirmacion($event,reparacion)" style=" font-size: 2rem; margin: 0;"
+            color="success" name="logo-whatsapp"></ion-icon>
         </ion-chip>
       </ion-chip>
 
@@ -114,18 +117,20 @@
                 </p>
                 <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario('ST',loggedUser)" style="background-color: white;"
                   outline="true" color="tertiary" class="flexColumn flexCenterCenter">
-                  <b>Detalle <ion-icon style="position: absolute; right: 1rem; font-size: 1.2rem;"
-                      class="ion-margin-start" name="create-outline"
-                      (click)="mostrarEditarDetalle(estado)"></ion-icon></b>
+                  <b>Detalle <ion-icon *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)"
+                      style="position: absolute; right: 1rem; font-size: 1.2rem;" class="ion-margin-start"
+                      name="create-outline" (click)="mostrarEditarDetalle(estado)"></ion-icon></b>
                   <p style="margin-top: 1rem;">{{estado.detalle}}</p>
                 </ion-chip>
                 <div class="ion-text-center">
                   <div *ngIf="estado.images && estado.images.length>0">
-                    <img (click)="mostrarImagen(imagen)" style="width: 40px;height: 40px;margin: 0.2rem;" *ngFor="let imagen of estado.images"
-                      [src]="imagen" alt="imagen de detalle">
+                    <img (click)="mostrarImagen(imagen)" style="width: 40px;height: 40px;margin: 0.2rem;"
+                      *ngFor="let imagen of estado.images" [src]="imagen" alt="imagen de detalle">
                   </div>
-                  <ion-button *ngIf="!estado.images ||estado.images.length<2" size="small" color="secondary"
-                    (click)="agregarImagen(reparacion,estado)">Agregar imagen</ion-button>
+                  <ion-button
+                    *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser) &&(!estado.images ||estado.images.length<2)"
+                    size="small" color="secondary" (click)="agregarImagen(reparacion,estado)">Agregar
+                    imagen</ion-button>
                 </div>
 
               </div>
@@ -133,7 +138,7 @@
           </ion-item>
 
           <ion-item-options *ngIf="reparacion.historial&&index == reparacion.historial.length-1">
-            <ion-item-option color="danger"
+            <ion-item-option color="danger" *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)"
               (click)="solicitarConfirmacionEliminar(reparacion,estado)">Eliminar</ion-item-option>
           </ion-item-options>
         </ion-item-sliding>

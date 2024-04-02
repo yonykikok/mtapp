@@ -86,10 +86,17 @@ export class FormModuloComponent implements OnInit {
 
 
   ngOnInit(): void {
-    if (this.funcionesUtiles.customDolar) {
-      this.precioDolarBlue = this.funcionesUtiles.customDolar;
-    }
-    this.funcionesUtiles.getPriceDolar().subscribe(newPrice => this.precioDolarBlue = newPrice);
+    this.dataBase.obtenerPorId(environment.TABLAS.cotizacion_dolar, 'dolarBlue').subscribe((res: any) => {
+      if (!res.payload.data().price) {
+        this.funcionesUtiles.dolar$.subscribe(precioDolarBlueSeguro => {
+          precioDolarBlueSeguro > 0
+            ? this.precioDolarBlue = precioDolarBlueSeguro//dolar blue de web + 100 de seguridad
+            : 0;// como no se logro obtener lo clavamos en 0 para no pasar precios
+        });
+      } else {
+        this.precioDolarBlue = res.payload.data().price;
+      }
+    });
     this.cargarInputAutoCompletado();
   }
 

@@ -1,0 +1,73 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/servicios'" [title]="'Agregar Servicio'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="d-flex justify-content-center">
+
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">
+        <b>
+          Agregar Servicio
+        </b>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content class="ion-no-padding">
+
+      <form class="card p-3 m-3 col-lg-6" [formGroup]="formServicio">
+
+        <ion-item class="ion-margin">
+          <ion-input label="Ingrese el nombre del servicio" labelPlacement="floating" type="text"
+            placeholder="Cambio de pin de carga" aria-label="servicio" formControlName="nombre">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="ion-margin">
+          <ion-select label="Selecciona el tipo de precio" labelPlacement="floating" placeholder="Fijo | Rango"
+            formControlName="tipo">
+            <ion-select-option *ngFor="let tipo of ['fijo','rango']" [value]="tipo">{{tipo}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <div [ngStyle]="{display:formServicio.controls['tipo'].value=='rango'?'flex':''}">
+          <ion-item class="ion_item_noPaddingEnd"
+            [ngClass]="formServicio.controls['tipo'].value=='rango'?'ion-margin-start':'ion-margin'">
+            <ion-input label="Precio" labelPlacement="floating" type="text" placeholder="5000" aria-label="servicio"
+              formControlName="desde">
+            </ion-input>
+          </ion-item>
+
+          <ion-item class="ion-margin-end ion_item_noPaddingEnd" *ngIf="formServicio.controls['tipo'].value=='rango'">
+            <ion-input label="Precio maximo" labelPlacement="floating" type="text" placeholder="10000"
+              aria-label="servicio" formControlName="hasta">
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <div [ngStyle]="{display:formServicio.controls['tipo'].value=='rango'?'flex':''}">
+          <ion-item class="ion_item_noPaddingEnd"
+            [ngClass]="formServicio.controls['tipo'].value=='rango'?'ion-margin-start':'ion-margin'">
+            <ion-input label="Precio para ST" labelPlacement="floating" type="text" placeholder="5000"
+              aria-label="servicio" formControlName="precioDesdeST">
+            </ion-input>
+          </ion-item>
+
+          <ion-item class="ion-margin-end ion_item_noPaddingEnd" *ngIf="formServicio.controls['tipo'].value=='rango'">
+            <ion-input label="Precio maximo para ST" labelPlacement="floating" type="text" placeholder="10000"
+              aria-label="servicio" formControlName="precioHastaST">
+            </ion-input>
+          </ion-item>
+        </div>
+
+        <ion-item class="ion-margin">
+          <ion-textarea formControlName="descripcion" label="Describe el servicio, aclara algo para el cliente"
+            labelPlacement="floating"
+            placeholder="Ej: El precio varia segun la version de android y binario que tenga."></ion-textarea>
+        </ion-item>
+
+
+        <ion-button type="submit" color="primary" expand="block" [disabled]="!formServicio.valid"
+          (click)="procesarServicio()">{{modoEdicion?'Actualizar':'Agregar'}}</ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

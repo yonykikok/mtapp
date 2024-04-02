@@ -1,9 +1,11 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Lista de pedidos'"></app-clasic-toolbar>
+  <app-clasic-toolbar  [isModal]="false" (opcionesClick)="mostrarOpciones()" [mostrarOpciones]="true" [ruta]="'/dashboard'" [title]="'Lista de pedidos'"></app-clasic-toolbar>
 </ion-header>
 
 
 <ion-content>
+  <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Actions" [buttons]="actionSheetButtons"
+  (didDismiss)="setOpen(false)"></ion-action-sheet>
   <!-- <ion-button (click)="borarPedidosConseguidosSinClientes()">borrar</ion-button> -->
   <ion-searchbar show-clear-button="focus" placeholder="J7 prime" [(ngModel)]="textoABuscar"
     (ionInput)="filtrarPorTexto($event,true)"></ion-searchbar>

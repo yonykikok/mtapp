@@ -43,7 +43,7 @@ export class DetalleReparacionComponent implements OnInit {
   }
 
   ngOnInit() {
-    //console.log(this.reparacion)
+    console.log(this.reparacion)
     this.getOpcionesEstadoDisponibles();
 
 

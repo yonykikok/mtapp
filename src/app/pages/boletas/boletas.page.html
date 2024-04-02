@@ -1,8 +1,10 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Boletas'"></app-clasic-toolbar>
+  <app-clasic-toolbar [isModal]="false" (opcionesClick)="mostrarOpciones()" [mostrarOpciones]="true" [ruta]="'/dashboard'" [title]="'Boletas'"></app-clasic-toolbar>
 </ion-header>
 
 <ion-content *ngIf="loggedUser">
+  <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Actions" [buttons]="actionSheetButtons"
+  (didDismiss)="setOpen(false)"></ion-action-sheet>
   <ion-item>
     <ion-select label="Campos visibles" label-placement="floating" placeholder="Selecciona los campos que quieres ver"
       [multiple]="true" [(ngModel)]="camposSeleccionados">

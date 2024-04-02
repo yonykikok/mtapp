@@ -25,22 +25,29 @@ export class ListaModulosProveedorPage implements OnInit {
   modulosAMostrar: any[] = [];
   proveedor!: Proveedor;
   mostrarFormModulo = true;
-  precioDolarBlue: number=0;
+  precioDolarBlue: number = 0;
 
   constructor(private dataBase: DataBaseService,
     private authService: AuthService,
     public funcionesUtiles: FuncionesUtilesService,
-    private modalController: ModalController) {
+    private modalController: ModalController,
+    private database: DataBaseService) {
 
     this.getCurrentUser();
     this.modulosAMostrar = [...this.modulos];
   }
   ngOnInit(): void {
-    if (this.funcionesUtiles.customDolar) {
-      this.precioDolarBlue = this.funcionesUtiles.customDolar;
-    }
-
-    this.funcionesUtiles.getPriceDolar().subscribe(newPrice => this.precioDolarBlue = newPrice);
+    this.database.obtenerPorId(environment.TABLAS.cotizacion_dolar, 'dolarBlue').subscribe((res: any) => {
+      if (!res.payload.data().price) {
+        this.funcionesUtiles.dolar$.subscribe(precioDolarBlueSeguro => {
+          precioDolarBlueSeguro > 0
+            ? this.precioDolarBlue = precioDolarBlueSeguro//dolar blue de web + 100 de seguridad
+            : 0;// como no se logro obtener lo clavamos en 0 para no pasar precios
+        });
+      } else {
+        this.precioDolarBlue = res.payload.data().price;
+      }
+    });
     this.modulos = this.proveedor.modulos;
     this.modulosAMostrar = [...this.modulos];
   }
@@ -82,7 +89,7 @@ export class ListaModulosProveedorPage implements OnInit {
 
   guardarCambiosProeveedor() {
     if (!this.proveedor || !this.proveedor.id) return; //TODO: notificar.
-      this.dataBase.actualizar(environment.TABLAS.proveedores, this.proveedor, this.proveedor.id);
+    this.dataBase.actualizar(environment.TABLAS.proveedores, this.proveedor, this.proveedor.id);
   }
 
   getCurrentUser() {

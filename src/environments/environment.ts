@@ -14,6 +14,7 @@ export const environment = {
   TABLAS: {
     acreedores: "acreedores",
     backUps: "backUps",
+    servicios: "servicios",
     baterias: "baterias",
     boletasReparacion: "boletasReparacion",
     categorias: "categorias",

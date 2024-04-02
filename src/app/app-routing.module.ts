@@ -137,7 +137,11 @@ const routes: Routes = [
   {
     path: 'equipos',
     loadChildren: () => import('./pages/equipos/equipos.module').then( m => m.EquiposPageModule)
+  },  {
+    path: 'servicios',
+    loadChildren: () => import('./pages/servicios/servicios.module').then( m => m.ServiciosPageModule)
   },
+
 
 
 

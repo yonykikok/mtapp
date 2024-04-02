@@ -5,7 +5,7 @@
 
 <ion-content class="fullscreen-container">
 
-  <ion-card class="ion-text-center"  color="success" routerLink="/equipos-disponibles">
+  <ion-card class="ion-text-center" color="success" routerLink="/equipos-disponibles">
     <ion-card-header>
       <ion-card-title>Equipos disponibles </ion-card-title>
     </ion-card-header>
@@ -16,7 +16,8 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-card class="ion-text-center" color="secondary" routerLink="/equipos-vendidos">
+  <ion-card class="ion-text-center" color="secondary" routerLink="/equipos-vendidos"
+    *ngIf="funcionesUtilesService.roleMinimoNecesario(roles.EMPLEADO,loggedUser)">
     <ion-card-header>
       <ion-card-title>Equipos vendidos </ion-card-title>
 

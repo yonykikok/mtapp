@@ -10,7 +10,7 @@ import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.servic
 import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 import { boleta, boletaHistorialEstado } from '../mis-reparaciones/mis-reparaciones.page';
-import { boleta_estados } from 'src/app/services/info-compartida.service';
+import { boleta_estados, roles } from 'src/app/services/info-compartida.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { SpinnerService } from 'src/app/services/spinner.service';
@@ -27,12 +27,23 @@ export class BoletasPage implements OnInit {
   busquedaPorInput: boolean = true;
   estadoSeleccionado!: boleta_estados;
   camposSeleccionados = ['nroBoleta', 'dniCliente', 'estado'];
-
-
+  isActionSheetOpen: boolean = false;
+  actionSheetButtons: any[] = [{
+    text: 'Buscar duplicados',
+    icon: 'copy-outline',
+    handler: async () => {
+      this.dataBase.obtenerBoletasDuplicadas(environment.TABLAS.boletasReparacion).then(res => console.log(res));
+    },
+  }, {
+    text: 'Cancelar',
+    role: 'cancel',
+    icon: 'close',
+    handler: () => { },
+  }];
   textoABuscar: string = "";
   boletas: boleta[] = [];
   boletasAMostrar: boleta[] = [];
-  loggedUser: User | null = null;
+  loggedUser!: User;
   sinCoincidencias = false;
 
   filterValue = '';
@@ -80,6 +91,14 @@ export class BoletasPage implements OnInit {
     // })
   }
 
+  setOpen(isOpen: boolean) {
+    this.isActionSheetOpen = isOpen;
+  }
+  mostrarOpciones() {
+    if (this.funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)) {
+      this.setOpen(true);
+    }
+  }
 
 
   getCurrentUser() {
@@ -268,16 +287,16 @@ export class BoletasPage implements OnInit {
     });
   }
 
-  async eliminarBoleta(event: Event, boleta: boleta,indiceAEliminar:number) {
+  async eliminarBoleta(event: Event, boleta: boleta, indiceAEliminar: number) {
     event.stopPropagation();
     let refImagen = `boletas/${boleta.fechaId}-${boleta.nroBoleta}-${boleta.dniCliente}`;
-    
+
     this.alertService.alertConfirmacion('Confirmación', "¿Seguro de eliminar esta boleta?", 'Si', () => {
       if (boleta.id) {
 
         this.dataBase.eliminar(environment.TABLAS.boletasReparacion, boleta.id)
           .then(() => {
-            this.boletasAMostrar.splice(indiceAEliminar,1);
+            this.boletasAMostrar.splice(indiceAEliminar, 1);
             // Eliminación en la base de datos completada
             const eliminarImagenesPromesas = [];
 
@@ -285,7 +304,7 @@ export class BoletasPage implements OnInit {
               // Eliminar imágenes en el historial
               boleta.historial.forEach((boletaHistorial: boletaHistorialEstado) => {
                 if (boletaHistorial.imgUrlsRef) {
-                  
+
                   boletaHistorial.imgUrlsRef.forEach((imgRef: string) => {
                     eliminarImagenesPromesas.push(this.eliminarImagen(imgRef));
                     console.log(imgRef);

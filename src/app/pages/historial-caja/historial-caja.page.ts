@@ -4497,7 +4497,6 @@ export class HistorialCajaPage implements OnInit {
   dataLibroDiarioDialog: any;
 
   precioDolarBlue: number = 0;
-  dolarObservable$: Observable<number> | null = null;
   constructor(private authService: AuthService, private database: DataBaseService,
     private toastService: ToastService,
     private modalController: ModalController,
@@ -4509,10 +4508,17 @@ export class HistorialCajaPage implements OnInit {
   ngOnInit(): void {
 
     this.mostrarIntervaloDeTiempo(false);
-    if (this.funcionesUtiles.customDolar) {
-      this.precioDolarBlue = this.funcionesUtiles.customDolar;
-    }
-    this.funcionesUtiles.getPriceDolar().subscribe(newPrice => this.precioDolarBlue = newPrice);
+    this.database.obtenerPorId(environment.TABLAS.cotizacion_dolar, 'dolarBlue').subscribe((res: any) => {
+      if (!res.payload.data().price) {
+        this.funcionesUtiles.dolar$.subscribe(precioDolarBlueSeguro => {
+          precioDolarBlueSeguro > 0
+            ? this.precioDolarBlue = precioDolarBlueSeguro//dolar blue de web + 100 de seguridad
+            : 0;// como no se logro obtener lo clavamos en 0 para no pasar precios
+        });
+      } else {
+        this.precioDolarBlue = res.payload.data().price;
+      }
+    });
 
 
   }
@@ -4599,7 +4605,12 @@ export class HistorialCajaPage implements OnInit {
   }
   mostrarDiaSeleccionado() {
     const fecha = new Date(this.fechaSeleccionada);
-    const idFecha = fecha.toISOString().split('T')[0];
+    const anio = fecha.getFullYear();
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0'); // Sumar 1 ya que los meses se indexan desde 0
+    const dia = fecha.getDate().toString().padStart(2, '0');
+
+    const idFecha = `${anio}-${mes}-${dia}`;
+    console.log(idFecha);
 
     this.database.obtenerPorId(environment.TABLAS.ingresos, idFecha).subscribe(res => {
       let libroDiarioDelDia: LibroDiario = res.payload.data() as LibroDiario;

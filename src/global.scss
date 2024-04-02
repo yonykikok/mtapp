@@ -92,3 +92,8 @@ ion-chip {
 ion-toolbar {
     text-align: center;
 }
+
+
+.ion_item_noPaddingEnd {
+    --inner-padding-end: none !important;
+}

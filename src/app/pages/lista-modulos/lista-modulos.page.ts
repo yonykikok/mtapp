@@ -25,7 +25,6 @@ export class ListaModulosPage implements OnInit {
   precioDolarBlue: number = 0;
   mostrarFormModulo = true;
 
-  dolarObservable$: Observable<number> | null = null;
   constructor(private dataBase: DataBaseService,
     private authService: AuthService,
     public funcionesUtiles: FuncionesUtilesService,
@@ -38,11 +37,20 @@ export class ListaModulosPage implements OnInit {
   }
   ngOnInit(): void {
 
-    if (this.funcionesUtiles.customDolar) {
-      this.precioDolarBlue = this.funcionesUtiles.customDolar;
-    }
-
-    this.funcionesUtiles.getPriceDolar().subscribe(newPrice => this.precioDolarBlue = newPrice);
+    this.database.obtenerPorId(environment.TABLAS.cotizacion_dolar, 'dolarBlue').subscribe((res: any) => {
+      this.funcionesUtiles.dolar$.subscribe(res => {
+        console.log(res)
+      })
+      if (!res.payload.data().price) {
+        this.funcionesUtiles.dolar$.subscribe(precioDolarBlueSeguro => {
+          precioDolarBlueSeguro > 0
+            ? this.precioDolarBlue = precioDolarBlueSeguro//dolar blue de web + 100 de seguridad
+            : 0;// como no se logro obtener lo clavamos en 0 para no pasar precios
+        });
+      } else {
+        this.precioDolarBlue = res.payload.data().price;
+      }
+    });
 
     let lista = [];
     this.dataBase.obtenerTodos(environment.TABLAS.modulos).subscribe((docsModulosRef: any) => {

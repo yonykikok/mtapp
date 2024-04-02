@@ -20,16 +20,17 @@ export class FormEquipoDisponibleComponent implements OnInit {
   mostrarSpinner = false;
 
   step2FormGroup: FormGroup = new FormGroup({
-    marca: new FormControl(['', Validators.required]),
-    modelo: new FormControl(['', Validators.required]),
-    imei: new FormControl(['', [Validators.required, Validators.minLength(15), Validators.maxLength(17)]]),
-    precio: new FormControl(['', Validators.required]),
+    detalles: new FormControl('', []),
+    marca: new FormControl('', [Validators.required]),
+    modelo: new FormControl('', [Validators.required]),
+    imei: new FormControl('', [Validators.required, Validators.minLength(15), Validators.maxLength(17)]),
+    precio: new FormControl('', [Validators.required]),
   });
   step3FormGroup: FormGroup = new FormGroup({
-    accesorios: new FormControl(['']),
+    accesorios: new FormControl('', []),
   });
   step4FormGroup: FormGroup = new FormGroup({
-    images: new FormControl(['']),
+    images: new FormControl('', []),
   });
 
   constructor(private _formBuilder: FormBuilder,
@@ -37,11 +38,12 @@ export class FormEquipoDisponibleComponent implements OnInit {
     private storageService: StorageService,
     private toastService: ToastService,
     private modalController: ModalController,
-    private spinnerService:SpinnerService
+    private spinnerService: SpinnerService
   ) { }
 
   ngOnInit(): void {
     this.step2FormGroup = this._formBuilder.group({
+    detalles: ['', Validators.required],
       marca: ['', Validators.required],
       modelo: ['', Validators.required],
       imei: ['', [Validators.required, Validators.minLength(15), Validators.maxLength(17)]],

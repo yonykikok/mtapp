@@ -34,7 +34,7 @@
       <ion-col *ngIf="camposSeleccionados.includes('calidad')"><b>Calidad</b></ion-col>
     </ion-row>
     <ion-row *ngFor="let flexDeCarga of flexDeCargasAMostrar"
-      (click)="funcionesUtiles.tieneUnRoleInferior('ADMIN',loggedUser)? seleccionar(flexDeCarga):''">
+      (click)="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)? seleccionar(flexDeCarga):''">
       <ion-col *ngIf="camposSeleccionados.includes('marca')">{{flexDeCarga.marca|titlecase}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('modelo')">{{flexDeCarga.modelo|titlecase}}</ion-col>
       <ion-col
@@ -45,7 +45,7 @@
   </ion-grid>
 
 
-  <ion-fab *ngIf="funcionesUtiles.tieneUnRoleInferior('ADMIN',loggedUser)" slot="fixed" vertical="bottom" horizontal="end" (click)="abrirFormModulo()">
+  <ion-fab *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)" slot="fixed" vertical="bottom" horizontal="end" (click)="abrirFormModulo()">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

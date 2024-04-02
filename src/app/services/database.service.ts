@@ -276,6 +276,44 @@ export class DataBaseService {
     }
   }
 
+  async obtenerBoletasDuplicadas(coleccion: any) {
+    let collectionRef = this.firestore.collection(coleccion).ref;
+    try {
+      // Obtén todas las boletas y agrúpalas por número de boleta
+      const querySnapshot = await collectionRef.orderBy('nroBoleta').get();
+
+      console.log(querySnapshot);
+      if (querySnapshot.empty) return null;
+
+      // Almacena los números de boleta y su frecuencia
+      const boletasRepetidas = new Map();
+      querySnapshot.forEach((doc: any) => {
+        const nroBoleta = doc.data().nroBoleta;
+        if (boletasRepetidas.has(nroBoleta)) {
+          boletasRepetidas.set(nroBoleta, boletasRepetidas.get(nroBoleta) + 1);
+        } else {
+          boletasRepetidas.set(nroBoleta, 1);
+        }
+      });
+
+      // Filtra las boletas que tienen más de una ocurrencia
+      const boletasDuplicadas: any[] = [];
+      boletasRepetidas.forEach((value, key) => {
+        if (value > 1) {
+          boletasDuplicadas.push({ nroBoleta: key, cantidad: value });
+        }
+      });
+
+      return boletasDuplicadas;
+
+    } catch (err) {
+      // this.snackBar.open(`Error al obtener boletas duplicadas: ${err}`, 'Cerrar', { duration: 5000, panelClass: ['dangerSnackBar'] });
+      return null;
+    }
+  }
+
+
+
   async obtenerBoletaPorEstadoBoleta(coleccion: any, estado: boleta_estados) {
     let collectionRef = this.firestore.collection(coleccion).ref;
     try {
@@ -331,14 +369,14 @@ export class DataBaseService {
 
 
   public obtenerUltimos60dias(coleccion: string): Observable<any[]> {
- // Obtén la fecha actual y la fecha de hace 60 días en milisegundos
- const fechaActualEnMillis = new Date().getTime();
- const fecha60DiasAtrasEnMillis = fechaActualEnMillis - (60 * 24 * 60 * 60 * 1000);
+    // Obtén la fecha actual y la fecha de hace 60 días en milisegundos
+    const fechaActualEnMillis = new Date().getTime();
+    const fecha60DiasAtrasEnMillis = fechaActualEnMillis - (60 * 24 * 60 * 60 * 1000);
 
- // Realiza la consulta con el rango de fechas
- return this.firestore.collection(coleccion, ref =>
-   ref.where('fecha', '>=', fecha60DiasAtrasEnMillis).where('fecha', '<=', fechaActualEnMillis)
- ).snapshotChanges();
-}
+    // Realiza la consulta con el rango de fechas
+    return this.firestore.collection(coleccion, ref =>
+      ref.where('fecha', '>=', fecha60DiasAtrasEnMillis).where('fecha', '<=', fechaActualEnMillis)
+    ).snapshotChanges();
+  }
 
 }

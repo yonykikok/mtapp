@@ -1,0 +1,43 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Trabajos'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid class="ion-text-center">
+    <ion-row class="ion_item">
+      <ion-col><b>Trabajo</b></ion-col>
+      <!-- <ion-col><b>Tipo</b></ion-col> -->
+      <ion-col><b>Precio</b></ion-col>
+    </ion-row>
+    <ion-row *ngFor="let servicio of listaServicios" (click)="mostrarDescripcion(servicio)">
+
+      <ion-item-sliding>
+        <ion-item-options side="start" *ngIf="funcionesUtilesService.roleMinimoNecesario('ST',loggedUser)">
+          <ion-item-option (click)="verPrecioST($event,servicio)" color="success">Precio ST</ion-item-option>
+        </ion-item-options>
+
+        <ion-item class="ion_item">
+          <ion-col>{{servicio.nombre}}</ion-col>
+          <!-- <ion-col>{{servicio.tipo}}</ion-col> -->
+          <ion-col style="display: flex; justify-content: end;"> <ion-text *ngIf="servicio.tipo=='rango'">{{servicio.desde|currency:'USD':'symbol':'1.0-0'}} -
+            </ion-text>
+            {{servicio.hasta|currency:'USD':'symbol':'1.0-0'}}</ion-col>
+        </ion-item>
+
+        <ion-item-options *ngIf="funcionesUtilesService.roleMinimoNecesario('EMPLEADO',loggedUser)">
+          <ion-item-option (click)="editarServicio($event,servicio)">Editar</ion-item-option>
+          <ion-item-option color="danger" (click)="eliminarServicio($event,servicio)">Eliminar</ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+
+    </ion-row>
+  </ion-grid>
+
+  <ion-fab *ngIf="funcionesUtilesService.roleMinimoNecesario('ADMIN',loggedUser)" slot="fixed" vertical="bottom"
+    horizontal="end" (click)="abrirFormAltaServicio()">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+
+  </ion-fab>
+</ion-content>

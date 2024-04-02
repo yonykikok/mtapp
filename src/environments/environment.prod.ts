@@ -18,6 +18,7 @@ export const environment = {
     boletasReparacion: "boletasReparacion",
     categorias: "categorias",
     categoriasProductos: "categoriasProductos",
+    servicios: "servicios",
     celulares: "celulares",
     consultas: "consultas",
     cotizacion_dolar: "cotizacion_dolar",

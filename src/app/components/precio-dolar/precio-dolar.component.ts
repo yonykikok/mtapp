@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/clases/user';
+import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
+import { ToastColor, ToastService } from 'src/app/services/toast.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-precio-dolar',
@@ -18,11 +21,22 @@ export class PrecioDolarComponent implements OnInit {
   dolarObservable$: Observable<number> = new Observable<number>();
 
   constructor(
-    public funcionesUtiles: FuncionesUtilesService) {
-    if (this.funcionesUtiles.customDolar) {
-      this.precioDolarBlue = this.funcionesUtiles.customDolar;
-    }
-    this.funcionesUtiles.getPriceDolar().subscribe(newPrice => this.precioDolarBlue = newPrice);
+    public funcionesUtiles: FuncionesUtilesService,
+    private toastService:ToastService,
+    private database: DataBaseService) {
+    this.database.obtenerPorId(environment.TABLAS.cotizacion_dolar, 'dolarBlue').subscribe((res: any) => {
+      console.log(res.payload.data().price)
+      if (!res.payload.data().price) {
+        this.funcionesUtiles.dolar$.subscribe(precioDolarBlueSeguro => {
+          precioDolarBlueSeguro > 0
+            ? this.precioDolarBlue = precioDolarBlueSeguro//dolar blue de web + 100 de seguridad
+            : 0;// como no se logro obtener lo clavamos en 0 para no pasar precios
+        });
+      } else {
+        this.precioDolarBlue = res.payload.data().price;
+      }
+    });
+
   }
 
 
@@ -34,9 +48,11 @@ export class PrecioDolarComponent implements OnInit {
 
     if (this.precioDolarBlueIngresado < this.funcionesUtiles.precioOriginal) {
       // this.snackBar.open('ERROR, no podes ingresar un valor menor al real', 'Cerrar', { duration: 5000, panelClass: ['dangerSnackBar'] });
+      this.toastService.simpleMessage('Error', 'no podes ingresar un valor menor al real', ToastColor.danger);
     } else {
       this.precioDolarBlue = Number(this.precioDolarBlueIngresado);
       this.funcionesUtiles.setPriceDolar(Number(this.precioDolarBlueIngresado));
+      this.toastService.simpleMessage('Exito', 'Se establecio el nuevo precio de seguridad', ToastColor.success);
       // this.snackBar.open('Se establecio el nuevo precio de seguridad', 'Cerrar', { duration: 5000, panelClass: ['successSnackBar'] });
     }
   }

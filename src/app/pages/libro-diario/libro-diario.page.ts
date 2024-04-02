@@ -57,7 +57,12 @@ export class LibroDiarioPage implements OnInit {
 
   ngOnInit(): void {
     const fechaActual = new Date();
-    const idDiaActual = fechaActual.toISOString().split('T')[0];
+    const anio = fechaActual.getFullYear();
+    const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0'); // Sumar 1 ya que los meses se indexan desde 0
+    const dia = fechaActual.getDate().toString().padStart(2, '0');
+
+    const idDiaActual = `${anio}-${mes}-${dia}`;
+    console.log(idDiaActual);
 
     this.database.obtenerPorId(environment.TABLAS.ingresos, idDiaActual).subscribe(res => {
       if (!res.payload.exists) {
@@ -112,7 +117,7 @@ export class LibroDiarioPage implements OnInit {
           this.mostrarModalAbrirCaja();
         },
       });
-    }   
+    }
     this.actionSheetButtons.push({
       text: 'Cancelar',
       role: 'cancel',

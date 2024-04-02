@@ -24,10 +24,12 @@ export class FormEquipoVendidoComponent implements OnInit {
     dni: new FormControl('', [Validators.required]),
   });
   step2FormGroup: FormGroup = new FormGroup({
-    marca: new FormControl('', [Validators.required]),
+    marca: new FormControl('', []),
+    descripcion: new FormControl('', [Validators.required]),
     modelo: new FormControl('', [Validators.required]),
     imei: new FormControl('', [Validators.required, Validators.minLength(15), Validators.maxLength(17)]),
     precio: new FormControl('', [Validators.required]),
+    
   });
   step3FormGroup: FormGroup = new FormGroup({
     accesorios: new FormControl([]),
