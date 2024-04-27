@@ -13,56 +13,34 @@ import { ToastColor, ToastService } from './toast.service';
 })
 export class FuncionesUtilesService {
 
-  precioOriginal: number = 0;
-  dolar: number = 0;
-  customDolar: number = 0;
-  dolar$: Subject<number>;
-
-
   constructor(
     private database: DataBaseService,
     private modalController: ModalController,
     private toastService: ToastService) {
-    this.dolar$ = new Subject();
-    this.database.obtenerPorId(environment.TABLAS.cotizacion_dolar, 'dolarBlue').subscribe(async (res: any) => {
-      await this.obtenerCotizacionDelDolarActual();
 
-      if (!res.payload.exists) {
-        this.database.actualizar(environment.TABLAS.cotizacion_dolar, { price: this.dolar + 100 }, 'dolarBlue');
-      } else {
-        this.customDolar = res.payload.data()['price'];
-      }
 
-      this.dolar$.next(res.payload.data()['price']);//obligamos a usar el dolar de firebase
-    });
   }
 
-  getPriceDolar(): Observable<number> {
-    return this.dolar$.asObservable();
-  }
+  // async obtenerCotizacionDelDolarActual() {
+  //   try {
+  //     const res = await fetch("https://api.bluelytics.com.ar/v2/latest");
+  //     const cotizaciones = await res.json();
+  //     const cotizacionBlue = cotizaciones.blue.value_sell;
 
-  async obtenerCotizacionDelDolarActual() {
-    try {
-      const res = await fetch("https://api.bluelytics.com.ar/v2/latest");
-      const cotizaciones = await res.json();
-      const cotizacionBlue = cotizaciones.blue.value_sell;
+  //     if (cotizacionBlue && cotizacionBlue > 900) {
+  //       this.dolar = parseFloat(cotizacionBlue);
+  //       this.precioOriginal = parseFloat(cotizacionBlue);
+  //       this.customDolar = parseFloat(cotizacionBlue + 100);
+  //     }
 
-      if (cotizacionBlue && cotizacionBlue > 900) {
-        this.dolar = parseFloat(cotizacionBlue);
-        this.precioOriginal = parseFloat(cotizacionBlue);
-        this.customDolar = parseFloat(cotizacionBlue + 100);
-      }
-
-      this.dolar$.next(this.dolar);
-    } catch (err) {
-      this.toastService.simpleMessage('Error', 'no se pudo obtener el valor del dolar de internet', ToastColor.danger);
-    }
-  }
+  //     this.dolar$.next(this.dolar);
+  //   } catch (err) {
+  //     this.toastService.simpleMessage('Error', 'no se pudo obtener el valor del dolar de internet', ToastColor.danger);
+  //   }
+  // }
 
   setPriceDolar(dolar: number) {
-    this.dolar = dolar;
-    this.dolar$.next(this.dolar);
-    this.database.actualizar(environment.TABLAS.cotizacion_dolar, { price: this.dolar }, 'dolarBlue');
+    this.database.actualizar(environment.TABLAS.cotizacion_dolar, { price: dolar }, 'dolarBlue');
   }
 
   scrollToElement(id: string) {

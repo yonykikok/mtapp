@@ -53,7 +53,7 @@ export class ProveedoresPage implements OnInit {
 
   loggedUser!: User
 
-  precioDolarBlue: number=0;
+  precioDolarBlue: number = 0;
   proveedores: Proveedor[] = [];
   productosAMostrar: any[] = [];
   textoABuscar: string = '';
@@ -62,7 +62,7 @@ export class ProveedoresPage implements OnInit {
     private authService: AuthService,
     private dataBase: DataBaseService,
     private modalController: ModalController,
-    private database:DataBaseService) {
+    private database: DataBaseService) {
 
     let producto: Modulo = {
       categoria: 'modulos',
@@ -159,15 +159,7 @@ export class ProveedoresPage implements OnInit {
   }
   ngOnInit() {
     this.database.obtenerPorId(environment.TABLAS.cotizacion_dolar, 'dolarBlue').subscribe((res: any) => {
-      if (!res.payload.data().price) {
-        this.funcionesUtiles.dolar$.subscribe(precioDolarBlueSeguro => {
-          precioDolarBlueSeguro > 0
-            ? this.precioDolarBlue = precioDolarBlueSeguro//dolar blue de web + 100 de seguridad
-            : 0;// como no se logro obtener lo clavamos en 0 para no pasar precios
-        });
-      } else {
-        this.precioDolarBlue = res.payload.data().price;
-      }
+      this.precioDolarBlue = res.payload.data().price;
     });
     this.dataBase.obtenerTodos(environment.TABLAS.proveedores).subscribe((listProveedoresRef) => {
       this.proveedores = listProveedoresRef.map((proveedorRef: DocumentChangeAction<any>) => {
@@ -265,7 +257,7 @@ export class ProveedoresPage implements OnInit {
 
 
 
-  asignarColor(lista:any[], index:number) {
+  asignarColor(lista: any[], index: number) {
     if (index == 0) {
       return 'success';
     } else if (index == lista.length - 1) {

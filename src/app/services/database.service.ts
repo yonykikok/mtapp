@@ -78,6 +78,20 @@ export class DataBaseService {
       return;
     }
   }
+  async getUserByRole(role:string) {
+    let collectionRef = this.firestore.collection(environment.TABLAS.users).ref;
+    try {
+
+      const respuesta = await collectionRef.where('role', '==', role).get();
+      if (respuesta.empty) return;
+
+      return respuesta.docs;
+
+    } catch (err) {
+      console.error(err);
+      return;
+    }
+  }
 
   async getPedidosConseguidos() {
     let collectionRef = this.firestore.collection(environment.TABLAS.pedidos).ref;

@@ -4,8 +4,7 @@
 
 <ion-content *ngIf="loggedUser">
 
-  <!-- <app-custom-ion-sliding *ngFor="let reparacion of reparacionesAMostrar" [reparacion]="reparacion"
-    (mostrarDetalleEvent)="mostrarDetalle($event)"></app-custom-ion-sliding> -->
+  <app-control-de-horas-trabajadas></app-control-de-horas-trabajadas>
   <div class="container">
     <ng-container *ngFor='let modulo of modulos'>
       <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario(modulo.role,loggedUser)" class=" flexCenterCenter"
@@ -14,18 +13,8 @@
         <img *ngIf="modulo.img" [src]="modulo.img" alt="">
       </ion-chip>
     </ng-container>
-    <!-- <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)" class=" flexCenterCenter" color="success"
-      outline="true" (click)="confirmarBackUpDiario()">
-      <ion-text class="ion-text-center"><b>Generar Backup</b></ion-text>
-    </ion-chip> -->
+
   </div>
-
-  <!-- <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="mostrarModalFormAltaReparacion()" *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)">
-    <ion-fab-button>
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab> -->
-
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end"
     *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)">
