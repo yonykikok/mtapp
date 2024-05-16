@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MenuController } from '@ionic/angular';
+import { AlertController, MenuController } from '@ionic/angular';
 import { User } from 'src/app/clases/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
@@ -13,10 +13,12 @@ import { environment } from 'src/environments/environment';
 })
 export class AjustesDeRepuestosPage implements OnInit, OnDestroy {
   loggedUser!: User;
+
   constructor(private authService: AuthService,
     private database: DataBaseService,
     private router: Router,
-    private menuController: MenuController) { }
+    private menuController: MenuController,
+    private alertController: AlertController) { }
 
   ngOnInit() {
     this.getCurrentUser();
@@ -53,7 +55,52 @@ export class AjustesDeRepuestosPage implements OnInit, OnDestroy {
   }
 
 
-  async agregarNuevoRepuesto(){
+
+
+  async agregarNuevoRepuesto() {
+
+    let configuracionRepuestos = [
+      {
+        modulosId: {
+          calidades: [{
+            nombre: '',
+            descripcion: null
+          }],
+          colores: [{
+            nombre: '',
+            descripcion: null
+          }],
+          marcas: [{
+            nombre: '',
+            descripcion: null
+          }],
+          tipos: [{
+            nombre: '',
+            descripcion: null
+          }]
+        }
+      },
+      {
+        bateriasId: {
+
+        }
+      },
+      {
+        flexDeCargasId: {
+
+        }
+      },
+      {
+        camarasId: {
+
+        }
+      },
+    ];
+
 
   }
+
+
+
+
 }

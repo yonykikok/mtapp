@@ -1,10 +1,13 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Historial de caja'"></app-clasic-toolbar>
+  <app-clasic-toolbar [isModal]="false" (opcionesClick)="mostrarOpciones()" [mostrarOpciones]="true"
+    [ruta]="'/dashboard'" [title]="'Historial de caja'"></app-clasic-toolbar>
 </ion-header>
 
 
 <ion-content>
-  <div *ngIf="loggedUser">
+  <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Actions" [buttons]="actionSheetButtons"
+  (didDismiss)="setOpen(false)"></ion-action-sheet>
+  <div *ngIf=" loggedUser">
 
     <div class="ion-text-center flexCenterCenter" style="flex-wrap: wrap; flex-direction: column;">
       <ion-toggle [checked]="true" [(ngModel)]="buscarPorRangoDeFechas">Buscador de rango</ion-toggle><br /><br />
@@ -92,7 +95,7 @@
       <ion-button color="primary"
         *ngIf="buscarPorRangoDeFechas && funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)"
         (click)="mostrarIntervaloDeTiempo(false)" (click)="scrollToElement($event,'#filtroBusquedaHistorial')">
-        MostrarResultados
+        Mostrar Resultados
       </ion-button>
 
 

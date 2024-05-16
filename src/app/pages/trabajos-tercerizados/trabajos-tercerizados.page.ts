@@ -9,7 +9,7 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { environment } from 'src/environments/environment';
 
 export interface trabajoTercerizado {
-  responsable:string,
+  responsable: string,
   fecha: number,
   modelo: string,
   trabajo: string,
@@ -44,7 +44,23 @@ export class TrabajosTercerizadosPage implements OnInit {
         return trabajoTercerizado;
       });
 
-      this.trabajosTercerizados = trabajosTercerizados;
+      this.trabajosTercerizados = trabajosTercerizados.sort((a, b) => {
+         // Si ambos tienen fechaRetiro == -1, mantenlos en el orden original
+        if (a.fecha === -1 && b.fecha === -1) {
+            return 0;
+        }
+        // Si solo uno de ellos tiene fechaRetiro == -1, colócalo primero
+        else if (a.fecha === -1) {
+            return -1;
+        } else if (b.fecha === -1) {
+            return 1;
+        }
+        // Ordena por fecha de retiro (en orden descendente)
+        else {
+            return b.fecha - a.fecha;
+        }
+    });
+    
     });
 
   }
@@ -121,5 +137,6 @@ export class TrabajosTercerizadosPage implements OnInit {
     } catch (err) {
     }
   }
+
 
 }

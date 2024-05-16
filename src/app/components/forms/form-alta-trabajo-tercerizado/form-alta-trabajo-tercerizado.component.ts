@@ -23,10 +23,13 @@ export class FormAltaTrabajoTercerizadoComponent implements OnInit {
       modelo: [null, Validators.required],
       trabajo: [null, Validators.required],
       boleta: [null, Validators.required],
+      responsable: ["Yanke", Validators.required],
       detallesDelEquipo: [null, Validators.required],
     });
   }
-  ngOnInit() { }
+  ngOnInit() {
+
+  }
 
   onSubmit() {
     if (this.formulario.valid) {
@@ -46,13 +49,14 @@ export class FormAltaTrabajoTercerizadoComponent implements OnInit {
       this.spinnerService.showLoading('Cargando...');
       this.database.crear(environment.TABLAS.trabajos_tercerizados, trabajoTercerizado).then(res => {
         this.toastService.simpleMessage('Exito', 'Se creo correctamente', ToastColor.success);
+        this.formulario.reset();
       }).catch(err => {
         this.toastService.simpleMessage('Error', 'Hubo un error al agregar el trabajo tercerizado', ToastColor.danger);
       }).finally(() => {
         this.spinnerService.stopLoading();
       })
       // Realizar acción con los datos del formulario
- //console.log(trabajoTercerizado);
+      //console.log(trabajoTercerizado);
     } else {
       // Formulario inválido, mostrar errores o tomar acción adicional
     }

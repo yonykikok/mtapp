@@ -60,10 +60,10 @@
       <ion-card style="padding: 2rem;" (click)="detenerPropagacion($event)">
         <ion-card-title style="margin: 1rem;">Cierre de caja</ion-card-title>
         <ion-card-subtitle>Ingrese el monto que hay en la caja</ion-card-subtitle>
-        <ion-card-content>
-          <ion-item class="ion-margin">
-            <ion-text position="floating">Monto de caja</ion-text>
-            <ion-input type="number" placeholder="Ingrese el monto total" [(ngModel)]="montoDeCaja"
+        <ion-card-content class="ion-no-padding">
+          <ion-item class="ion-margin-bottom">
+            <ion-input labelPlacement="floating" label="Monto de caja" type="number"
+              placeholder="Ingrese el monto total" [(ngModel)]="montoDeCaja"
               [ngModelOptions]="{standalone: true}"></ion-input>
           </ion-item>
 
@@ -83,7 +83,7 @@
 
           <p *ngIf="this.resultadoDeCaja!=0">{{this.resultadoDeCaja|currency}}</p>
 
-          <ion-item-divider class="ion-no-padding">
+          <ion-item-divider class="ion-no-padding" sticky="--background:none;">
             <ion-button expand="block" class="ion-margin-top ion-margin-bottom" color="warning"
               (click)="mostrarModalCierreDeCaja=false;">Cancelar</ion-button>
             <ion-button expand="block" class="ion-margin-top ion-margin-bottom" color="primary"

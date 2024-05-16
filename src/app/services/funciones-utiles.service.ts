@@ -91,7 +91,8 @@ export class FuncionesUtilesService {
       const modal = await this.modalController.create({
         component: VisualizadorDeImagenComponent,
         componentProps: {
-          imagen
+          imagen,
+          isModal: true
         },
       })
 

@@ -16,7 +16,7 @@
           <ion-item-option (click)="verPrecioST($event,servicio)" color="success">Precio ST</ion-item-option>
         </ion-item-options>
 
-        <ion-item class="ion_item">
+        <ion-item class="ion_item" lines="none">
           <ion-col>{{servicio.nombre}}</ion-col>
           <!-- <ion-col>{{servicio.tipo}}</ion-col> -->
           <ion-col style="display: flex; justify-content: end;"> <ion-text *ngIf="servicio.tipo=='rango'">{{servicio.desde|currency:'USD':'symbol':'1.0-0'}} -

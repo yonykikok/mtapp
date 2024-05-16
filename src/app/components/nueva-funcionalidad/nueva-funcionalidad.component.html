@@ -1,0 +1,67 @@
+<ion-searchbar animated="true" placeholder="Ej: Cargador" (ionInput)="filtrarProductos($event)"></ion-searchbar>
+
+<ion-list>
+  <ion-card *ngFor="let producto of productosAMostrar" (click)="mostrarOpciones()">
+    <ion-toolbar class="header">
+      <ion-text class="ion-text-center">
+        <b> {{producto.producto|uppercase}}</b>
+      </ion-text>
+    </ion-toolbar>
+    <ion-card-content style="display: flex; align-items: center;">
+
+      <div class="flexColumn" style="align-items: center; 
+      border-right: 1px solid #cbcbcb;
+      margin-right: 0.5rem;">
+        <ion-avatar class="ion-margin-end" *ngIf="producto.img; else sinImagen">
+          <img [src]="'https://cdn-icons-png.flaticon.com/512/10608/10608883.png'" />
+        </ion-avatar>
+
+
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: start;">
+
+        <!-- <ion-button fill="outline" size="small" style="
+        position: absolute;
+        right: 0.5rem;
+        top: 0.3rem;">
+          <ion-icon name="create-outline"></ion-icon>
+        </ion-button> -->
+        <ion-text *ngIf="producto.marca"><b>Marca:</b> {{producto.marca|titlecase}}</ion-text>
+        <ion-text *ngIf="producto.color"><b>Color:</b> {{producto.color}}</ion-text>
+
+        <ion-text *ngIf="producto.cantidad"><b>Cantidad:</b> {{producto.cantidad}}</ion-text>
+        <ion-chip color="success" class="ion-text-center">
+          <ion-icon name="cash-outline"></ion-icon>
+          <ion-text *ngIf="producto.precio"><b>{{producto.precio|currency}}</b></ion-text>
+        </ion-chip>
+        <!-- <ion-text *ngIf="producto.iva"><b>iva:</b> {{producto.iva}}</ion-text> -->
+        <!-- <ion-text *ngIf="producto.precio_con_iva"><b>precio_con_iva:</b> {{producto.precio_con_iva}}</ion-text> -->
+      </div>
+    </ion-card-content>
+
+    <ion-footer>
+      <ion-toolbar>
+        <ion-text *ngIf="producto.codigo; else agregarCodigoDeProducto"><b>Codigo:</b> {{producto.codigo}}</ion-text>
+      </ion-toolbar>
+      <ng-template #agregarCodigoDeProducto>
+        <ion-button (click)="agregarCodigoDeBarra($event, producto)" color="success" size="small">Agregar un codigo de
+          barras</ion-button>
+      </ng-template>
+      
+    </ion-footer>
+  </ion-card>
+</ion-list>
+
+<ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Actions" [buttons]="actionSheetButtons"
+  (didDismiss)="setOpen(false)"></ion-action-sheet>
+
+
+<ng-template #sinImagen>
+  <ion-avatar>
+    <img [src]="'https://cdn-icons-png.flaticon.com/512/10608/10608883.png'" />
+  </ion-avatar>
+
+  <ion-chip color="secondary" class="no-radius ">
+    <small>Cargar imagen</small>
+  </ion-chip>
+</ng-template>

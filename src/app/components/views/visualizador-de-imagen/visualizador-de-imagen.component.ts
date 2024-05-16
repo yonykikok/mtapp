@@ -11,10 +11,11 @@ import { Camera } from '@capacitor/camera';
 export class VisualizadorDeImagenComponent implements OnInit {
   isActionSheetOpen = false;
   imagen!: string;
+  isModal: boolean = false;
   actionSheetButtons: any[] = [{
     text: 'Compartir',
     icon: 'share-social-outline',
-    handler: async () => { 
+    handler: async () => {
       try {
         await Share.share({
           title: 'Imagen tomada al equipo',
@@ -22,7 +23,7 @@ export class VisualizadorDeImagenComponent implements OnInit {
           url: this.imagen,
           dialogTitle: 'Compartir al cliente',
         });
-    
+
         console.log('Imagen compartida con éxito');
       } catch (error) {
         console.error('Error al compartir la imagen', error);

@@ -14,18 +14,20 @@
       </ion-title>
     </ion-toolbar>
 
-    <ion-text class="ion-margin" *ngIf="trabajo.responsable">Responsable: <b>{{trabajo.responsable}}</b></ion-text>
+    <ion-chip class="ion-margin ion-padding no-radius" *ngIf="trabajo.responsable" color="tertiary">Responsable:
+      <b>{{trabajo.responsable}}</b></ion-chip>
     <ion-item-divider class="ion-no-padding">
       <ion-chip slot="start" style="flex-direction: column; " outline="true">
         <small>Fecha de entrega</small>
         <small>{{trabajo.fecha|date}}</small>
       </ion-chip>
-      <ion-chip slot="end" style="flex-direction: column; " outline="true" *ngIf="trabajo.fechaRetiro; else btnRetirar">
+      <ion-chip slot="end" style="flex-direction: column; " outline="true"
+        *ngIf="trabajo.fechaRetiro && trabajo.fechaRetiro!=-1; else btnRetirar">
         <small>Fecha de retiro</small>
         <small>{{trabajo.fechaRetiro|date}}</small>
       </ion-chip>
       <ng-template #btnRetirar>
-        <ion-chip color="success" slot="end" outline="true" (click)="marcarComoRetirado()">
+        <ion-chip class="no-radius" color="success" slot="end"  (click)="marcarComoRetirado()">
           <small>Marcar como retirado</small>
         </ion-chip>
       </ng-template>

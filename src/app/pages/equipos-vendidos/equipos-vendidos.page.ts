@@ -36,7 +36,7 @@ export class EquiposVendidosPage implements OnInit {
     private authService: AuthService,
     private modalController: ModalController,
     private spinnerService: SpinnerService,
-    private funcionesUtiles:FuncionesUtilesService,
+    private funcionesUtiles: FuncionesUtilesService,
     private alertService: AlertService) { }
 
   ngOnInit(): void {
@@ -127,7 +127,8 @@ export class EquiposVendidosPage implements OnInit {
       const modal = await this.modalController.create({
         component: VisualizadorDeImagenComponent,
         componentProps: {
-          imagen
+          imagen,
+          isModal: true
         },
       })
 

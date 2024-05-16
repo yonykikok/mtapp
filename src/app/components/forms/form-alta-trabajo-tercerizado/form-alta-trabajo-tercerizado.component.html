@@ -8,19 +8,28 @@
     <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
 
       <ion-item>
-        <ion-input label="Modelo del equipo" labelPlacement="floating" formControlName="modelo" placeholder="J7 prime"></ion-input>
+        <ion-input label="Modelo del equipo" labelPlacement="floating" formControlName="modelo"
+          placeholder="J7 prime"></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-input label="Trabajo a realizar" labelPlacement="floating" formControlName="trabajo" placeholder="Liberacion, Flasheo, etc."></ion-input>
+        <ion-input label="Trabajo a realizar" labelPlacement="floating" formControlName="trabajo"
+          placeholder="Liberacion, Flasheo, etc."></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-input label="Boleta del equipo" labelPlacement="floating" type="number" formControlName="boleta" placeholder="4848"></ion-input>
+        <ion-input label="Boleta del equipo" labelPlacement="floating" type="number" formControlName="boleta"
+          placeholder="4848"></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-textarea label="Detalles del equipo" labelPlacement="floating" formControlName="detallesDelEquipo" placeholder="El equipo lo mandamos con la tapa despegada, y el equipo astillado"></ion-textarea>
+        <ion-input label="Responsable" labelPlacement="floating" formControlName="responsable"
+          placeholder="Yanke, Lucia, etc."></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-textarea label="Detalles del equipo" labelPlacement="floating" formControlName="detallesDelEquipo"
+          placeholder="El equipo lo mandamos con la tapa despegada, y el equipo astillado"></ion-textarea>
       </ion-item>
 
       <ion-button class="ion-margin" expand="full" type="submit" [disabled]="formulario.invalid">

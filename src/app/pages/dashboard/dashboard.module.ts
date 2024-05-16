@@ -9,6 +9,7 @@ import { DashboardPageRoutingModule } from './dashboard-routing.module';
 import { DashboardPage } from './dashboard.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ControlDeHorasTrabajadasComponent } from 'src/app/components/control-de-horas-trabajadas/control-de-horas-trabajadas.component';
+import { NuevaFuncionalidadComponent } from 'src/app/components/nueva-funcionalidad/nueva-funcionalidad.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -18,7 +19,8 @@ import { ControlDeHorasTrabajadasComponent } from 'src/app/components/control-de
     SharedModule,
   ],
   declarations: [DashboardPage,
-    ControlDeHorasTrabajadasComponent
+    ControlDeHorasTrabajadasComponent,
+    NuevaFuncionalidadComponent
 
   ],
   providers: [

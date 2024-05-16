@@ -62,9 +62,10 @@ export class LibroDiarioPage implements OnInit {
     const dia = fechaActual.getDate().toString().padStart(2, '0');
 
     const idDiaActual = `${anio}-${mes}-${dia}`;
-    console.log(idDiaActual);
+    console.log(environment.TABLAS.ingresos,idDiaActual);
 
     this.database.obtenerPorId(environment.TABLAS.ingresos, idDiaActual).subscribe(res => {
+      console.log(res)
       if (!res.payload.exists) {
         this.libroDiarioHoy = this.obtenerNuevoLibroDiario(idDiaActual);//aca debe estar el problema
         this.database.crearConCustomId(environment.TABLAS.ingresos, this.libroDiarioHoy.id, this.libroDiarioHoy);
