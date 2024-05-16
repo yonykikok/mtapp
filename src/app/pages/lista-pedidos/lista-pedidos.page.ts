@@ -57,11 +57,11 @@ export class ListaPedidosPage implements OnInit {
     private modalController: ModalController,
     private actionSheetController: ActionSheetController,
     public funcionesUtiles: FuncionesUtilesService,
-    private authService:AuthService
+    private authService: AuthService
   ) { }
   ngOnInit(): void {
     this.getCurrentUser();
-   
+
     let sus = this.database.obtenerTodos(environment.TABLAS.pedidos).subscribe((pedidosRef: any) => {
       this.pedidos = {
         conseguidos: [],
@@ -93,7 +93,7 @@ export class ListaPedidosPage implements OnInit {
     this.isActionSheetOpen = isOpen;
   }
   mostrarOpciones() {
-    console.log("Entra",this.loggedUser)
+    console.log("Entra", this.loggedUser)
     if (this.funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)) {
       this.setOpen(true);
     }
@@ -351,7 +351,10 @@ export class ListaPedidosPage implements OnInit {
     await actionSheet.present();
   }
 
-
+  async mostrarNota(event:Event,pedido: Pedido) {
+    event.stopPropagation();
+    this.alerService.alertSinAccion('NOTA', pedido.nota, 'OK');
+  }
 }
 
 

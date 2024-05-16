@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { Share } from '@capacitor/share';
 import { ModalController } from '@ionic/angular';
 import { User } from 'src/app/clases/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
+import { BarcodeScannerComponent } from '../barcode-scanner/barcode-scanner.component';
 let productoseas = [
   {
     "producto": "adaptador auricular iphone, tipoc carga",
@@ -2428,7 +2430,28 @@ export class NuevaFuncionalidadComponent implements OnInit {
     this.setOpen(true);
   }
 
-  agregarCodigoDeBarra(event: Event, producto: any) {
+
+  async agregarCodigoDeBarra(event: Event, producto: any) {
     event.stopPropagation();
+    try {
+      const modal = await this.modalController.create({
+        component: BarcodeScannerComponent,
+        componentProps: {
+          producto,
+        },
+      })
+
+      modal.onDidDismiss().then(async (result: any) => {
+        if (!result.data || !result.role) return;
+
+      })
+      return await modal.present();
+    } catch (err) {
+    }
+  }
+
+  cargarImagen(event: Event, producto: any) {
+    event.stopPropagation();
+
   }
 }

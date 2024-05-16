@@ -9,12 +9,19 @@
     </ion-toolbar>
     <ion-card-content style="display: flex; align-items: center;">
 
-      <div class="flexColumn" style="align-items: center; 
-      border-right: 1px solid #cbcbcb;
-      margin-right: 0.5rem;">
+      <div class="flexColumn" style="align-items: center;border-right: 1px solid #cbcbcb;margin-right: 0.5rem;">
         <ion-avatar class="ion-margin-end" *ngIf="producto.img; else sinImagen">
-          <img [src]="'https://cdn-icons-png.flaticon.com/512/10608/10608883.png'" />
+          <img [src]="producto.img" />
         </ion-avatar>
+        <ng-template #sinImagen>
+          <ion-avatar>
+            <img [src]="'https://cdn-icons-png.flaticon.com/512/10608/10608883.png'" />
+          </ion-avatar>
+
+          <ion-chip color="secondary" class="no-radius " (click)="cargarImagen($event, producto)">
+            <small>Cargar imagen</small>
+          </ion-chip>
+        </ng-template>
 
 
       </div>
@@ -47,21 +54,10 @@
         <ion-button (click)="agregarCodigoDeBarra($event, producto)" color="success" size="small">Agregar un codigo de
           barras</ion-button>
       </ng-template>
-      
+
     </ion-footer>
   </ion-card>
 </ion-list>
 
 <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Actions" [buttons]="actionSheetButtons"
   (didDismiss)="setOpen(false)"></ion-action-sheet>
-
-
-<ng-template #sinImagen>
-  <ion-avatar>
-    <img [src]="'https://cdn-icons-png.flaticon.com/512/10608/10608883.png'" />
-  </ion-avatar>
-
-  <ion-chip color="secondary" class="no-radius ">
-    <small>Cargar imagen</small>
-  </ion-chip>
-</ng-template>

@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 // import { BarcodeScanner } from '@awesome-cordova-plugins/barcode-scanner/ngx';
 import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
+import { ToastColor, ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-barcode-scanner',
@@ -11,12 +13,23 @@ import { AlertController } from '@ionic/angular';
 export class BarcodeScannerComponent implements OnInit {
   isSupported = false;
   barcodes: Barcode[] = [];
+  barcodeFormGroup = new FormGroup({
+    codigo: new FormControl('', [Validators.minLength(12), Validators.maxLength(13), Validators.pattern('^[0-9]*$')])
+  });
 
-  constructor(private alertController: AlertController) {}
+
+  constructor(private alertController: AlertController,
+    public modalController: ModalController,
+    private toastService: ToastService) { }
 
   ngOnInit() {
-    BarcodeScanner.isSupported().then((result:any) => {
+    BarcodeScanner.isSupported().then((result) => {
+      console.log(result)
       this.isSupported = result.supported;
+    }, (err) => {
+      this.isSupported = false;
+      // this.toastService.simpleMessage('Lector no soportado', 'El lector no esta soportado en esta plataforma', ToastColor.warning);
+      console.log(err)
     });
   }
 
@@ -44,35 +57,3 @@ export class BarcodeScannerComponent implements OnInit {
     await alert.present();
   }
 }
-//   @Input() formats: string = "QR_CODE,PDF_417";
-//   @Output() scannerResultEvent = new EventEmitter<any>();
-
-
-//   constructor(
-//     private barcodeScanner: BarcodeScanner,
-//     private modalRef: ModalController
-//   ) { }
-
-//   ngOnInit() {
-
-//   }
-
-
-
-  
-//   abrirScanner() {
-//     let options = {
-//       formats: this.formats ? this.formats : "QR_CODE,PDF_417"
-//     }
-
-//     this.barcodeScanner.scan(options).then((barcodeData: any) => {
-//       // this.scannerResultEvent.emit(barcodeData);
-//       this.modalRef.dismiss(barcodeData);
-//     }).catch((err: Error) => {
-//       console.error('Error', err);
-//     });
-
-//   }
-//   cerrarScanner() {
-//     this.modalRef.dismiss();
-//   }

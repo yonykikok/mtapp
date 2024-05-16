@@ -1,14 +1,17 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Barcode Scanner</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button [defaultHref]="'/dashboard'" (click)="modalController.dismiss()"></ion-back-button>
+      <ion-title>Codigo de producto</ion-title>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="this.isSupported; else ingresarManualmente">
   <ion-list>
     <ion-item *ngFor="let barcode of barcodes">
-      <ion-input labelPlacement="floating" [label]="{{ barcode.format }}" type="text"
-        [value]="barcode.rawValue"></ion-input>
+      <ion-label position="stacked">{{ barcode.format }}</ion-label>
+      <ion-input type="text" [value]="barcode.rawValue"></ion-input>
     </ion-item>
   </ion-list>
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
@@ -17,3 +20,34 @@
     </ion-fab-button>
   </ion-fab>
 </ion-content>
+
+
+<ng-template #ingresarManualmente>
+
+  <ion-content>
+    <ion-card class="ion-margin">
+      <ion-card-content>
+        <form [formGroup]="barcodeFormGroup">
+          <ion-input label="Codigo del producto" fill="outline" labelPlacement="floating"
+            placeholder="Ingrese el codigo del producto" formControlName="codigo" type="text"></ion-input>
+          <div
+            *ngIf="barcodeFormGroup.controls['codigo'].errors && (barcodeFormGroup.controls['codigo'].dirty || barcodeFormGroup.controls['codigo'].touched)">
+            <small class="errorSmall" *ngIf="barcodeFormGroup.controls['codigo'].errors['required']">El código de barras
+              es obligatorio.</small>
+            <small class="errorSmall" *ngIf="barcodeFormGroup.controls['codigo'].errors['minlength']">El código de
+              barras debe tener al menos 12 caracteres.</small>
+            <small class="errorSmall" *ngIf="barcodeFormGroup.controls['codigo'].errors['maxlength']">El código de
+              barras no debe exceder los 13 caracteres.</small>
+            <small class="errorSmall" *ngIf="barcodeFormGroup.controls['codigo'].errors['pattern']">El código de barras
+              debe contener solo números.</small>
+          </div>
+
+          <ion-button class="ion-margin" expand="block" fill="clear" shape="round" [disabled]="!barcodeFormGroup.valid">
+            Guardar
+          </ion-button>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </ion-content>
+
+</ng-template>

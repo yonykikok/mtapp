@@ -15,6 +15,7 @@ import { UploadImagesComponent } from '../components/upload-images/upload-images
 import { MaxLengthPipe } from '../pipes/max-length.pipe';
 import { FormAltaReparacionComponent } from '../components/forms/form-alta-reparacion/form-alta-reparacion.component';
 import { EncuestaCalificacionComponent } from '../components/encuesta-calificacion/encuesta-calificacion.component';
+import { FormAltaProductoComponent } from '../components/forms/form-alta-producto/form-alta-producto.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { EncuestaCalificacionComponent } from '../components/encuesta-calificaci
     UploadImagesComponent,
     MaxLengthPipe,
     FormAltaReparacionComponent,
-    EncuestaCalificacionComponent
+    EncuestaCalificacionComponent,
+    FormAltaProductoComponent
 
   ],
   imports: [
@@ -54,7 +56,8 @@ import { EncuestaCalificacionComponent } from '../components/encuesta-calificaci
     MaxLengthPipe,
     ColoresPipe,
     FormAltaReparacionComponent,
-    EncuestaCalificacionComponent
+    EncuestaCalificacionComponent,
+    FormAltaProductoComponent
 
 
   ]

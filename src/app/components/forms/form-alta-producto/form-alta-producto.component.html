@@ -1,0 +1,22 @@
+<form [formGroup]="productoForm" (ngSubmit)="guardarProducto()">
+  <ion-item>
+    <ion-input labelPlacement="floating" label="producto" formControlName="producto" type="text"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input labelPlacement="floating" label="marca" formControlName="marca" type="text"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input labelPlacement="floating" label="color" formControlName="color" type="text"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input labelPlacement="floating" label="codigo" formControlName="codigo" type="text"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input labelPlacement="floating" label="cantidad" formControlName="cantidad" type="number"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input labelPlacement="floating" label="precio" formControlName="precio" type="number"></ion-input>
+  </ion-item>
+
+  <ion-button type="submit" expand="block" [disabled]="!productoForm.valid">Guardar</ion-button>
+</form>

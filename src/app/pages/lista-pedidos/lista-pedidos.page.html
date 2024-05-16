@@ -1,11 +1,12 @@
 <ion-header>
-  <app-clasic-toolbar  [isModal]="false" (opcionesClick)="mostrarOpciones()" [mostrarOpciones]="true" [ruta]="'/dashboard'" [title]="'Lista de pedidos'"></app-clasic-toolbar>
+  <app-clasic-toolbar [isModal]="false" (opcionesClick)="mostrarOpciones()" [mostrarOpciones]="true"
+    [ruta]="'/dashboard'" [title]="'Lista de pedidos'"></app-clasic-toolbar>
 </ion-header>
 
 
 <ion-content>
   <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Actions" [buttons]="actionSheetButtons"
-  (didDismiss)="setOpen(false)"></ion-action-sheet>
+    (didDismiss)="setOpen(false)"></ion-action-sheet>
   <!-- <ion-button (click)="borarPedidosConseguidosSinClientes()">borrar</ion-button> -->
   <ion-searchbar show-clear-button="focus" placeholder="J7 prime" [(ngModel)]="textoABuscar"
     (ionInput)="filtrarPorTexto($event,true)"></ion-searchbar>
@@ -19,15 +20,19 @@
     <ion-row *ngFor="let pedido of pedidosAMostrar" [appPrioridadPedido]="pedido" (click)="mostrarDetalle(pedido)">
       <ion-col>{{pedido.tipo|titlecase}}</ion-col>
       <ion-col>{{pedido.modelo|titlecase}}</ion-col>
-      <ion-col>
+      <ion-col style=" display: flex; justify-content: space-evenly; align-items: center;">
         <ion-button (click)="notificarPorWhatsapp($event,pedido)" color="success"
           *ngIf="listaSeleccionada=='para_notificar' && pedido.cliente && pedido.cliente.telefono">
           <ion-icon style="font-size: 1.5rem;" name="logo-whatsapp"></ion-icon>
         </ion-button>
 
+        <ion-button size="small" *ngIf="pedido.nota" (click)="mostrarNota($event,pedido)">
+          <ion-icon name="document-text-outline"></ion-icon>
+        </ion-button>
+
         <ion-checkbox *ngIf="listaSeleccionada!='para_notificar'" [(ngModel)]="pedido.conseguido" (click)="pedido.conseguido
         ?confirmarDesmarcado(pedido,'conseguido',$event)
-        :confirmarMarcado(pedido,'conseguido',$event)">Conseguido</ion-checkbox>
+        :confirmarMarcado(pedido,'conseguido',$event)"></ion-checkbox>
       </ion-col>
     </ion-row>
   </ion-grid>
