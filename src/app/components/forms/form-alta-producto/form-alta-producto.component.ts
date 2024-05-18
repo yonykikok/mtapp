@@ -7,6 +7,7 @@ import { FormControl, FormGroup } from '@angular/forms';
   styleUrls: ['./form-alta-producto.component.scss'],
 })
 export class FormAltaProductoComponent implements OnInit {
+  colorSeleccionado!: string;
   productoForm = new FormGroup({
     producto: new FormControl('', []),
     marca: new FormControl('', []),

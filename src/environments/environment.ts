@@ -12,6 +12,7 @@ export const environment = {
     measurementId: "G-Y87CBVERHZ"
   },
   TABLAS: {
+    glasses: "glasses",
     acreedores: "acreedores",
     backUps: "backUps",
     servicios: "servicios",

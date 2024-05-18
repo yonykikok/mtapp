@@ -103,7 +103,7 @@ export class FormEquipoDisponibleComponent implements OnInit {
     let imgUrlsRef: string[] = [];//referencia para eliminar
     let contador = 0;
     images.forEach((imgBase64, index) => {
-      this.storageService.subirImagenEquiposVenta(imgPath + `${this.equipoDisponible.fecha}-${this.equipoDisponible.marca}-${this.equipoDisponible.imei}-${index}`, imgBase64).then((urlImagen) => {
+      this.storageService.subirImagen(imgPath + `${this.equipoDisponible.fecha}-${this.equipoDisponible.marca}-${this.equipoDisponible.imei}-${index}`, imgBase64).then((urlImagen) => {
         imgUrls.push(urlImagen as string);
         imgUrlsRef.push(imgPath + `${this.equipoDisponible.fecha}-${this.equipoDisponible.marca}-${this.equipoDisponible.imei}-${index}`);//referencia para eliminar
         contador++;

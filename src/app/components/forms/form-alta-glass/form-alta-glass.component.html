@@ -1,0 +1,174 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/lista-glass'" [title]="'Alta de Glasses'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-toolbar class="header">
+      <ion-text class="ion-text-center">
+        <b>{{"Repuesto Glass"|uppercase}}</b>
+      </ion-text>
+    </ion-toolbar>
+    <ion-card-content>
+      <form [formGroup]="glassForm">
+        <ion-item>
+          <ion-input labelPlacement="floating" label="Marca" formControlName="marca" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input labelPlacement="floating" label="Modelo" formControlName="modelo" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input labelPlacement="floating" label="Precio" formControlName="precio" type="number"></ion-input>
+        </ion-item>
+      </form>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-toolbar class="header">
+      <ion-text class="ion-text-center">
+        <b>{{"Caracteristicas"|uppercase}}</b>
+      </ion-text>
+    </ion-toolbar>
+    <ion-card-content>
+      <ion-grid>
+        <!-- Fila para el encabezado -->
+
+        <ion-row class="ion-margin-bottom">
+          <ion-col size="8">
+            <ion-text color="primary">
+              <b>CARACTERISTICA</b>
+              <ion-icon name="notifications-outline" slot="start" color="grey"></ion-icon>
+            </ion-text>
+          </ion-col>
+          <ion-col size="2" class="ion-text-center">
+            <ion-text color="success">
+              <b>SI</b>
+            </ion-text>
+          </ion-col>
+          <ion-col size="2" class="ion-text-center">
+            <ion-text color="danger">
+              <b>NO</b>
+            </ion-text>
+          </ion-col>
+        </ion-row>
+
+
+      </ion-grid>
+
+      <form [formGroup]="glassForm">
+
+        <!-- Es nuevo -->
+        <ion-item-divider class="displayBlock ion-no-padding" style="background: none;">
+          <div style="display: flex; justify-content: space-between; width: 100%;">
+            <ion-text style="display: flex; align-items: center;">Es nuevo</ion-text>
+            <ion-radio-group formControlName="estado" style="display: flex;">
+              <ion-item lines="none">
+                <ion-radio slot="end" color="secondary" [value]="true"></ion-radio>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-radio slot="end" color="secondary" [value]="false"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          </div>
+        </ion-item-divider>
+        <!-- Es nuevo -->
+
+        <!-- Incluye OCA -->
+        <ion-item-divider class="displayBlock ion-no-padding" style="background: none;">
+          <div style="display: flex; justify-content: space-between; width: 100%;">
+            <ion-text style="display: flex; align-items: center;">Incluye OCA</ion-text>
+            <ion-radio-group formControlName="oca" style="display: flex;">
+              <ion-item lines="none">
+                <ion-radio slot="end" color="secondary" [value]="true"></ion-radio>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-radio slot="end" color="secondary" [value]="false"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          </div>
+        </ion-item-divider>
+        <!-- Incluye OCA -->
+
+        <!-- Incluye marco -->
+        <ion-item-divider class="displayBlock ion-no-padding" style="background: none;">
+          <div style="display: flex; justify-content: space-between; width: 100%;">
+            <ion-text style="display: flex; align-items: center;">Incluye Marco</ion-text>
+            <ion-radio-group formControlName="marco" style="display: flex;">
+              <ion-item lines="none">
+                <ion-radio slot="end" color="secondary" [value]="true"></ion-radio>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-radio slot="end" color="secondary" [value]="false"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          </div>
+        </ion-item-divider>
+        <!-- Incluye marco -->
+
+        <!-- Incluye touch -->
+        <ion-item-divider class="displayBlock ion-no-padding" style="background: none;">
+          <div style="display: flex; justify-content: space-between; width: 100%;">
+            <ion-text style="display: flex; align-items: center;">Incluye Touch</ion-text>
+            <ion-radio-group formControlName="touch" style="display: flex;">
+              <ion-item lines="none">
+                <ion-radio slot="end" color="secondary" [value]="true"></ion-radio>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-radio slot="end" color="secondary" [value]="false"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          </div>
+        </ion-item-divider>
+        <!-- Incluye touch -->
+
+        <!-- Es curvo -->
+        <ion-item-divider class="displayBlock ion-no-padding" style="background: none;">
+          <div style="display: flex; justify-content: space-between; width: 100%;">
+            <ion-text style="display: flex; align-items: center;">Es curvo</ion-text>
+            <ion-radio-group formControlName="curvo" style="display: flex;">
+              <ion-item lines="none">
+                <ion-radio slot="end" color="secondary" [value]="true"></ion-radio>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-radio slot="end" color="secondary" [value]="false"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          </div>
+        </ion-item-divider>
+        <!-- Es curvo -->
+
+
+
+      </form>
+    </ion-card-content>
+  </ion-card>
+
+
+
+  <ion-card>
+    <ion-toolbar class="header">
+      <ion-text class="ion-text-center">
+        <b>{{"Compatibilidad y Ubicacion"|uppercase}}</b>
+      </ion-text>
+    </ion-toolbar>
+    <ion-card-content>
+      <form [formGroup]="glassForm" (ngSubmit)="onSubmit()">
+        <ion-item>
+          <ion-select labelPlacement="floating" label="Compatibilidad" formControlName="compatibilidad" multiple="true">
+            <ion-select-option value="Modelo1">Modelo Existente1</ion-select-option>
+            <ion-select-option value="Modelo2">Modelo Existente2</ion-select-option>
+            <!-- Agrega más opciones según sea necesario -->
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-select labelPlacement="floating" label="Ubicación Repuesto" formControlName="ubicacionRepuesto">
+            <ion-select-option value="{{ Ubicaciones.LocalSanMartin }}">Local San Martin</ion-select-option>
+            <ion-select-option value="{{ Ubicaciones.LocalAvellaneda }}">Local Avellaneda</ion-select-option>
+            <ion-select-option value="{{ Ubicaciones.ParaCambio }}">Para Cambio</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

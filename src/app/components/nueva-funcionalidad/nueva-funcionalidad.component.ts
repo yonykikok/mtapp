@@ -6,6 +6,12 @@ import { User } from 'src/app/clases/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { BarcodeScannerComponent } from '../barcode-scanner/barcode-scanner.component';
+import { ToastColor, ToastService } from 'src/app/services/toast.service';
+import { NgxImageCompressService } from 'ngx-image-compress';
+import { StorageService } from 'src/app/services/storage.service';
+import { DataBaseService } from 'src/app/services/database.service';
+import { environment } from 'src/environments/environment';
+import { FormAltaProductoComponent } from '../forms/form-alta-producto/form-alta-producto.component';
 let productoseas = [
   {
     "producto": "adaptador auricular iphone, tipoc carga",
@@ -2362,7 +2368,7 @@ export class NuevaFuncionalidadComponent implements OnInit {
     handler: async () => {
     },
   }, {
-    text: 'Cambiar Stock Rapido',
+    text: 'Cambiar Stock',
     icon: 'chevron-expand-outline',
     handler: async () => {
     },
@@ -2373,7 +2379,11 @@ export class NuevaFuncionalidadComponent implements OnInit {
     handler: () => { },
   }];
   constructor(public funcionesUtiles: FuncionesUtilesService,
+    private imageCompress: NgxImageCompressService,
+    private storageService: StorageService,
     private authService: AuthService,
+    private database: DataBaseService,
+    private toastService: ToastService,
     private modalController: ModalController) {
     this.authService.user$.subscribe(res => {
       this.loggedUser = res;
@@ -2452,6 +2462,91 @@ export class NuevaFuncionalidadComponent implements OnInit {
 
   cargarImagen(event: Event, producto: any) {
     event.stopPropagation();
+    const MAX_MEGABYTE = 0.5;
+    let posicionDisponible = this.obtenerPosicionDisponibles(producto);
+    console.log(posicionDisponible)
+    if (posicionDisponible != undefined) {
+      console.log(posicionDisponible);
+      let imgName = `${Date.now()}`
+      this.imageCompress
+        .uploadAndGetImageWithMaxSize(MAX_MEGABYTE) // this function can provide debug information using (MAX_MEGABYTE,true) parameters
+        .then(
+          (result: string) => {//caso de que comprima
+            this.subirImagen(producto, `estados_reparacion/`, imgName, result);
+          },
+          (result: string) => {//caso de que NO comprima
+            this.subirImagen(producto, `estados_reparacion/`, imgName, result);
+          });
+    }
+  }
+
+
+  subirImagen(producto: any, imgPath: string, imgName: string, imgBase64: string) {
+
+    this.storageService.subirImagen(imgPath + imgName, imgBase64).then((urlImagen) => {
+
+      let urlRef = imgPath + imgName;
+
+      console.log(`imgUrls: `, urlImagen)
+      console.log(`imgUrlsRef: `, urlRef)
+      if (urlImagen) {
+        if (!producto.images || !producto.imgUrlsRef) {
+          producto.imgUrlsRef = [];
+          producto.images = [];
+        }
+        producto.imgUrlsRef.push(urlRef);
+        producto.images.push(urlImagen);
+      }
+      if (producto.id) {
+        this.database.actualizar(environment.TABLAS.boletasReparacion, producto, producto.id)?.then((res: any) => {
+          // this.spinnerService.stopLoading();
+          this.toastService.simpleMessage('Existo', 'Nueva imagen añadida', ToastColor.success);
+
+        }).catch(err => {
+          this.toastService.simpleMessage('Error', 'No se pudo agregar la imagen', ToastColor.danger);
+        })
+      }
+    }).catch(err => {
+      this.toastService.simpleMessage('Error', 'al subir la image ocurrio un error ("equipos disponibles")', ToastColor.danger);
+    });
+  }
+
+  obtenerPosicionDisponibles(producto: any) {
+    let posicionesDiponibles: number[] = [];
+    const imagenesRefSinRepetidos = Array.from(new Set(producto.imgUrlsRef));
+    console.log(imagenesRefSinRepetidos);
+    let posiblesPosiciones = [0, 1];
+
+    posiblesPosiciones.forEach(posicion => {
+      let existe = false;
+      imagenesRefSinRepetidos.forEach((imgRef: any) => {
+
+        const partes = imgRef.split('-');
+        const obtenerUltimoDigito = parseInt(partes[partes.length - 1], 10);
+
+        if (posicion == obtenerUltimoDigito) {
+          existe = true
+        }
+      });
+      if (existe) {
+
+      } else {
+        posicionesDiponibles.push(posicion);
+        console.log("disponible: ", posicion)
+
+      }
+
+    });
+    console.log("posiciones disponible: ", posicionesDiponibles)
+    return posicionesDiponibles[0];
 
   }
+
+  async mostrarFormulario() {
+    let modal = await this.modalController.create({
+      component: FormAltaProductoComponent,
+    });
+    modal.present();
+  }
+
 }

@@ -141,6 +141,10 @@ const routes: Routes = [
     path: 'servicios',
     loadChildren: () => import('./pages/servicios/servicios.module').then( m => m.ServiciosPageModule)
   },
+  {
+    path: 'lista-glass',
+    loadChildren: () => import('./pages/lista-glass/lista-glass.module').then( m => m.ListaGlassPageModule)
+  },
 
 
 

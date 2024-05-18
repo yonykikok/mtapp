@@ -32,7 +32,7 @@ export class StorageService {
   //   }
   // }
   
-  async subirImagenEquiposVenta(ruta: string, imgBase64: any) {
+  async subirImagen(ruta: string, imgBase64: any) {
     try {
       let respuesta = await this.storageRef.child(ruta).putString(imgBase64, 'data_url');
       return await respuesta.ref.getDownloadURL();

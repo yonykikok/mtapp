@@ -114,7 +114,7 @@ export class FormEquipoVendidoComponent implements OnInit {
     let imgUrlsRef: string[] = [];
     let contador = 0;
     images.forEach((imgBase64, index) => {
-      this.storageService.subirImagenEquiposVenta(imgPath + `${this.equipoVendido.fecha}-${this.equipoVendido.marca}-${this.equipoVendido.imei}-${index}`, imgBase64).then((urlImagen: any) => {
+      this.storageService.subirImagen(imgPath + `${this.equipoVendido.fecha}-${this.equipoVendido.marca}-${this.equipoVendido.imei}-${index}`, imgBase64).then((urlImagen: any) => {
         imgUrls.push(urlImagen);
         imgUrlsRef.push(imgPath + `${this.equipoVendido.fecha}-${this.equipoVendido.marca}-${this.equipoVendido.imei}-${index}`);
         contador++;

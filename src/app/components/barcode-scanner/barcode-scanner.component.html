@@ -28,9 +28,11 @@
     <ion-card class="ion-margin">
       <ion-card-content>
         <form [formGroup]="barcodeFormGroup">
-          <ion-input label="Codigo del producto" fill="outline" labelPlacement="floating"
-            placeholder="Ingrese el codigo del producto" formControlName="codigo" type="text"></ion-input>
-          <div
+          <ion-item>
+            <ion-input label="Codigo del producto" fill="outline" labelPlacement="floating"
+              placeholder="Ingrese el codigo del producto" formControlName="codigo" type="text"></ion-input>
+          </ion-item>
+          <div class="flexColumn"
             *ngIf="barcodeFormGroup.controls['codigo'].errors && (barcodeFormGroup.controls['codigo'].dirty || barcodeFormGroup.controls['codigo'].touched)">
             <small class="errorSmall" *ngIf="barcodeFormGroup.controls['codigo'].errors['required']">El código de barras
               es obligatorio.</small>

@@ -334,7 +334,7 @@ export class EquiposDisponiblesPage implements OnInit {
     data.images.forEach((imgBase64, index) => {
       if (!imgBase64.includes("https://firebasestorage")) {
         let posicionDisponible = Number(data.posicionesDiponibles.shift());
-        this.storageService.subirImagenEquiposVenta(imgPath + `${this.equipoSeleccionado.fecha}-${this.equipoSeleccionado.marca}-${this.equipoSeleccionado.imei}-${posicionDisponible}`, imgBase64).then((urlImagen) => {
+        this.storageService.subirImagen(imgPath + `${this.equipoSeleccionado.fecha}-${this.equipoSeleccionado.marca}-${this.equipoSeleccionado.imei}-${posicionDisponible}`, imgBase64).then((urlImagen) => {
           imgUrls.push(urlImagen as string);
           imgUrlsRef.push(imgPath + `${this.equipoSeleccionado.fecha}-${this.equipoSeleccionado.marca}-${this.equipoSeleccionado.imei}-${posicionDisponible}`);//referencia para eliminar
           contador++;

@@ -328,7 +328,7 @@ export class DetalleReparacionComponent implements OnInit {
 
   subirImagen(reparacion: boleta, estado: boletaHistorialEstado, imgPath: string, imgName: string, imgBase64: string) {
 
-    this.storageService.subirImagenEquiposVenta(imgPath + imgName, imgBase64).then((urlImagen) => {
+    this.storageService.subirImagen(imgPath + imgName, imgBase64).then((urlImagen) => {
 
       let urlRef = imgPath + imgName;
 
