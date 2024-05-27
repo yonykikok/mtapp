@@ -4,14 +4,15 @@ export enum EstadoRepuesto {
 }
 
 export enum Ubicaciones {
-    LocalSanMartin = "Nuevo",
-    LocalAvellaneda = "Usado",
+    LocalSanMartin = "LocalSanMartin",
+    LocalAvellaneda = "LocalAvellaneda",
     Deposito = "Deposito",
     Exhibicion = "Exhibicion",
     ParaCambio = "ParaCambio"
 }
 
 export class Glass {
+    id!: string;
     marca: string;
     modelo: string;
     precio: number;
@@ -20,7 +21,7 @@ export class Glass {
     touch: boolean;
     curvo: boolean;
     stock: number;
-    compatibilidad: string[];
+    compatibilidad: any[];
     ubicacionRepuesto: Ubicaciones;
     estado: EstadoRepuesto;
 

@@ -1,0 +1,32 @@
+<ion-header>
+  <app-clasic-toolbar (click)="modalController.dismiss()" [title]="'Ingresar categoria'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-card>
+
+    <div class="ion-text-center">
+
+      <ion-chip class="ion-margin" color="primary" *ngIf="formCategoria.controls.categoria.value?.includes('@')">
+        Las notificaciones seran enviadas a <br>
+        {{formCategoria.controls.categoria.value}}
+      </ion-chip>
+    </div>
+    <ion-card-content>
+      <form [formGroup]="formCategoria" (ngSubmit)="guardar()" >
+
+        <ion-item>
+          <ion-input labelPlacement="floating" label="Categoria del producto" type="text" formControlName="categoria"
+            placeholder="Cargadores, Auriculares, Fundas etc."></ion-input>
+        </ion-item>
+
+        <ion-button expand="block" class="ion-margin-top" [disabled]="!formCategoria.valid" type="submit">Guardar
+          categoria
+        </ion-button>
+      </form>
+
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

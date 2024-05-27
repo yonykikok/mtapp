@@ -12,6 +12,7 @@ export class VisualizadorDeImagenComponent implements OnInit {
   isActionSheetOpen = false;
   imagen!: string;
   isModal: boolean = false;
+  ruta: string='/equipos-vendidos';
   actionSheetButtons: any[] = [{
     text: 'Compartir',
     icon: 'share-social-outline',

@@ -5,17 +5,17 @@ import { ModalController } from '@ionic/angular';
 import { User } from 'src/app/clases/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
-import { BarcodeScannerComponent } from '../barcode-scanner/barcode-scanner.component';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { StorageService } from 'src/app/services/storage.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { environment } from 'src/environments/environment';
-import { FormAltaProductoComponent } from '../forms/form-alta-producto/form-alta-producto.component';
-import { VisualizadorDeImagenComponent } from '../views/visualizador-de-imagen/visualizador-de-imagen.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { SpinnerService } from 'src/app/services/spinner.service';
-import { CambiarStockProductoComponent } from '../cambiar-stock-producto/cambiar-stock-producto.component';
+import { VisualizadorDeImagenComponent } from 'src/app/components/views/visualizador-de-imagen/visualizador-de-imagen.component';
+import { BarcodeScannerComponent } from 'src/app/components/barcode-scanner/barcode-scanner.component';
+import { FormAltaProductoComponent } from 'src/app/components/forms/form-alta-producto/form-alta-producto.component';
+import { CambiarStockProductoComponent } from 'src/app/components/cambiar-stock-producto/cambiar-stock-producto.component';
 
 export interface Producto {
   id: string,//sera puesto por firebase
@@ -34,12 +34,12 @@ export interface Producto {
   precio?: number;
 }
 @Component({
-  selector: 'app-nueva-funcionalidad',
-  templateUrl: './nueva-funcionalidad.component.html',
-  styleUrls: ['./nueva-funcionalidad.component.scss'],
+  selector: 'app-lista-productos',
+  templateUrl: './lista-productos.page.html',
+  styleUrls: ['./lista-productos.page.scss'],
 })
-export class NuevaFuncionalidadComponent implements OnInit {
-  recargos: any;
+export class ListaProductosPage implements OnInit {
+ recargos: any;
   productos: any[] = [];
   camposSeleccionados = ['producto', 'codigo', 'cantidad', 'precio'];
   productosAMostrar: any[] = [];

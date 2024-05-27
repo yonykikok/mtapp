@@ -1,0 +1,67 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="ruta" [title]="'Detalle del modulo'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-toolbar class="ion-text-center">
+      <ion-icon color="danger" style="font-size: 1.5rem;" slot="start" name="trash-outline" (click)="eliminarGlass()">
+      </ion-icon>
+
+      <ion-text>
+        <b> {{repuesto.marca|uppercase}} {{repuesto.modelo|uppercase}} </b> <!-- //TODO:  -->
+      </ion-text>
+      <ion-icon style="font-size: 1.5rem;" slot="end" name="create-outline" (click)="modificarGlass()"></ion-icon>
+
+    </ion-toolbar>
+    <ion-card-content>
+      <ion-text *ngIf="repuesto.oca==true" color="success">Incluye Oca<br></ion-text>
+      <ion-text *ngIf="repuesto.marco==true" color="warning">Incluye Marco<br></ion-text>
+      <ion-text *ngIf="repuesto.touch==true" color="warning">Incluye Tactil<br></ion-text>
+      <ion-text *ngIf="repuesto.curvo==true" color="danger">Es pantalla curva<br></ion-text>
+      <ion-text>Repuesto: <b>{{repuesto.estado?'Nuevo':'Reutilizado'}}</b><br></ion-text>
+      <ion-text>Cantidad disponible: <b>{{repuesto.stock}}</b><br></ion-text>
+
+      <ion-card class="ion-text-center">
+
+        <ion-text>
+          <b> Modelos compatibles </b> <!-- //TODO:  -->
+        </ion-text>
+        <ion-list class="flexColumn" style="text-align: start;"
+          *ngIf="repuesto.compatibilidad && repuesto.compatibilidad.length>0; else sinModelosCompatibles">
+
+          <ion-label class="ion-margin-start" *ngFor="let glass of repuesto.compatibilidad"> {{glass.marca|uppercase}}
+            {{glass.modelo|uppercase}}
+          </ion-label> <!-- //TODO:  -->
+        </ion-list>
+
+        <ng-template #sinModelosCompatibles>
+          <br>
+          <ion-text color="danger"> Aun no tienes modelos compatibles agregarlos.</ion-text>
+        </ng-template>
+        <ion-button size="small" class="ion-margin" (click)="abrirSelectorDeModelos()">
+          Agregar modelo compatible
+        </ion-button>
+      </ion-card>
+
+
+    </ion-card-content>
+    <ion-footer>
+      <ion-toolbar color="success">
+        <ion-title><b>{{repuesto.precio|currency:'USD':'symbol':'1.0-0'}}</b></ion-title>
+      </ion-toolbar>
+    </ion-footer>
+  </ion-card>
+
+
+
+
+
+
+
+
+
+
+
+
+</ion-content>

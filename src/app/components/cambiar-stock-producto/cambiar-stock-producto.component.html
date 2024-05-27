@@ -1,0 +1,61 @@
+<ion-content>
+  <ion-header>
+    <app-clasic-toolbar [isModal]="true" (atrasEvent)="volverAtras()" [ruta]="'/lista-productos'" [title]="'Edita el stock  '"></app-clasic-toolbar>
+  </ion-header>
+  <ion-card>
+    <ion-toolbar class="header">
+      <ion-text class="ion-text-center">
+        <b>Colores disponibles</b>
+      </ion-text>
+    </ion-toolbar>
+    <ion-card-content *ngIf="agregarNuevoColor">
+      <form [formGroup]="stockForm" >
+        <div style="display: flex; align-items: center;">
+          <input style="height: 3rem;" type="color" formControlName="color">
+          <ion-item>
+            <ion-input labelPlacement="floating" label="Color" formControlName="denominacionColor"
+              type="text"></ion-input>
+          </ion-item>
+        </div>
+        <ion-item>
+          <ion-input labelPlacement="floating" label="Stock" formControlName="stock" type="number"></ion-input>
+        </ion-item>
+
+        <ion-button class="ion-margin" size="small" (click)="agregarColor()"
+          [disabled]="!stockForm.valid">Agregar</ion-button>
+
+      </form>
+    </ion-card-content>
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let colorSeleccionado of producto.coloresDisponibles">
+
+          <ion-card class="ion-margin flexCenterCenter"
+            [style]="{'background-color':colorSeleccionado.color,'height':'2rem','width':'2rem'}">
+          </ion-card>
+          <div class="flexCenterCenter">
+            <ion-text color="primary">
+              ({{colorSeleccionado.stock}})
+            </ion-text>
+            <ion-text class="ion-margin-start">
+              {{colorSeleccionado.denominacionColor}}
+            </ion-text>
+          </div>
+
+          <div slot="end" class="flexColumn" style="font-size: 2rem;">
+            <ion-icon name="caret-up-outline" (click)="aumentarStock(colorSeleccionado)"></ion-icon>
+            <ion-icon name="caret-down-outline" (click)="disminuirStock(colorSeleccionado)"></ion-icon>
+          </div>
+        </ion-item>
+
+      </ion-list>
+
+      <ion-button *ngIf="!agregarNuevoColor" size="small" (click)="agregarNuevoColor=true"> Agregar otro
+        color</ion-button>
+    </ion-card-content>
+
+    <ion-button class="ion-margin" type="submit" expand="block" (click)="guardarProducto()" [disabled]="!verSiHayCambios()">Guardar</ion-button>
+
+  </ion-card>
+
+</ion-content>

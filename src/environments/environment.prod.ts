@@ -12,13 +12,14 @@ export const environment = {
     measurementId: "G-Y87CBVERHZ"
   },
   TABLAS: {
+    recargosProductos: "recargosProductos",
+    glasses: "glasses",
     acreedores: "acreedores",
     backUps: "backUps",
+    servicios: "servicios",
     baterias: "baterias",
     boletasReparacion: "boletasReparacion",
-    categorias: "categorias",
     categoriasProductos: "categoriasProductos",
-    servicios: "servicios",
     celulares: "celulares",
     consultas: "consultas",
     cotizacion_dolar: "cotizacion_dolar",

@@ -1,0 +1,52 @@
+<ion-content>
+  <ion-header>
+    <app-clasic-toolbar [ruta]="'/repuestos/lista-glasses'" [title]="'Selector de modelos'"></app-clasic-toolbar>
+  </ion-header>
+
+
+  <ion-searchbar debounce="500" placeholder="Escriba marca o modelo del compatible" [(ngModel)]="textoABuscar"
+    (ionChange)="onChangeFilter()"></ion-searchbar>
+
+
+  <div class="ion-text-center" *ngIf="lista.length == 0" style="height: 85vh;">
+    <ion-text>No hay modelos existentes cargados.</ion-text>
+  </div>
+
+  <ion-list lines="full">
+
+    <ion-item color="light" *ngFor="let item of lista">
+      <ion-label class="ion-text-wrap">
+        <ion-text color="secondary">
+          <h2> {{item.marca|titlecase}}</h2>
+        </ion-text>
+        <ion-text color="dark">
+          <h3> {{item.modelo}}</h3>
+        </ion-text>
+      </ion-label>
+
+      <div slot="end" style="display:flex; align-items: center;">
+        <label *ngIf="item.checked"
+          style="position: absolute; right: 0.3rem; display:flex; flex-direction: column; align-items: center;">
+
+        </label>
+
+        <ion-button fill="clear" slot="end">
+          <ion-checkbox [(ngModel)]="item.checked" (click)="seleccionarModelo($event,item)">
+          </ion-checkbox>
+        </ion-button>
+
+      </div>
+    </ion-item>
+
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="modelosSeleccionados.length>0"
+    (click)="mostrarConfirmacion()">
+    <ion-chip class="terminarSeleccion" color="success" outline="true">
+      <ion-icon name="checkmark-done-outline"></ion-icon>
+      <ion-label>Terminar selección</ion-label>
+    </ion-chip>
+
+  </ion-fab>
+
+</ion-content>

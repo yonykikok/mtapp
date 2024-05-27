@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { User } from 'src/app/clases/user';
 import { FormAltaGlassComponent } from 'src/app/components/forms/form-alta-glass/form-alta-glass.component';
+import { DetalleGlassComponent } from 'src/app/components/views/detalle-glass/detalle-glass.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
@@ -15,7 +16,7 @@ import { environment } from 'src/environments/environment';
 })
 export class ListaGlassPage implements OnInit {
   loggedUser!: User;
-  camposSeleccionados = ['modelo', 'calidad', 'precio'];
+  camposSeleccionados = ['marca', 'modelo', 'precio'];
   glasses: any[] = [];
   glassesAMostrar: any[] = [];
 
@@ -54,38 +55,39 @@ export class ListaGlassPage implements OnInit {
   }
 
   async seleccionar(glass: any) {
-    // try {
-    //   const modal = await this.modalController.create({
-    //     component: DetalleGlassComponent,
-    //     componentProps: {
-    //       repuesto: glass,
-    //       ruta: '/repuestos/lista-glasses'
-    //     },
-    //   })
+    try {
+      const modal = await this.modalController.create({
+        component: DetalleGlassComponent,
+        componentProps: {
+          repuesto: glass,
+          ruta: '/repuestos/lista-glasses',
+          glassesCargados: [...this.glasses]
+        },
+      })
 
-    //   modal.onDidDismiss().then(async (result: any) => {
-    //     if (!result.data || !result.role) return;
+      modal.onDidDismiss().then(async (result: any) => {
+        if (!result.data || !result.role) return;
 
-    //     if (result.role == 'guardar') {
-    //       try {
-    //         await this.database.actualizar(environment.TABLAS.glasses, result.data, result.data.id);
-    //       } catch (err) {
-    //         this.toastService.simpleMessage('Error', 'No se pudo actualizar', ToastColor.danger);
-    //       }
-    //     } else if (result.role == 'borrar') {
-    //       this.database.eliminar(environment.TABLAS.glasses, result.data.id).then(() => {
-    //         this.toastService.simpleMessage('Exito', 'Glass borrado con exito', ToastColor.success);
+        if (result.role == 'guardar') {
+          try {
+            await this.database.actualizar(environment.TABLAS.glasses, result.data, result.data.id);
+          } catch (err) {
+            this.toastService.simpleMessage('Error', 'No se pudo actualizar', ToastColor.danger);
+          }
+        } else if (result.role == 'borrar') {
+          this.database.eliminar(environment.TABLAS.glasses, result.data.id).then(() => {
+            this.toastService.simpleMessage('Exito', 'Glass borrado con exito', ToastColor.success);
 
-    //       }).catch((err: Error) => {
-    //         this.toastService.simpleMessage('Error', 'No se pudo borrar el glass', ToastColor.danger);
-    //       })
-    //     }
+          }).catch((err: Error) => {
+            this.toastService.simpleMessage('Error', 'No se pudo borrar el glass', ToastColor.danger);
+          })
+        }
 
 
-    //   })
-    //   return await modal.present();
-    // } catch (err) {
-    // }
+      })
+      return await modal.present();
+    } catch (err) {
+    }
 
   }
 
@@ -119,6 +121,7 @@ export class ListaGlassPage implements OnInit {
       const modal = await this.modalController.create({
         component: FormAltaGlassComponent,
         componentProps: {
+          glassesCargados: this.glasses
         },
       })
 

@@ -10,6 +10,7 @@ import { DashboardPage } from './dashboard.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ControlDeHorasTrabajadasComponent } from 'src/app/components/control-de-horas-trabajadas/control-de-horas-trabajadas.component';
 import { NuevaFuncionalidadComponent } from 'src/app/components/nueva-funcionalidad/nueva-funcionalidad.component';
+import { CambiarStockProductoComponent } from 'src/app/components/cambiar-stock-producto/cambiar-stock-producto.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -20,7 +21,8 @@ import { NuevaFuncionalidadComponent } from 'src/app/components/nueva-funcionali
   ],
   declarations: [DashboardPage,
     ControlDeHorasTrabajadasComponent,
-    NuevaFuncionalidadComponent
+    NuevaFuncionalidadComponent,
+    CambiarStockProductoComponent
 
   ],
   providers: [

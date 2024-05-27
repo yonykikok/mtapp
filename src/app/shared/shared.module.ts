@@ -16,6 +16,8 @@ import { MaxLengthPipe } from '../pipes/max-length.pipe';
 import { FormAltaReparacionComponent } from '../components/forms/form-alta-reparacion/form-alta-reparacion.component';
 import { EncuestaCalificacionComponent } from '../components/encuesta-calificacion/encuesta-calificacion.component';
 import { FormAltaProductoComponent } from '../components/forms/form-alta-producto/form-alta-producto.component';
+import { CargarCategoriaComponent } from '../components/cargar-categoria/cargar-categoria.component';
+import { CambiarStockProductoComponent } from '../components/cambiar-stock-producto/cambiar-stock-producto.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import { FormAltaProductoComponent } from '../components/forms/form-alta-product
     MaxLengthPipe,
     FormAltaReparacionComponent,
     EncuestaCalificacionComponent,
-    FormAltaProductoComponent
+    FormAltaProductoComponent,
+    CargarCategoriaComponent
 
   ],
   imports: [
@@ -57,8 +60,8 @@ import { FormAltaProductoComponent } from '../components/forms/form-alta-product
     ColoresPipe,
     FormAltaReparacionComponent,
     EncuestaCalificacionComponent,
-    FormAltaProductoComponent
-
+    FormAltaProductoComponent,
+    CargarCategoriaComponent,
 
   ]
 })

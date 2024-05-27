@@ -9,6 +9,8 @@ import { ListaGlassPageRoutingModule } from './lista-glass-routing.module';
 import { ListaGlassPage } from './lista-glass.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { FormAltaGlassComponent } from 'src/app/components/forms/form-alta-glass/form-alta-glass.component';
+import { SelectorDeModelosCompatiblesComponent } from 'src/app/components/selector-de-modelos-compatibles/selector-de-modelos-compatibles.component';
+import { DetalleGlassComponent } from 'src/app/components/views/detalle-glass/detalle-glass.component';
 
 @NgModule({
   imports: [
@@ -19,6 +21,7 @@ import { FormAltaGlassComponent } from 'src/app/components/forms/form-alta-glass
     SharedModule
   ],
   declarations: [ListaGlassPage,
-  FormAltaGlassComponent]
+    FormAltaGlassComponent,
+    SelectorDeModelosCompatiblesComponent, DetalleGlassComponent]
 })
-export class ListaGlassPageModule {}
+export class ListaGlassPageModule { }

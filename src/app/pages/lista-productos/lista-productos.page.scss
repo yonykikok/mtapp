@@ -30,3 +30,17 @@ ion-row:first-child {
     background-color: var(--main-bg-color) !important;
     color: white;
 }
+
+.scroll-container {
+    overflow-x: auto;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+  
+  .scroll-container ion-col {
+    display: inline-block;
+    vertical-align: top;
+    width: 200px; /* ajusta este valor según sea necesario */
+    white-space: normal;
+  }
+  

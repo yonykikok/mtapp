@@ -27,10 +27,10 @@ export class DashboardPage implements OnInit {
   }];
   modulos: { titulo: string, color: string, ruta: string, role: Roles, img?: string }[] = [
     { titulo: 'Libro diario', color: '#dc70fd', ruta: "/libro-diario", role: 'EMPLEADO', img: '/assets/svg/icons/librodiario.svg' },
-    { titulo: 'Articulos', color: '#dc70fd', ruta: "/articulos", role: 'EMPLEADO', img: '/assets/svg/icons/articulos.png' },
     { titulo: 'Reparaciones', color: 'rgb(79 132 211)', ruta: "/repuestos", role: 'CLIENTE', img: '/assets/svg/icons/btnRepuestos.png' },
     { titulo: 'Pedidos', color: '#007bff', ruta: "/lista-pedidos", role: 'EMPLEADO', img: '/assets/svg/icons/pedidos.svg' },
     { titulo: 'Historial', color: 'rgb(113 112 253)', ruta: "/historial-caja", role: 'ADMIN', img: '/assets/svg/icons/historial.svg' },
+    { titulo: 'Lista productos', color: 'rgb(103 102 102)', ruta: "/lista-productos", role: 'EMPLEADO', img: '/assets/svg/icons/articulos.png' },
     { titulo: 'Stock Modulos', color: 'rgb(103 102 102)', ruta: "/stock-modulos", role: 'EMPLEADO', img: '/assets/svg/icons/stock.svg' },
     { titulo: 'Boletas', color: 'rgb(149 157 126)', ruta: "/boletas", role: 'EMPLEADO', img: '/assets/svg/icons/boletas.svg' },
     { titulo: 'Equipos', color: '#7fbdc7', ruta: "/equipos", role: 'CLIENTE', img: '/assets/svg/icons/celulares.png' },
@@ -40,6 +40,7 @@ export class DashboardPage implements OnInit {
     { titulo: 'Trabajos tercerizados', color: 'rgb(141 205 119)', ruta: "/trabajos-tercerizados", role: 'ADMIN', img: '/assets/svg/icons/delegar.svg' },
     { titulo: 'Proveedores', color: 'rgb(149 57 126)', ruta: "/proveedores", role: 'OWNER', img: '/assets/svg/icons/proveedores.svg' },
     { titulo: 'Usuarios', color: 'rgb(149 57 126)', ruta: "/lista-de-usuarios", role: 'OWNER', img: '/assets/svg/icons/usuarios.svg' },
+    // { titulo: 'Articulos', color: '#dc70fd', ruta: "/articulos", role: 'EMPLEADO', img: '/assets/svg/icons/articulos.png' },
   ];
 
   loggedUser!: User;

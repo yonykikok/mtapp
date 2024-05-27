@@ -1,44 +1,94 @@
-<ion-card>
-  <ion-toolbar class="header">
-    <ion-text class="ion-text-center">
-      <b> Formulario producto</b>
-    </ion-text>
-  </ion-toolbar>
-  <ion-card-content>
-    <form [formGroup]="productoForm" (ngSubmit)="guardarProducto()">
-      <ion-item>
-        <ion-input labelPlacement="floating" label="Producto" formControlName="producto" type="text"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input labelPlacement="floating" label="Marca" formControlName="marca" type="text"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input labelPlacement="floating" label="Codigo" formControlName="codigo" type="text"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-input labelPlacement="floating" label="Precio" formControlName="precio" type="number"></ion-input>
-      </ion-item>
+<ion-content>
+  <ion-header>
+    <app-clasic-toolbar [ruta]="'/lista-productos'" [title]="'Producto'"></app-clasic-toolbar>
+  </ion-header>
 
-      <ion-button class="ion-margin" type="submit" expand="block" [disabled]="!productoForm.valid">Guardar</ion-button>
-    </form>
-  </ion-card-content>
-</ion-card>
-
-<ion-card>
-  <ion-toolbar class="header">
-    <ion-text class="ion-text-center">
-      <b>Colores disponibles</b>
-    </ion-text>
-  </ion-toolbar>
-  <ion-card-content>
-    <form [formGroup]="productoForm" (ngSubmit)="guardarProducto()">
-      <div style="display: flex; align-items: center;">
-        <input  style="height: 3rem;" type="color" formControlName="color">
-        <ion-item>
-          <ion-input labelPlacement="floating" label="Color" formControlName="Denominacion" type="text"></ion-input>
-        </ion-item>
+  <ion-card>
+    <ion-toolbar>
+      <ion-text class="ion-text-center">
+        <b> Selector de categoria</b>
+      </ion-text>
+    </ion-toolbar>
+    <ion-card-content class="ion-no-padding">
+      <ion-item class="ion-margin">
+        <ion-select label="Categoria del producto" labelPlacement="floating"
+          placeholder="Seleccione o cree una categoria" [(ngModel)]="categoria">>
+          <ion-select-option *ngFor="let categoria of categoriasProductos"
+            [value]="categoria">{{categoria|titlecase}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <div class="flexCenterCenter">
+        <ion-button size="small" class="ion-margin" expand="block" (click)="mostrarFormularioNuevaCategoria()">Agregar
+          nueva categoria</ion-button>
       </div>
-      <ion-button class="ion-margin" type="submit" expand="block" [disabled]="!productoForm.valid">Guardar</ion-button>
-    </form>
-  </ion-card-content>
-</ion-card>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-toolbar>
+      <ion-text class="ion-text-center">
+        <b> Formulario producto</b>
+      </ion-text>
+    </ion-toolbar>
+    <ion-card-content>
+      <form [formGroup]="productoForm" (ngSubmit)="guardarProducto()">
+        <ion-item>
+          <ion-input labelPlacement="floating" label="Producto" formControlName="producto" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input labelPlacement="floating" label="Marca" formControlName="marca" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input labelPlacement="floating" label="Codigo" formControlName="codigo" type="text"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input labelPlacement="floating" label="Costo del producto" formControlName="costo"
+            type="number"></ion-input>
+        </ion-item>
+      </form>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-toolbar class="header">
+      <ion-text class="ion-text-center">
+        <b>Colores disponibles</b>
+      </ion-text>
+    </ion-toolbar>
+    <ion-card-content>
+      <form [formGroup]="stockForm" (ngSubmit)="guardarProducto()">
+        <div style="display: flex; align-items: center;">
+          <input style="height: 3rem;" type="color" formControlName="color">
+          <ion-item>
+            <ion-input labelPlacement="floating" label="Color" formControlName="denominacionColor"
+              type="text"></ion-input>
+          </ion-item>
+        </div>
+        <ion-item>
+          <ion-input labelPlacement="floating" label="Stock" formControlName="stock" type="number"></ion-input>
+        </ion-item>
+
+        <ion-button class="ion-margin" size="small" (click)="agregarColor()"
+          [disabled]="!stockForm.valid">Agregar</ion-button>
+        <div class="flexCenterCenter" style="flex-wrap: wrap;">
+          <div class="flexColumn" style="justify-content: space-evenly; align-items: center; margin: 1rem;"
+            *ngFor="let colorSeleccionado of coloresSeleccionados">
+
+            <ion-card class="ion-no-margin flexCenterCenter"
+              [style]="{'background-color':colorSeleccionado.color,'height':'2rem','width':'2rem'}">
+            </ion-card>
+            <div class="flexCenterCenter">
+              <small> <ion-text color="primary">
+                  ({{colorSeleccionado.stock}})
+                </ion-text>
+                {{colorSeleccionado.denominacionColor}}</small>
+            </div>
+          </div>
+        </div>
+        <ion-button class="ion-margin" type="submit" expand="block"
+          [disabled]="!stockForm.valid ||!productoForm.valid||coloresSeleccionados.length<=0 ||!categoria">Guardar</ion-button>
+      </form>
+
+    </ion-card-content>
+  </ion-card>
+</ion-content>
