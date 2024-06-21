@@ -119,6 +119,7 @@ export class FormEquipoDisponibleComponent implements OnInit {
     console.log(this.equipoDisponible);
     this.dataBase.actualizar(environment.TABLAS.equipos_disponibles, this.equipoDisponible, this.equipoDisponible.id)?.then(res => {
       this.spinnerService.stopLoading();
+      this.modalController.dismiss();
     })
 
     // this.uploadImages(this.equipoDisponible.images, `equipos_disponibles/`);

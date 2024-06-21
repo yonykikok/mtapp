@@ -38,7 +38,11 @@
             <div slot="content" class="ion-text-start">
               <ul>
                 <li *ngFor="let item of deudor.items">
-                  <p>{{item.producto}}: <b>{{item.precio |currency:'USD':'symbol':'1.0-0'}}</b></p>
+                  <p style="display: flex; justify-content: space-between; padding-right: 0.5rem;">
+                    <b>{{item.producto}}: {{item.precio |currency:'USD':'symbol':'1.0-0'}}</b>
+                    <small>{{item.fecha|date}}</small>
+                  </p>
+
                 </li>
               </ul>
               <hr>
@@ -94,7 +98,8 @@
           </ion-accordion>
           <!-- fin pagos realizados -->
         </ion-accordion-group>
-        <ion-item-divider style="flex-direction: column; background: none;" class="ion-no-padding ion-margin-top ion-margin-bottom">
+        <ion-item-divider style="flex-direction: column; background: none;"
+          class="ion-no-padding ion-margin-top ion-margin-bottom">
           <ion-text class="ion-text-center" color="secondary">
             Saldo pendiente: <b class="ml-2">{{calcularRestante()|currency:'USD':'symbol':'1.0-0'}}</b>
           </ion-text>

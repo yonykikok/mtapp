@@ -7,6 +7,7 @@ import { InfoCompartidaService } from 'src/app/services/info-compartida.service'
 import { DataBaseService } from 'src/app/services/database.service';
 import { environment } from 'src/environments/environment';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-form-alta-glass',
@@ -37,6 +38,7 @@ export class FormAltaGlassComponent implements OnInit {
   constructor(private modalController: ModalController,
     private infoCompartida: InfoCompartidaService,
     private dataBaseService: DataBaseService,
+    private spinnerService: SpinnerService,
     private toastService: ToastService) { }
 
 
@@ -171,5 +173,16 @@ export class FormAltaGlassComponent implements OnInit {
     }
 
     this.glassForm.patchValue(formularioVacio);
+  }
+
+  actualizarGlass() {
+    let glassActualizado = { ...this.glassSeleccionado, ...this.glassForm.value };
+    console.log(glassActualizado)
+    this.spinnerService.showLoading("Actualizando glass");
+    this.dataBaseService.actualizar(environment.TABLAS.glasses, glassActualizado, glassActualizado.id)?.then(() => {
+      this.modalController.dismiss(glassActualizado,'actualizado');
+    }).finally(() => {
+      this.spinnerService.stopLoading();
+    })
   }
 }

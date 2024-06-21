@@ -4,6 +4,8 @@ import { Producto } from '../../nueva-funcionalidad/nueva-funcionalidad.componen
 import { DataBaseService } from 'src/app/services/database.service';
 import { environment } from 'src/environments/environment';
 import { AlertService } from 'src/app/services/alert.service';
+import { ModalController } from '@ionic/angular';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-form-impuestos-producto',
@@ -13,6 +15,7 @@ import { AlertService } from 'src/app/services/alert.service';
 export class FormImpuestosProductoComponent implements OnInit {
   impuestosGenerales: boolean = false;
   producto!: Producto;
+  precioDolarBlue: number = 0;
   impuestosForm = new FormGroup({
     iva: new FormControl(0, [Validators.required, Validators.minLength(2)]),
     margen: new FormControl(0, []),
@@ -25,7 +28,9 @@ export class FormImpuestosProductoComponent implements OnInit {
     financiamiento: number,
   };
   constructor(private database: DataBaseService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private modalController: ModalController,
+    private spinnerService: SpinnerService
   ) { }
 
   ngOnInit() {
@@ -42,13 +47,18 @@ export class FormImpuestosProductoComponent implements OnInit {
   guardarCambios() {
     let impuestosActuales: any = this.impuestosForm.value;
     if (this.impuestosGenerales) {
+      this.spinnerService.showLoading('Actualizando valores');
       this.alertService.alertConfirmacion('Confirmacion', 'Estara modificando todos los productos con estos nuevos valores, ¿Quiere continuar"', 'Si', () => {
         this.modificarTodosLosProductos();
         this.database.actualizar(environment.TABLAS.recargosProductos, impuestosActuales, this.impuestosOriginales.id)?.then(res => {
           console.log(res)
+          this.modalController.dismiss();
+        }).finally(() => {
+          this.spinnerService.stopLoading();
         });
       })
     } else {
+      this.spinnerService.showLoading('Actualizando valores');
       //aca cambiamos el impuesto del producto individual..
       let { iva, financiamiento, margen } = this.impuestosForm.value as any;
       this.producto.iva = iva;
@@ -56,6 +66,9 @@ export class FormImpuestosProductoComponent implements OnInit {
       this.producto.margen = margen;
       this.database.actualizar(environment.TABLAS.productos, this.producto, this.producto.id)?.then(res => {
         console.log(res)
+        this.modalController.dismiss();
+      }).finally(() => {
+        this.spinnerService.stopLoading();
       });
       console.log(this.producto)
 
@@ -126,7 +139,7 @@ export class FormImpuestosProductoComponent implements OnInit {
       let precioConFinanciamiento = precioConIva * (1 + financiamientoDecimal);
 
       // Asignamos el precio final al producto
-      producto['precio'] = precioConFinanciamiento;
+      producto['precio'] = (precioConFinanciamiento * this.precioDolarBlue);
     } else {
       console.log("no se puede calcular");
     }

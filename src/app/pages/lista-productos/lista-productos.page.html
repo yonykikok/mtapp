@@ -18,10 +18,12 @@
 
           <div class="flexColumn" style="align-items: center;border-right: 1px solid #cbcbcb;margin-right: 0.5rem;">
             <ion-avatar style="width: 70px; height: 70px;" *ngIf="producto.images; else sinImagen"
-              (click)="mostrarImagenCompleta($event,producto.images[0])">
+              class="flexCenterCenter" (click)="mostrarImagenCompleta($event,producto.images[0])">
+              <ion-chip *ngIf="producto.cantidad<=0" color="danger" class="no-radius"
+                style="position: absolute; background: black;"><small><b>SIN STOCK</b></small></ion-chip>
               <img [src]="producto.images[0]" />
             </ion-avatar>
-            <ion-chip style="padding: 0.2rem;" color="tertiary" class="no-radius "
+            <ion-chip *ngIf="producto.images" style="padding: 0.2rem;" color="tertiary" class="no-radius "
               (click)="actualizarImagen($event, producto)">
               <small>Cambiar imagen</small>
             </ion-chip>

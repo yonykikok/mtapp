@@ -241,7 +241,8 @@
         <!--  -->
 
 
-        <ion-button expand="full" color="success" type="submit" [disabled]="!glassForm.valid">Agregar Glass</ion-button>
+        <ion-button *ngIf="!modoModificarGlass" expand="full" color="success" type="submit" [disabled]="!glassForm.valid">Agregar Glass</ion-button>
+        <ion-button *ngIf="modoModificarGlass" expand="full" color="success" [disabled]="!glassForm.valid" (click)="actualizarGlass()">Guardar cambios</ion-button>
       </form>
     </ion-card-content>
   </ion-card>

@@ -396,7 +396,8 @@ export class ListaProductosPage implements OnInit {
       component: FormImpuestosProductoComponent,
       componentProps: {
         producto: this.productoSeleccionado,
-        impuestosGenerales
+        impuestosGenerales,
+        precioDolarBlue:this.precioDolarBlue
       }
     });
     modal.present();
