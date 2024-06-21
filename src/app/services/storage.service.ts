@@ -31,7 +31,7 @@ export class StorageService {
   //     return null;
   //   }
   // }
-  
+
   async subirImagen(ruta: string, imgBase64: any) {
     try {
       let respuesta = await this.storageRef.child(ruta).putString(imgBase64, 'data_url');
@@ -43,6 +43,16 @@ export class StorageService {
     }
   }
 
+  async obtenerReferenciaDeImagenPorUrl(publicUrl: string) {
+    try {
+      const ref = this.storageRef.storage.refFromURL(publicUrl);
+      console.log(ref)
+      return ref;
+    } catch (error) {
+      console.error('Error obtaining image reference: ', error);
+      throw error;
+    }
+  }
   async borrarImagen(ruta: string): Promise<boolean> {
     try {
       // Obtén una referencia al archivo que deseas borrar

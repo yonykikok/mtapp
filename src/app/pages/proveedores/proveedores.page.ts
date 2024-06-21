@@ -14,7 +14,7 @@ export interface Proveedor {
   nombre: string,
   direccion: string,
   telefono: string,
-  telefonoAlternativo: string,
+  telefonoAlternativo?: string | null,
   modulos: Modulo[],
 }
 interface Producto {

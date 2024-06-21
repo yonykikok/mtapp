@@ -42,9 +42,21 @@
           <ion-input labelPlacement="floating" label="Codigo" formControlName="codigo" type="text"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-input labelPlacement="floating" label="Costo del producto" formControlName="costo"
+          <ion-input labelPlacement="floating" label="Costo del producto en PESOS" formControlName="costo"
             type="number"></ion-input>
         </ion-item>
+        <div class="flexCenterCenter" style="justify-content: space-evenly;" *ngIf="funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)">
+
+          <ion-chip slot="end" *ngIf="productoForm.controls['costo'].value" class="flexColumn" color="success">
+            <ion-label>En dolares</ion-label>
+            <ion-label *ngIf="productoForm.controls['costo'].value">{{(productoForm.controls['costo'].value/precioDolarBlue)|currency:'USD'}}</ion-label>
+          </ion-chip>
+          <ion-chip slot="end" *ngIf="productoForm.controls['costo'].value" class="flexColumn" color="danger">
+            <ion-label>Final cliente</ion-label>
+            <ion-label>{{
+              (calcularPrecioConRecargos(productoForm.controls['costo'].value))|currency:'USD':'symbol':'1.0-0'}}</ion-label>
+          </ion-chip>
+        </div>
       </form>
     </ion-card-content>
   </ion-card>

@@ -1,5 +1,5 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/deudores'" [title]="'Historial de compras'"></app-clasic-toolbar>
+  <app-clasic-toolbar [ruta]="'/cuentas-clientes'" [title]="'Historial de compras'"></app-clasic-toolbar>
 </ion-header>
 
 <ion-content>
@@ -22,7 +22,7 @@
         <ion-button class="ion-margin" expand="block" slot="start" color="secondary" [disabled]="!formGroupCompra.valid"
           (click)="agregarItem()">agregar</ion-button>
         <ion-button class="ion-margin" expand="block" slot="end" color="primary"
-          (click)="confirmarGuardadoDeCompras()">Guardar compras</ion-button>
+          (click)="confirmarGuardadoDeCompras()" [disabled]="!seModificaronLosItems()">Guardar compras</ion-button>
       </ion-item-divider>
 
       <div>

@@ -1,5 +1,5 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/equipos-disponibles'" [title]="'Agregar nueva venta'"></app-clasic-toolbar>
+  <app-clasic-toolbar [ruta]="'/equipos-disponibles'" [title]="'Agregar nuevo disponible'"></app-clasic-toolbar>
 </ion-header>
 
 
@@ -68,14 +68,15 @@
   </ion-card>
 
 
-  <ion-card *ngIf="step==4">
+  <ion-card *ngIf="step==4 && !modoModificarEquipo">
     <ion-card-header>
       <ion-card-title class="ion-text-center">Fotos</ion-card-title>
     </ion-card-header>
     <ion-card-content>
 
       <form [formGroup]="step4FormGroup">
-        <app-upload-images (imagesListChangedEvent)="actualizarImagenes($event)"></app-upload-images>
+        <app-upload-images (imagesListChangedEvent)="actualizarImagenes($event)" [imagenes]="imagenes"
+          [imagenesRef]="imagenesRef"></app-upload-images>
 
         <small style="color:'red'" class="flexCenterCenter" *ngIf="step4FormGroup.controls['images'].value.length<=0">
           <ion-icon>error_outline</ion-icon>
@@ -89,7 +90,7 @@
       </form>
     </ion-card-content>
   </ion-card>
-  <ion-card *ngIf="step==5">
+  <ion-card *ngIf="step==5 || (step==4 && modoModificarEquipo)">
     <ion-card-header>
       <ion-card-title class="ion-text-center">Revisa los datos</ion-card-title>
     </ion-card-header>
@@ -126,7 +127,7 @@
       </ul>
       <div class="ion-text-center">
         <ion-button (click)="step=step-1">Atras</ion-button>
-        <ion-button (click)="procesarVenta()"
+        <ion-button (click)="modoModificarEquipo?procesarModificacion():procesarVenta()"
           [disabled]="step4FormGroup.controls['images'].value.length<=0">Finalizar</ion-button>
         <small style="color:'red'" class="flexCenterCenter" *ngIf="step4FormGroup.controls['images'].value.length<=0">
           <ion-icon>error_outline</ion-icon>

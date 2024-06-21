@@ -18,6 +18,7 @@ import { environment } from 'src/environments/environment';
 export class ServiciosPage implements OnInit {
   loggedUser!: User;
   listaServicios: Servicio[] = [];
+  listaServiciosAMostrar: Servicio[] = [];
   constructor(private alertService: AlertService,
     private modalController: ModalController,
     public funcionesUtilesService: FuncionesUtilesService,
@@ -33,7 +34,8 @@ export class ServiciosPage implements OnInit {
         let servicio: Servicio = servicioRef.payload.doc.data() as Servicio;
         servicio.id = servicioRef.payload.doc.id;
         return servicio;
-      })
+      });
+      this.listaServiciosAMostrar = [...this.listaServicios];
     })
   }
   mostrarDescripcion(servicio: any) {
@@ -117,5 +119,11 @@ export class ServiciosPage implements OnInit {
         };
       })
     })
+  }
+
+  handleInput(event: any) {
+    const query = event.target.value.toLowerCase();
+    console.log(query)
+    this.listaServiciosAMostrar = this.listaServicios.filter((d) => d.nombre.toLowerCase().indexOf(query) > -1);
   }
 }

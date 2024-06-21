@@ -5,7 +5,7 @@
 
 
   <ion-searchbar debounce="500" placeholder="Escriba marca o modelo del compatible" [(ngModel)]="textoABuscar"
-    (ionChange)="onChangeFilter()"></ion-searchbar>
+    (ionInput)="onChangeFilter()"></ion-searchbar>
 
 
   <div class="ion-text-center" *ngIf="lista.length == 0" style="height: 85vh;">
@@ -14,7 +14,7 @@
 
   <ion-list lines="full">
 
-    <ion-item color="light" *ngFor="let item of lista">
+    <ion-item color="light" *ngFor="let item of listaAMostrar">
       <ion-label class="ion-text-wrap">
         <ion-text color="secondary">
           <h2> {{item.marca|titlecase}}</h2>

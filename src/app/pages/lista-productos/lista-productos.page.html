@@ -1,5 +1,6 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Lista de productos'"></app-clasic-toolbar>
+  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Lista de productos'" [mostrarOpciones]="true"
+    (opcionesClick)="mostrarOpciones()"></app-clasic-toolbar>
 </ion-header>
 <ion-content>
   <ion-searchbar animated="true" placeholder="Ej: Cargador" (ionInput)="filtrarProductos($event)"></ion-searchbar>
@@ -16,10 +17,14 @@
         <ion-card-content style="display: flex; align-items: center;">
 
           <div class="flexColumn" style="align-items: center;border-right: 1px solid #cbcbcb;margin-right: 0.5rem;">
-            <ion-avatar class="ion-margin-end" *ngIf="producto.images; else sinImagen"
+            <ion-avatar style="width: 70px; height: 70px;" *ngIf="producto.images; else sinImagen"
               (click)="mostrarImagenCompleta($event,producto.images[0])">
               <img [src]="producto.images[0]" />
             </ion-avatar>
+            <ion-chip style="padding: 0.2rem;" color="tertiary" class="no-radius "
+              (click)="actualizarImagen($event, producto)">
+              <small>Cambiar imagen</small>
+            </ion-chip>
             <ng-template #sinImagen>
               <ion-avatar>
                 <img [src]="'https://cdn-icons-png.flaticon.com/512/10608/10608883.png'" />
@@ -44,9 +49,15 @@
             <ion-text *ngIf="producto.color"><b>Color:</b> {{producto.color}}</ion-text>
 
             <ion-text *ngIf="producto.cantidad"><b>Cantidad:</b> {{producto.cantidad}}</ion-text>
-            <ion-chip color="success" class="ion-text-center">
+            <ion-chip [color]="mostrarCosto?'danger':'success'" class="ion-text-center"
+              (click)="mostrarCostoToggle($event)">
               <ion-icon name="cash-outline"></ion-icon>
-              <ion-text *ngIf="producto.precio"><b>{{producto.precio|currency}}</b></ion-text>
+              <ion-text *ngIf="producto.precio">
+                <b *ngIf="mostrarCosto"> {{(producto.costo*precioDolarBlue)|redondearPrecio: 'pesos'|currency}}
+                  <small>
+                    ({{producto.costo|redondearPrecio: 'dolares'|currency}})</small></b>
+                <b *ngIf="!mostrarCosto">{{producto.precio|redondearPrecio: 'pesos'|currency}}</b>
+              </ion-text>
             </ion-chip>
             <!-- <ion-text *ngIf="producto.iva"><b>iva:</b> {{producto.iva}}</ion-text> -->
             <!-- <ion-text *ngIf="producto.precio_con_iva"><b>precio_con_iva:</b> {{producto.precio_con_iva}}</ion-text> -->
@@ -89,7 +100,7 @@
     </ion-item-sliding> -->
   </ion-list>
 
-  <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Actions" [buttons]="actionSheetButtons"
+  <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Acciones disponibles" [buttons]="actionSheetButtons"
     (didDismiss)="setOpen(false)"></ion-action-sheet>
 
 

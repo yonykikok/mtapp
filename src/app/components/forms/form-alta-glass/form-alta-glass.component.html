@@ -126,6 +126,22 @@
         </ion-item-divider>
         <!-- Incluye touch -->
 
+        <!-- Incluye polarizado -->
+        <ion-item-divider class="displayBlock ion-no-padding" style="background: none;">
+          <div style="display: flex; justify-content: space-between; width: 100%;">
+            <ion-text style="display: flex; align-items: center;">Incluye polarizado</ion-text>
+            <ion-radio-group formControlName="polarizado" style="display: flex;">
+              <ion-item lines="none">
+                <ion-radio slot="end" color="secondary" [value]="true"></ion-radio>
+              </ion-item>
+              <ion-item lines="none">
+                <ion-radio slot="end" color="secondary" [value]="false"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          </div>
+        </ion-item-divider>
+        <!-- Incluye polarizado -->
+
         <!-- Es curvo -->
         <ion-item-divider class="displayBlock ion-no-padding" style="background: none;">
           <div style="display: flex; justify-content: space-between; width: 100%;">

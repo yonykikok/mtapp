@@ -33,7 +33,7 @@ export class FormAltaProveedorComponent implements OnInit {
 
   mostrarConfirmacion() {
     let { nombre, direccion, telefono, telefonoAlternativo } = this.formAltaProveedor.value;
-    if (!nombre! || !direccion || !telefono || !telefonoAlternativo) return;  //TODO: informar
+    if (!nombre! || !direccion || !telefono ) return;  //TODO: informar
     let proveedor: Proveedor = {
       nombre,
       direccion,
@@ -57,7 +57,7 @@ export class FormAltaProveedorComponent implements OnInit {
       'Confirmar',
       () => {
 
-        this.spinnerService.showLoading("Generando la boleta digital...")
+        this.spinnerService.showLoading("Cargando al nuevo proveedor...")
 
         this.database.crear(environment.TABLAS.proveedores, proveedor).then(res => {
           this.toastService.simpleMessage("Exito!", "Se agrego con exito el nuevo proveedor", ToastColor.success);

@@ -29,8 +29,8 @@
       <ion-item-divider class="ion-no-padding">
         <ion-button class="ion-margin" expand="block" slot="start" color="secondary" [disabled]="!formGroupPago.valid"
           (click)="agregarPago()">agregar</ion-button>
-        <ion-button class="ion-margin" expand="block" slot="end" color="primary"
-          (click)="confirmarGuardadoDePagos()">Guardar pagos</ion-button>
+        <ion-button class="ion-margin" expand="block" slot="end" color="primary" (click)="confirmarGuardadoDePagos()"
+        [disabled]="!seModificaronLosPagos()">Guardar pagos</ion-button>
         <!-- [ion-dialog-close]="pagos" -->
       </ion-item-divider>
       <div>

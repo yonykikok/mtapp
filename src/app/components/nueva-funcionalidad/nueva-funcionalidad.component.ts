@@ -311,12 +311,15 @@ export class NuevaFuncionalidadComponent implements OnInit {
     modal.present();
   }
 
-  calcularPrecioConRecargos(costo: number) {
-    let precioConMargen = (costo * Number(`1.${this.recargos.margen}`));
-    let precioConIva = (precioConMargen * Number(`1.${this.recargos.iva}`));
-    let precioConFinanciamiento = (precioConIva * Number(`1.${this.recargos.financiamiento < 10 ? '0' + this.recargos.financiamiento : this.recargos.financiamiento}`));
+  calcularPrecioConRecargos(costo: number): number {
+    // Los recargos son números entre 1 y 100, por lo que deben ser convertidos a porcentajes
+    let precioConMargen = costo * (1 + this.recargos.margen / 100);
+    let precioConIva = precioConMargen * (1 + this.recargos.iva / 100);
+    let precioConFinanciamiento = precioConIva * (1 + this.recargos.financiamiento / 100);
+  
     return precioConFinanciamiento;
   }
+  
 
   confirmarEliminacion(producto: Producto) {
     this.alertService.alertConfirmacion('Confirmar eliminacion', '¿Quiere eliminar este producto?', 'Si', () => {

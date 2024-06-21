@@ -132,6 +132,8 @@ export interface EquipoDisponible {
   imgUrlsRef: string[];
   [key: string]: any;
   mostrarImagenes?: boolean;
+  suspendido?: boolean;
+  motivoSuspension?: string;
   tiempoTranscurrido?: number;
   especificaciones?: EquipoEspecificaciones;
 }

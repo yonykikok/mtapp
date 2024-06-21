@@ -27,6 +27,7 @@ export interface boleta {
   fechaId: string,
   historial?: boletaHistorialEstado[],
   id?: string,
+  imgUrlsRef?: string[],
   images: string[],
   modelo: string,
   nroBoleta: string,

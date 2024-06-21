@@ -1,0 +1,41 @@
+<ion-content class="ion-text-center">
+  <ion-header>
+    <app-clasic-toolbar [ruta]="'/lista-productos'" [title]="'Impuestos'"></app-clasic-toolbar>
+  </ion-header>
+  <ion-chip *ngIf="impuestosGenerales" color="danger" class="no-radius">Estas a punto de modificar los impuestos
+    generales <br> Esto afecta a
+    TODOS los productos.</ion-chip>
+  <ion-card>
+    <ion-toolbar>
+      <ion-text class="ion-text-center">
+        <b> Formulario producto</b>
+      </ion-text>
+    </ion-toolbar>
+    <ion-card-content>
+      <ion-header *ngIf="!impuestosGenerales">
+        <ion-toolbar>
+          <ion-title *ngIf="producto.precio">{{producto.precio | redondearPrecio:'pesos'
+            |currency:'USD':'symbol':'1.0-0'}}</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <form [formGroup]="impuestosForm" (ngSubmit)="guardarCambios()">
+        <ion-item>
+          <ion-input (ionChange)="impuestosGenerales?null:calcularPrecioConRecargosDelProducto(producto)"
+            labelPlacement="floating" label="IVA" formControlName="iva" type="number"></ion-input>
+          <ion-text slot="end">%</ion-text>
+        </ion-item>
+        <ion-item>
+          <ion-input (ionChange)="impuestosGenerales?null:calcularPrecioConRecargosDelProducto(producto)"
+            labelPlacement="floating" label="Margen" formControlName="margen" type="number"></ion-input>
+          <ion-text slot="end">%</ion-text>
+        </ion-item>
+        <ion-item>
+          <ion-input (ionChange)="impuestosGenerales?null:calcularPrecioConRecargosDelProducto(producto)"
+            labelPlacement="floating" label="Financiamiento" formControlName="financiamiento" type="number"></ion-input>
+          <ion-text slot="end">%</ion-text>
+        </ion-item>
+        <ion-button class="ion-margin" expand="full" type="submit">Guardar cambios</ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

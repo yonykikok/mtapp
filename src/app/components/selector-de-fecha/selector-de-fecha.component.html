@@ -1,0 +1,23 @@
+<ion-header>
+  <app-clasic-toolbar [isModal]="true" [mostrarOpciones]="false" [ruta]="'/historial-caja'"
+    [title]="'Selector de fecha'"></app-clasic-toolbar>
+</ion-header>
+<ion-content>
+  <ion-card>
+    <ion-toolbar color="secondary">
+      <ion-icon style="font-size: 2rem;" class="ion-margin" slot="start" name="calendar-outline"></ion-icon>
+      <ion-title class="ion-text-center">
+        <b> Seleccione la fecha </b>
+      </ion-title>
+      <ion-icon slot="end" class="ion-padding"> </ion-icon>
+    </ion-toolbar>
+    <ion-card-content>
+      <ion-datetime mode="md" min="2022-07-01T00:00:00" [max]="maxFechaActual" presentation="date" [preferWheel]="true"
+        locale="es-ES" [(ngModel)]="fechaSeleccionadaDate" (ionChange)="updateCalcs($event)"> </ion-datetime>
+
+      <ion-button [disabled]="!fechaSeleccionadaDate" (click)="seleccionar()" expand="block" shape="round">
+        Seleccionar esta fecha
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

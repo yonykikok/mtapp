@@ -7,6 +7,9 @@ import { SpinnerService } from 'src/app/services/spinner.service';
 import { ModalController } from '@ionic/angular';
 import { CargarCategoriaComponent } from '../../cargar-categoria/cargar-categoria.component';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
+import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
+import { Roles, User } from 'src/app/clases/user';
+import { roles } from 'src/app/services/info-compartida.service';
 
 @Component({
   selector: 'app-form-alta-producto',
@@ -17,9 +20,13 @@ export class FormAltaProductoComponent implements OnInit {
   categoria: any;
   categoriasProductos: any[] = [];
 
+
+  roles = roles;
+  loggedUser!: User;
+
   modoActualizarInformacion: boolean = false;
   productoAModificar!: Producto;
-
+  precioDolarBlue: number = 0;
 
   colorSeleccionado!: string;
   coloresSeleccionados: { stock: number, color: string, denominacionColor: string }[] = [];
@@ -42,7 +49,8 @@ export class FormAltaProductoComponent implements OnInit {
   constructor(private database: DataBaseService,
     private spinnerService: SpinnerService,
     private modalController: ModalController,
-    private toastService: ToastService
+    private toastService: ToastService,
+    public funcionesUtiles: FuncionesUtilesService
   ) { }
 
   ngOnInit() {
@@ -59,6 +67,11 @@ export class FormAltaProductoComponent implements OnInit {
     if (this.modoActualizarInformacion) {
       //@ts-ignore
       this.productoForm.patchValue(this.productoAModificar);
+
+      this.productoForm.patchValue({
+        //@ts-ignore
+        costo: (this.productoAModificar.costo * this.precioDolarBlue)
+      });
       this.coloresSeleccionados = [...this.productoAModificar.coloresDisponibles || []];
       this.categoria = this.productoAModificar.categoria
     }
@@ -77,12 +90,14 @@ export class FormAltaProductoComponent implements OnInit {
         producto: productoForm.producto,
         marca: productoForm.marca,
         codigo: productoForm.codigo ? productoForm.codigo : this.generarCodigoDebarras(),
-        costo: productoForm.costo,
+        costo: (productoForm.costo / this.precioDolarBlue),
+        financiamiento: this.recargos.financiamiento,
+        iva: this.recargos.iva,
+        margen: this.recargos.margen,
         coloresDisponibles: productoForm.coloresDisponibles,
         cantidad: productoForm.cantidad = productoForm.coloresDisponibles?.reduce((total: number, color: any) => {
           return total + color.stock;
         }, 0) || 0,
-        margen: this.recargos.margen,
       };
       console.log(producto)
 
@@ -91,6 +106,9 @@ export class FormAltaProductoComponent implements OnInit {
         this.spinnerService.showLoading('Actualizando producto');
         //@ts-ignore
         this.database.actualizar(environment.TABLAS.productos, producto, producto.id).then((res) => {
+          this.productoForm.reset();
+          this.stockForm.reset();
+          this.modalController.dismiss();
           console.log(res);
         }).catch((err) => {
           console.error(err);
@@ -117,12 +135,27 @@ export class FormAltaProductoComponent implements OnInit {
     return 'asfsafsafsafsafsa';
   }
 
-  calcularPrecioConRecargos(costo: number) {
-    let precioConMargen = (costo * Number(`1.${this.recargos.margen}`));
-    let precioConIva = (precioConMargen * Number(`1.${this.recargos.iva}`));
-    let precioConFinanciamiento = (precioConIva * Number(`1.${this.recargos.financiamiento < 10 ? '0' + this.recargos.financiamiento : this.recargos.financiamiento}`));
+  // calcularPrecioConRecargos(costo: number) {
+  //   console.log(costo)
+  //   console.log(this.recargos)
+  //   let precioConMargen = (costo * Number(`1.${this.recargos.margen}`));
+  //   let precioConIva = (precioConMargen * Number(`1.${this.recargos.iva}`));
+  //   let precioConFinanciamiento = (precioConIva * Number(`1.${this.recargos.financiamiento < 10 ? '0' + this.recargos.financiamiento : this.recargos.financiamiento}`));
+  //   return precioConFinanciamiento;
+  // }
+
+  calcularPrecioConRecargos(costo: number): number {
+    // Los recargos son números entre 1 y 100, por lo que deben ser convertidos a porcentajes
+    let precioConMargen = costo * (1 + this.recargos.margen / 100);
+    console.log('precioConMargen', precioConMargen);
+    let precioConIva = precioConMargen * (1 + this.recargos.iva / 100);
+    console.log('precioConIva', precioConIva);
+    let precioConFinanciamiento = precioConIva * (1 + this.recargos.financiamiento / 100);
+
+    console.log('precioConFinanciamiento', precioConFinanciamiento);
     return precioConFinanciamiento;
   }
+
   agregarColor() {
     let nuevoColor: any = this.stockForm.value;
     // Verificar si el color ya existe en el array

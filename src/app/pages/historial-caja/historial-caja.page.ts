@@ -7,6 +7,7 @@ import { User } from 'src/app/clases/user';
 import { BusquedaPorTextoComponent } from 'src/app/components/busqueda-por-texto/busqueda-por-texto.component';
 import { DetalleVentasDelDiaComponent } from 'src/app/components/detalle-ventas-del-dia/detalle-ventas-del-dia.component';
 import { MediosDePago } from 'src/app/components/forms/form-detalle-venta/form-detalle-venta.component';
+import { SelectorDeFechaComponent } from 'src/app/components/selector-de-fecha/selector-de-fecha.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
@@ -32,18 +33,24 @@ export class HistorialCajaPage implements OnInit {
       const diaSemana = hoy.getDay(); // 0: Domingo, 1: Lunes, ..., 6: Sábado
       const ultimoDomingo = new Date(hoy);
       ultimoDomingo.setDate(hoy.getDate() - diaSemana); // Restamos los días para llegar al domingo
-  
+
       // Si hoy es domingo, consideramos la semana anterior
       if (diaSemana === 0) {
         ultimoDomingo.setDate(ultimoDomingo.getDate() - 7);
       }
-  
+
       const manana = new Date(hoy);
       manana.setDate(hoy.getDate() + 1);
-  
+
       this.fechaSeleccionada = ultimoDomingo;
       this.fechaSeleccionadaFin = manana;
       this.mostrarIntervaloDeTiempo(false);
+    },
+  }, {
+    text: 'Agregar dia no cargado',
+    icon: 'today-outline',
+    handler: async () => {
+      this.mostarFormularioDeAltaDiaNoCargado()
     },
   }, {
     text: 'Cancelar',
@@ -195,7 +202,7 @@ export class HistorialCajaPage implements OnInit {
     console.log(this.fechaSeleccionada)
     console.log(this.fechaSeleccionadaFin)
     this.database.getLibrosDiariosEnIntervalo(this.fechaSeleccionada, this.fechaSeleccionadaFin).then(diasListRef => {
-      
+
       this.intervaloSeleccionado.dias = diasListRef?.map(diaRef => {
         let dia: LibroDiario = diaRef.data() as LibroDiario;
         dia['id'] = diaRef.id;
@@ -375,6 +382,56 @@ export class HistorialCajaPage implements OnInit {
   setOpen(isOpen: boolean) {
     this.isActionSheetOpen = isOpen;
   }
+
+  async mostarFormularioDeAltaDiaNoCargado() {
+    try {
+      const modal = await this.modalController.create({
+        component: SelectorDeFechaComponent,
+        componentProps: {
+        },
+      })
+
+      modal.onDidDismiss().then((result: any) => {
+        if (!result.data || !result.role) return;
+
+        if (result.role == 'fechaSeleccionada') {
+          const fechaOriginal = new Date(result.data.fechaSeleccionada);
+          const año = fechaOriginal.getUTCFullYear();
+          const mes = String(fechaOriginal.getUTCMonth() + 1).padStart(2, '0'); // Los meses empiezan en 0
+          const día = String(fechaOriginal.getUTCDate()).padStart(2, '0');
+
+          const fechaFormato = `${año}-${mes}-${día}`;
+          let dia = {
+            "fechaString": result.data.fechaSeleccionada,
+            "ventas": [],
+            "id": fechaFormato,
+            "montoInicial": 0,
+            "montoTotal": 0,
+            "cuadra": false,
+            "fecha": fechaOriginal.getTime()
+          }
+          let subscribe = this.database.obtenerPorId(environment.TABLAS.ingresos, dia.id).subscribe(res => {
+            subscribe.unsubscribe();
+            if (!res.payload.exists) {
+              this.database.crearConCustomId(environment.TABLAS.ingresos, dia.id, dia).then(res => {
+                this.toastService.simpleMessage('Listo', 'Se agrego el dia', ToastColor.success);
+              })
+            } else {
+              this.toastService.simpleMessage('Existente', 'El dia seleccionado ya existe', ToastColor.warning);
+            }
+          })
+          console.log(result.data)
+          console.log(dia)
+        }
+      })
+      return await modal.present();
+    } catch (err) {
+    }
+
+  }
+
+
+
 }
 
 

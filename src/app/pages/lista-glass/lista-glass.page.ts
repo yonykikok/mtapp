@@ -16,11 +16,13 @@ import { environment } from 'src/environments/environment';
 })
 export class ListaGlassPage implements OnInit {
   loggedUser!: User;
-  camposSeleccionados = ['marca', 'modelo', 'precio'];
+  camposSeleccionados = ['marca', 'modelo', 'precio','stock'];
   glasses: any[] = [];
   glassesAMostrar: any[] = [];
 
   mostrarFormGlass = true;
+
+  precioDolarBlue!: number;
 
   constructor(private dataBase: DataBaseService,
     private authService: AuthService,
@@ -32,8 +34,13 @@ export class ListaGlassPage implements OnInit {
     this.getCurrentUser();
     this.glassesAMostrar = [...this.glasses];
   }
+  ionViewWillEnter() {
+    this.dataBase.obtenerPorId(environment.TABLAS.cotizacion_dolar, 'dolarBlue').subscribe((res: any) => {
+      this.precioDolarBlue = res.payload.data().price;
+    });
+  }
   ngOnInit(): void {
-
+    
     let lista = [];
     this.dataBase.obtenerTodos(environment.TABLAS.glasses).subscribe((docsGlasssRef: any) => {
       if (docsGlasssRef.length <= 0) return;
@@ -45,6 +52,7 @@ export class ListaGlassPage implements OnInit {
       lista = this.ordenarListaPor(lista, 'modelo', 'precio');
       this.glasses = lista;
       this.glassesAMostrar = [...this.glasses];
+      console.log(this.glassesAMostrar)
     });
 
 
@@ -61,7 +69,8 @@ export class ListaGlassPage implements OnInit {
         componentProps: {
           repuesto: glass,
           ruta: '/repuestos/lista-glasses',
-          glassesCargados: [...this.glasses]
+          glassesCargados: this.funcionesUtiles.clonarObjeto(this.glasses),
+          precioDolarBlue:this.precioDolarBlue
         },
       })
 
@@ -121,7 +130,7 @@ export class ListaGlassPage implements OnInit {
       const modal = await this.modalController.create({
         component: FormAltaGlassComponent,
         componentProps: {
-          glassesCargados: this.glasses
+          glassesCargados: this.funcionesUtiles.clonarObjeto(this.glasses)
         },
       })
 

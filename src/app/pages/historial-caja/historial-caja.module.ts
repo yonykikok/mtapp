@@ -10,6 +10,7 @@ import { HistorialCajaPage } from './historial-caja.page';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { BusquedaPorTextoComponent } from 'src/app/components/busqueda-por-texto/busqueda-por-texto.component';
 import { DetalleVentasDelDiaComponent } from 'src/app/components/detalle-ventas-del-dia/detalle-ventas-del-dia.component';
+import { SelectorDeFechaComponent } from 'src/app/components/selector-de-fecha/selector-de-fecha.component';
 
 @NgModule({
   imports: [
@@ -19,6 +20,6 @@ import { DetalleVentasDelDiaComponent } from 'src/app/components/detalle-ventas-
     HistorialCajaPageRoutingModule,
     SharedModule
   ],
-  declarations: [HistorialCajaPage,BusquedaPorTextoComponent,DetalleVentasDelDiaComponent]
+  declarations: [HistorialCajaPage,BusquedaPorTextoComponent,DetalleVentasDelDiaComponent,SelectorDeFechaComponent]
 })
 export class HistorialCajaPageModule {}

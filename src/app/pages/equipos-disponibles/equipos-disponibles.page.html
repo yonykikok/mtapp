@@ -9,7 +9,8 @@
   <div *ngIf="equipos && equipos.length>0; else sinEquiposDisponibles">
 
     <ion-card *ngFor="let equipo of equipos">
-      <ion-card-content class="ion-no-padding">
+
+      <ion-card-content class="ion-no-padding" [ngClass]="equipo.suspendido?'suspendido':null">
         <div class="titleModel">
           <p style="font-size: 1.2rem;">
             <b> {{equipo.marca|titlecase}} {{equipo.modelo|uppercase}}</b>
@@ -18,7 +19,7 @@
         <div class="card-content-container">
           <div class="left-content">
             <!-- Contenido del lado izquierdo (30%) -->
-            <img style="object-fit: contain;" height="300px" [src]="equipo.images[0]" />
+            <img style="object-fit: contain;" height="300px" [src]="equipo.images[0]" (click)="mostrarImagen(equipo)"/>
             <p style="font-size: 1.3rem; 
             flex-direction: column;
             display: flex;" *ngIf="equipo.reserva&& equipo.reserva.reservado; else disponible">
@@ -27,7 +28,7 @@
                 reserva</ion-button>
             </p>
             <ng-template #disponible>
-              <p style="font-size: 1.3rem;">
+              <p style="font-size: 1.3rem;" *ngIf="!equipo.suspendido">
                 <b style="color: green;">{{equipo.precio|currency:'USD':'symbol':'1.0-0'}}</b>
               </p>
             </ng-template>
@@ -35,7 +36,8 @@
           <div class="right-content">
             <div>
 
-              <ion-icon *ngIf="funcionesUtilesService.roleMinimoNecesario(roles.EMPLEADO,loggedUser)" (click)="equipoSeleccionado=equipo" (click)="setOpen(true)" color="primary"
+              <ion-icon *ngIf="funcionesUtilesService.roleMinimoNecesario(roles.EMPLEADO,loggedUser)"
+                (click)="equipoSeleccionado=equipo" (click)="setOpen(true)" color="primary"
                 style="position: absolute; right: 0.2rem; top: 0.2rem; font-size: 1.4rem;"
                 name="ellipsis-vertical-outline"></ion-icon>
 
@@ -65,9 +67,18 @@
               <ion-button color="success" size="small" (click)="venderEquipo(equipo)">Completar venta</ion-button>
             </div>
             <ng-template #accionDisponible>
-              <div *ngIf="funcionesUtilesService.roleMinimoNecesario(roles.EMPLEADO,loggedUser)" style="position: absolute; bottom: 0; right: 0; display: flex; justify-content: space-evenly;">
-                <ion-button color="warning" size="small" (click)="mostrarAlertaReserva(equipo)">Reservar</ion-button>
-                <ion-button color="success" size="small" (click)="venderEquipo(equipo)">Vender</ion-button>
+              <div *ngIf="funcionesUtilesService.roleMinimoNecesario(roles.EMPLEADO,loggedUser)"
+                style="position: absolute; bottom: 0; right: 0; display: flex; justify-content: space-evenly;">
+                <ion-button color="warning" size="small" (click)="mostrarAlertaReserva(equipo)"
+                  *ngIf="!equipo.suspendido">Reservar</ion-button>
+                <ion-button color="success" size="small" (click)="venderEquipo(equipo)"
+                  *ngIf="!equipo.suspendido">Vender</ion-button>
+                <div *ngIf="equipo.suspendido" class="flexColumn">
+                  <ion-chip class="no-radius" >
+                    <ion-text color="danger"   (click)="mostrarMotivo(equipo)"><b>Equipo suspendido</b></ion-text>
+                    <!-- VER motivo suspencion y habilitar funcionamiento total -->
+                  </ion-chip>
+                </div>
               </div>
             </ng-template>
 
@@ -99,7 +110,8 @@
         <li><b>Imei: </b>{{equipoSeleccionado.imei}}</li>
         <li><b>Precio: </b> {{equipoSeleccionado.precio}}
           <ion-icon name="create-outline" (click)="actualizarPrecio(equipoSeleccionado) " color="warning"
-          style="font-size: 1.3rem;"></ion-icon></li>
+            style="font-size: 1.3rem;"></ion-icon>
+        </li>
         <li><b>Accesorios: </b><br>
           [ <b style="font-weight: 400;" *ngFor="let accesorio of equipoSeleccionado.accesorios; let index = index">
             <!-- para quitar la ',' del ultimo lugar -->
@@ -122,7 +134,9 @@
               alt="imagen celular">
 
 
-            <ion-fab style="position: relative; " *ngIf="funcionesUtilesService.roleMinimoNecesario(roles.EMPLEADO,loggedUser)" (click)="abrirModalImagenes();">
+            <ion-fab style="position: relative; "
+              *ngIf="funcionesUtilesService.roleMinimoNecesario(roles.EMPLEADO,loggedUser)"
+              (click)="abrirModalImagenes();">
               <ion-fab-button size="small" color="success">
                 <ion-icon name="add"></ion-icon>
               </ion-fab-button>
@@ -139,7 +153,8 @@
   </ion-card>
 
 
-  <ion-fab *ngIf="funcionesUtilesService.roleMinimoNecesario(roles.EMPLEADO,loggedUser)" slot="fixed" vertical="bottom" horizontal="end" (click)="openDialog()">
+  <ion-fab *ngIf="funcionesUtilesService.roleMinimoNecesario(roles.EMPLEADO,loggedUser)" slot="fixed" vertical="bottom"
+    horizontal="end" (click)="openDialog(false)">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

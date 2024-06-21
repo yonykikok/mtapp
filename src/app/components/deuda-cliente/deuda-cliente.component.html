@@ -32,7 +32,7 @@
 
           <!-- datos de la deuda -->
           <ion-accordion value="datosDeuda">
-            <ion-item slot="header" color="medium" >
+            <ion-item slot="header" color="medium">
               <ion-text> Datos de la deuda </ion-text>
             </ion-item>
             <div slot="content" class="ion-text-start">
@@ -45,7 +45,14 @@
               <p class="ion-text-center">
                 Total fiado: <b class="ml-2">{{calcularDeuda()|currency:'USD':'symbol':'1.0-0'}}</b>
               </p>
+              <!-- agregar producto -->
+              <ion-button slot="end" expand="block" class="ion-margin" color="warning"
+                (click)="openDialogAgregarCompra()">Agregar producto
+                <ion-icon slot="end" name="cart-outline"></ion-icon>
+              </ion-button>
+              <!-- agregar producto -->
             </div>
+
           </ion-accordion>
           <!-- fin datos de la deuda -->
 
@@ -67,18 +74,31 @@
               <p class="ion-text-center">
                 Total pagado: <b class="ml-2">{{calcularPagos()|currency:'USD':'symbol':'1.0-0'}}</b>
               </p>
+              <!-- btn agregar pago -->
+              <ion-button slot="start" expand="block" class="ion-margin" color="primary" (click)="openDialog()">
+                Agregar pago <ion-icon slot="end" name="cash-outline"></ion-icon>
+              </ion-button>
+              <!-- btn agregar pago -->
             </div>
             <ng-template #SinPagosRealizados>
-              <h4 slot="content" style="color: rgb(247, 89, 89);">Aun no a realizado pagos.</h4>
+              <div slot="content">
+                <h4 style="color: rgb(247, 89, 89);">Aun no a realizado pagos.</h4>
+                <!-- btn agregar pago -->
+                <ion-button slot="start" expand="block" class="ion-margin" color="primary" (click)="openDialog()">
+                  Agregar pago <ion-icon slot="end" name="cash-outline"></ion-icon>
+                </ion-button>
+                <!-- btn agregar pago -->
+              </div>
             </ng-template>
+
           </ion-accordion>
           <!-- fin pagos realizados -->
         </ion-accordion-group>
-        <ion-item-divider style="flex-direction: column;" class="ion-no-padding ion-margin-top ion-margin-bottom">
-          <p class="ion-text-center">
-            Resta pagar: <b class="ml-2">{{calcularRestante()|currency:'USD':'symbol':'1.0-0'}}</b>
-          </p>
-          <div>
+        <ion-item-divider style="flex-direction: column; background: none;" class="ion-no-padding ion-margin-top ion-margin-bottom">
+          <ion-text class="ion-text-center" color="secondary">
+            Saldo pendiente: <b class="ml-2">{{calcularRestante()|currency:'USD':'symbol':'1.0-0'}}</b>
+          </ion-text>
+          <!-- <div>
             <ion-button slot="start" expand="block" class="ion-margin" color="primary" (click)="openDialog()">Agregar
               pago
               <ion-icon slot="end" name="cash-outline"></ion-icon>
@@ -87,7 +107,7 @@
               (click)="openDialogAgregarCompra()">Agregar compra
               <ion-icon slot="end" name="cart-outline"></ion-icon>
             </ion-button>
-          </div>
+          </div> -->
         </ion-item-divider>
       </ion-card>
 

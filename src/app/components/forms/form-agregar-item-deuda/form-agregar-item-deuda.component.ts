@@ -14,6 +14,7 @@ export class FormAgregarItemDeudaComponent implements OnInit {
 
   user!: User;
   items: any[] = [];
+  itemsOriginal: any[] = [];
   formGroupCompra = new FormGroup({
     producto: new FormControl('', Validators.required),
     precio: new FormControl('', Validators.required),
@@ -30,6 +31,13 @@ export class FormAgregarItemDeudaComponent implements OnInit {
     // this.user=data.user;
   }
   ngOnInit(): void {
+    this.itemsOriginal = this.funcionesUtiles.clonarObjeto(this.items);
+  }
+  seModificaronLosItems() {
+    if (JSON.stringify(this.itemsOriginal) != JSON.stringify(this.items)){
+      return true
+    }
+    return false
   }
   agregarItem() {
     let item: any = this.formGroupCompra.value;

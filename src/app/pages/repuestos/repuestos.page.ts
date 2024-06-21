@@ -16,6 +16,7 @@ export class RepuestosPage implements OnInit {
     { titulo: 'Modulos', color: '#28a745', ruta: "/repuestos/lista-modulos", role: 'CLIENTE', img: '/assets/svg/icons/modulos.png' },
     { titulo: 'Baterias', color: '#ffc107', ruta: "/repuestos/lista-baterias", role: 'CLIENTE', img: '/assets/svg/icons/baterias.png' },
     { titulo: 'Flex de carga', color: '#d34fb2', ruta: "/repuestos/lista-flex-de-carga", role: 'CLIENTE', img: '/assets/svg/icons/placaDeCarga.png' },
+    { titulo: 'Glass + Oca', color: 'rgb(64 108 242)', ruta: "/repuestos/lista-glasses", role: 'EMPLEADO', img: 'https://i.ebayimg.com/images/g/1AsAAOSw0tBk0~dZ/s-l1600.png' },
 
 
 

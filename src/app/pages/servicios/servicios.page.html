@@ -3,13 +3,15 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-searchbar show-clear-button="focus" placeholder="J7 prime" (ionInput)="handleInput($event)"></ion-searchbar>
+
   <ion-grid class="ion-text-center">
     <ion-row class="ion_item">
       <ion-col><b>Trabajo</b></ion-col>
       <!-- <ion-col><b>Tipo</b></ion-col> -->
       <ion-col><b>Precio</b></ion-col>
     </ion-row>
-    <ion-row *ngFor="let servicio of listaServicios" (click)="mostrarDescripcion(servicio)">
+    <ion-row *ngFor="let servicio of listaServiciosAMostrar" (click)="mostrarDescripcion(servicio)">
 
       <ion-item-sliding>
         <ion-item-options side="start" *ngIf="funcionesUtilesService.roleMinimoNecesario('ST',loggedUser)">

@@ -19,13 +19,14 @@ export class Glass {
     marco: boolean;
     oca: boolean;
     touch: boolean;
+    polarizado: boolean;
     curvo: boolean;
     stock: number;
     compatibilidad: any[];
     ubicacionRepuesto: Ubicaciones;
     estado: EstadoRepuesto;
 
-    constructor(marca: string, modelo: string, precio: number, marco: boolean, oca: boolean, touch: boolean, curvo: boolean, stock: number,
+    constructor(marca: string, modelo: string, precio: number, marco: boolean, oca: boolean, touch: boolean, polarizado: boolean, curvo: boolean, stock: number,
         compatibilidad: string[], ubicacionRepuesto: Ubicaciones, estado: EstadoRepuesto) {
         this.marca = marca;
         this.modelo = modelo;
@@ -33,6 +34,7 @@ export class Glass {
         this.marco = marco;
         this.oca = oca;
         this.touch = touch;
+        this.polarizado = polarizado;
         this.curvo = curvo;
         this.stock = stock;
         this.compatibilidad = compatibilidad;

@@ -16,6 +16,9 @@ import { VisualizadorDeImagenComponent } from 'src/app/components/views/visualiz
 import { BarcodeScannerComponent } from 'src/app/components/barcode-scanner/barcode-scanner.component';
 import { FormAltaProductoComponent } from 'src/app/components/forms/form-alta-producto/form-alta-producto.component';
 import { CambiarStockProductoComponent } from 'src/app/components/cambiar-stock-producto/cambiar-stock-producto.component';
+import { FormImpuestosProductoComponent } from 'src/app/components/forms/form-impuestos-producto/form-impuestos-producto.component';
+import { roles } from 'src/app/services/info-compartida.service';
+import { FormAumentoPorcentualComponent } from 'src/app/components/forms/form-aumento-porcentual/form-aumento-porcentual.component';
 
 export interface Producto {
   id: string,//sera puesto por firebase
@@ -33,24 +36,48 @@ export interface Producto {
   financiamiento?: number,
   precio?: number;
 }
+
+
 @Component({
   selector: 'app-lista-productos',
   templateUrl: './lista-productos.page.html',
   styleUrls: ['./lista-productos.page.scss'],
 })
 export class ListaProductosPage implements OnInit {
- recargos: any;
+  mostrarCosto: boolean = false;
+  recargos!: {
+    financiamiento: number,
+    iva: number,
+    margen: number
+  };
+  precioDolarBlue: number = 0;
   productos: any[] = [];
   camposSeleccionados = ['producto', 'codigo', 'cantidad', 'precio'];
   productosAMostrar: any[] = [];
   loggedUser!: User;
   isActionSheetOpen = false;
   productoSeleccionado!: Producto;
-  actionSheetButtons: any[] = [{
+  actionSheetButtons: any[] = [];
+  actionSheetButtonsOrigial: any[] = [{
+    text: 'Editar impuestos',
+    icon: 'calculator-outline',
+    handler: async () => {
+
+      if (this.funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)) {
+        this.mostrarFormularioImpuestos(false);
+      } else {
+        alert("No tienes permisos para esta acción.")
+      }
+    },
+  }, {
     text: 'Editar información',
     icon: 'create-outline',
     handler: async () => {
-      this.mostrarFormulario(true);
+      if (this.funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)) {
+        this.mostrarFormulario(true);
+      } else {
+        alert("No tienes permisos para esta acción.")
+      }
     },
   }, {
     text: 'Cambiar Stock',
@@ -83,6 +110,12 @@ export class ListaProductosPage implements OnInit {
       this.loggedUser = res;
     })
   }
+  mostrarCostoToggle(e: Event) {
+    e.stopPropagation();
+    if (this.funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)) {
+      this.mostrarCosto = !this.mostrarCosto;
+    }
+  }
   async mostrarImagenCompleta(event: Event, imagen: string) {
     event.stopPropagation();
     try {
@@ -91,7 +124,8 @@ export class ListaProductosPage implements OnInit {
         componentProps: {
           imagen,
           isModal: true,
-          ruta: 'dashboard'
+          ruta: 'lista-productos',
+          mostrarOpcionesIcon: false
         },
       })
 
@@ -104,31 +138,38 @@ export class ListaProductosPage implements OnInit {
     } catch (err) {
     }
   }
-  ngOnInit() {
+
+  ionViewWillEnter() {
+
+    this.database.obtenerPorId(environment.TABLAS.cotizacion_dolar, 'dolarBlue').subscribe((res: any) => {
+      this.precioDolarBlue = res.payload.data().price;
+    });
+
+    this.actionSheetButtons = [...this.actionSheetButtonsOrigial];
     this.database.obtenerPorId(environment.TABLAS.recargosProductos, 'recargos').subscribe((res: any) => {
       console.log(res.payload.data())
       this.recargos = res.payload.data();
     });
 
-    // this.database.crearConCustomId(environment.TABLAS.recargosProductos, 'recargos', {
-    //   iva: 21,
-    //   margen: 80,
-    //   financiamiento: 8,
-    // })
     this.database.obtenerTodos(environment.TABLAS.productos).subscribe((docsProductosRef: any) => {
+      // subs.unsubscribe();
       if (docsProductosRef.length <= 0) return;
       let lista = docsProductosRef.map((productoRef: any) => {
-        let producto = productoRef.payload.doc.data();
+        let producto: Producto = productoRef.payload.doc.data();
         producto['id'] = productoRef.payload.doc.id;
-        producto['precio'] = this.calcularPrecioConRecargos(producto.costo);
+        producto.precio = (this.calcularPrecioConRecargos(producto) * this.precioDolarBlue);
         return producto;
       });
       lista = this.ordenarListaPor(lista, 'producto', 'marca');
       this.productos = lista;
       this.productosAMostrar = [...this.productos];
-      console.log(this.productos)
+      console.log(lista)
+      // lista.forEach((element:any) => {
+      //     this.database.actualizar(environment.TABLAS.productos,element,element.id)?.then(res=>{
+      //       console.log("listo");
+      //     })
+      // });
     });
-
 
 
 
@@ -139,6 +180,8 @@ export class ListaProductosPage implements OnInit {
         }
       });
     });
+
+
     // productoseas.forEach((element, i) => {
     //   this.database.crear(environment.TABLAS.productos, element).then(res => {
     //     console.log(i)
@@ -151,6 +194,10 @@ export class ListaProductosPage implements OnInit {
     //   return produ;
     // })
     // console.log(productos)
+  }
+
+  ngOnInit() {
+
   }
 
 
@@ -193,8 +240,39 @@ export class ListaProductosPage implements OnInit {
   setOpen(isOpen: boolean) {
     this.isActionSheetOpen = isOpen;
   }
-  mostrarOpciones(producto: Producto) {
-    this.productoSeleccionado = producto;
+  mostrarOpciones(producto?: Producto) {
+    if (producto) {
+      this.productoSeleccionado = producto;
+      this.actionSheetButtons = [...this.actionSheetButtonsOrigial];
+    } else {
+      this.actionSheetButtons = [{
+        text: 'Editar impuestos generales',
+        icon: 'calculator-outline',
+        handler: async () => {
+
+          if (this.funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)) {
+            this.mostrarFormularioImpuestos(true);
+          } else {
+            alert("No tienes permisos para esta acción.")
+          }
+        },
+      }, {
+        text: 'Aumentar el costo (%) general ',
+        icon: 'stats-chart-outline',
+        handler: async () => {
+          if (this.funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)) {
+            this.mostrarFormularioAumentoPorcentual();
+          } else {
+            alert("No tienes permisos para esta acción.")
+          }
+        },
+      }, {
+        text: 'Cancelar',
+        role: 'cancel',
+        icon: 'close',
+        handler: () => { },
+      }];
+    }
     this.setOpen(true);
   }
 
@@ -305,18 +383,112 @@ export class ListaProductosPage implements OnInit {
       component: FormAltaProductoComponent,
       componentProps: {
         modoActualizarInformacion,
-        productoAModificar: this.productoSeleccionado
+        productoAModificar: this.productoSeleccionado,
+        precioDolarBlue: this.precioDolarBlue,
+        loggedUser:this.loggedUser
       }
     });
     modal.present();
   }
 
-  calcularPrecioConRecargos(costo: number) {
+  async mostrarFormularioImpuestos(impuestosGenerales: boolean) {
+    let modal = await this.modalController.create({
+      component: FormImpuestosProductoComponent,
+      componentProps: {
+        producto: this.productoSeleccionado,
+        impuestosGenerales
+      }
+    });
+    modal.present();
+  }
+  async mostrarFormularioAumentoPorcentual() {
+    let modal = await this.modalController.create({
+      component: FormAumentoPorcentualComponent,
+      componentProps: {
+        productos: this.productos
+      }
+    });
+
+    modal.onDidDismiss().then(result => {
+      if (result.data && result.role == 'aplicarAumento') {
+        this.productos.forEach(prod => {
+          let porcentajeDeAumento: number = result.data;
+          // Convertimos el porcentaje de aumento a un valor decimal
+          if (porcentajeDeAumento && typeof porcentajeDeAumento == 'number') {
+            let aumentoDecimal = porcentajeDeAumento / 100;
+            // Calculamos el nuevo costo aplicando el aumento
+            prod.costo = prod.costo * (1 + aumentoDecimal);
+            prod.precio = this.calcularPrecioConRecargos(prod);
+            this.database.actualizar(environment.TABLAS.productos, prod, prod.id)?.then(res => {
+              console.log(res)
+            }).catch(err => {
+              console.error(err)
+            });
+          }
+        });
+
+      }
+
+    })
+    modal.present();
+  }
+
+  calcularPrecioConRecargos2(costo: number) {
     let precioConMargen = (costo * Number(`1.${this.recargos.margen}`));
     let precioConIva = (precioConMargen * Number(`1.${this.recargos.iva}`));
     let precioConFinanciamiento = (precioConIva * Number(`1.${this.recargos.financiamiento < 10 ? '0' + this.recargos.financiamiento : this.recargos.financiamiento}`));
     return precioConFinanciamiento;
   }
+
+  calcularPrecioConRecargos(producto: Producto) {
+    // Verificamos que los recargos generales estén definidos y sean números válidos
+    if (this.recargos.financiamiento !== undefined && this.recargos.iva !== undefined && this.recargos.margen !== undefined &&
+      !isNaN(Number(this.recargos.financiamiento)) && !isNaN(Number(this.recargos.iva)) && !isNaN(Number(this.recargos.margen))
+    ) {
+      // Convertimos los porcentajes a fracciones decimales, utilizando valores del producto si están disponibles
+      let margenDecimal = Number(producto.margen !== undefined ? producto.margen : this.recargos.margen) / 100;
+      let ivaDecimal = Number(producto.iva !== undefined ? producto.iva : this.recargos.iva) / 100;
+      let financiamientoDecimal = Number(producto.financiamiento !== undefined ? producto.financiamiento : this.recargos.financiamiento) / 100;
+
+      // Aplicamos los recargos en secuencia
+      let precioConMargen = producto.costo * (1 + margenDecimal);
+      let precioConIva = precioConMargen * (1 + ivaDecimal);
+      let precioConFinanciamiento = precioConIva * (1 + financiamientoDecimal);
+
+      // Devolvemos el precio final con todos los recargos aplicados
+      return precioConFinanciamiento;
+    } else {
+      console.log("No se puede calcular el precio: recargos inválidos o no definidos.");
+      return 0;
+    }
+  }
+
+  calcularCostoDesdePrecioFinal(precioFinal: number, recargos: { financiamiento: number, iva: number, margen: number }) {
+    if (recargos.financiamiento !== undefined && recargos.iva !== undefined && recargos.margen !== undefined &&
+      !isNaN(Number(recargos.financiamiento)) && !isNaN(Number(recargos.iva)) && !isNaN(Number(recargos.margen))
+    ) {
+      // Convertimos los porcentajes a fracciones decimales
+      let margenDecimal = Number(recargos.margen) / 100;
+      let ivaDecimal = Number(recargos.iva) / 100;
+      let financiamientoDecimal = Number(recargos.financiamiento) / 100;
+
+      // 1. Eliminamos el recargo por financiamiento
+      let precioConIva = precioFinal / (1 + financiamientoDecimal);
+
+      // 2. Eliminamos el recargo por IVA
+      let precioConMargen = precioConIva / (1 + ivaDecimal);
+
+      // 3. Eliminamos el recargo por margen
+      let costo = precioConMargen / (1 + margenDecimal);
+
+      // Devolvemos el costo base del producto
+      return costo;
+    } else {
+      console.log("No se puede calcular el costo: recargos inválidos o no definidos.");
+      return 0;
+    }
+  }
+
 
   confirmarEliminacion(producto: Producto) {
     this.alertService.alertConfirmacion('Confirmar eliminacion', '¿Quiere eliminar este producto?', 'Si', () => {
@@ -353,4 +525,74 @@ export class ListaProductosPage implements OnInit {
     modal.present();
 
   }
+
+  actualizarImagen(event: Event, producto: any) {
+    event.stopPropagation();
+    const MAX_MEGABYTE = 0.5;
+    const imgName = `${Date.now()}`;
+
+    // Subir y comprimir la nueva imagen
+    this.imageCompress
+      .uploadAndGetImageWithMaxSize(MAX_MEGABYTE)
+      .then(
+        (result: string) => {
+          // Primero eliminar la imagen existente
+          this.storageService.borrarImagen(producto.imgUrlsRef[0]).then(() => {
+            // Subir la nueva imagen
+            this.storageService.subirImagen(`productos/${imgName}`, result).then((urlImagen) => {
+              // Actualizar las referencias en el producto
+              const index = producto.imgUrlsRef.indexOf(producto.imgUrlsRef[0]);
+              if (index !== -1) {
+                producto.imgUrlsRef[index] = `productos/${imgName}`;
+                producto.images[index] = urlImagen;
+              } else {
+                producto.imgUrlsRef.push(`productos/${imgName}`);
+                producto.images.push(urlImagen);
+              }
+
+              // Actualizar el producto en la base de datos
+              if (producto.id) {
+                this.database.actualizar(environment.TABLAS.productos, producto, producto.id)?.then((res: any) => {
+                  this.toastService.simpleMessage('Exito', 'Imagen actualizada correctamente', ToastColor.success);
+                }).catch(err => {
+                  this.toastService.simpleMessage('Error', 'No se pudo actualizar la imagen', ToastColor.danger);
+                });
+              }
+            }).catch(err => {
+              this.toastService.simpleMessage('Error', 'No se pudo subir la nueva imagen', ToastColor.danger);
+            });
+          }).catch((err: Error) => {
+            this.toastService.simpleMessage('Error', 'No se pudo eliminar la imagen existente', ToastColor.danger);
+          });
+        },
+        (result: string) => {
+          // Subir sin comprimir si falla la compresión
+          this.storageService.borrarImagen(producto.imgUrlsRef[0]).then(() => {
+            this.storageService.subirImagen(`productos/${imgName}`, result).then((urlImagen) => {
+              const index = producto.imgUrlsRef.indexOf(producto.imgUrlsRef[0]);
+              if (index !== -1) {
+                producto.imgUrlsRef[index] = `productos/${imgName}`;
+                producto.images[index] = urlImagen;
+              } else {
+                producto.imgUrlsRef.push(`productos/${imgName}`);
+                producto.images.push(urlImagen);
+              }
+
+              if (producto.id) {
+                this.database.actualizar(environment.TABLAS.productos, producto, producto.id)?.then((res: any) => {
+                  this.toastService.simpleMessage('Exito', 'Imagen actualizada correctamente', ToastColor.success);
+                }).catch(err => {
+                  this.toastService.simpleMessage('Error', 'No se pudo actualizar la imagen', ToastColor.danger);
+                });
+              }
+            }).catch(err => {
+              this.toastService.simpleMessage('Error', 'No se pudo subir la nueva imagen', ToastColor.danger);
+            });
+          }).catch(err => {
+            this.toastService.simpleMessage('Error', 'No se pudo eliminar la imagen existente', ToastColor.danger);
+          });
+        }
+      );
+  }
+
 }

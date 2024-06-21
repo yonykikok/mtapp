@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { DataBaseService } from 'src/app/services/database.service';
+import { EquipoDisponible } from 'src/app/services/info-compartida.service';
 import { SpinnerService } from 'src/app/services/spinner.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
@@ -13,14 +14,15 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./form-equipo-disponible.component.scss'],
 })
 export class FormEquipoDisponibleComponent implements OnInit {
-
+  modoModificarEquipo: boolean = false;
   step = 2;
-  imagenes: any[] = [];
-  equipoDisponible: any;
+  imagenes: string[] = [];
+  imagenesRef: string[] = [];
+  equipoDisponible!: EquipoDisponible;
   mostrarSpinner = false;
 
   step2FormGroup: FormGroup = new FormGroup({
-    detalles: new FormControl('', []),
+    detalles: new FormControl(''),
     marca: new FormControl('', [Validators.required]),
     modelo: new FormControl('', [Validators.required]),
     imei: new FormControl('', [Validators.required, Validators.minLength(15), Validators.maxLength(17)]),
@@ -41,9 +43,19 @@ export class FormEquipoDisponibleComponent implements OnInit {
     private spinnerService: SpinnerService
   ) { }
 
+  ionViewWillEnter() {
+    console.log(this.equipoDisponible)
+    if (this.modoModificarEquipo) {
+      this.step2FormGroup.patchValue(this.equipoDisponible);
+      this.step3FormGroup.patchValue(this.equipoDisponible);
+      this.step4FormGroup.patchValue(this.equipoDisponible);
+      this.imagenes = this.equipoDisponible.images;
+      this.imagenesRef = this.equipoDisponible.imgUrlsRef;
+    }
+  }
   ngOnInit(): void {
     this.step2FormGroup = this._formBuilder.group({
-    detalles: ['', Validators.required],
+      detalles: ['', Validators.required],
       marca: ['', Validators.required],
       modelo: ['', Validators.required],
       imei: ['', [Validators.required, Validators.minLength(15), Validators.maxLength(17)]],
@@ -90,13 +102,34 @@ export class FormEquipoDisponibleComponent implements OnInit {
       ...this.step4FormGroup.value,
       fecha: Date.now()
     }
+    console.log(this.equipoDisponible.images)
     this.uploadImages(this.equipoDisponible.images, `equipos_disponibles/`);
 
 
   }
+
+  procesarModificacion() {
+    this.spinnerService.showLoading('Modificando...');
+    this.equipoDisponible = {
+      ...this.equipoDisponible,
+      ...this.step2FormGroup.value,
+      ...this.step3FormGroup.value,
+      ...this.step4FormGroup.value,
+    }
+    console.log(this.equipoDisponible);
+    this.dataBase.actualizar(environment.TABLAS.equipos_disponibles, this.equipoDisponible, this.equipoDisponible.id)?.then(res => {
+      this.spinnerService.stopLoading();
+    })
+
+    // this.uploadImages(this.equipoDisponible.images, `equipos_disponibles/`);
+
+  }
+
+
   cerrarFormulario() {
     this.modalController.dismiss();
   }
+
   uploadImages(images: any[], imgPath: string) {
     this.spinnerService.showLoading('Subiendo equipo');
     let imgUrls: string[] = [];

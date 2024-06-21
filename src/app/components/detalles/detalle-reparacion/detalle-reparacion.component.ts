@@ -24,7 +24,6 @@ export class DetalleReparacionComponent implements OnInit {
   mostrarHistorial = false;
   modoEditar = false;
   reparacion!: boleta;
-  mostrarImgBoleta = false;
   estadosPosibles: any[] = [];
   estadoSeleccionado?: any;
   loggedUser!: User;
@@ -387,7 +386,98 @@ export class DetalleReparacionComponent implements OnInit {
 
   }
 
-  mostrarImagen(img:string) {
-    this.funcionesUtiles.mostrarImagenCompleta(img);
+  mostrarImagen(img: string) {
+    this.funcionesUtiles.mostrarImagenCompleta(img, this.actualizarImagen.bind(this, this.reparacion));
+  }
+
+  async actualizarImagen(boleta: any, event?: Event) {///NO IMPLEMENTADO AUN ACA
+    console.log(boleta);
+    if (event) {
+      event.stopPropagation();
+    }
+    let ref = await this.storageService.obtenerReferenciaDeImagenPorUrl(boleta.images[0]);
+    console.log(ref.fullPath)
+    // return;
+    const MAX_MEGABYTE = 0.5;
+    let hoy = new Date(Date.now());
+
+    const months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+    let month = months[hoy.getMonth()];
+    let year = hoy.getFullYear();
+
+    const imgName = ref.fullPath ? ref.fullPath : `boletas/${month}${year}-${boleta.nroBoleta}-${boleta.dniCliente}`;
+    if (!boleta.imgUrlsRef) {
+      boleta.imgUrlsRef = [imgName]
+    }
+
+    console.log(boleta);
+    // Subir y comprimir la nueva imagen
+    this.imageCompress
+      .uploadAndGetImageWithMaxSize(MAX_MEGABYTE)
+      .then(
+        (result: string) => {
+          this.spinnerService.showLoading('Cargando imagen');
+          // Primero eliminar la imagen existente
+          this.storageService.borrarImagen(boleta.imgUrlsRef[0]).then(() => {
+            // Subir la nueva imagen
+            this.storageService.subirImagen(`boletas/${imgName}`, result).then((urlImagen) => {
+              // Actualizar las referencias en el boleta
+              const index = boleta.imgUrlsRef.indexOf(boleta.imgUrlsRef[0]);
+              if (index !== -1) {
+                boleta.imgUrlsRef[index] = `boletas/${imgName}`;
+                boleta.images[index] = urlImagen;
+              } else {
+                boleta.imgUrlsRef.push(`boletas/${imgName}`);
+                boleta.images.push(urlImagen);
+              }
+
+              // Actualizar el boleta en la base de datos
+              if (boleta.id) {
+                this.database.actualizar(environment.TABLAS.boletasReparacion, boleta, boleta.id)?.then((res: any) => {
+                  this.toastService.simpleMessage('Exito', 'Imagen actualizada correctamente', ToastColor.success);
+                }).catch(err => {
+                  this.toastService.simpleMessage('Error', 'No se pudo actualizar la imagen', ToastColor.danger);
+                }).finally(() => {
+                  this.spinnerService.stopLoading();
+                });
+              }
+            }).catch(err => {
+              this.toastService.simpleMessage('Error', 'No se pudo subir la nueva imagen', ToastColor.danger);
+            });
+          }).catch((err: Error) => {
+            this.toastService.simpleMessage('Error', 'No se pudo eliminar la imagen existente', ToastColor.danger);
+          });
+        },
+        (result: string) => {
+          this.spinnerService.showLoading('Cargando imagen');
+          // Subir sin comprimir si falla la compresión
+          this.storageService.borrarImagen(boleta.imgUrlsRef[0]).then(() => {
+            this.storageService.subirImagen(`boletas/${imgName}`, result).then((urlImagen) => {
+              const index = boleta.imgUrlsRef.indexOf(boleta.imgUrlsRef[0]);
+              if (index !== -1) {
+                boleta.imgUrlsRef[index] = `boletas/${imgName}`;
+                boleta.images[index] = urlImagen;
+              } else {
+                boleta.imgUrlsRef.push(`boletas/${imgName}`);
+                boleta.images.push(urlImagen);
+              }
+
+              if (boleta.id) {
+                this.database.actualizar(environment.TABLAS.boletasReparacion, boleta, boleta.id)?.then((res: any) => {
+                  this.toastService.simpleMessage('Exito', 'Imagen actualizada correctamente', ToastColor.success);
+                }).catch(err => {
+                  this.toastService.simpleMessage('Error', 'No se pudo actualizar la imagen', ToastColor.danger);
+                }).finally(() => {
+                  this.spinnerService.stopLoading();
+                });
+              }
+            }).catch(err => {
+              this.toastService.simpleMessage('Error', 'No se pudo subir la nueva imagen', ToastColor.danger);
+            });
+          }).catch(err => {
+            this.toastService.simpleMessage('Error', 'No se pudo eliminar la imagen existente', ToastColor.danger);
+          });
+        }
+      );
   }
 }

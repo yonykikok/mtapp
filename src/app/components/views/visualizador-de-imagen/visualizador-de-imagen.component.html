@@ -1,11 +1,32 @@
 <ion-header>
-  <app-clasic-toolbar [isModal]="isModal" (opcionesClick)="mostrarOpciones()" [mostrarOpciones]="true" [ruta]="ruta"
-    [title]="'Imagen completa'"></app-clasic-toolbar>
+  <app-clasic-toolbar [isModal]="isModal" (opcionesClick)="mostrarOpciones()" [mostrarOpciones]="mostrarOpcionesIcon"
+    [ruta]="ruta" [title]="'Imagen completa'"></app-clasic-toolbar>
 </ion-header>
 
 
 <ion-content>
   <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Actions" [buttons]="actionSheetButtons"
-  (didDismiss)="setOpen(false)"></ion-action-sheet>
-  <ion-img [src]="imagen" alt="equipo vendido"></ion-img>
+    (didDismiss)="setOpen(false)"></ion-action-sheet>
+  <!-- <ion-img *ngIf="!permitirGirarImagen" [src]="imagen" alt="equipo vendido"></ion-img> -->
+
+  <div *ngIf="permitirGirarImagen" style="width: 100% ; " class="flexCenterCenter">
+    <ion-chip color="primary">
+      <ion-icon style="font-size: 1.5rem;" class="ion-margin-start ion-margin-end" (click)="girarImagen(-90)"
+        name="arrow-undo-outline"></ion-icon>
+    </ion-chip>
+    <ion-chip color="primary">
+      <ion-icon style="font-size: 1.5rem;" class="ion-margin-start ion-margin-end" (click)="girarImagen(90)"
+        name="arrow-redo-outline"></ion-icon>
+    </ion-chip>
+  </div>
+  <ion-img [ngStyle]="{ 'transform': 'rotate(' + imagenGradosRotada + 'deg)' }" class="ion-margin" [src]="imagen"
+    alt="equipo vendido"></ion-img>
+
+  <div class="flexCenterCenter" *ngIf="imagenesArray && imagenesArray.length>1">
+    <ion-chip color="tertiary"  (click)="volver()"><ion-icon style="font-size: 1.5rem;" class="ion-margin-start ion-margin-end" name="chevron-back-circle-outline"></ion-icon></ion-chip>
+    <ion-chip color="tertiary"  (click)="siguiente()"><ion-icon style="font-size: 1.5rem;" class="ion-margin-start ion-margin-end" name="chevron-forward-circle-outline"></ion-icon></ion-chip>
+  </div>
+
+
+
 </ion-content>

@@ -14,6 +14,7 @@ import { User } from 'src/app/clases/user';
 export class FormAgregarPagoDeudaComponent implements OnInit {
   tipoDePagoSeleccionado: any;
   pagos: any[] = [];
+  pagosOriginal: any[] = [];
   formGroupPago = new FormGroup({
     concepto: new FormControl('', Validators.required),
     monto: new FormControl('', Validators.required),
@@ -31,8 +32,14 @@ export class FormAgregarPagoDeudaComponent implements OnInit {
     // this.user = data.user;
   }
   ngOnInit(): void {
+    this.pagosOriginal = this.funcionesUtiles.clonarObjeto(this.pagos);
   }
-
+  seModificaronLosPagos() {
+    if (JSON.stringify(this.pagosOriginal) != JSON.stringify(this.pagos)){
+      return true
+    }
+    return false
+  }
   cargarTipoDePago(e: any) {
     if (this.tipoDePagoSeleccionado != 'otro') {
       this.formGroupPago.controls.concepto.setValue(e.target.value);

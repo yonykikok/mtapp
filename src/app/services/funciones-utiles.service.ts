@@ -21,23 +21,6 @@ export class FuncionesUtilesService {
 
   }
 
-  // async obtenerCotizacionDelDolarActual() {
-  //   try {
-  //     const res = await fetch("https://api.bluelytics.com.ar/v2/latest");
-  //     const cotizaciones = await res.json();
-  //     const cotizacionBlue = cotizaciones.blue.value_sell;
-
-  //     if (cotizacionBlue && cotizacionBlue > 900) {
-  //       this.dolar = parseFloat(cotizacionBlue);
-  //       this.precioOriginal = parseFloat(cotizacionBlue);
-  //       this.customDolar = parseFloat(cotizacionBlue + 100);
-  //     }
-
-  //     this.dolar$.next(this.dolar);
-  //   } catch (err) {
-  //     this.toastService.simpleMessage('Error', 'no se pudo obtener el valor del dolar de internet', ToastColor.danger);
-  //   }
-  // }
 
   setPriceDolar(dolar: number) {
     this.database.actualizar(environment.TABLAS.cotizacion_dolar, { price: dolar }, 'dolarBlue');
@@ -86,13 +69,16 @@ export class FuncionesUtilesService {
 
 
 
-  async mostrarImagenCompleta(imagen: string) {
+  async mostrarImagenCompleta(imagen: string, actualizarImagenMethod?: any) {
     try {
       const modal = await this.modalController.create({
         component: VisualizadorDeImagenComponent,
         componentProps: {
           imagen,
-          isModal: true
+          isModal: true,
+          permitirGirarImagen: true,
+          mostrarOpcionesIcon: true,
+          actualizarImagenMethod
         },
       })
 

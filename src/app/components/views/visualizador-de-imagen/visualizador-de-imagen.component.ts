@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { Share } from '@capacitor/share';
 import { Camera } from '@capacitor/camera';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-visualizador-de-imagen',
@@ -9,10 +10,17 @@ import { Camera } from '@capacitor/camera';
   styleUrls: ['./visualizador-de-imagen.component.scss'],
 })
 export class VisualizadorDeImagenComponent implements OnInit {
+  permitirGirarImagen: boolean = false;
+  imagenGradosRotada = 0;
   isActionSheetOpen = false;
+  actualizarImagenMethod!: any;
+  mostrarOpcionesIcon: boolean = false;
   imagen!: string;
+  imagenesArray!: string[];
+  indiceImagenMostradaActual = 0;
   isModal: boolean = false;
-  ruta: string='/equipos-vendidos';
+  ruta!: string;
+
   actionSheetButtons: any[] = [{
     text: 'Compartir',
     icon: 'share-social-outline',
@@ -31,14 +39,32 @@ export class VisualizadorDeImagenComponent implements OnInit {
       }
     },
   }, {
+    text: 'Actualizar',
+    icon: 'camera-reverse-outline',
+    handler: async () => {
+      console.log("ENTRA");
+      if (typeof this.actualizarImagenMethod === 'function') {
+        await this.actualizarImagenMethod(this.indiceImagenMostradaActual);
+      } else {
+        console.error('actualizarImagenMethod no es una función');
+      }
+    }
+  }, {
     text: 'Cancelar',
     role: 'cancel',
     icon: 'close',
     handler: () => { },
   }];
-  constructor(public funcionesUtiles: FuncionesUtilesService) { }
+  constructor(public funcionesUtiles: FuncionesUtilesService,
+    private router: Router
+  ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    console.log(this.actualizarImagenMethod)
+    if (!this.ruta) {
+      this.ruta = this.router.url;
+    }
+  }
 
   setOpen(isOpen: boolean) {
     this.isActionSheetOpen = isOpen;
@@ -70,5 +96,22 @@ export class VisualizadorDeImagenComponent implements OnInit {
     //   files: photos.map(photo => photo.path!),
     // });
 
+  }
+  girarImagen(grados: number) {
+    return this.imagenGradosRotada += grados;
+  }
+
+  volver() {
+    if (this.indiceImagenMostradaActual > 0) {
+      this.indiceImagenMostradaActual = this.indiceImagenMostradaActual - 1;
+    }
+    this.imagen = this.imagenesArray[this.indiceImagenMostradaActual];
+
+  }
+  siguiente() {
+    if (this.indiceImagenMostradaActual < (this.imagenesArray.length - 1)) {
+      this.indiceImagenMostradaActual = this.indiceImagenMostradaActual + 1;
+    }
+    this.imagen = this.imagenesArray[this.indiceImagenMostradaActual];
   }
 }

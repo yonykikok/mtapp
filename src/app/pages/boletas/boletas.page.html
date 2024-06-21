@@ -1,10 +1,11 @@
 <ion-header>
-  <app-clasic-toolbar [isModal]="false" (opcionesClick)="mostrarOpciones()" [mostrarOpciones]="true" [ruta]="'/dashboard'" [title]="'Boletas'"></app-clasic-toolbar>
+  <app-clasic-toolbar [isModal]="false" (opcionesClick)="mostrarOpciones()" [mostrarOpciones]="true"
+    [ruta]="'/dashboard'" [title]="'Boletas'"></app-clasic-toolbar>
 </ion-header>
 
 <ion-content *ngIf="loggedUser">
   <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Actions" [buttons]="actionSheetButtons"
-  (didDismiss)="setOpen(false)"></ion-action-sheet>
+    (didDismiss)="setOpen(false)"></ion-action-sheet>
   <ion-item>
     <ion-select label="Campos visibles" label-placement="floating" placeholder="Selecciona los campos que quieres ver"
       [multiple]="true" [(ngModel)]="camposSeleccionados">
@@ -71,11 +72,15 @@
       <ion-row *ngFor="let boleta of boletasAMostrar; let index=index"
         (click)=" funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)?seleccionar(boleta):''">
         <ion-item-sliding>
-          <ion-item class="ion_item"> 
+          <ion-item class="ion_item">
             <ion-col *ngIf="camposSeleccionados.includes('nroBoleta')">{{boleta.nroBoleta}}</ion-col>
             <ion-col *ngIf="camposSeleccionados.includes('dniCliente')">{{boleta.dniCliente}}</ion-col>
-            <ion-col *ngIf="camposSeleccionados.includes('estado')">{{boleta.estado|
-              estadoReparacion:'short'}}</ion-col>
+            <ion-col *ngIf="camposSeleccionados.includes('estado')" class="flexColumn">
+              <ion-text>
+                <b>{{boleta.estado| estadoReparacion:'short'}}</b>
+              </ion-text>
+              <ion-text *ngIf="boleta.estado=='RETIRADO'">{{ boleta.fechaUltimoCambioDeEstado | date:'dd-MM-yyyy' }}</ion-text>
+            </ion-col>
             <ion-col *ngIf="camposSeleccionados.includes('modelo')">{{boleta.modelo}}</ion-col>
             <ion-col *ngIf="camposSeleccionados.includes('telefono')">{{boleta.telefono}}</ion-col>
             <ion-col *ngIf="camposSeleccionados.includes('fechaUltimoCambioDeEstado')">{{

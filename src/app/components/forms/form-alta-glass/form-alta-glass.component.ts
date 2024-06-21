@@ -14,6 +14,9 @@ import { ToastColor, ToastService } from 'src/app/services/toast.service';
   styleUrls: ['./form-alta-glass.component.scss'],
 })
 export class FormAltaGlassComponent implements OnInit {
+  modoModificarGlass: boolean = false;
+  glassSeleccionado!: Glass;
+
   marcas = this.infoCompartida.marcasTrabajadas;
   Ubicaciones = Ubicaciones;
   glassesCargados: Glass[] = []
@@ -24,6 +27,7 @@ export class FormAltaGlassComponent implements OnInit {
     marco: new FormControl(false, [Validators.required]),
     oca: new FormControl(true, [Validators.required]),
     touch: new FormControl(false, [Validators.required]),
+    polarizado: new FormControl(false, [Validators.required]),
     curvo: new FormControl(false, [Validators.required]),
     estado: new FormControl(true, [Validators.required]),
     stock: new FormControl(1, [Validators.required]),
@@ -35,6 +39,15 @@ export class FormAltaGlassComponent implements OnInit {
     private dataBaseService: DataBaseService,
     private toastService: ToastService) { }
 
+
+  ionViewWillEnter() {
+    console.log(this.modoModificarGlass)
+    console.log(this.glassSeleccionado)
+    console.log(this.glassesCargados)
+    if (this.modoModificarGlass) {
+      this.glassForm.patchValue(this.glassSeleccionado);
+    }
+  }
 
   ngOnInit() { }
 
@@ -149,6 +162,7 @@ export class FormAltaGlassComponent implements OnInit {
       marco: false,
       oca: true,
       touch: false,
+      polarizado: false,
       curvo: false,
       estado: true,
       stock: 1,

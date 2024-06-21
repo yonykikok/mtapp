@@ -7,6 +7,51 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { environment } from 'src/environments/environment';
 
+interface FechaLimite {
+  seconds: number,
+  nanoseconds: number
+}
+interface Item {
+  precio: number,
+  producto: string,
+  fecha: number
+}
+interface Pago {
+  monto: number,
+  concepto: string,
+  fecha: number
+}
+export interface Deudor {
+  telefono: string,
+  apellido: string,
+  fechaLimite: FechaLimite,
+  deudaTotal: number,
+  dni: string,
+  direccion: string,
+  nombre: string,
+  id: string,
+  fechaCreacion: number,
+  items: Item[],
+  montoTotal: 960,
+  pagos: Pago[]
+}
+export interface Acreedor {
+  telefono: number,
+  apellido: string,
+  fechaCreacion: number,
+  id: string,
+  nombre: string,
+  pagos: Pago[],
+  saldado: boolean,
+  items: [
+    {
+      fecha: number,
+      producto: string
+    }
+  ],
+  direccion: string,
+  dni: number
+}
 
 
 @Component({
@@ -15,16 +60,19 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./cuentas-clientes.page.scss'],
 })
 export class CuentasClientesPage implements OnInit {
-  moduloSeleccionado = 'deudores';
+  moduloSeleccionado: 'acreedores' | 'deudores' = 'deudores';
   totalFiado = 0;
   totalAdeudado = 0;
 
-  listaClientes: any = {
-    acreedores: [],
-    deudores: []
-  }
+  listaClientes: {
+    acreedores: Acreedor[];
+    deudores: Deudor[];
+  } = {
+      acreedores: [],
+      deudores: []
+    };
 
-  listaAMostrar: any[] = [];
+  listaAMostrar: (Acreedor | Deudor)[] = [];
 
   loggedUser!: User;
   textoABuscar: string = '';
@@ -41,12 +89,13 @@ export class CuentasClientesPage implements OnInit {
     //LISTA DEUDORES
     this.database.obtenerTodos(environment.TABLAS.deudores).subscribe(deudoresListRef => {
       this.listaClientes.deudores = deudoresListRef.map(deudorRef => {
-        let deudor: any = deudorRef.payload.doc.data();
+        let deudor: Deudor = deudorRef.payload.doc.data() as Deudor;
         deudor['id'] = deudorRef.payload.doc.id;
         return deudor;
       });
       this.listaAMostrar = [...this.listaClientes.deudores];
       this.ordenarLista(this.listaAMostrar);
+      console.log(this.listaAMostrar)
 
       this.totalFiado = this.listaClientes.deudores.reduce((suma: number, deudor: any) => {
         return suma + (deudor.items.reduce((suma: number, item: any) => suma + item.precio, 0) - deudor.pagos.reduce((suma: number, pago: any) => suma + pago.monto, 0));
@@ -58,11 +107,12 @@ export class CuentasClientesPage implements OnInit {
     //LISTA ACREEDORES
     this.database.obtenerTodos(environment.TABLAS.acreedores).subscribe(acreedoresListRef => {
       this.listaClientes.acreedores = acreedoresListRef.map(acreedorRef => {
-        let acreedor: any = acreedorRef.payload.doc.data();
+        let acreedor: Acreedor = acreedorRef.payload.doc.data() as Acreedor;
         acreedor['id'] = acreedorRef.payload.doc.id;
         return acreedor;
       });
 
+      console.log(this.listaClientes.acreedores)
       this.totalAdeudado = this.listaClientes.acreedores.reduce((suma: number, acreedor: any) => {
         if (!acreedor.saldado) {
           return suma + (acreedor.pagos.reduce((suma: number, pago: any) => suma + pago.monto, 0));
@@ -77,7 +127,10 @@ export class CuentasClientesPage implements OnInit {
   filtrarPorTexto(event: any) {
     let texto = event.target['value'];
     const query = !texto ? "" : texto.toLowerCase();
-    this.listaAMostrar = this.listaClientes[this.moduloSeleccionado].filter((d: any) =>
+    console.log(typeof this.listaClientes[this.moduloSeleccionado]);
+    console.log(this.listaClientes[this.moduloSeleccionado]);
+    //@ts-ignore
+    this.listaAMostrar = this.listaClientes[this.moduloSeleccionado]?.filter((d: Acreedor | Deudor) =>
       d.apellido.toString().toLowerCase().indexOf(query) > -1 ||
       d.direccion.toString().toLowerCase().indexOf(query) > -1 ||
       d.dni.toString().toLowerCase().indexOf(query) > -1 ||
@@ -134,14 +187,6 @@ export class CuentasClientesPage implements OnInit {
       return await modal.present();
     } catch (err) {
     }
-    // const dialogRef = this.dialog.open(FormAltaDeudorComponent, {
-    //   width: '100vw',
-    //   panelClass: 'minWidth360px'
-    // });
-
-    // dialogRef.afterClosed().subscribe(result => {
-    //   // this.animal = result;
-    // });
   }
 
 
@@ -159,21 +204,21 @@ export class CuentasClientesPage implements OnInit {
     })
   }
 
-  calcularRestante(deudor: any) {
+  calcularRestante(deudor: Deudor) {
     return this.calcularDeuda(deudor) - this.calcularPagos(deudor);
   }
 
-  calcularDeuda(deudor: any) {
-    if (!deudor.items) return;
+  calcularDeuda(deudor: Deudor) {
+    if (!deudor.items) return 0;
     return Array.isArray(deudor.items) ? deudor.items.reduce((suma: number, item: any) => suma + item.precio, 0) : 0;
   }
-  calcularPagos(deudor: any) {
-    if (!deudor.pagos) return;
+  calcularPagos(deudor: Deudor) {
+    if (!deudor.pagos) return 0;
     return Array.isArray(deudor.items) ? deudor.pagos.reduce((suma: number, pago: any) => suma + pago.monto, 0) : 0;
 
   }
 
-  seleccionarModulo(modulo: any) {
+  seleccionarModulo(modulo: 'acreedores' | 'deudores') {
     this.moduloSeleccionado = modulo;
     this.listaAMostrar = this.listaClientes[modulo];
     this.ordenarLista(this.listaAMostrar);

@@ -139,6 +139,7 @@ export class FormModuloComponent implements OnInit {
   agregarModulo(nuevoModulo: Modulo) {
     this.dataBase.crear(environment.TABLAS.modulos, nuevoModulo).then(() => {
       this.toastService.simpleMessage('Exito', 'Se agrego el modulo correctamente', ToastColor.success);
+      this.formModulo.reset();
 
     });
   }

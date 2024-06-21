@@ -1,0 +1,26 @@
+<ion-content class="ion-text-center">
+  <ion-header>
+    <app-clasic-toolbar [ruta]="'/lista-productos'" [title]="'Impuestos'"></app-clasic-toolbar>
+  </ion-header>
+  <ion-chip color="danger" class="no-radius">Estas a punto de modificar los costos
+    generales <br> Esto afecta a TODOS los productos.</ion-chip>
+  <ion-card>
+    <ion-toolbar>
+      <ion-text class="ion-text-center">
+        <b> Formulario producto</b>
+      </ion-text>
+    </ion-toolbar>
+    <ion-card-content>
+
+      <form [formGroup]="aumentoForm" (ngSubmit)="guardarCambios()">
+        <ion-item>
+          <ion-input labelPlacement="floating" label="IVA" formControlName="porcentajeDeAumento"
+            type="number"></ion-input>
+          <ion-text slot="end">%</ion-text>
+        </ion-item>
+
+        <ion-button class="ion-margin" expand="full" type="submit">Guardar cambios</ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

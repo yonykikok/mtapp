@@ -110,11 +110,13 @@ export class FormAltaReparacionComponent implements OnInit {
 
 
         this.storageRef.child(`boletas/${month}${year}-${nroBoleta}-${dniCliente}`).putString(this.imgVistaPrevia, 'data_url').then(async (respuesta) => {
+          let imgRef = respuesta.ref.fullPath; // Obtenemos la referencia completa del archivo
           let photo = await respuesta.ref.getDownloadURL();
           if (!dniCliente || !nroBoleta || !telefono || !modelo) return; //TODO: notificar
           let boleta: boleta = {
             completa: false,
             images: [photo],
+            imgUrlsRef: [imgRef],//falta cargar la ref para poder eliminarlo 
             dniCliente: dniCliente.toString(),
             modelo: modelo.toString().toLowerCase(),
             nroBoleta: nroBoleta.toString(),

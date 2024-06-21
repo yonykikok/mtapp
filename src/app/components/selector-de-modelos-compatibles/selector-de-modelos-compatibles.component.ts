@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { AlertService } from 'src/app/services/alert.service';
+import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 
 @Component({
   selector: 'app-selector-de-modelos-compatibles',
@@ -11,8 +12,10 @@ export class SelectorDeModelosCompatiblesComponent implements OnInit {
   textoABuscar: string = '';
   lista: { marca: string, modelo: string, id: string, checked: boolean }[] = [];
   modelosSeleccionados: any[] = [];
+  listaAMostrar: any[] = [];
   constructor(private alertService: AlertService,
-    private modalController: ModalController) { }
+    private modalController: ModalController,
+    private funcionesUtilesService: FuncionesUtilesService) { }
 
   ngOnInit() {
     this.lista.forEach(item => {
@@ -20,6 +23,7 @@ export class SelectorDeModelosCompatiblesComponent implements OnInit {
         item.checked = true;
       }
     });
+    this.listaAMostrar = this.funcionesUtilesService.clonarObjeto(this.lista);
   }
 
   seleccionarModelo(event: Event, item: any) {
@@ -33,9 +37,9 @@ export class SelectorDeModelosCompatiblesComponent implements OnInit {
   }
 
   onChangeFilter() {
-
+    this.listaAMostrar = this.lista.filter((d) => d.modelo.toLowerCase().indexOf(this.textoABuscar) > -1);
   }
-  
+
   mostrarConfirmacion() {
     this.alertService.alertConfirmacion('Confirmación', "¿Termino de seleccionar todos los compatibles?", 'Sí', () => {
       this.modalController.dismiss(this.modelosSeleccionados, 'seleccionTerminada');

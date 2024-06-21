@@ -62,7 +62,7 @@
         {{reparacion.estado | estadoReparacion}}
       </ion-chip>
 
-      <div *ngIf="mostrarImgBoleta">
+      <!-- <div *ngIf="mostrarImgBoleta">
         <ion-img [ngStyle]="{ 'transform': 'rotate(' + imagenGradosRotada + 'deg)' }" class="ion-margin"
           [src]="reparacion.images[0]"></ion-img>
         <ion-chip color="primary">
@@ -73,12 +73,12 @@
           <ion-icon style="font-size: 1.5rem;" class="ion-margin-start ion-margin-end" (click)="girarImagen(90)"
             name="arrow-redo-outline"></ion-icon>
         </ion-chip>
-      </div>
+      </div> -->
 
-      <ion-button color="primary" mode="ios" class="ion-margin" expand="block"
-        (click)="mostrarImgBoleta? mostrarImgBoleta=false:mostrarImgBoleta=true">
+      <ion-button size="small" color="primary" mode="ios" class="ion-margin" expand="block"
+        (click)="mostrarImagen(reparacion.images[0])">
         <ion-icon slot="start" name="image-outline"></ion-icon>
-        {{mostrarImgBoleta?'Ocultar imagen de boleta':'Ver boleta'}}
+        Ver boleta
       </ion-button>
 
 

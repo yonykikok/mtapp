@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { AlertController, ModalController } from '@ionic/angular';
+import { NgxImageCompressService } from 'ngx-image-compress';
 import { User } from 'src/app/clases/user';
 import { FormEquipoDisponibleComponent } from 'src/app/components/forms/form-equipo-disponible/form-equipo-disponible.component';
 import { FormEspecificacionesEquipoComponent } from 'src/app/components/forms/form-especificaciones-equipo/form-especificaciones-equipo.component';
 import { UploadImagesComponent } from 'src/app/components/upload-images/upload-images.component';
+import { VisualizadorDeImagenComponent } from 'src/app/components/views/visualizador-de-imagen/visualizador-de-imagen.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
@@ -39,6 +41,11 @@ export class EquiposDisponiblesPage implements OnInit {
       handler: () => this.realizarAccion('modificar'),
     },
     {
+      text: 'Suspender disponibilidad',
+      icon: 'time-outline',
+      handler: () => this.realizarAccion('suspender'),
+    },
+    {
       text: 'Eliminar',
       role: 'destructive',
       icon: 'trash',
@@ -61,6 +68,7 @@ export class EquiposDisponiblesPage implements OnInit {
     private database: DataBaseService,
     private alertController: AlertController,
     private funcionesUtiles: FuncionesUtilesService,
+    private imageCompress: NgxImageCompressService,
     private spinnerService: SpinnerService,
     private toastService: ToastService,
     private storageService: StorageService) { }
@@ -79,7 +87,7 @@ export class EquiposDisponiblesPage implements OnInit {
     });
   }
 
-  
+
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe((userRef: any) => {
       this.database.obtenerPorId(environment.TABLAS.users, userRef.uid).subscribe((res: any) => {
@@ -107,6 +115,11 @@ export class EquiposDisponiblesPage implements OnInit {
         break;
       case 'modificar':
         // Lógica para la acción Modificar
+        this.openDialog(true, this.equipoSeleccionado);
+        break;
+      case 'suspender':
+        // Lógica para la acción suspender
+        this.confirmarSuspencion(this.equipoSeleccionado);
         break;
       case 'delete':
         this.confirmarEliminacion(this.equipoSeleccionado);
@@ -126,12 +139,14 @@ export class EquiposDisponiblesPage implements OnInit {
   setOpen(isOpen: boolean) {
     this.isActionSheetOpen = isOpen;
   }
-  async openDialog() {
+  async openDialog(modoModificarEquipo: boolean, equipoSeleccionado?: EquipoDisponible) {
 
     try {
       const modal = await this.modalController.create({
         component: FormEquipoDisponibleComponent,
         componentProps: {
+          equipoDisponible: equipoSeleccionado,
+          modoModificarEquipo
         },
       })
 
@@ -279,6 +294,61 @@ export class EquiposDisponiblesPage implements OnInit {
     })
   }
 
+  mostrarMotivo(equipo: EquipoDisponible) {
+    this.alertService.alertConfirmacion('Motivo de suspension', equipo.motivoSuspension ? equipo.motivoSuspension : 'Sin aclaracion', 'Habilitar',
+      () => {
+        equipo.motivoSuspension = '';
+        equipo.suspendido = false;
+        this.spinnerService.showLoading('Habilitando equipo...');
+
+        this.database.actualizar(environment.TABLAS.equipos_disponibles, equipo, equipo.id)?.finally(() => {
+          this.spinnerService.stopLoading();
+        });
+      })
+    // this.alertService.alertSinAccion('Motivo de suspension', equipo.motivoSuspension ? equipo.motivoSuspension : 'Sin aclaracion', 'OK');
+  }
+  async confirmarSuspencion(equipo: EquipoDisponible) {
+    const alert = await this.alertController.create({
+      header: 'Confirmar suspensión',
+      subHeader: '¿Quiere suspender este equipo?',
+      message: 'Explica el motivo',
+      inputs: [
+        {
+          name: 'motivo',
+          type: 'text',
+          placeholder: 'Motivo de la suspensión'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirmación de suspensión cancelada');
+          }
+        }, {
+          text: 'Confirmar',
+          handler: (data) => {
+            console.log('Motivo de suspensión:', data.motivo);
+            this.spinnerService.showLoading("Suspendiendo equipo...");
+            equipo.suspendido = true;
+            equipo.motivoSuspension = data.motivo;
+            //@ts-ignore
+            this.database.actualizar(environment.TABLAS.equipos_disponibles, equipo, equipo.id).then(res => {
+              console.log(res);
+            }).finally(() => {
+              this.spinnerService.stopLoading();
+            });
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+
   solicitarConfirmacionCancelarReserva(equipo: EquipoDisponible) {
     this.alertService.alertConfirmacion('Confirmación', '¿Seguro de cancelar esta reserva?', 'Si', () => {
       this.spinnerService.showLoading('Cancelando reserva');
@@ -374,6 +444,64 @@ export class EquiposDisponiblesPage implements OnInit {
 
     });
 
+  }
+
+  mostrarImagen(equipo: EquipoDisponible) {
+    this.mostrarImagenCompleta(equipo, (data: any) => {
+
+      let nuevaImagen: string; '';
+      let nuevaImagenRef: string; '';
+      const MAX_MEGABYTE = 0.5;
+      this.imageCompress
+        .uploadAndGetImageWithMaxSize(MAX_MEGABYTE) // this function can provide debug information using (MAX_MEGABYTE,true) parameters
+        .then(
+          (result: string) => {
+            // imgResult = result;
+            nuevaImagen = result;
+            nuevaImagenRef = equipo.imgUrlsRef[data];
+            //console.log(result)
+          },
+          (result: string) => {
+            console.info('The compression algorithm didn\'t succed! The best size we can do is', this.imageCompress.byteCount(result), 'bytes')
+            // imgResult = result;
+            nuevaImagen = result;
+            nuevaImagenRef = equipo.imgUrlsRef[data];
+            //console.log(result)
+          }).finally(() => {
+            equipo.images[data] = nuevaImagen;
+            equipo.imgUrlsRef[data] = nuevaImagenRef;
+            this.spinnerService.showLoading('Actualizando imagen...');
+            this.storageService.subirImagen(nuevaImagenRef, nuevaImagen).then(res => {
+            }).finally(() => {
+              this.spinnerService.stopLoading();
+            });
+          });
+
+    })
+  }
+
+  async mostrarImagenCompleta(equipo: EquipoDisponible, actualizarImagenMethod?: any) {
+    try {
+      const modal = await this.modalController.create({
+        component: VisualizadorDeImagenComponent,
+        componentProps: {
+          imagen: equipo.images[0],
+          imagenesArray: equipo.images,
+          isModal: true,
+          permitirGirarImagen: true,
+          mostrarOpcionesIcon: true,
+          actualizarImagenMethod
+        },
+      })
+
+      modal.onDidDismiss().then((result: any) => {
+        if (!result.data || !result.role) return;
+
+
+      })
+      return await modal.present();
+    } catch (err) {
+    }
   }
 }
 
