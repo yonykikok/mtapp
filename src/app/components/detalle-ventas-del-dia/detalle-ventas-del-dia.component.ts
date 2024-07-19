@@ -40,7 +40,7 @@ export class DetalleVentasDelDiaComponent implements OnInit {
         this.libroDiario.ventas = [...this.libroDiario.ventas, ...result.data];
 
         this.database.actualizar(environment.TABLAS.ingresos, this.libroDiario, this.libroDiario.id)?.then(res => {
-          console.log(res);
+          
           this.toastService.simpleMessage('Exito', 'Se agregaron las ventas al dia seleccionado', ToastColor.success);
         });
       }

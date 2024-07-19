@@ -44,7 +44,7 @@ export class FormEquipoDisponibleComponent implements OnInit {
   ) { }
 
   ionViewWillEnter() {
-    console.log(this.equipoDisponible)
+    
     if (this.modoModificarEquipo) {
       this.step2FormGroup.patchValue(this.equipoDisponible);
       this.step3FormGroup.patchValue(this.equipoDisponible);
@@ -116,7 +116,7 @@ export class FormEquipoDisponibleComponent implements OnInit {
       ...this.step3FormGroup.value,
       ...this.step4FormGroup.value,
     }
-    console.log(this.equipoDisponible);
+    
     this.dataBase.actualizar(environment.TABLAS.equipos_disponibles, this.equipoDisponible, this.equipoDisponible.id)?.then(res => {
       this.spinnerService.stopLoading();
       this.modalController.dismiss();

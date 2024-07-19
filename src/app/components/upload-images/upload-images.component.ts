@@ -87,7 +87,7 @@ export class UploadImagesComponent implements OnInit {
           // imgResult = result;
           this.imagenes.push(result);
           this.imagenesRef.push("referencia falsa para ocupar el indice necesitado");
-          //console.log(result)
+          //
           this.imagesListChangedEvent.emit(this.imagenes);
           this.selectedImg = result;
         },
@@ -96,7 +96,7 @@ export class UploadImagesComponent implements OnInit {
           // imgResult = result;
           this.imagenes.push(result);
           this.imagenesRef.push("referencia falsa para ocupar el indice necesitado");
-          //console.log(result)
+          //
           this.imagesListChangedEvent.emit(this.imagenes);
           this.selectedImg = result;
         });

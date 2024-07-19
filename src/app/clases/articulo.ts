@@ -18,20 +18,15 @@ export class Articulo {
     // aumentarStock(cantidad: number): void {
     //   if (cantidad > 0) {
     //     this.stock += cantidad;
-    //     console.log(`Stock aumentado en ${cantidad}. Nuevo stock: ${this.stock}`);
     //   } else {
-    //     console.log('La cantidad debe ser mayor que 0 para aumentar el stock.');
     //   }
     // }
   
     // disminuirStock(cantidad: number): void {
     //   if (cantidad > 0 && cantidad <= this.stock) {
     //     this.stock -= cantidad;
-    //     console.log(`Stock disminuido en ${cantidad}. Nuevo stock: ${this.stock}`);
     //   } else if (cantidad > this.stock) {
-    //     console.log('La cantidad a disminuir supera el stock disponible.');
     //   } else {
-    //     console.log('La cantidad debe ser mayor que 0 y menor o igual al stock actual.');
     //   }
     // }
   }

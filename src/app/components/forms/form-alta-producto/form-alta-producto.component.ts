@@ -55,12 +55,12 @@ export class FormAltaProductoComponent implements OnInit {
 
   ngOnInit() {
     this.database.obtenerPorId(environment.TABLAS.recargosProductos, 'recargos').subscribe((res: any) => {
-      console.log(res.payload.data())
+
       this.recargos = res.payload.data();
     });
 
     this.database.obtenerPorId(environment.TABLAS.categoriasProductos, 'categorias').subscribe((res: any) => {
-      console.log(res.payload.data())
+
       this.categoriasProductos = res.payload.data().categorias;
     });
 
@@ -109,7 +109,7 @@ export class FormAltaProductoComponent implements OnInit {
           this.productoForm.reset();
           this.stockForm.reset();
           this.modalController.dismiss();
-          console.log(res);
+
         }).catch((err) => {
           console.error(err);
         }).finally(() => {
@@ -119,7 +119,9 @@ export class FormAltaProductoComponent implements OnInit {
       } else {
         this.spinnerService.showLoading('Creando producto');
         this.database.crear(environment.TABLAS.productos, producto).then((res) => {
-          console.log(res);
+          this.productoForm.reset();
+          this.stockForm.reset();
+          this.coloresSeleccionados = [];
         }).catch((err) => {
           console.error(err);
         }).finally(() => {
@@ -129,6 +131,13 @@ export class FormAltaProductoComponent implements OnInit {
     }
 
 
+  }
+  onColorChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const color = input.value;
+    console.log('Color changed to:', color);
+    this.stockForm.patchValue({ denominacionColor: '' });
+    // Aquí puedes realizar cualquier acción adicional que necesites cuando cambie el color
   }
 
   generarCodigoDebarras(): string {
@@ -202,5 +211,8 @@ export class FormAltaProductoComponent implements OnInit {
 
     })
     modal.present();
+  }
+  eliminarColor(indice: number) {
+    this.coloresSeleccionados.splice(indice, 1);
   }
 }

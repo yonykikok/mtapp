@@ -7,7 +7,7 @@
 
   <ion-list>
     <!-- <ion-item-sliding > -->
-    <ion-item *ngFor="let producto of productosAMostrar">
+    <ion-item *ngFor="let producto of productosAMostrar; let index = index">
       <ion-card style="width: 100%;" (click)="mostrarOpciones(producto)">
         <ion-toolbar class="header">
           <ion-text class="ion-text-center">
@@ -48,7 +48,7 @@
             <ion-icon name="create-outline"></ion-icon>
           </ion-button> -->
             <ion-text *ngIf="producto.marca"><b>Marca:</b> {{producto.marca|titlecase}}</ion-text>
-            <ion-text *ngIf="producto.color"><b>Color:</b> {{producto.color}}</ion-text>
+            <!-- <ion-text *ngIf="producto.color"><b>Color:</b> {{producto.color}}</ion-text> -->
 
             <ion-text *ngIf="producto.cantidad"><b>Cantidad:</b> {{producto.cantidad}}</ion-text>
             <ion-chip [color]="mostrarCosto?'danger':'success'" class="ion-text-center"
@@ -70,14 +70,19 @@
           <ion-toolbar>
             <ion-text *ngIf="producto.codigo; else agregarCodigoDeProducto"><b>Codigo:</b>
               {{producto.codigo}}</ion-text>
+            <ion-icon (click)="solicitarConfirmacion($event,producto)" color="tertiary" name="barcode-outline"
+              style=" position: absolute; right: 0.5rem; top: 0.5rem; font-size: 2rem;"></ion-icon>
           </ion-toolbar>
           <ng-template #agregarCodigoDeProducto>
             <ion-button (click)="agregarCodigoDeBarra($event, producto)" color="success" size="small">Agregar un
-              codigo de
-              barras</ion-button>
-          </ng-template>
+              codigo de barras
+            </ion-button>
+            <ion-icon (click)="solicitarConfirmacion($event,producto)" color="tertiary" name="barcode-outline"
+              style=" position: absolute; right: 0.5rem; top: 0.5rem; font-size: 2rem;"></ion-icon>
 
+          </ng-template>
         </ion-footer>
+
       </ion-card>
     </ion-item>
 
@@ -109,6 +114,11 @@
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button (click)="mostrarFormulario()">
       <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-fab slot="fixed" color="tertiary" vertical="bottom" horizontal="start">
+    <ion-fab-button (click)="mostrarFormulario()">
+      <ion-icon name="cart-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 </ion-content>

@@ -74,12 +74,17 @@
         <ion-item-sliding>
           <ion-item class="ion_item">
             <ion-col *ngIf="camposSeleccionados.includes('nroBoleta')">{{boleta.nroBoleta}}</ion-col>
-            <ion-col *ngIf="camposSeleccionados.includes('dniCliente')">{{boleta.dniCliente}}</ion-col>
+            <ion-col *ngIf="camposSeleccionados.includes('dniCliente')" class="flexCenterCenter" style="justify-content: space-between;">{{boleta.dniCliente}}
+              <ion-badge (click)="solicitarConfirmacionDeBusqueda($event,boleta.dniCliente)">
+                <ion-icon name="search-outline"></ion-icon>
+              </ion-badge>
+            </ion-col>
             <ion-col *ngIf="camposSeleccionados.includes('estado')" class="flexColumn">
               <ion-text>
                 <b>{{boleta.estado| estadoReparacion:'short'}}</b>
               </ion-text>
-              <ion-text *ngIf="boleta.estado=='RETIRADO'">{{ boleta.fechaUltimoCambioDeEstado | date:'dd-MM-yyyy' }}</ion-text>
+              <ion-text *ngIf="boleta.estado=='RETIRADO'">{{ boleta.fechaUltimoCambioDeEstado | date:'dd-MM-yyyy'
+                }}</ion-text>
             </ion-col>
             <ion-col *ngIf="camposSeleccionados.includes('modelo')">{{boleta.modelo}}</ion-col>
             <ion-col *ngIf="camposSeleccionados.includes('telefono')">{{boleta.telefono}}</ion-col>

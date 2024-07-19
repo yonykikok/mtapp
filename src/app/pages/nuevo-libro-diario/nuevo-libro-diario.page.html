@@ -1,0 +1,116 @@
+<ion-header>
+  <app-clasic-toolbar (opcionesClick)="mostrarOpciones()" [mostrarOpciones]="true" [ruta]="'/dashboard'"
+    [title]="'Nuevo libro diario'"></app-clasic-toolbar>
+</ion-header>
+<ion-content *ngIf="loggedUser">
+  <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Actions" [buttons]="actionSheetButtons"
+    (didDismiss)="setOpen(false)"></ion-action-sheet>
+  <div style="text-align: center; margin-bottom: 4rem;">
+    <div
+      *ngIf=" libroDiarioHoy && libroDiarioHoy.montoInicial && libroDiarioHoy.montoInicial>=0;else ingresarMontoInicial ">
+
+      <ion-toggle [(ngModel)]="mostrarMontoInicial"
+        *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)"></ion-toggle>
+
+
+      <ion-item-divider class="ion-no-padding ion-text-center" style="flex-direction: column;">
+        <h2 class="ion-no-margin" *ngIf="mostrarMontoInicial;else mostrarMontoTotal">Monto inicial:
+          {{libroDiarioHoy.montoInicial|currency}}
+        </h2>
+        <!-- <ion-icon *ngIf="!libroDiarioHoy.ventas || funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)"
+          class="ion-margin-end" slot="end" (click)="reiniciarMontoInicialDeCaja()" name="create-outline"></ion-icon> -->
+      </ion-item-divider>
+
+      <ng-template #mostrarMontoTotal>
+        <ion-item-divider class="ion-no-padding ion-text-center" style="flex-direction: column; --background:none">
+          <h2 class="ion-no-margin">Monto total en caja</h2>
+          <h2 class="ion-no-margin" *ngIf="libroDiarioHoy['montoTotalEfectivo']&&libroDiarioHoy['montoInicial']">
+            {{(libroDiarioHoy['montoTotalEfectivo']+libroDiarioHoy['montoInicial'])|currency}}
+          </h2>
+        </ion-item-divider>
+      </ng-template>
+
+    </div>
+    <ng-template #ingresarMontoInicial>
+      <ion-button class="ion-margin" expand="block" (click)="mostrarModalAbrirCaja()">Abrir caja</ion-button>
+    </ng-template>
+
+    <ion-item-divider class="ion-no-padding" *ngIf="libroDiarioHoy&&libroDiarioHoy.ventas"
+      style="flex-direction: column; ;">
+
+      <ion-chip (click)="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)?mostrarModalEditarVenta(item):''"
+        style="width: 90%; justify-content: space-between;" *ngFor="let item of libroDiarioHoy.ventas" [ngStyle]="{'background-color': item.boleta ? 'rgb(168 231 232)' : '' ,
+            'border': item.medioDePago!='efectivo' ? '2px solid orange' : 'none' }">
+        <label [ngStyle]="{'color': item.precio<0 ? 'red' : '' }">{{item.precio|currency}}</label>
+
+        <b>{{item.descripcion|maxLength:25}} </b>
+
+        <label> {{item.boleta?'('+item.boleta+')':''}}</label>
+      </ion-chip>
+    </ion-item-divider>
+
+
+
+
+    <!-- modal cierre de caja -->
+    <div
+      style="position: fixed; top: 20%; display: flex; justify-content: center;align-items: center; width: 100%; z-index: 999;"
+      (click)="mostrarModalCierreDeCaja=false" *ngIf="mostrarModalCierreDeCaja">
+
+      <ion-card style="padding: 2rem;" (click)="detenerPropagacion($event)">
+        <ion-card-title style="margin: 1rem;">Cierre de caja</ion-card-title>
+        <ion-card-subtitle>Ingrese el monto que hay en la caja</ion-card-subtitle>
+        <ion-card-content class="ion-no-padding">
+          <ion-item class="ion-margin-bottom">
+            <ion-input labelPlacement="floating" label="Monto de caja" type="number"
+              placeholder="Ingrese el monto total" [(ngModel)]="montoDeCaja"
+              [ngModelOptions]="{standalone: true}"></ion-input>
+          </ion-item>
+
+          <ion-chip *ngIf="this.resultadoDeCaja>0;" color="danger">
+            Algo esta mal:
+            <br>(falta plata en la caja)
+          </ion-chip>
+
+          <ion-chip *ngIf="this.resultadoDeCaja<0;" color="primary">
+            Algo esta mal:
+            <br>(hay de mas en la caja)
+          </ion-chip>
+
+          <ion-chip *ngIf="this.resultadoDeCaja===0" color="success">Excelente!
+            <br> Cerro perfecto!
+          </ion-chip>
+
+          <p *ngIf="this.resultadoDeCaja!=0">{{this.resultadoDeCaja|currency}}</p>
+
+          <ion-item-divider class="ion-no-padding" sticky="--background:none;">
+            <ion-button expand="block" class="ion-margin-top ion-margin-bottom" color="warning"
+              (click)="mostrarModalCierreDeCaja=false;">Cancelar</ion-button>
+            <ion-button expand="block" class="ion-margin-top ion-margin-bottom" color="primary"
+              (click)="comprobar()">Comprobar</ion-button>
+          </ion-item-divider>
+        </ion-card-content>
+      </ion-card>
+    </div>
+    <!-- fin modal cierre de caja -->
+
+  </div>
+
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" (click)="openDialog()"
+    *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser) && libroDiarioHoy &&libroDiarioHoy.montoInicial &&libroDiarioHoy.montoInicial>0">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- boton modal cierre de caja -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="start"
+    *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser) && libroDiarioHoy && libroDiarioHoy['montoTotalEfectivo']&& libroDiarioHoy['montoTotalEfectivo']>0"
+    (click)="mostrarModalCierreDeCaja=true">
+    <ion-fab-button color="success">
+      <ion-icon name="newspaper-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <!-- fin boton modal cierre de caja -->
+</ion-content>

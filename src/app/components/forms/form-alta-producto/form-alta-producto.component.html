@@ -70,7 +70,7 @@
     <ion-card-content>
       <form [formGroup]="stockForm" (ngSubmit)="guardarProducto()">
         <div style="display: flex; align-items: center;">
-          <input style="height: 3rem;" type="color" formControlName="color">
+          <input style="height: 3rem;" type="color" formControlName="color" (change)="onColorChange($event)">
           <ion-item>
             <ion-input labelPlacement="floating" label="Color" formControlName="denominacionColor"
               type="text"></ion-input>
@@ -84,16 +84,17 @@
           [disabled]="!stockForm.valid">Agregar</ion-button>
         <div class="flexCenterCenter" style="flex-wrap: wrap;">
           <div class="flexColumn" style="justify-content: space-evenly; align-items: center; margin: 1rem;"
-            *ngFor="let colorSeleccionado of coloresSeleccionados">
+            *ngFor="let colorSeleccionado of coloresSeleccionados; let index=index">
 
             <ion-card class="ion-no-margin flexCenterCenter"
               [style]="{'background-color':colorSeleccionado.color,'height':'2rem','width':'2rem'}">
             </ion-card>
-            <div class="flexCenterCenter">
+            <div class="flexCenterCenter flexColumn">
               <small> <ion-text color="primary">
-                  ({{colorSeleccionado.stock}})
-                </ion-text>
-                {{colorSeleccionado.denominacionColor}}</small>
+                ({{colorSeleccionado.stock}})
+              </ion-text>
+              {{colorSeleccionado.denominacionColor}}</small>
+              <ion-icon slot="start" name="trash" color="danger" (click)="eliminarColor(index)"></ion-icon>
             </div>
           </div>
         </div>

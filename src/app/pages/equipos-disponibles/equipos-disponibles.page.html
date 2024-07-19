@@ -4,11 +4,13 @@
 
 
 <ion-content [fullscreen]="true">
+  <ion-searchbar animated="true" placeholder="Ej: J7 prime" (ionInput)="filtrarProductos($event)"></ion-searchbar>
+
   <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Actions" [buttons]="actionSheetButtons"
     (didDismiss)="setOpen(false)"></ion-action-sheet>
   <div *ngIf="equipos && equipos.length>0; else sinEquiposDisponibles">
 
-    <ion-card *ngFor="let equipo of equipos">
+    <ion-card *ngFor="let equipo of equiposAMostrar">
 
       <ion-card-content class="ion-no-padding" [ngClass]="equipo.suspendido?'suspendido':null">
         <div class="titleModel">

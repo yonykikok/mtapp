@@ -55,7 +55,7 @@ export class EquiposVendidosPage implements OnInit {
         return equipoVendido;
       });
 
-      console.log(this.listaEquiposVendidos)
+      
       this.listaEquiposVendidos.sort((equipoA, equipoB) => {
         if (equipoA['fecha'] > equipoB['fecha']) {
           return -1;
@@ -87,7 +87,7 @@ export class EquiposVendidosPage implements OnInit {
         return equipoVendido;
       });
 
-      console.log(this.listaEquiposVendidos)
+      
       this.listaEquiposVendidos.sort((equipoA, equipoB) => {
         if (equipoA['fecha'] > equipoB['fecha']) {
           return -1;
@@ -173,7 +173,7 @@ export class EquiposVendidosPage implements OnInit {
       equipo.imgUrlsRef?.forEach(async (imgRef) => {
         try {
           let result = await this.storageService.borrarImagen(imgRef);
-          console.log(result);
+          
 
         } catch (error) {
           console.error(error);

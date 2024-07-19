@@ -102,7 +102,7 @@ export class ClienteAcreedorComponent implements OnInit {
   solicitarConfirmacion() {
     this.alertService.alertConfirmacion('Confirmación', '¿Quiere confirmar que este cliente esta llevando el producto que quiere?', 'Si, confirmar', () => {
       this.acreedor['saldado'] = true;
-      this.database.actualizar(environment.TABLAS.acreedores, this.acreedor, this.acreedor.id)?.then(res => console.log(res));
+      this.database.actualizar(environment.TABLAS.acreedores, this.acreedor, this.acreedor.id)?.then(res => { });
     });
   }
 

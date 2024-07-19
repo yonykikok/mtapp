@@ -123,11 +123,16 @@
                   <p style="margin-top: 1rem;">{{estado.detalle}}</p>
                 </ion-chip>
                 <div class="ion-text-center">
-                  <div *ngIf="estado.images && estado.images.length>0">
-                    <img (click)="mostrarImagen(imagen)" style="width: 40px;height: 40px;margin: 0.2rem;"
-                      *ngFor="let imagen of estado.images" [src]="imagen" alt="imagen de detalle">
+                  <div *ngIf="estado.images && estado.images.length>0" class="flexCenterCenter">
+                    <div class="flexColumn" style="align-items: center;"
+                      *ngFor="let imagen of estado.images; let index=index">
+                      <img (click)="mostrarImagen(imagen)" style="width: 40px;height: 40px;margin: 0.2rem;"
+                        [src]="imagen" alt="imagen de detalle">
+                      <ion-icon color="danger" name="trash-outline"
+                        (click)="confirmarEliminacionDeImagen(reparacion,estado,index)"></ion-icon>
+                    </div>
                   </div>
-                  <ion-button
+                  <ion-button [disabled]="subiendoImagen"
                     *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser) &&(!estado.images ||estado.images.length<2)"
                     size="small" color="secondary" (click)="agregarImagen(reparacion,estado)">Agregar
                     imagen</ion-button>

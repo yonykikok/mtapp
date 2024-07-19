@@ -149,6 +149,10 @@ const routes: Routes = [
     path: 'lista-productos',
     loadChildren: () => import('./pages/lista-productos/lista-productos.module').then( m => m.ListaProductosPageModule)
   },
+  {
+    path: 'nuevo-libro-diario',
+    loadChildren: () => import('./pages/nuevo-libro-diario/nuevo-libro-diario.module').then( m => m.NuevoLibroDiarioPageModule)
+  },
 
 
 

@@ -17,6 +17,8 @@ export class DetalleGlassComponent implements OnInit {
   clonRepuesto!: Glass;
   glassesCargados!: Glass[];
   precioDolarBlue!: number;
+
+  
   constructor(private funcionesUtilesService: FuncionesUtilesService,
     private modalController: ModalController,
     private alertService: AlertService
@@ -41,7 +43,7 @@ export class DetalleGlassComponent implements OnInit {
 
       modal.onDidDismiss().then((result: any) => {
         if (!result.data || !result.role) return;
-        console.log(result)
+        
         if (result.role == "actualizado") {
           this.modalController.dismiss();
         }

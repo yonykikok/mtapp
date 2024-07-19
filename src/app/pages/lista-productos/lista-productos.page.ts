@@ -19,6 +19,7 @@ import { CambiarStockProductoComponent } from 'src/app/components/cambiar-stock-
 import { FormImpuestosProductoComponent } from 'src/app/components/forms/form-impuestos-producto/form-impuestos-producto.component';
 import { roles } from 'src/app/services/info-compartida.service';
 import { FormAumentoPorcentualComponent } from 'src/app/components/forms/form-aumento-porcentual/form-aumento-porcentual.component';
+import { GeneradorDeCodigosDeBarraComponent } from 'src/app/components/generador-de-codigos-de-barra/generador-de-codigos-de-barra.component';
 
 export interface Producto {
   id: string,//sera puesto por firebase
@@ -53,7 +54,7 @@ export class ListaProductosPage implements OnInit {
   precioDolarBlue: number = 0;
   productos: any[] = [];
   camposSeleccionados = ['producto', 'codigo', 'cantidad', 'precio'];
-  productosAMostrar: any[] = [];
+  productosAMostrar: Producto[] = [];
   loggedUser!: User;
   isActionSheetOpen = false;
   productoSeleccionado!: Producto;
@@ -116,6 +117,7 @@ export class ListaProductosPage implements OnInit {
       this.mostrarCosto = !this.mostrarCosto;
     }
   }
+
   async mostrarImagenCompleta(event: Event, imagen: string) {
     event.stopPropagation();
     try {
@@ -147,12 +149,12 @@ export class ListaProductosPage implements OnInit {
 
     this.actionSheetButtons = [...this.actionSheetButtonsOrigial];
     this.database.obtenerPorId(environment.TABLAS.recargosProductos, 'recargos').subscribe((res: any) => {
-      console.log(res.payload.data())
+
       this.recargos = res.payload.data();
     });
 
-    this.database.obtenerTodos(environment.TABLAS.productos).subscribe((docsProductosRef: any) => {
-      // subs.unsubscribe();
+    let subs = this.database.obtenerTodos(environment.TABLAS.productos).subscribe((docsProductosRef: any) => {
+      subs.unsubscribe();
       if (docsProductosRef.length <= 0) return;
       let lista = docsProductosRef.map((productoRef: any) => {
         let producto: Producto = productoRef.payload.doc.data();
@@ -163,10 +165,9 @@ export class ListaProductosPage implements OnInit {
       lista = this.ordenarListaPor(lista, 'producto', 'marca');
       this.productos = lista;
       this.productosAMostrar = [...this.productos];
-      console.log(lista)
+      console.log(this.productos);
       // lista.forEach((element:any) => {
       //     this.database.actualizar(environment.TABLAS.productos,element,element.id)?.then(res=>{
-      //       console.log("listo");
       //     })
       // });
     });
@@ -188,16 +189,32 @@ export class ListaProductosPage implements OnInit {
 
     //   });
     // });
-    console.log(this.productos)
     // let productos = this.productos.map(produ => {
     //   produ.precio_con_iva = Number(produ.precio_con_iva);
     //   return produ;
     // })
-    // console.log(productos)
   }
 
   ngOnInit() {
 
+  }
+  async solicitarConfirmacion(e: Event, producto: Producto) {
+    e.stopPropagation();
+    let modal = await this.modalController.create({
+      component: GeneradorDeCodigosDeBarraComponent,
+      componentProps: {
+        codigo: producto.codigo
+      }
+    })
+    modal.onDidDismiss().then((result) => {
+      if (result.data && result.role == 'Guardar Codigo') {
+        producto.codigo = result.data;
+      }
+    });
+    modal.present();
+    // this.alertService.alertConfirmacion('Confirmación', '¿Quiere generar un nuevo codigo de barras aleatorio?', 'Si', () => {
+    //   producto.codigo=this.funcionesUtiles.generateBarcodeValue();
+    // });
   }
 
 
@@ -224,18 +241,36 @@ export class ListaProductosPage implements OnInit {
   }
 
   filtrarProductos(event: any) {
-    console.log(event.target.value);
     const valorBusqueda = event.target.value.toLowerCase();
-    this.productosAMostrar = this.productos.filter(producto => {
+    this.productosAMostrar = this.productos.filter((producto: Producto) => {
       // Verificar si el producto contiene el valor de búsqueda
-      if (producto.producto.toLowerCase().includes(valorBusqueda) ||
-        producto.codigo.toLowerCase().includes(valorBusqueda) ||
+      if (
+        producto.producto.toLowerCase().includes(valorBusqueda) ||
+        (producto.codigo && producto.codigo.toLowerCase().includes(valorBusqueda)) ||
+        producto.categoria.toLowerCase().includes(valorBusqueda) ||
         producto.marca.toLowerCase().includes(valorBusqueda)
       ) {
         return producto;
       }
+      return null;
+    });
+
+    this.ordenarPorPrecio(true);
+
+  }
+  ordenarPorPrecio(ascendente: boolean = true): void {
+    this.productosAMostrar = this.productosAMostrar.sort((a: Producto, b: Producto) => {
+      const precioA = a.precio !== undefined ? a.precio : 0;
+      const precioB = b.precio !== undefined ? b.precio : 0;
+
+      if (ascendente) {
+        return precioA - precioB;
+      } else {
+        return precioB - precioA;
+      }
     });
   }
+
 
   setOpen(isOpen: boolean) {
     this.isActionSheetOpen = isOpen;
@@ -300,9 +335,7 @@ export class ListaProductosPage implements OnInit {
     event.stopPropagation();
     const MAX_MEGABYTE = 0.5;
     let posicionDisponible = this.obtenerPosicionDisponibles(producto);
-    console.log(posicionDisponible)
     if (posicionDisponible != undefined) {
-      console.log(posicionDisponible);
       let imgName = `${Date.now()}`
       this.imageCompress
         .uploadAndGetImageWithMaxSize(MAX_MEGABYTE) // this function can provide debug information using (MAX_MEGABYTE,true) parameters
@@ -323,8 +356,6 @@ export class ListaProductosPage implements OnInit {
 
       let urlRef = imgPath + imgName;
 
-      console.log(`imgUrls: `, urlImagen)
-      console.log(`imgUrlsRef: `, urlRef)
       if (urlImagen) {
         if (!producto.images || !producto.imgUrlsRef) {
           producto.imgUrlsRef = [];
@@ -350,7 +381,6 @@ export class ListaProductosPage implements OnInit {
   obtenerPosicionDisponibles(producto: any) {
     let posicionesDiponibles: number[] = [];
     const imagenesRefSinRepetidos = Array.from(new Set(producto.imgUrlsRef));
-    console.log(imagenesRefSinRepetidos);
     let posiblesPosiciones = [0, 1];
 
     posiblesPosiciones.forEach(posicion => {
@@ -368,12 +398,10 @@ export class ListaProductosPage implements OnInit {
 
       } else {
         posicionesDiponibles.push(posicion);
-        console.log("disponible: ", posicion)
 
       }
 
     });
-    console.log("posiciones disponible: ", posicionesDiponibles)
     return posicionesDiponibles[0];
 
   }
@@ -385,7 +413,7 @@ export class ListaProductosPage implements OnInit {
         modoActualizarInformacion,
         productoAModificar: this.productoSeleccionado,
         precioDolarBlue: this.precioDolarBlue,
-        loggedUser:this.loggedUser
+        loggedUser: this.loggedUser
       }
     });
     modal.present();
@@ -397,7 +425,7 @@ export class ListaProductosPage implements OnInit {
       componentProps: {
         producto: this.productoSeleccionado,
         impuestosGenerales,
-        precioDolarBlue:this.precioDolarBlue
+        precioDolarBlue: this.precioDolarBlue
       }
     });
     modal.present();
@@ -421,7 +449,7 @@ export class ListaProductosPage implements OnInit {
             prod.costo = prod.costo * (1 + aumentoDecimal);
             prod.precio = this.calcularPrecioConRecargos(prod);
             this.database.actualizar(environment.TABLAS.productos, prod, prod.id)?.then(res => {
-              console.log(res)
+
             }).catch(err => {
               console.error(err)
             });
@@ -459,7 +487,7 @@ export class ListaProductosPage implements OnInit {
       // Devolvemos el precio final con todos los recargos aplicados
       return precioConFinanciamiento;
     } else {
-      console.log("No se puede calcular el precio: recargos inválidos o no definidos.");
+      console.info("No se puede calcular el precio: recargos inválidos o no definidos.");
       return 0;
     }
   }
@@ -485,7 +513,7 @@ export class ListaProductosPage implements OnInit {
       // Devolvemos el costo base del producto
       return costo;
     } else {
-      console.log("No se puede calcular el costo: recargos inválidos o no definidos.");
+      console.info("No se puede calcular el costo: recargos inválidos o no definidos.");
       return 0;
     }
   }
@@ -495,11 +523,10 @@ export class ListaProductosPage implements OnInit {
     this.alertService.alertConfirmacion('Confirmar eliminacion', '¿Quiere eliminar este producto?', 'Si', () => {
       if (producto.imgUrlsRef && producto.imgUrlsRef.length > 0) {
         this.spinnerService.showLoading("Eliminando producto...");
-        console.log(producto)
         producto.imgUrlsRef?.forEach(async (imgRef) => {
           try {
             let result = await this.storageService.borrarImagen(imgRef);
-            console.log(result);
+
 
           } catch (error) {
             console.error(error);
@@ -512,7 +539,7 @@ export class ListaProductosPage implements OnInit {
 
       }
       this.database.eliminar(environment.TABLAS.productos, producto.id).then(res => {
-        console.log(res);
+
       });
     })
   }
@@ -523,6 +550,14 @@ export class ListaProductosPage implements OnInit {
         producto
       }
     });
+
+    modal.onDidDismiss().then((result) => {
+
+      if (result.role == 'Guardar') {
+        this.database.actualizar(environment.TABLAS.productos, producto, producto.id)?.finally(() => {
+        })
+      }
+    })
     modal.present();
 
   }
@@ -595,5 +630,6 @@ export class ListaProductosPage implements OnInit {
         }
       );
   }
+
 
 }

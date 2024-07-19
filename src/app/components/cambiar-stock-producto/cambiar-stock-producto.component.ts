@@ -60,11 +60,11 @@ export class CambiarStockProductoComponent implements OnInit {
     }
   }
   guardarProducto() {
-    console.log(this.producto)
+    
     this.producto.cantidad = this.producto.coloresDisponibles?.reduce((total: number, color: any) => {
       return total + color.stock;
     }, 0) || 0
-    console.log(this.producto);
+    
     this.modalController.dismiss(this.producto, 'Guardar');
 
   }

@@ -32,7 +32,9 @@ export class BoletasPage implements OnInit {
     text: 'Buscar duplicados',
     icon: 'copy-outline',
     handler: async () => {
-      this.dataBase.obtenerBoletasDuplicadas(environment.TABLAS.boletasReparacion).then(res => console.log(res));
+      this.dataBase.obtenerBoletasDuplicadas(environment.TABLAS.boletasReparacion).then(res => {
+
+      });
     },
   }, {
     text: 'Cancelar',
@@ -166,7 +168,6 @@ export class BoletasPage implements OnInit {
 
   limpiarFiltro() {
 
-    console.log("limpiar")
   }
 
   applyFilter() {
@@ -179,7 +180,6 @@ export class BoletasPage implements OnInit {
         this.busquedaPorDni();
       }
     } else {//busqueda por texto.
-      console.log("busqueda por texto")
       if (this.textoABuscar.length >= 2) {
         this.busquedaPorTexto();
       }
@@ -200,7 +200,6 @@ export class BoletasPage implements OnInit {
       boletas.sort((a: boleta, b: boleta) => b.nroBoleta.localeCompare(a.nroBoleta));
       this.boletas = boletas;
       this.boletasAMostrar = this.funcionesUtiles.clonarObjeto(boletas);
-      console.log(boletas)
 
     });
   }
@@ -222,7 +221,6 @@ export class BoletasPage implements OnInit {
     });
   }
   busquedaPorNroBoleta(textoABuscar: string) {
-    console.log(this.textoABuscar)
     this.dataBase.obtenerBoletaPorNroBoleta(environment.TABLAS.boletasReparacion, this.textoABuscar).then((res: any) => {
       if (!res) {
         this.sinCoincidencias = true;
@@ -236,8 +234,17 @@ export class BoletasPage implements OnInit {
       });
       this.boletas = boletas;
       this.boletasAMostrar = this.funcionesUtiles.clonarObjeto(boletas);
+      console.log(this.boletasAMostrar)
 
     });
+  }
+
+  solicitarConfirmacionDeBusqueda(e: Event, dni: string) {
+    e.stopPropagation();
+    this.alertService.alertConfirmacion('Confirmación', `¿Quiere buscar las boletas del DNI: ${dni}?`, 'Si', () => {
+      this.textoABuscar = dni;
+      this.busquedaPorDni();
+    })
   }
 
   applyFilter2(event: Event) {
@@ -282,7 +289,6 @@ export class BoletasPage implements OnInit {
       boletas.sort((a: boleta, b: boleta) => b.nroBoleta.localeCompare(a.nroBoleta));
       this.boletas = boletas;
       this.boletasAMostrar = this.funcionesUtiles.clonarObjeto(boletas);
-      console.log(boletas)
 
     });
   }
@@ -307,7 +313,6 @@ export class BoletasPage implements OnInit {
 
                   boletaHistorial.imgUrlsRef.forEach((imgRef: string) => {
                     eliminarImagenesPromesas.push(this.eliminarImagen(imgRef));
-                    console.log(imgRef);
                   });
                 }
               });
@@ -319,7 +324,7 @@ export class BoletasPage implements OnInit {
             // Utilizar Promise.all para esperar a que se completen todas las eliminaciones de imágenes
             Promise.all(eliminarImagenesPromesas)
               .then(() => {
-                console.log('Todas las imágenes eliminadas correctamente.');
+                console.info('Todas las imágenes eliminadas correctamente.');
               })
               .catch((error) => {
                 console.error('Error al eliminar imágenes:', error);
@@ -335,7 +340,7 @@ export class BoletasPage implements OnInit {
   async eliminarImagen(imgRef: string): Promise<void> {
     try {
       let result = await this.storageService.borrarImagen(imgRef);
-      console.log(result);
+
     } catch (error) {
       console.error(`Error al eliminar la imagen ${imgRef}:`, error);
       // Lanza el error nuevamente para que pueda ser manejado por el bloque catch del caller si es necesario

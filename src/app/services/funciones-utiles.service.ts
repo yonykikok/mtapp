@@ -7,6 +7,7 @@ import { MediosDePago } from '../components/forms/form-detalle-venta/form-detall
 import { VisualizadorDeImagenComponent } from '../components/views/visualizador-de-imagen/visualizador-de-imagen.component';
 import { ModalController } from '@ionic/angular';
 import { ToastColor, ToastService } from './toast.service';
+import JsBarcode from 'jsbarcode';
 
 @Injectable({
   providedIn: 'root'
@@ -93,6 +94,20 @@ export class FuncionesUtilesService {
   }
 
 
+  generateBarcodeValue(): string {
+    // Genera un código de barras numérico aleatorio de 12 dígitos
+    return Array.from({ length: 12 }, () => Math.floor(Math.random() * 10)).join('');
+  }
 
+  generateBarcode(text: string, index: number) {
+    const canvas = document.getElementById(`barcode-${index}`) as HTMLCanvasElement;
+    JsBarcode(canvas, text, {
+      format: 'CODE128',
+      lineColor: '#000000',
+      width: 2,
+      height: 100,
+      displayValue: true
+    });
+  }
 
 }

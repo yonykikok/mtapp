@@ -106,7 +106,7 @@ export class NuevaFuncionalidadComponent implements OnInit {
   }
   ngOnInit() {
     this.database.obtenerPorId(environment.TABLAS.recargosProductos, 'recargos').subscribe((res: any) => {
-      console.log(res.payload.data())
+      
       this.recargos = res.payload.data();
     });
 
@@ -329,7 +329,7 @@ export class NuevaFuncionalidadComponent implements OnInit {
         producto.imgUrlsRef?.forEach(async (imgRef) => {
           try {
             let result = await this.storageService.borrarImagen(imgRef);
-            console.log(result);
+            
 
           } catch (error) {
             console.error(error);
@@ -342,7 +342,7 @@ export class NuevaFuncionalidadComponent implements OnInit {
 
       }
       this.database.eliminar(environment.TABLAS.productos, producto.id).then(res => {
-        console.log(res);
+        
       });
     })
   }

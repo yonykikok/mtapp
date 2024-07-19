@@ -19,6 +19,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./detalle-reparacion.component.scss'],
 })
 export class DetalleReparacionComponent implements OnInit {
+  subiendoImagen: boolean = false;
   editarDetalle = false;
   ruta: string = '';
   mostrarHistorial = false;
@@ -42,7 +43,7 @@ export class DetalleReparacionComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.reparacion)
+
     this.getOpcionesEstadoDisponibles();
 
 
@@ -114,7 +115,7 @@ export class DetalleReparacionComponent implements OnInit {
         {
           text: 'Guardar',
           handler: (data) => {
-            //console.log(this.loggedUser)
+            //
             let cambioDeEstado = {
               estadoAnterior: this.reparacion.estado,
               estadoActual: this.estadoSeleccionado,
@@ -129,13 +130,13 @@ export class DetalleReparacionComponent implements OnInit {
             this.modoEditar = false;
             this.reparacion.estado = this.estadoSeleccionado;
             this.reparacion.fechaUltimoCambioDeEstado = Date.now()
-            console.log(this.reparacion);
+
             if (!this.reparacion.historial) {
               this.reparacion.historial = [cambioDeEstado]
             } else {
               this.reparacion.historial.push(cambioDeEstado);
             };
-            //console.log(this.reparacion)
+            //
             this.getOpcionesEstadoDisponibles();//TODO: guardar en la db.
 
             if (!this.reparacion || !this.reparacion.id) return //TODO:informar
@@ -156,9 +157,28 @@ export class DetalleReparacionComponent implements OnInit {
     return reparacionShortMessage[estado];
   }
 
+  confirmarEliminacionDeImagen(reparacion: boleta, estado: boletaHistorialEstado, index: number) {
+    this.alertService.alertConfirmacion('Confirmar eliminacion', '¿Quiere borrar la imagen?', 'Si', () => {
+      this.spinnerService.showLoading('Borrando img...');
+      if (estado.images && estado.imgUrlsRef) {
+        this.storageService.borrarImagen(estado.imgUrlsRef[index]).then(res => {
+          if (res) {
+            estado.images?.splice(index, 1);
+            estado.imgUrlsRef?.splice(index, 1);
+
+            if (reparacion.id) {
+              this.database.actualizar(environment.TABLAS.boletasReparacion, reparacion, reparacion.id)?.finally(() => {
+                this.spinnerService.stopLoading();
+              });
+            }
+          }
+          console.log(res)
+        });
+      }
+    })
+  }
 
   solicitarConfirmacion(event: any, reparacion: boleta) {
-    //console.log("se")
     event.stopPropagation();
     this.alertService.alertConfirmacion('Confirmación', '¿Quiere enviarle un mensaje al cliente en este momento?', 'Si', this.presentActionSheet.bind(this, reparacion));
   }
@@ -200,7 +220,6 @@ export class DetalleReparacionComponent implements OnInit {
           text: 'Cancelar',
           role: 'cancel',
           handler: () => {
-            //console.log('Acción cancelada');
             // Lógica adicional para la acción cancelada
           }
         }
@@ -218,10 +237,8 @@ export class DetalleReparacionComponent implements OnInit {
   }
 
   mostrarFormularioEditarinformacion(nombre: string, campo: string) {
-    //console.log("entra")
     this.alertService.mostrarAlertaConTextPrompt(`Actualizar ${nombre}`, `Ingresa el nuevo ${nombre}`, 'Cancelar', 'Actualizar', (input: any) => {
       this.reparacion[campo] = input.valor;
-      //console.log("Actualizamos", this.reparacion);
 
       if (!this.reparacion || !this.reparacion.id) return //TODO:informar
       this.database.actualizar(environment.TABLAS.boletasReparacion, this.reparacion, this.reparacion.id)
@@ -233,7 +250,6 @@ export class DetalleReparacionComponent implements OnInit {
         });
     }, () => {
 
-      //console.log("Cancelo");
     })
   }
 
@@ -284,7 +300,7 @@ export class DetalleReparacionComponent implements OnInit {
             imgUrlRefCopia.forEach(async (imgRef: any) => {
               try {
                 let result = await this.storageService.borrarImagen(imgRef);
-                console.log(result);
+
 
               } catch (error) {
                 console.error(error);
@@ -296,7 +312,6 @@ export class DetalleReparacionComponent implements OnInit {
           reparacion.historial.splice(index, 1);
         }
 
-        console.log(reparacion)
         this.database.actualizar(environment.TABLAS.boletasReparacion, reparacion, reparacion.id)?.finally(() => {
           this.spinnerService.stopLoading();
         });
@@ -308,10 +323,10 @@ export class DetalleReparacionComponent implements OnInit {
   agregarImagen(reparacion: boleta, estado: boletaHistorialEstado) {
     const MAX_MEGABYTE = 0.5;
     let posicionDisponible = this.obtenerPosicionDisponibles(estado);
-    console.log(posicionDisponible)
+    console.log(posicionDisponible);
     if (posicionDisponible != undefined) {
-      console.log(posicionDisponible);
-      let imgName = `${new Date(estado.fecha).getTime()}-${reparacion.dniCliente}-${reparacion.nroBoleta}-${posicionDisponible}`
+      let imgName = `${new Date(estado.fecha).getTime()}-${reparacion.dniCliente}-${reparacion.nroBoleta}-${posicionDisponible}`;
+      this.subiendoImagen = true;
       this.imageCompress
         .uploadAndGetImageWithMaxSize(MAX_MEGABYTE) // this function can provide debug information using (MAX_MEGABYTE,true) parameters
         .then(
@@ -331,8 +346,6 @@ export class DetalleReparacionComponent implements OnInit {
 
       let urlRef = imgPath + imgName;
 
-      console.log(`imgUrls: `, urlImagen)
-      console.log(`imgUrlsRef: `, urlRef)
       if (urlImagen) {
         if (!estado.images || !estado.imgUrlsRef) {
           estado.imgUrlsRef = [];
@@ -348,6 +361,8 @@ export class DetalleReparacionComponent implements OnInit {
 
         }).catch(err => {
           this.toastService.simpleMessage('Error', 'No se pudo agregar la imagen', ToastColor.danger);
+        }).finally(() => {
+          this.subiendoImagen = false;
         })
       }
     }).catch(err => {
@@ -358,7 +373,6 @@ export class DetalleReparacionComponent implements OnInit {
   obtenerPosicionDisponibles(estado: boletaHistorialEstado) {
     let posicionesDiponibles: number[] = [];
     const imagenesRefSinRepetidos = Array.from(new Set(estado.imgUrlsRef));
-    console.log(imagenesRefSinRepetidos);
     let posiblesPosiciones = [0, 1];
 
     posiblesPosiciones.forEach(posicion => {
@@ -376,12 +390,10 @@ export class DetalleReparacionComponent implements OnInit {
 
       } else {
         posicionesDiponibles.push(posicion);
-        console.log("disponible: ", posicion)
 
       }
 
     });
-    console.log("posiciones disponible: ", posicionesDiponibles)
     return posicionesDiponibles[0];
 
   }
@@ -391,12 +403,10 @@ export class DetalleReparacionComponent implements OnInit {
   }
 
   async actualizarImagen(boleta: any, event?: Event) {///NO IMPLEMENTADO AUN ACA
-    console.log(boleta);
     if (event) {
       event.stopPropagation();
     }
     let ref = await this.storageService.obtenerReferenciaDeImagenPorUrl(boleta.images[0]);
-    console.log(ref.fullPath)
     // return;
     const MAX_MEGABYTE = 0.5;
     let hoy = new Date(Date.now());
@@ -410,7 +420,6 @@ export class DetalleReparacionComponent implements OnInit {
       boleta.imgUrlsRef = [imgName]
     }
 
-    console.log(boleta);
     // Subir y comprimir la nueva imagen
     this.imageCompress
       .uploadAndGetImageWithMaxSize(MAX_MEGABYTE)

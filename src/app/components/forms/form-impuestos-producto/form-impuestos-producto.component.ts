@@ -51,7 +51,7 @@ export class FormImpuestosProductoComponent implements OnInit {
       this.alertService.alertConfirmacion('Confirmacion', 'Estara modificando todos los productos con estos nuevos valores, ¿Quiere continuar"', 'Si', () => {
         this.modificarTodosLosProductos();
         this.database.actualizar(environment.TABLAS.recargosProductos, impuestosActuales, this.impuestosOriginales.id)?.then(res => {
-          console.log(res)
+          
           this.modalController.dismiss();
         }).finally(() => {
           this.spinnerService.stopLoading();
@@ -65,12 +65,12 @@ export class FormImpuestosProductoComponent implements OnInit {
       this.producto.financiamiento = financiamiento;
       this.producto.margen = margen;
       this.database.actualizar(environment.TABLAS.productos, this.producto, this.producto.id)?.then(res => {
-        console.log(res)
+        
         this.modalController.dismiss();
       }).finally(() => {
         this.spinnerService.stopLoading();
       });
-      console.log(this.producto)
+      
 
     }
 

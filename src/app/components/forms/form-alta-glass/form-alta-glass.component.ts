@@ -120,7 +120,6 @@ export class FormAltaGlassComponent implements OnInit {
 
       //Modificar compatible al modelo seleccionado como compatible
       this.dataBaseService.crear(environment.TABLAS.glasses, this.glassForm.value).then((res) => {
-        console.log()
         nuevoGlass.id = res.id
 
         nuevoGlass.compatibilidad.forEach((glassCompatible: any) => {

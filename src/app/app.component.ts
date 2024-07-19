@@ -82,7 +82,6 @@ export class AppComponent implements OnInit {
     const hasta = new Date(); // Esto representará la fecha actual
 
     const arrayDias = this.generarArrayDeDias(desde, hasta);
-    console.log(arrayDias);
     let susb = this.database.obtenerTodos('ingresos').subscribe(res => {
       susb.unsubscribe();
       let dias = res.map(diaref => {
@@ -103,8 +102,6 @@ export class AppComponent implements OnInit {
         this.database.crearConCustomId('ingresos', dia.id, dia);
       })
 
-
-      console.log(diasNoCargados)
     })
   }
 
@@ -120,7 +117,6 @@ export class AppComponent implements OnInit {
         const fecha = new Date(dia.fechaString);
 
         if (fecha.getDay() === 0) {
-          console.log(`es domingo: `,)
           return dia;
         }
       })
@@ -128,14 +124,12 @@ export class AppComponent implements OnInit {
       // Devuelve true si es domingo, false en caso contrario
 
 
-      console.log(resultado); // Devolverá true si la fecha es un domingo
 
       let contador = 0;
       resultado?.forEach((dia: any) => {
 
         if (dia.ventas && dia.ventas.length <= 0) {
           contador++;
-          console.log(contador);
           this.database.eliminar('ingresos', dia.id);
         }
       })

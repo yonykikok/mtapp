@@ -96,7 +96,6 @@ export class AuthService {
         displayName: user.displayName,
         photoURL: user.photoURL,
       }
-      console.log(res.data());
 
       !userData?.role
         ? data['role'] = 'CLIENTE'

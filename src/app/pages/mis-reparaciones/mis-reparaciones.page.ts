@@ -75,7 +75,7 @@ export class MisReparacionesPage implements OnInit, ViewWillEnter {
           securityCode: usuario['securityCode'],
           dni: usuario['dni']
         };
-        console.log(this.loggedUser)
+        
         this.obtenerReparaciones();
       })
     })
@@ -91,7 +91,7 @@ export class MisReparacionesPage implements OnInit, ViewWillEnter {
 
     console.log(this.loggedUser.dni)
     this.database.obtenerBoletaPorDni(environment.TABLAS.boletasReparacion, this.loggedUser.dni.toString()).then((res: any) => {
-      console.log(res)
+      
       if (!res) {
         return;
       }

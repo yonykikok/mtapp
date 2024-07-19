@@ -165,7 +165,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
         if (!result.data || !result.role) return;
 
         this.loggedUser.fNacimiento = result.data;
-        console.log(this.loggedUser)
+        
         this.actualizarUsuario();
         this.toastService.simpleMessage("Correo guardado", "Se cargó el correo a su cuenta.", ToastColor.success);
 
@@ -186,7 +186,7 @@ export class MiCuentaPage implements OnInit, ViewDidEnter {
       this.toastService.simpleMessage("Cuenta activada", "Se activó con éxito su cuenta, ya puede comenzar a utilizar la App", ToastColor.success);
     }
 
-    console.log(this.loggedUser)
+    
     this.database.actualizar('users', this.loggedUser, this.loggedUser.uid)?.then(res => {
       console.log("res", res);
     }).catch((errr) => {

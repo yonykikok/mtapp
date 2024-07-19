@@ -95,7 +95,6 @@ export class CuentasClientesPage implements OnInit {
       });
       this.listaAMostrar = [...this.listaClientes.deudores];
       this.ordenarLista(this.listaAMostrar);
-      console.log(this.listaAMostrar)
 
       this.totalFiado = this.listaClientes.deudores.reduce((suma: number, deudor: any) => {
         return suma + (deudor.items.reduce((suma: number, item: any) => suma + item.precio, 0) - deudor.pagos.reduce((suma: number, pago: any) => suma + pago.monto, 0));
@@ -112,7 +111,6 @@ export class CuentasClientesPage implements OnInit {
         return acreedor;
       });
 
-      console.log(this.listaClientes.acreedores)
       this.totalAdeudado = this.listaClientes.acreedores.reduce((suma: number, acreedor: any) => {
         if (!acreedor.saldado) {
           return suma + (acreedor.pagos.reduce((suma: number, pago: any) => suma + pago.monto, 0));
@@ -127,8 +125,6 @@ export class CuentasClientesPage implements OnInit {
   filtrarPorTexto(event: any) {
     let texto = event.target['value'];
     const query = !texto ? "" : texto.toLowerCase();
-    console.log(typeof this.listaClientes[this.moduloSeleccionado]);
-    console.log(this.listaClientes[this.moduloSeleccionado]);
     //@ts-ignore
     this.listaAMostrar = this.listaClientes[this.moduloSeleccionado]?.filter((d: Acreedor | Deudor) =>
       d.apellido.toString().toLowerCase().indexOf(query) > -1 ||

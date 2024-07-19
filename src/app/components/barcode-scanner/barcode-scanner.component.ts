@@ -24,7 +24,7 @@ export class BarcodeScannerComponent implements OnInit {
 
   ngOnInit() {
     BarcodeScanner.isSupported().then((result) => {
-      console.log(result)
+      
       this.isSupported = result.supported;
     }, (err) => {
       this.isSupported = false;

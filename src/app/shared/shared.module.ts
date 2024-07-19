@@ -17,6 +17,8 @@ import { FormAltaReparacionComponent } from '../components/forms/form-alta-repar
 import { EncuestaCalificacionComponent } from '../components/encuesta-calificacion/encuesta-calificacion.component';
 import { FormAltaProductoComponent } from '../components/forms/form-alta-producto/form-alta-producto.component';
 import { CargarCategoriaComponent } from '../components/cargar-categoria/cargar-categoria.component';
+import { GeneradorDeCodigosDeBarraComponent } from '../components/generador-de-codigos-de-barra/generador-de-codigos-de-barra.component';
+import { RedondearPrecioPipe } from 'src/app/redondear-precio.pipe';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,8 @@ import { CargarCategoriaComponent } from '../components/cargar-categoria/cargar-
     EncuestaCalificacionComponent,
     FormAltaProductoComponent,
     CargarCategoriaComponent,
-
+    GeneradorDeCodigosDeBarraComponent,
+    RedondearPrecioPipe
   ],
   imports: [
     CommonModule,
@@ -61,6 +64,9 @@ import { CargarCategoriaComponent } from '../components/cargar-categoria/cargar-
     EncuestaCalificacionComponent,
     FormAltaProductoComponent,
     CargarCategoriaComponent,
+    GeneradorDeCodigosDeBarraComponent,
+    RedondearPrecioPipe
+
   ]
 })
 export class SharedModule {

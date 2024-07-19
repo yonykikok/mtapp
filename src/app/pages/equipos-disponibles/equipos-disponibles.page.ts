@@ -25,6 +25,7 @@ import { environment } from 'src/environments/environment';
 export class EquiposDisponiblesPage implements OnInit {
   mostrarConfirmacionDeVenta: boolean = false;
   equipos!: EquipoDisponible[];
+  equiposAMostrar!: EquipoDisponible[];
   equipoSeleccionado!: EquipoDisponible;
   isActionSheetOpen = false;
   accesoriosSeleccionados = [];
@@ -83,7 +84,8 @@ export class EquiposDisponiblesPage implements OnInit {
 
         return equipoDisponible;
       });
-      console.log(this.equipos)
+      this.equiposAMostrar = this.funcionesUtiles.clonarObjeto(this.equipos);
+      this.ordenarPorPrecio(true);
     });
   }
 
@@ -172,7 +174,7 @@ export class EquiposDisponiblesPage implements OnInit {
       inputs: [{ name: 'adelanto', type: 'number', placeholder: 'Adelanto', }, { name: 'dni', type: 'text', placeholder: 'DNI' }],
       buttons: [{
         text: 'Cancelar', role: 'cancel', cssClass: 'secondary', handler: () => {
-          console.log('Cancelado');
+
         }
       }, {
         text: 'Confirmar', handler: (data) => {
@@ -219,12 +221,12 @@ export class EquiposDisponiblesPage implements OnInit {
       inputs: [{ name: 'precio', type: 'number', placeholder: 'Precio de venta' }],
       buttons: [{
         text: 'Cancelar', role: 'cancel', cssClass: 'secondary', handler: () => {
-          console.log('Cancelado');
+
         }
       }, {
         text: 'Confirmar', handler: (data) => {
           this.equipoSeleccionado.precio = data.precio;
-          console.log(data)
+
         }
       }
       ]
@@ -239,14 +241,14 @@ export class EquiposDisponiblesPage implements OnInit {
       inputs: [{ name: 'dni', type: 'text', placeholder: 'DNI del comprador' }],
       buttons: [{
         text: 'Cancelar', role: 'cancel', cssClass: 'secondary', handler: () => {
-          console.log('Cancelado');
+
         }
       }, {
         text: 'Confirmar', handler: (data) => {
           this.mostrarConfirmacionDeVenta = true;
 
           this.equipoSeleccionado.dni = data.dni;
-          console.log(data)
+
         }
       }
       ]
@@ -259,8 +261,6 @@ export class EquiposDisponiblesPage implements OnInit {
       let nuevaVenta = this.funcionesUtiles.clonarObjeto(this.equipoSeleccionado);
       delete nuevaVenta.id;
       nuevaVenta.fecha = Date.now();
-      console.log(this.equipoSeleccionado)
-      console.log(nuevaVenta)
 
       this.database.crear(environment.TABLAS.equipos_vendidos, nuevaVenta).then(res => {
         this.database.eliminar(environment.TABLAS.equipos_disponibles, this.equipoSeleccionado.id).then(res => {
@@ -273,11 +273,10 @@ export class EquiposDisponiblesPage implements OnInit {
   confirmarEliminacion(equipo: EquipoDisponible) {
     this.alertService.alertConfirmacion('Confirmar eliminacion', '¿Quiere eliminar este equipo?', 'Si', () => {
       this.spinnerService.showLoading("Eliminando venta...");
-      console.log(equipo)
       equipo.imgUrlsRef?.forEach(async (imgRef) => {
         try {
           let result = await this.storageService.borrarImagen(imgRef);
-          console.log(result);
+
 
         } catch (error) {
           console.error(error);
@@ -289,7 +288,7 @@ export class EquiposDisponiblesPage implements OnInit {
       });
 
       this.database.eliminar(environment.TABLAS.equipos_disponibles, equipo.id).then(res => {
-        console.log(res);
+
       });
     })
   }
@@ -330,13 +329,12 @@ export class EquiposDisponiblesPage implements OnInit {
         }, {
           text: 'Confirmar',
           handler: (data) => {
-            console.log('Motivo de suspensión:', data.motivo);
             this.spinnerService.showLoading("Suspendiendo equipo...");
             equipo.suspendido = true;
             equipo.motivoSuspension = data.motivo;
             //@ts-ignore
             this.database.actualizar(environment.TABLAS.equipos_disponibles, equipo, equipo.id).then(res => {
-              console.log(res);
+
             }).finally(() => {
               this.spinnerService.stopLoading();
             });
@@ -368,7 +366,6 @@ export class EquiposDisponiblesPage implements OnInit {
   cargarNuevosAccesorios(equipo: EquipoDisponible) {
     equipo.accesorios = this.accesoriosSeleccionados;
     this.modificarAccesorios = false;
-    console.log(equipo)
   }
 
   async abrirModalImagenes() {
@@ -397,7 +394,7 @@ export class EquiposDisponiblesPage implements OnInit {
 
 
   uploadImages(data: { images: string[], imagesRef: string[], posicionesDiponibles: number[] }, imgPath: string) {
-    console.log(data);
+
     let imgUrls: string[] = [];
     let imgUrlsRef: string[] = [];//referencia para eliminar
     let contador = 0;
@@ -412,8 +409,6 @@ export class EquiposDisponiblesPage implements OnInit {
           if (index == data.images.length - 1) {
             this.equipoSeleccionado.images = imgUrls;
             this.equipoSeleccionado.imgUrlsRef = imgUrlsRef;//referencia para eliminar
-            console.log(`imgUrls: `, imgUrls)
-            console.log(`imgUrlsRef: `, imgUrlsRef)
 
             this.database.actualizar(environment.TABLAS.equipos_disponibles, this.equipoSeleccionado, this.equipoSeleccionado.id)?.then((res: any) => {
               // this.spinnerService.stopLoading();
@@ -446,6 +441,35 @@ export class EquiposDisponiblesPage implements OnInit {
 
   }
 
+  filtrarProductos(event: any) {
+    const valorBusqueda = event.target.value.toLowerCase();
+    this.equiposAMostrar = this.equipos.filter((equipo: EquipoDisponible) => {
+      // Verificar si el producto contiene el valor de búsqueda
+      if (
+        equipo.modelo.toLowerCase().includes(valorBusqueda) ||
+        equipo.marca.toLowerCase().includes(valorBusqueda) ||
+        equipo.especificaciones?.memoria.toString().toLowerCase().includes(valorBusqueda)
+      ) {
+        return equipo;
+      }
+      return null;
+    });
+
+    this.ordenarPorPrecio(true);
+
+  }
+  ordenarPorPrecio(ascendente: boolean = true): void {
+    this.equiposAMostrar = this.equiposAMostrar.sort((a: EquipoDisponible, b: EquipoDisponible) => {
+      const precioA = a.precio !== undefined ? a.precio : 0;
+      const precioB = b.precio !== undefined ? b.precio : 0;
+
+      if (ascendente) {
+        return precioA - precioB;
+      } else {
+        return precioB - precioA;
+      }
+    });
+  }
   mostrarImagen(equipo: EquipoDisponible) {
     this.mostrarImagenCompleta(equipo, (data: any) => {
 
@@ -459,14 +483,14 @@ export class EquiposDisponiblesPage implements OnInit {
             // imgResult = result;
             nuevaImagen = result;
             nuevaImagenRef = equipo.imgUrlsRef[data];
-            //console.log(result)
+            //
           },
           (result: string) => {
             console.info('The compression algorithm didn\'t succed! The best size we can do is', this.imageCompress.byteCount(result), 'bytes')
             // imgResult = result;
             nuevaImagen = result;
             nuevaImagenRef = equipo.imgUrlsRef[data];
-            //console.log(result)
+            //
           }).finally(() => {
             equipo.images[data] = nuevaImagen;
             equipo.imgUrlsRef[data] = nuevaImagenRef;

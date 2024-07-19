@@ -82,7 +82,6 @@ export class ListaPedidosPage implements OnInit {
       });
       this.pedidosAMostrar = [...this.pedidos.pendientes];
       this.pedidosAMostrar?.sort(this.compare.bind(this));
-      console.log(this.textoABuscar)
       this.filtrarPorTexto(this.textoABuscar, false);
 
       // sus.unsubscribe();//remover despues de limpieza
@@ -93,7 +92,6 @@ export class ListaPedidosPage implements OnInit {
     this.isActionSheetOpen = isOpen;
   }
   mostrarOpciones() {
-    console.log("Entra", this.loggedUser)
     if (this.funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)) {
       this.setOpen(true);
     }
@@ -236,7 +234,6 @@ export class ListaPedidosPage implements OnInit {
       }
       return;
     });
-    console.log(auxLista)
     auxLista.forEach((element: Pedido) => {
       this.database.eliminar(environment.TABLAS.pedidos, element.id).finally(() => {
       });
@@ -251,7 +248,6 @@ export class ListaPedidosPage implements OnInit {
       }
       return;
     });
-    console.log(auxLista)
     auxLista.forEach((element: Pedido) => {
       this.database.eliminar(environment.TABLAS.pedidos, element.id).finally(() => {
       });
@@ -286,7 +282,6 @@ export class ListaPedidosPage implements OnInit {
     this.pedidosAMostrar = this.pedidos.conseguidos.filter((pedido: Pedido) => pedido.cliente);
     this.pedidosAMostrar?.sort(this.compare.bind(this))
     this.listaSeleccionada = 'para_notificar';
-    console.log(this.pedidosAMostrar);
   }
 
   async mostrarFormularioDeAltaPedido() {
@@ -322,7 +317,6 @@ export class ListaPedidosPage implements OnInit {
     let boletaMessage = pedido.cliente.boleta
       ? `Recorda que tu numero de boleta es ${pedido.cliente.boleta}.`
       : '';
-    console.log(pedido)
     let mensaje = `Hola ${pedido.cliente.nombre} como estas? te escribia por el pedido de ${pedido.tipo} que habias realizado. Era para informarte que ya lo conseguimos, por favor indicanos si aun estas interesado en el pedido. ${boletaMessage}`;
     // Mensaje predeterminado para el cliente;
     const actionSheet = await this.actionSheetController.create({

@@ -185,22 +185,18 @@ export class HistorialCajaPage implements OnInit {
     const dia = fecha.getDate().toString().padStart(2, '0');
 
     const idFecha = `${anio}-${mes}-${dia}`;
-    console.log(idFecha);
 
     this.database.obtenerPorId(environment.TABLAS.ingresos, idFecha).subscribe(res => {
       let libroDiarioDelDia: LibroDiario = res.payload.data() as LibroDiario;
       libroDiarioDelDia['id'] = res.payload.id;
-      console.log(res.payload.data());
+      
       this.mostrarDialogLibroDiario(libroDiarioDelDia);
     })
   }
   mostrarIntervaloDeTiempo(mostrarBuscador: boolean) {
-    console.log("por aca")
     if (!this.intervaloSeleccionado) {
       this.intervaloSeleccionado = { dias: [] };
     }
-    console.log(this.fechaSeleccionada)
-    console.log(this.fechaSeleccionadaFin)
     this.database.getLibrosDiariosEnIntervalo(this.fechaSeleccionada, this.fechaSeleccionadaFin).then(diasListRef => {
 
       this.intervaloSeleccionado.dias = diasListRef?.map(diaRef => {
@@ -208,8 +204,6 @@ export class HistorialCajaPage implements OnInit {
         dia['id'] = diaRef.id;
         return dia
       });
-      console.log(diasListRef)
-      console.log(this.intervaloSeleccionado.dias)
       this.intervaloSeleccionado['montoTotalMensualEfectivo'] = this.getMontoTotalMensual(MediosDePago.Efectivo, this.intervaloSeleccionado);
       this.intervaloSeleccionado['montoTotalMensualTransferencia'] = this.getMontoTotalMensual(MediosDePago.Transferencia, this.intervaloSeleccionado);
       this.intervaloSeleccionado['montoTotalMensualMercadoPago'] = this.getMontoTotalMensual(MediosDePago.MercadoPago, this.intervaloSeleccionado);
@@ -224,7 +218,7 @@ export class HistorialCajaPage implements OnInit {
         }
       });
       // this.intervaloSeleccionado.dias = this.intervaloSeleccionado.dias.filter((dia: LibroDiario) => dia.ventas.length <= 0);
-      console.log(this.intervaloSeleccionado)
+      
       // this.reajustarMes(this.intervaloSeleccionado);
 
 
@@ -257,7 +251,7 @@ export class HistorialCajaPage implements OnInit {
           return 0;
         }
       });
-      console.log(this.intervaloSeleccionado)
+      
       mostrarBuscador ? this.mostrarBuscadorPorTexto() : null;
     })
 
@@ -271,7 +265,6 @@ export class HistorialCajaPage implements OnInit {
 
   getMontoTotalMensualNegativo(intervalo: any) {
     return intervalo.dias?.reduce((monto: number, dia: any) => {
-      // console.log(dia)
       if (dia.montoTotalNegativo && dia.montoTotalNegativo <= 0) {
         return monto += dia.montoTotalNegativo ? dia.montoTotalNegativo : 0;
       }
@@ -283,7 +276,6 @@ export class HistorialCajaPage implements OnInit {
 
   getMontoTotalMensual(medioDePago: MediosDePago, intervalo: any) {
     return intervalo.dias?.reduce((monto: number, dia: any) => {
-      // console.log(dia.montoTotalEfectivo)  
       switch (medioDePago) {
         case MediosDePago.Transferencia:
           return monto += dia.montoTotalTransferencia ? dia.montoTotalTransferencia : 0;
@@ -293,7 +285,7 @@ export class HistorialCajaPage implements OnInit {
           if (dia.montoTotalEfectivo > 0) {
             return monto += dia.montoTotalEfectivo ? dia.montoTotalEfectivo : 0;
           }
-          // console.log(`dia no calculado`, dia)
+          // `dia no calculado`, dia)
           return monto;
       }
     }, 0);
@@ -307,7 +299,7 @@ export class HistorialCajaPage implements OnInit {
   }
 
   async mostrarBuscadorPorTexto() {
-    console.log(this.intervaloSeleccionado)
+    
     try {
       const modal = await this.modalController.create({
         component: BusquedaPorTextoComponent,
@@ -330,9 +322,7 @@ export class HistorialCajaPage implements OnInit {
 
   //TEMPORAL
   reajustarMes(mes: any) { //metodo de reajuste montos diarios y totales
-    console.log("entra!")
     let copia = this.funcionesUtiles.clonarObjeto(mes);
-    console.log(copia);
 
     mes.dias.forEach((dia: LibroDiario) => {
       dia.montoTotalEfectivo = this.obtenerMontoTotalPorMedioDePago(dia, MediosDePago.Efectivo);//total en efectivo
@@ -348,8 +338,6 @@ export class HistorialCajaPage implements OnInit {
     mes['montoTotalMensualMercadoPago'] = this.getMontoTotalMensual(MediosDePago.MercadoPago, mes);
     mes['montoNegativoTotalMensualEfectivo'] = this.getMontoTotalMensualNegativo(mes);
 
-    console.log(mes);
-    console.log(copia);
   }
   obtenerMontoTotalPorNegativo(libroDiarioHoy: any) {
     let acumuladorNegativo = 0;
@@ -373,9 +361,7 @@ export class HistorialCajaPage implements OnInit {
   }
   // FIN TEMPORAL
   mostrarOpciones() {
-    console.log("Entra", this.loggedUser)
     if (this.funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)) {
-      console.log("SEASPEASD")
       this.setOpen(true);
     }
   }
@@ -420,8 +406,6 @@ export class HistorialCajaPage implements OnInit {
               this.toastService.simpleMessage('Existente', 'El dia seleccionado ya existe', ToastColor.warning);
             }
           })
-          console.log(result.data)
-          console.log(dia)
         }
       })
       return await modal.present();
