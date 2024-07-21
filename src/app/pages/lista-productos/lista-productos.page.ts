@@ -209,6 +209,11 @@ export class ListaProductosPage implements OnInit {
     modal.onDidDismiss().then((result) => {
       if (result.data && result.role == 'Guardar Codigo') {
         producto.codigo = result.data;
+        this.spinnerService.showLoading('Cargando codigo...');
+        this.database.actualizar(environment.TABLAS.productos, producto, producto.id)?.finally(() => {
+
+          this.spinnerService.stopLoading();
+        })
       }
     });
     modal.present();
