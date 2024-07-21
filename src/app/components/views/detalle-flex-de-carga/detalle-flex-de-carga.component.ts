@@ -5,6 +5,7 @@ import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.servic
 import { InfoCompartidaService } from 'src/app/services/info-compartida.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
+import { PlacaDecarga } from '../../forms/form-flex-de-carga/form-flex-de-carga.component';
 
 @Component({
   selector: 'app-detalle-flex-de-carga',
@@ -17,8 +18,10 @@ export class DetalleFlexDeCargaComponent implements OnInit {
   editPrecio = false;
   editMarca = false;
   editCalidad = false;
-  repuesto: any;
-  clonRepuesto: any;
+  editStock = false;
+  editVersion = false;
+  repuesto!: PlacaDecarga;
+  clonRepuesto!: PlacaDecarga;
   marcas = this.infoConpatida.marcasModulos;
   colores = this.infoConpatida.coloresModulos;
   tipos = this.infoConpatida.tiposModulos;
@@ -43,7 +46,7 @@ export class DetalleFlexDeCargaComponent implements OnInit {
     this.clonRepuesto = this.funcionesUtilesService.clonarObjeto(this.repuesto);
   }
 
-  mostrar(campo: 'editMarca' | 'editModelo' | 'editPrecio' | 'editCalidad') {
+  mostrar(campo: 'editMarca' | 'editModelo' | 'editPrecio' | 'editCalidad' | 'editStock' | 'editVersion') {
     this.resetBanderas();
     this[campo] = true;
   }
@@ -52,28 +55,9 @@ export class DetalleFlexDeCargaComponent implements OnInit {
     this.editPrecio = false;
     this.editMarca = false;
     this.editCalidad = false;
+    this.editStock = false;
+    this.editVersion = false;
   }
-  agregarNuevoColor() {
-    let cantidad = this.cantidad;
-    let color = this.color;
-    let colorExistente = this.clonRepuesto.stock.find((stock: { color: string, cantidad: number }) => stock.color == color);
-
-    if (!colorExistente) {
-      cantidad <= 0
-        ? this.toastService.simpleMessage('Error en la cantidad', 'la cantidad debe ser mayor a 0', ToastColor.warning)
-        : this.clonRepuesto.stock.push({ cantidad, color });
-    } else {
-      colorExistente.cantidad = cantidad;
-    }
-  }
-  resetearColores() {
-    this.alertService.alertConfirmacion('Confirmación', 'Si confirma borrara todos los colores y volvera a empezar, ¿quiere continuar?', 'Si, Resetear',
-      () => {
-        this.clonRepuesto.stock = []
-      })
-
-  }
-
 
   async guardarCambios() {
     this.repuesto = this.funcionesUtilesService.clonarObjeto(this.clonRepuesto);
@@ -92,13 +76,14 @@ export class DetalleFlexDeCargaComponent implements OnInit {
 
   borrarArticulo() {
     this.repuesto = this.funcionesUtilesService.clonarObjeto(this.clonRepuesto);
+    if (this.repuesto.id) {
+      this.database.eliminar(environment.TABLAS.flexs, this.repuesto.id).then(() => {
+        this.toastService.simpleMessage('Exito', 'Flex borrado con exito', ToastColor.success);
 
-    this.database.eliminar(environment.TABLAS.flexs, this.repuesto.id).then(() => {
-      this.toastService.simpleMessage('Exito', 'Flex borrado con exito', ToastColor.success);
-
-    }).catch(err => {
-      this.toastService.simpleMessage('Error', 'No se pudo borrar el flex', ToastColor.danger);
-    })
+      }).catch(err => {
+        this.toastService.simpleMessage('Error', 'No se pudo borrar el flex', ToastColor.danger);
+      })
+    }
   }
 
   showDeleteDialog() {

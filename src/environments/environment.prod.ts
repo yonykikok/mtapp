@@ -11,7 +11,9 @@ export const environment = {
     appId: "1:1091635374212:web:64d0ba31668236c0ccfad1",
     measurementId: "G-Y87CBVERHZ"
   },
-  TABLAS: {
+  TABLAS:{
+    ingresosNuevoLibro: "ingresosNuevoLibro",
+    especificacionesDeEquipos: "especificacionesDeEquipos",
     recargosProductos: "recargosProductos",
     glasses: "glasses",
     acreedores: "acreedores",

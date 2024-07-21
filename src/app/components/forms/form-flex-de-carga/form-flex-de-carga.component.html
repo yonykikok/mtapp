@@ -1,5 +1,5 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/lista-flex-de-carga'" [title]="'Agregar Flex de carga'"></app-clasic-toolbar>
+  <app-clasic-toolbar [ruta]="'repuestos/lista-flex-de-carga'" [title]="'Agregar Flex de carga'"></app-clasic-toolbar>
 </ion-header>
 
 <ion-content>
@@ -16,30 +16,39 @@
 
       <form class="card p-3 m-3 col-lg-6" [formGroup]="formFlexDeCarga">
 
-        <ion-item   class="ion-margin">
+        <ion-item class="ion-margin">
           <ion-input type="text" placeholder="Escriba el modelo" aria-label="FlexDeCarga" formControlName="modelo">
           </ion-input>
         </ion-item>
 
-        <ion-item  class="ion-margin">
+        <ion-item class="ion-margin">
           <ion-input type="number" placeholder="precio en dolares" formControlName="precio"></ion-input>
           <ion-chip>{{formFlexDeCarga.controls['precio'].value*precioDolarBlue|currency:'USD':'symbol':'1.0-0'}}</ion-chip>
         </ion-item>
 
 
-        <ion-item  class="ion-margin">
-          <ion-select aria-label="fruit" placeholder="Select fruit" formControlName="marca">>
+        <ion-item class="ion-margin">
+          <ion-select aria-label="Marca" placeholder="Seleccione la marca" formControlName="marca">>
             <ion-select-option *ngFor="let marca of marcas" [value]="marca">{{marca}}</ion-select-option>
           </ion-select>
         </ion-item>
 
 
-        <ion-item  class="ion-margin">
-          <ion-select aria-label="fruit" placeholder="Select fruit" formControlName="calidad">>
+        <ion-item class="ion-margin">
+          <ion-select aria-label="Calidad" placeholder="Seleccione la calidad" formControlName="calidad">>
             <ion-select-option *ngFor="let calidad of calidades" [value]="calidad">{{calidad}}</ion-select-option>
           </ion-select>
         </ion-item>
 
+        <ion-item class="ion-margin">
+          <ion-input type="number" placeholder="cantidad en stock" formControlName="stock"></ion-input>
+        </ion-item>
+
+        <ion-item class="ion-margin">
+          <ion-input type="text" placeholder="Ej: version 'M', version de 20 patas" aria-label="version"
+            formControlName="version">
+          </ion-input>
+        </ion-item>
 
         <ion-button type="submit" color="primary" expand="block" [disabled]="!formFlexDeCarga.valid"
           (click)="procesarAltaFlexDeCarga()">Agregar</ion-button>

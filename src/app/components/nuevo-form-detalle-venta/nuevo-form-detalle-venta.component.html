@@ -18,6 +18,7 @@
           <ion-input label="Producto" labelPlacement="floating" type="text" placeholder="Ej: Cargador v8"
             [(ngModel)]="productoABuscar" [ngModelOptions]="{standalone: true}"
             (ionInput)="filtrarProductos($event)"></ion-input>
+
         </ion-item>
 
         <ion-list inset="true" style="max-height: 10rem; overflow-y: scroll;">
@@ -33,6 +34,8 @@
                 {{producto.precio|redondearPrecio: 'pesos'|currency}}
               </ion-text>
             </div>
+            <ion-checkbox slot="end" (click)="agregarProducto(producto)"></ion-checkbox>
+
           </ion-item>
         </ion-list>
       </ion-card>

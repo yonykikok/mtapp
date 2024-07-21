@@ -9,6 +9,8 @@ import { Producto } from '../nueva-funcionalidad/nueva-funcionalidad.component';
   styleUrls: ['./nuevo-form-detalle-venta.component.scss'],
 })
 export class NuevoFormDetalleVentaComponent implements OnInit {
+
+  productosSeleccionados: Producto[] = [];
   productoABuscar: string = '';
   productos: Producto[] = [];
   productosAMostrar: Producto[] = [];
@@ -151,6 +153,11 @@ export class NuevoFormDetalleVentaComponent implements OnInit {
             : 0;//efectivo
       }
     }, 100);
+  }
+
+  agregarProducto(producto: Producto) {
+    this.productosSeleccionados.push(producto);
+    console.log(this.productosSeleccionados)
   }
 }
 

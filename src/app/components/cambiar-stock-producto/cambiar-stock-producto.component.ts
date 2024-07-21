@@ -61,7 +61,7 @@ export class CambiarStockProductoComponent implements OnInit {
   }
   guardarProducto() {
     
-    this.producto.cantidad = this.producto.coloresDisponibles?.reduce((total: number, color: any) => {
+    this.producto.stockTotal = this.producto.coloresDisponibles?.reduce((total: number, color: any) => {
       return total + color.stock;
     }, 0) || 0
     

@@ -12,6 +12,7 @@ import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.servic
 
 
 export interface PlacaDecarga {
+  id?: string,
   calidad: string,
   modelo: string,
   marca: string,
@@ -26,26 +27,24 @@ export interface PlacaDecarga {
 })
 export class FormFlexDeCargaComponent implements OnInit {
 
-  @Input() nuevoFlexDeCarga = {
+  @Input() nuevoFlexDeCarga: PlacaDecarga = {
     calidad: '',
     modelo: '',
     marca: '',
-    precio: '',
-    tipo: '',
-    stock: []
+    precio: 0,
+    stock: 0,
   }
 
 
   precioDolarBlue: number = 0;
   //auto complete
-  modelosExistentes: any[] = [];
+  modelosExistentes: any[] = [];//solo el string modelo
   flexDeCargasFiltrados: Observable<string[]> = new Observable<string[]>();
   //auto complete
 
   //parametros formulario
   marcas = this.infoConpatida.marcasModulos;
   calidades = this.infoConpatida.calidadesFlexDecarga;
-  cantidades = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   //parametros formulario
 
   flexDeCargas: any[] = [];
@@ -53,11 +52,10 @@ export class FormFlexDeCargaComponent implements OnInit {
   formFlexDeCarga: FormGroup = new FormGroup({
     modelo: new FormControl('', Validators.required),
     precio: new FormControl('', Validators.required),
-    cantidad: new FormControl(0, Validators.required),
     marca: new FormControl('Samsung', Validators.required),
-    color: new FormControl('Blanco', Validators.required),
-    tipo: new FormControl('Simple', Validators.required),
-    calidad: new FormControl('AAA', Validators.required)
+    calidad: new FormControl('AAA', Validators.required),
+    stock: new FormControl(1, Validators.required),
+    version: new FormControl('',),
   });
 
 
@@ -95,7 +93,7 @@ export class FormFlexDeCargaComponent implements OnInit {
 
   ngOnInit() {
     this.dataBase.obtenerPorId(environment.TABLAS.cotizacion_dolar, 'dolarBlue').subscribe((res: any) => {
-        this.precioDolarBlue = res.payload.data().price;
+      this.precioDolarBlue = res.payload.data().price;
     });
 
     this.cargarInputAutoCompletado();
@@ -117,21 +115,6 @@ export class FormFlexDeCargaComponent implements OnInit {
     });
   }
 
-  // agregarNuevoColor() {
-  //   let { cantidad, color } = this.formFlexDeCarga.value;
-  //   let existeColor = this.nuevoFlexDeCarga.stock.find((stock: any) => stock.color == color);
-
-  //   if (!existeColor) {
-  //     cantidad <= 0
-  //       ? this.toastService.simpleMessage('Error en la cantidad', 'la cantidad debe ser mayor a 0', ToastColor.warning)
-  //       : this.nuevoFlexDeCarga.stock.push({ cantidad, color });
-  //   } else {
-  //     this.toastService.simpleMessage('Error en el color', 'El color ya existe', ToastColor.warning)
-  //   }
-  // }
-
-
-
   agregarFlexDeCarga(nuevoFlexDeCarga: any) {
     this.dataBase.crear(environment.TABLAS.flexs, nuevoFlexDeCarga).then(() => {
       this.toastService.simpleMessage('Exito', 'Se agrego el flexDeCarga correctamente', ToastColor.success);
@@ -140,18 +123,7 @@ export class FormFlexDeCargaComponent implements OnInit {
   }
 
   obtenerObjetoFlexDeCarga() {
-    const { calidad, modelo, marca, precio, tipo } = this.formFlexDeCarga.value;
-    // let { stock } = this.nuevoFlexDeCarga;
-    // stock.length <= 0 ? stock = [{ color: 'Blanco', cantidad: 0 }] : null;
-
-    return {
-      calidad,
-      modelo,
-      marca,
-      precio,
-      tipo,
-      // stock
-    }
+    return this.formFlexDeCarga.value;
   }
 
 

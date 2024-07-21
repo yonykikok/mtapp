@@ -30,3 +30,8 @@ ion-row:first-child {
     background-color: var(--main-bg-color) !important;
     color: white;
 }
+
+
+.ion_item {
+    --inner-padding-end: none !important;
+}

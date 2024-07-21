@@ -26,7 +26,7 @@ export class DashboardPage implements OnInit {
     codigo: "7798113301765",
   }];
   modulos: { titulo: string, color: string, ruta: string, role: Roles, img?: string }[] = [
-    { titulo: 'Prototipo', color: '#222222', ruta: "/nuevo-libro-diario", role: 'OWNER', img: '/assets/svg/icons/librodiario.svg' },
+    // { titulo: 'Prototipo', color: '#222222', ruta: "/nuevo-libro-diario", role: 'OWNER', img: '/assets/svg/icons/librodiario.svg' },
     { titulo: 'Libro diario', color: '#dc70fd', ruta: "/libro-diario", role: 'EMPLEADO', img: '/assets/svg/icons/librodiario.svg' },
     { titulo: 'Reparaciones', color: 'rgb(79 132 211)', ruta: "/repuestos", role: 'CLIENTE', img: '/assets/svg/icons/btnRepuestos.png' },
     { titulo: 'Pedidos', color: '#007bff', ruta: "/lista-pedidos", role: 'EMPLEADO', img: '/assets/svg/icons/pedidos.svg' },

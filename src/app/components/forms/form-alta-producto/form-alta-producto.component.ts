@@ -95,7 +95,7 @@ export class FormAltaProductoComponent implements OnInit {
         iva: this.recargos.iva,
         margen: this.recargos.margen,
         coloresDisponibles: productoForm.coloresDisponibles,
-        cantidad: productoForm.cantidad = productoForm.coloresDisponibles?.reduce((total: number, color: any) => {
+        stockTotal: productoForm.cantidad = productoForm.coloresDisponibles?.reduce((total: number, color: any) => {
           return total + color.stock;
         }, 0) || 0,
       };

@@ -17,6 +17,24 @@ import { AlertService } from 'src/app/services/alert.service';
 import { SpinnerService } from 'src/app/services/spinner.service';
 import { CambiarStockProductoComponent } from '../cambiar-stock-producto/cambiar-stock-producto.component';
 
+export interface ProductoCarrito {
+  id: string,//sera puesto por firebase
+  checked: boolean,
+  cantidad: number,
+  codigo?: string,
+  imgUrlsRef?: string[],
+  images?: string[],
+  marca: string,
+  coloresDisponibles?: { stock: number; color: string; denominacionColor: string; }[],
+  stockTotal: number,
+  categoria: string,
+  costo: number,
+  iva?: number,
+  producto: string,
+  margen?: number,
+  financiamiento?: number,
+  precio: number;
+}
 export interface Producto {
   id: string,//sera puesto por firebase
   codigo?: string,
@@ -24,7 +42,7 @@ export interface Producto {
   images?: string[],
   marca: string,
   coloresDisponibles?: { stock: number; color: string; denominacionColor: string; }[],
-  cantidad: number,
+  stockTotal: number,
   categoria: string,
   costo: number,
   iva?: number,
@@ -106,7 +124,7 @@ export class NuevaFuncionalidadComponent implements OnInit {
   }
   ngOnInit() {
     this.database.obtenerPorId(environment.TABLAS.recargosProductos, 'recargos').subscribe((res: any) => {
-      
+
       this.recargos = res.payload.data();
     });
 
@@ -316,10 +334,10 @@ export class NuevaFuncionalidadComponent implements OnInit {
     let precioConMargen = costo * (1 + this.recargos.margen / 100);
     let precioConIva = precioConMargen * (1 + this.recargos.iva / 100);
     let precioConFinanciamiento = precioConIva * (1 + this.recargos.financiamiento / 100);
-  
+
     return precioConFinanciamiento;
   }
-  
+
 
   confirmarEliminacion(producto: Producto) {
     this.alertService.alertConfirmacion('Confirmar eliminacion', '¿Quiere eliminar este producto?', 'Si', () => {
@@ -329,7 +347,7 @@ export class NuevaFuncionalidadComponent implements OnInit {
         producto.imgUrlsRef?.forEach(async (imgRef) => {
           try {
             let result = await this.storageService.borrarImagen(imgRef);
-            
+
 
           } catch (error) {
             console.error(error);
@@ -342,7 +360,7 @@ export class NuevaFuncionalidadComponent implements OnInit {
 
       }
       this.database.eliminar(environment.TABLAS.productos, producto.id).then(res => {
-        
+
       });
     })
   }

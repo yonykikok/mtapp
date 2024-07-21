@@ -1,0 +1,28 @@
+<!-- FORM MODIFICAR STOCK RAPIDO -->
+<div (click)="cerrarModificador();" class="flexCenterCenter customModal">
+  <ion-card (click)="$event.stopPropagation();">
+    <ion-card-header>
+
+      <ion-item-divider class="ion-padding">
+        <ion-chip class="ion-text-center" slot="start" color="danger" outline="true"
+          (click)="cambiarCantidad('disminuir')">
+          <ion-icon class="ion-no-margin" name="remove-outline"></ion-icon>
+        </ion-chip>
+
+        <ion-card class="ion-padding">
+          {{stockEditable}}
+        </ion-card>
+
+        <ion-chip class="ion-text-center" slot="end" color="success" outline="true"
+          (click)="cambiarCantidad('aumentar')">
+          <ion-icon class="ion-no-margin" name="add-outline"></ion-icon>
+        </ion-chip>
+      </ion-item-divider>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-button expand="block" class="ion-margin" color="primary" (click)="guardarCambios()">
+        Guardar cambios</ion-button>
+    </ion-card-content>
+  </ion-card>
+</div>
+<!-- FIN FORM MODIFICAR STOCK RAPIDO -->

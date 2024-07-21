@@ -63,7 +63,7 @@
 
       <!-- EDIT MARCA -->
       <ion-item  *ngIf="editMarca" class="ion-margin">
-        <ion-select aria-label="fruit" placeholder="Select fruit" [(ngModel)]="clonRepuesto.marca">
+        <ion-select aria-label="Marca" placeholder="Seleccione la marca" [(ngModel)]="clonRepuesto.marca">
           <ion-select-option *ngFor="let marca of marcas" [value]="marca">{{marca}}</ion-select-option>
         </ion-select>
       </ion-item>
@@ -98,7 +98,7 @@
       <!-- FIN EDIT STOCK -->
       <!--  EDIT TIPO -->
       <ion-item  *ngIf="editTipo" class="ion-margin">
-        <ion-select aria-label="fruit" placeholder="Select fruit" [(ngModel)]="clonRepuesto.tipo">
+        <ion-select aria-label="Tipo" placeholder="Seleccione el tipo" [(ngModel)]="clonRepuesto.tipo">
           <ion-select-option *ngFor="let tipo of tipos" [value]="tipo">{{tipo}}</ion-select-option>
         </ion-select>
       </ion-item>
@@ -106,7 +106,7 @@
 
       <!-- EDIT CALIDAD -->
       <ion-item  *ngIf="editCalidad" class="ion-margin">
-        <ion-select aria-label="fruit" placeholder="Select fruit" [(ngModel)]="clonRepuesto.calidad">
+        <ion-select aria-label="Calidad" placeholder="Seleccione la calidad" [(ngModel)]="clonRepuesto.calidad">
           <ion-select-option *ngFor="let calidad of calidades" [value]="calidad">{{calidad}}</ion-select-option>
         </ion-select>
       </ion-item>

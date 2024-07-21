@@ -6,6 +6,7 @@ import { AperturaDeCajaComponent } from 'src/app/components/apertura-de-caja/ape
 import { FormActualizarItemLibroDiarioComponent } from 'src/app/components/forms/form-actualizar-item-libro-diario/form-actualizar-item-libro-diario.component';
 import { FormDetalleVentaComponent, MediosDePago } from 'src/app/components/forms/form-detalle-venta/form-detalle-venta.component';
 import { NuevoFormDetalleVentaComponent } from 'src/app/components/nuevo-form-detalle-venta/nuevo-form-detalle-venta.component';
+import { SelectorDeProductosComponent } from 'src/app/components/selector-de-productos/selector-de-productos.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
@@ -7091,5 +7092,29 @@ export class NuevoLibroDiarioPage implements OnInit {
 
   mostrarOpciones() {
     this.setOpen(true);
+  }
+
+  async nuevoCarrito() {
+    try {
+      const modal = await this.modalController.create({
+        component: SelectorDeProductosComponent,
+        componentProps: {
+          lista: productos,
+          isModal: false
+        },
+      })
+
+      modal.onDidDismiss().then((result: any) => {
+        if (!result.data || !result.role) return;
+
+
+        if (result.role == 'seleccionTerminada') {
+          console.log(result.data)
+        }
+
+      });
+      return await modal.present();
+    } catch (err) {
+    }
   }
 }
