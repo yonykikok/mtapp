@@ -38,15 +38,20 @@
     <ion-item-divider class="ion-no-padding" *ngIf="libroDiarioHoy&&libroDiarioHoy.ventas"
       style="flex-direction: column; ;">
 
-      <ion-chip (click)="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)?mostrarModalEditarVenta(item):''"
-        style="width: 90%; justify-content: space-between;" *ngFor="let item of libroDiarioHoy.ventas" [ngStyle]="{'background-color': item.boleta ? 'rgb(168 231 232)' : '' ,
-            'border': item.medioDePago!='efectivo' ? '2px solid orange' : 'none' }">
-        <label [ngStyle]="{'color': item.precio<0 ? 'red' : '' }">{{item.precio|currency}}</label>
+      <div *ngFor="let venta of libroDiarioHoy.ventas">
+        <div *ngIf="venta.carrito && venta.carrito.items">
+          <ion-chip (click)="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)?mostrarModalEditarVenta(item):''"
+            style="width: 90%; justify-content: space-between;" *ngFor="let item of venta.carrito.items">
+            <!-- [ngStyle]="{'background-color': item.boleta ? 'rgb(168 231 232)' : '' ,
+          'border': item.medioDePago!='efectivo' ? '2px solid orange' : 'none' }" -->
+            <label [ngStyle]="{'color': item.precio<0 ? 'red' : '' }">{{item.precio|currency}}</label>
 
-        <b>{{item.descripcion|maxLength:25}} </b>
+            <b>{{item.descripcion|maxLength:25}} </b>
 
-        <label> {{item.boleta?'('+item.boleta+')':''}}</label>
-      </ion-chip>
+            <label> {{item.boleta?'('+item.boleta+')':''}}</label>
+          </ion-chip>
+        </div>
+      </div>
     </ion-item-divider>
 
 
@@ -103,20 +108,5 @@
       <ion-icon name="cart"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end" (click)="openDialog()"
-    *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser) && libroDiarioHoy &&libroDiarioHoy.montoInicial &&libroDiarioHoy.montoInicial>0">
-    <ion-fab-button>
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 
-  <!-- boton modal cierre de caja -->
-  <ion-fab slot="fixed" vertical="bottom" horizontal="start"
-    *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser) && libroDiarioHoy && libroDiarioHoy['montoTotalEfectivo']&& libroDiarioHoy['montoTotalEfectivo']>0"
-    (click)="mostrarModalCierreDeCaja=true">
-    <ion-fab-button color="success">
-      <ion-icon name="newspaper-outline"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-  <!-- fin boton modal cierre de caja -->
 </ion-content>

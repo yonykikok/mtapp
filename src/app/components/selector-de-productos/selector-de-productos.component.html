@@ -1,54 +1,96 @@
 <ion-content>
-  <ion-header>
-    <app-clasic-toolbar [ruta]="'/repuestos/lista-glasses'" [title]="'Selector de modelos'"></app-clasic-toolbar>
-  </ion-header>
 
-  <ion-searchbar debounce="500" placeholder="Escriba marca o modelo del compatible" [(ngModel)]="textoABuscar"
-    (ionInput)="onChangeFilter()"></ion-searchbar>
+  <!-- Lista de Carritos -->
+  <ion-list>
+    <ion-item-sliding *ngFor="let carrito of carritos">
+      <ion-item color="light" [class.selected]="carrito.id === idCarritoSeleccionado"
+        (click)="seleccionarCarrito(carrito.id)">
+        <ion-icon slot="start" name="cart-outline" color="success"></ion-icon>
+        <ion-label>
+          <h2>Carrito {{ carrito.id }}</h2>
+          <p>Total: {{ obtenerPrecioTotal(carrito.id) | currency }}</p>
+        </ion-label>
+        <ion-icon color="success" slot="end" name="checkbox-outline"
+          *ngIf="carrito.id === idCarritoSeleccionado"></ion-icon>
+      </ion-item>
 
-  <div class="ion-text-center" *ngIf="lista.length == 0" style="height: 85vh;">
-    <ion-text>No hay modelos existentes cargados.</ion-text>
-  </div>
-
-  <ion-list lines="full">
-    <ion-item color="light" *ngFor="let item of listaAMostrar">
-      <ion-avatar *ngIf="item.images" (click)="mostrarImagenCompleta(item)">
-        <img [src]="item.images[0]" />
-      </ion-avatar>
-      
-      <div class="flexColumn ion-margin-start">
-        <ion-text>{{item.producto}}</ion-text>
-        <ion-label>{{item.codigo}}</ion-label>
-        <ion-text *ngIf="item.precio" color="success">
-          {{item.precio|redondearPrecio: 'pesos'|currency}}
-        </ion-text>
-      </div>
-
-      <div slot="end" style="display:flex; align-items: center;">
-        <label *ngIf="item.checked"
-          style="position: absolute; right: 0.3rem; display:flex; flex-direction: column; align-items: center;">
-        </label>
-
-        <ion-button fill="clear" slot="end">
-          <ion-checkbox aria-label="Label" [(ngModel)]="item.checked" (click)="seleccionarModelo($event, item)">
-          </ion-checkbox>
-        </ion-button>
-      </div>
-    </ion-item>
+      <!-- Opciones de acción de deslizamiento -->
+      <ion-item-options side="end">
+        <ion-item-option (click)="borrarCarrito(carrito.id)" color="danger">
+          Borrar
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
   </ion-list>
 
-  <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
-    <ion-infinite-scroll-content
-      loadingSpinner="bubbles"
-      loadingText="Cargando más datos...">
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="modelosSeleccionados.length > 0"
-    (click)="mostrarConfirmacion()">
-    <ion-chip class="terminarSeleccion" color="success" outline="true" style="background-color: white;">
-      <ion-icon name="checkmark-done-outline"></ion-icon>
-      <ion-label>Terminar selección</ion-label>
-    </ion-chip>
+  <!-- Lista de Productos en el Carrito Seleccionado -->
+  <ion-list *ngIf="itemsCarritoSeleccionado.length > 0" class="ion-no-padding">
+    <ion-item-sliding *ngFor="let item of itemsCarritoSeleccionado">
+      <ion-item>
+        <ion-avatar *ngIf="item.images && item.images.length>0" class="ion-margin-end">
+          <img [src]="item.images[0]" />
+        </ion-avatar>
+        <ion-label>
+          <ion-text [color]="!item.idProducto?'danger':''">{{ item.marca|titlecase }}</ion-text>
+          <h2><b>{{ item.descripcion|titlecase }}</b> </h2>
+          <ion-text *ngIf="item.boleta">Boleta: ({{item.boleta}})</ion-text>
+          <p>{{ item.cantidad }} x {{ item.precio|redondearPrecio:'pesos' | currency }}</p>
+        </ion-label>
+
+        <div slot="end" class="flexColumn" style="font-size: 2rem;">
+          <ion-icon name="caret-up-outline" (click)="cambiarCantidad(item,1)"></ion-icon>
+          <ion-icon name="caret-down-outline" (click)="cambiarCantidad(item,-1)"></ion-icon>
+        </div>
+        <!-- <ion-input type="number" [(ngModel)]="item.cantidad" (ngModelChange)="actualizarCantidad(item.idProducto, $event)"
+            min="1" style="width: 80px;"></ion-input> -->
+      </ion-item>
+
+      <!-- Opciones de acción de deslizamiento -->
+      <ion-item-options side="end">
+        <ion-item-option (click)="eliminarDelCarrito(item.idProducto)" color="danger">
+          Eliminar
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+    <ion-button expand="full" class="ion-margin" color="tertiary" (click)="confirmarVenta()">Pasar a formas de
+      pago</ion-button>
+  </ion-list>
+
+
+  <!-- Botón para Crear un Nuevo Carrito -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="start" (click)="crearNuevoCarrito()">
+    <ion-fab-button>
+      <ion-icon name="cart"></ion-icon>
+    </ion-fab-button>
   </ion-fab>
+
+  <!-- <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-chip class="no-radius" color="tertiary" 
+    style="width: 10rem; display: flex; justify-content: space-between; border: 2px solid black; font-size:1.1rem">
+    <ion-icon name="hammer-outline"></ion-icon><b>Reparación</b>
+  </ion-chip>
+    <ion-fab-button>
+      <ion-icon name="chevron-up-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top" style="right: 0;">
+      <ion-chip class="no-radius" color="success" (click)="mostrarAlerta()"
+        style="width: 10rem; display: flex; justify-content: space-between; border: 2px solid black; font-size:1.1rem">
+        <ion-icon name="pricetag-outline"></ion-icon><b>Producto</b>
+      </ion-chip>
+      <ion-chip class="no-radius" color="tertiary" 
+        style="width: 10rem; display: flex; justify-content: space-between; border: 2px solid black; font-size:1.1rem">
+        <ion-icon name="hammer-outline"></ion-icon><b>Reparación</b>
+      </ion-chip>
+    </ion-fab-list>
+  </ion-fab> -->
+
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button color="warning" (click)="openDialog()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+
 </ion-content>

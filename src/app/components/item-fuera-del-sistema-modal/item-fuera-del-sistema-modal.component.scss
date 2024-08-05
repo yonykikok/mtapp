@@ -1,0 +1,21 @@
+ion-item {
+    margin-bottom: 1rem;
+}
+
+.input-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.input-container > div {
+    margin-right: 10px;
+}
+
+ion-radio {
+    margin-left: 0.5rem;
+}
+
+.textRadio {
+    display: flex;
+    align-items: center;
+}

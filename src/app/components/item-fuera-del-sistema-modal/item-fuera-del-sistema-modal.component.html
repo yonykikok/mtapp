@@ -1,0 +1,71 @@
+<!-- <ion-button (click)="cerrarModal()">Cerrar</ion-button> -->
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/nuevo-libro-diario'" [title]="'Agregar Item Fuera del Sistema'"></app-clasic-toolbar>
+</ion-header>
+
+
+<ion-content>
+  <ion-card class="ion-text-center">
+    <div *ngIf=" itemFuraDelSistema && itemFuraDelSistema.precio && itemFuraDelSistema.precio<0">
+      <ion-chip color="danger">
+        'Saldo negativo'<br> Estas haciendo un retiro de dinero
+      </ion-chip>
+    </div>
+    <ion-card-content>
+
+      <form>
+        <div class="input-container">
+          <ion-item>
+            <ion-input label="Precio" labelPlacement="floating" type="number" placeholder="Ej: 1500"
+              [(ngModel)]="itemFuraDelSistema.precio" [ngModelOptions]="{ standalone: true }"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-input label="Numero de boleta" labelPlacement="floating" type="number" placeholder="Ej: 2955"
+              [(ngModel)]="itemFuraDelSistema.boleta" [ngModelOptions]="{ standalone: true }"></ion-input>
+          </ion-item>
+        </div>
+
+        <ion-item>
+          <ion-textarea label="Descripción" labelPlacement="floating" placeholder="Cargador 5.1 Innova tipo C"
+            [(ngModel)]="itemFuraDelSistema.descripcion" [ngModelOptions]="{ standalone: true }"></ion-textarea>
+        </ion-item>
+
+        <div>
+          <ion-button expand="block" color="primary" (click)="agregarItemFueraDelSistema()"
+            [disabled]="!itemFuraDelSistema.precio || !itemFuraDelSistema.descripcion">Agregar</ion-button>
+
+          <ion-button expand="block" color="secondary"
+            [disabled]="!itemsFueraDelSistema || itemsFueraDelSistema.length <= 0"
+            (click)="agregarAlCarrito()">Listo</ion-button>
+        </div>
+      </form>
+    </ion-card-content>
+  </ion-card>
+  <ion-list class="ion-no-padding" *ngIf="itemsFueraDelSistema" style="flex-direction: column;">
+    <ion-item-sliding *ngFor="let item of itemsFueraDelSistema">
+      <ion-item style="width: 95%;" lines="none">
+        <div slot="start">
+          <p style="display: flex;">{{item.cantidad}}x
+            <b> {{item.descripcion | titlecase}}</b>
+            <ion-label *ngIf="item.boleta" color="tertiary">
+              -({{item.boleta}})
+            </ion-label>
+          </p>
+          <p><label>{{item.precioTotal | currency}}</label></p>
+        </div>
+        <div slot="end" class="flexColumn" style="font-size: 2rem;">
+          <ion-icon name="caret-up-outline" (click)="cambiarCantidad(item,1)"></ion-icon>
+          <ion-icon name="caret-down-outline" (click)="cambiarCantidad(item,-1)"></ion-icon>
+        </div>
+      </ion-item>
+
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="eliminarItem(item)">
+          <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+</ion-content>

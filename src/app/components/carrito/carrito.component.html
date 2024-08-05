@@ -1,0 +1,50 @@
+<ion-content>
+  <!-- Formulario de Búsqueda -->
+  <form (ngSubmit)="onSubmit()">
+    <ion-item>
+      <ion-label position="floating">Producto</ion-label>
+      <ion-input type="text" placeholder="Ej: Cargador v8" [(ngModel)]="productoABuscar" name="producto"></ion-input>
+      <ion-button (click)="clearSearch()" fill="outline">Limpiar</ion-button>
+      <ion-button type="submit">Buscar</ion-button>
+    </ion-item>
+  </form>
+
+  <!-- Lista de Carritos -->
+  <ion-list>
+    <ion-item *ngFor="let cart of carts" [class.selected]="cart.id === selectedCartId" (click)="selectCart(cart.id)">
+      <ion-label>
+        <h2>Carrito {{ cart.id }}</h2>
+        <p>Total: {{ getTotalPrice(cart.id) | currency }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <!-- Lista de Productos en el Carrito Seleccionado -->
+  <ion-list *ngIf="selectedCartItems.length > 0">
+    <ion-item *ngFor="let item of selectedCartItems">
+      <ion-label>
+        <h2>{{ item.name }}</h2>
+        <p>{{ item.quantity }} x {{ item.price | currency }}</p>
+      </ion-label>
+      <ion-button (click)="removeFromCart(item.productId)" fill="outline">Eliminar</ion-button>
+      <!-- Opción para actualizar la cantidad si es necesario -->
+      <ion-input type="number" [(ngModel)]="item.quantity" (ngModelChange)="updateQuantity(item.productId, $event)"
+        min="1" style="width: 80px;"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <!-- Botón para Crear un Nuevo Carrito -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="start" (click)="createNewCart()">
+    <ion-fab-button>
+      <ion-icon name="cart"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- Footer para Mostrar el Total y Realizar el Checkout -->
+  <!-- <ion-footer *ngIf="selectedCartItems.length > 0">
+    <ion-toolbar>
+      <ion-title>Total: {{ selectedTotalPrice | currency }}</ion-title>
+      <ion-button expand="full" (click)="showCheckoutConfirmation()">Checkout</ion-button>
+    </ion-toolbar>
+  </ion-footer> -->
+</ion-content>

@@ -1,4 +1,4 @@
-interface historialCaja {
+export interface historialCaja {
     fecha: number,
     fechaString: string,
     mensaje: string,

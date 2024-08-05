@@ -1,11 +1,11 @@
 <ion-header>
   <app-clasic-toolbar [isModal]="false" [ruta]="'/libro-diario'" (atrasEvent)="volverAtras()"
-    [title]="'Nuevo Agregar venta'"></app-clasic-toolbar>
+    [title]="'Carritos de compras'"></app-clasic-toolbar>
 </ion-header>
 
 <ion-content>
 
-  <ion-card class="ion-padding">
+  <!-- <ion-card class="ion-padding">
 
     <div *ngIf=" item && item.precio && item.precio<0">
       <ion-chip color="danger">
@@ -13,49 +13,45 @@
       </ion-chip>
     </div>
     <form *ngIf="step==1">
-      <ion-card>
+      <div class="ion-no-margin ion-margin-bottom">
         <ion-item>
-          <ion-input label="Producto" labelPlacement="floating" type="text" placeholder="Ej: Cargador v8"
-            [(ngModel)]="productoABuscar" [ngModelOptions]="{standalone: true}"
-            (ionInput)="filtrarProductos($event)"></ion-input>
+          <form (ngSubmit)="onSubmit()">
+            <ion-input label="Producto" labelPlacement="floating" type="text" placeholder="Ej: Cargador v8"
+              [(ngModel)]="productoABuscar" name="producto" (ionInput)="filtrarProductos($event)"></ion-input>
+            <ion-button type="submit">Buscar</ion-button>
+          </form>
 
         </ion-item>
 
-        <ion-list inset="true" style="max-height: 10rem; overflow-y: scroll;">
+        <ion-list inset="true" style="max-height: 15rem; overflow-y: scroll; margin: 0;">
 
-          <ion-item *ngFor="let producto of productosAMostrar">
-            <ion-avatar *ngIf="producto.images">
+          <ion-item *ngFor="let producto of productosAMostrar" (click)="solicitarCantidad(producto)">
+            <ion-avatar *ngIf="producto.images" style="max-width: 30%;"
+              (click)="mostrarImagenCompleta($event,producto.images[0])">
               <img [src]="producto.images[0]" />
             </ion-avatar>
-            <div class="flexColumn ion-margin-start">
+            <div class="flexColumn ion-margin-start" style="max-width: 70%;">
               <ion-text>{{producto.producto}}</ion-text>
               <ion-label>{{producto.codigo}}</ion-label>
               <ion-text *ngIf="producto.precio" color="success">
                 {{producto.precio|redondearPrecio: 'pesos'|currency}}
               </ion-text>
             </div>
-            <ion-checkbox slot="end" (click)="agregarProducto(producto)"></ion-checkbox>
-
           </ion-item>
         </ion-list>
-      </ion-card>
-
-      <div class="input-container">
-        <ion-item>
-          <ion-input label="Precio" labelPlacement="floating" type="number" placeholder="Ej: 1500"
-            [(ngModel)]="item.precio" [ngModelOptions]="{standalone: true}"></ion-input>
-        </ion-item>
-
-        <ion-item>
-          <ion-input label="Numero de boleta" labelPlacement="floating" type="number" placeholder="Ej: 2955"
-            [(ngModel)]="item.boleta" [ngModelOptions]="{standalone: true}"></ion-input>
-        </ion-item>
       </div>
 
-      <ion-item>
-        <ion-textarea label="Descripción" labelPlacement="floating" placeholder="Cargador 5.1 Innova tipo C"
-          [(ngModel)]="item.descripcion" [ngModelOptions]="{standalone: true}"></ion-textarea>
-      </ion-item>
+      <div class="input-container">
+        <ion-input mode="md" fill="outline " label="Precio" labelPlacement="floating" type="number"
+          placeholder="Ej: 1500" [(ngModel)]="item.precio" [ngModelOptions]="{standalone: true}"></ion-input>
+
+        <ion-input mode="md" fill="outline " label="Numero de boleta" labelPlacement="floating" type="number"
+          placeholder="Ej: 2955" [(ngModel)]="item.boleta" [ngModelOptions]="{standalone: true}"></ion-input>
+      </div>
+
+      <ion-textarea mode="md" fill="outline " label="Descripción" labelPlacement="floating"
+        placeholder="Cargador 5.1 Innova tipo C" [(ngModel)]="item.descripcion"
+        [ngModelOptions]="{standalone: true}"></ion-textarea>
 
       <div>
         <ion-button expand="block" color="primary" (click)="agregarItem()"
@@ -67,7 +63,7 @@
     </form>
     <ion-item-divider class="ion-no-padding" *ngIf="items" style="flex-direction: column;">
       <ion-chip class="flexBetweenCenter" style="width: 95%;" *ngFor="let item of items">
-        <label>{{item.precio|currency}}</label>
+        <label>{{item.precio|redondearPrecio: 'pesos'|currency}}</label>
         <b>{{item.descripcion}} </b>
         <label class="flexCenterCenter">
           <ion-text *ngIf="item.boleta"> ({{item.boleta}}) </ion-text>
@@ -157,6 +153,20 @@
           (click)="showConfirmDialog()">Finalizar</ion-button>
       </ng-template>
     </div>
-  </ion-card>
+  </ion-card> -->
+  <!--  generado por ia -->
+
+
+
+  <!-- <ion-item>
+    <form (ngSubmit)="onSubmit()">
+      <ion-input label="Producto" labelPlacement="floating" type="text" placeholder="Ej: Cargador v8"
+        [(ngModel)]="productoABuscar" name="producto" (ionInput)="filtrarProductos($event)"></ion-input>
+      <ion-button type="submit">Buscar</ion-button>
+    </form>
+
+  </ion-item> -->
+  
+
 
 </ion-content>

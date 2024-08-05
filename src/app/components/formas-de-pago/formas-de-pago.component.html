@@ -1,0 +1,113 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'nuevo-libro-diario'" [title]="'Formas de pago'"></app-clasic-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+  <ion-card>
+    <ion-toolbar color="dark">
+      <ion-title>
+        <ion-text color="danger" *ngIf="calcularTotalPagado()<venta.total; else pagoCompleto">
+          Falta pagar: {{(venta.total-calcularTotalPagado())|currency}}
+        </ion-text>
+        <ng-template #pagoCompleto>
+          <ion-text color="success"> PAGO COMPLETADO </ion-text>
+        </ng-template>
+      </ion-title>
+    </ion-toolbar>
+    <ion-card-content>
+      <ion-list>
+        <ion-grid fixed>
+          <ion-row>
+            <ion-col size="3" style="display: flex;">
+              <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Efectivo'"
+                [src]="'assets/svg/icons/cashcard.svg'" />
+              <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Tarjeta de Crédito'"
+                [src]="'assets/svg/icons/creditcard.svg'" />
+              <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Tarjeta de Débito'"
+                [src]="'assets/svg/icons/debitcard.svg'" />
+              <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Transferencia'"
+                [src]="'assets/svg/icons/transfercard.svg'" />
+              <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Vale de compra'"
+                [src]="'assets/svg/icons/valecard.svg'" />
+              <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Mercado pago'"
+                [src]="'assets/svg/icons/mpcard.svg'" />
+            </ion-col>
+            <ion-col size="9">
+              <ion-select label="Forma de Pago" labelPlacement="floating" fill="outline" mode="md"
+                [(ngModel)]="pagoActual.formaDePago">
+                <ion-select-option value="Efectivo">Efectivo</ion-select-option>
+                <ion-select-option value="Tarjeta de Crédito">Tarjeta de Crédito</ion-select-option>
+                <ion-select-option value="Tarjeta de Débito">Tarjeta de Débito</ion-select-option>
+                <ion-select-option value="Transferencia">Transferencia</ion-select-option>
+                <ion-select-option value="Mercado pago">Mercado pago</ion-select-option>
+                <ion-select-option value="Vale de compra">Vale de compra</ion-select-option>
+                <ion-select-option value="Otro">Otro</ion-select-option>
+              </ion-select>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+
+        <ion-input label="Cantidad" labelPlacement="floating" mode="md" fill="outline" type="number"
+          [(ngModel)]="pagoActual.cantidad"></ion-input>
+
+        <ion-button expand="full" class="ion-margin" (click)="agregarPago()">Agregar Pago</ion-button>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="venta.pagos && venta.pagos.length>0">
+    <ion-toolbar>
+      <ion-title>TOTAL pagado: {{calcularTotalPagado()}}</ion-title>
+    </ion-toolbar>
+    <ion-card-content>
+      <ion-list>
+        <ion-item-sliding *ngFor="let pago of venta.pagos; let index =index">
+          <ion-item class="ion-margin-bottom">
+            <div class="flexColumn" *ngIf="pago.formaDePago=='Efectivo'">
+              <img style="max-width: 4rem;" [src]="'assets/svg/icons/cashcard.svg'" />
+              {{ pago.formaDePago }}
+            </div>
+            <div class="flexColumn" *ngIf="pago.formaDePago=='Tarjeta de Crédito'">
+              <img style="max-width: 4rem;" [src]="'assets/svg/icons/creditcard.svg'" />
+              {{ pago.formaDePago }}
+            </div>
+            <div class="flexColumn" *ngIf="pago.formaDePago=='Tarjeta de Débito'">
+              <img style="max-width: 4rem;" [src]="'assets/svg/icons/debitcard.svg'" />
+              {{ pago.formaDePago }}
+            </div>
+            <div class="flexColumn" *ngIf="pago.formaDePago=='Transferencia'">
+              <img style="max-width: 4rem;" [src]="'assets/svg/icons/transfercard.svg'" />
+              {{ pago.formaDePago }}
+            </div>
+            <div class="flexColumn" *ngIf="pago.formaDePago=='Mercado pago'">
+              <img style="max-width: 4rem;" [src]="'assets/svg/icons/mpcard.svg'" />
+              {{ pago.formaDePago }}
+            </div>
+            <div class="flexColumn" *ngIf="pago.formaDePago=='Vale de compra'">
+              <img style="max-width: 4rem;" [src]="'assets/svg/icons/valecard.svg'" />
+              {{ pago.formaDePago }}
+            </div>
+            <div class="flexColumn" *ngIf="pago.formaDePago=='Otro'">
+              {{ pago.formaDePago }}
+            </div>
+            <ion-label slot="end"> {{ pago.cantidad | currency }}</ion-label>
+          </ion-item>
+
+          <ion-item-options side="end">
+            <ion-item-option color="danger" (click)="eliminarPago(index)">
+              Eliminar
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-list>
+
+      <ion-button expand="full" [disabled]="calcularTotalPagado() !== venta.total" (click)="confirmarPagos()">Finalizar
+        pagos</ion-button>
+
+    </ion-card-content>
+
+  </ion-card>
+</ion-content>
