@@ -250,7 +250,7 @@ export class BoletasPage implements OnInit {
   applyFilter2(event: Event) {
     this.sinCoincidencias = false;
     let textoABuscar = (event.target as HTMLInputElement).value;
-    if (this.textoABuscar.length == 4 || this.textoABuscar.length == 5 || this.textoABuscar.length == 8) {
+    if (this.textoABuscar.length == 4 || this.textoABuscar.length == 5 || this.textoABuscar.length == 7|| this.textoABuscar.length == 8) {
 
       let metodoALlamar: any = (this.textoABuscar.length == 4 || this.textoABuscar.length == 5)
         ? this.dataBase.obtenerBoletaPorNroBoleta
