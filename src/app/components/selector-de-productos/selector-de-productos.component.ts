@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { Producto } from '../nueva-funcionalidad/nueva-funcionalidad.component';
+// import { Producto } from '../nueva-funcionalidad/nueva-funcionalidad.component';
 import { VisualizadorDeImagenComponent } from '../views/visualizador-de-imagen/visualizador-de-imagen.component';
 import { AlertController, ModalController } from '@ionic/angular';
 import { AlertService } from 'src/app/services/alert.service';
@@ -8,6 +8,9 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { environment } from 'src/environments/environment';
 import { FormDetalleVentaComponent } from '../forms/form-detalle-venta/form-detalle-venta.component';
 import { ItemFueraDelSistemaModalComponent } from '../item-fuera-del-sistema-modal/item-fuera-del-sistema-modal.component';
+import { ProductosService } from 'src/app/services/productos.service';
+import { Producto } from 'src/app/pages/lista-productos/lista-productos.page';
+import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 
 export interface Venta {
   id: string; // ID único para la venta
@@ -24,6 +27,7 @@ export interface Pago {
 
 export enum FormasDePago {
   EFECTIVO = 'Efectivo',
+  DOLARES = 'Dolares',
   TARJETA_CREDITO = 'Tarjeta de Crédito',
   TARJETA_DEBITO = 'Tarjeta de Débito',
   TRANSFERENCIA = 'Transferencia',
@@ -72,7 +76,9 @@ export class SelectorDeProductosComponent {
   constructor(private modalController: ModalController,
     private alertController: AlertController,
     private alertService: AlertService,
-    private dataBase: DataBaseService
+    private funcionesUtilesService: FuncionesUtilesService,
+    private dataBase: DataBaseService,
+    private productosService: ProductosService
   ) { }
   ngOnInit() {
     this.codigoDeBarras = '';
@@ -83,7 +89,12 @@ export class SelectorDeProductosComponent {
 
 
   ionViewWillEnter() {
-    this.productosAMostrar = this.productos;
+    // Cargar los datos iniciales desde el servicio
+    this.productosService.cargarDatosIniciales();
+    this.productosService.productos$.subscribe(productos => {
+      this.productos = productos;
+      console.log('Productos actualizados:', this.productos);
+    });
 
     // Recuperar carritos del localStorage
     const carritosGuardados = localStorage.getItem('carritos');
@@ -109,10 +120,12 @@ export class SelectorDeProductosComponent {
   onKeydown(event: KeyboardEvent) {
     // Filtra las teclas modificadoras
     if (event.key.length === 1) { // Solo considera teclas de un solo carácter
+      console.log("ENTRA!");
       this.codigoDeBarras += event.key;
     }
     // Verifica si la tecla presionada es Enter
     if (event.key === 'Enter') {
+      console.log("ENTRA2!");
       this.procesarCodigoDeBarras(this.codigoDeBarras);
       this.codigoDeBarras = ''; // Limpia el código de barras después de procesarlo
     }
@@ -120,6 +133,7 @@ export class SelectorDeProductosComponent {
     // Configura un tiempo de espera para evitar que se procese código de barras parcial
     clearTimeout(this.tiempoDeEspera);
     this.tiempoDeEspera = setTimeout(() => {
+      console.log("ENTRA3!");
       if (this.codigoDeBarras) {
         this.procesarCodigoDeBarras(this.codigoDeBarras);
         this.codigoDeBarras = ''; // Limpia el código de barras después de procesarlo
@@ -130,8 +144,12 @@ export class SelectorDeProductosComponent {
   // Procesa el código de barras leído
   procesarCodigoDeBarras(codigo: string) {
     // Aquí puedes buscar el producto por el código y agregarlo al carrito
-    const producto = this.productos.find(p => p.codigo === codigo);
+    let producto: any = this.productos.find(p => p.codigo === codigo);
+
+    console.log(producto)
+    console.log(this.productos)
     if (producto && this.idCarritoSeleccionado) {
+      producto = this.funcionesUtilesService.clonarObjeto(producto);
       const carrito = this.carritos.find(c => c.id === this.idCarritoSeleccionado);
       if (carrito) {
         const itemEnCarrito = carrito.items.find(item => item.idProducto === producto.id);

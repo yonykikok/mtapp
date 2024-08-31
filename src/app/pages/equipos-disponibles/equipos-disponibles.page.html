@@ -15,7 +15,7 @@
       <ion-card-content class="ion-no-padding" [ngClass]="equipo.suspendido?'suspendido':null">
         <div class="titleModel">
           <p style="font-size: 1.2rem;">
-            <b> {{equipo.marca|titlecase}} {{equipo.modelo|uppercase}}</b>
+            <b> <span *ngIf="equipo.marca!='otro'">{{equipo.marca|titlecase}}</span> {{equipo.modelo|uppercase}}</b>
           </p>
         </div>
         <div class="card-content-container">

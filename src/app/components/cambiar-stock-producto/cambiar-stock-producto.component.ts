@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Producto } from '../nueva-funcionalidad/nueva-funcionalidad.component';
+// import { Producto } from '../nueva-funcionalidad/nueva-funcionalidad.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AlertService } from 'src/app/services/alert.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { ModalController } from '@ionic/angular';
+import { Producto } from 'src/app/pages/lista-productos/lista-productos.page';
 
 @Component({
   selector: 'app-cambiar-stock-producto',
@@ -32,7 +33,7 @@ export class CambiarStockProductoComponent implements OnInit {
     if (!this.producto.coloresDisponibles) { return; }
     let nuevoColor: any = this.stockForm.value;
     // Verificar si el color ya existe en el array
-    const existe = this.producto.coloresDisponibles.some(color => (color.color === nuevoColor.color || color.denominacionColor.toLowerCase() === nuevoColor.denominacionColor.toLowerCase()));
+    const existe = this.producto.coloresDisponibles.some((color: any) => (color.color === nuevoColor.color || color.denominacionColor.toLowerCase() === nuevoColor.denominacionColor.toLowerCase()));
 
     // Si el color no existe, agregarlo al array
     if (!existe) {
@@ -51,7 +52,7 @@ export class CambiarStockProductoComponent implements OnInit {
       colorSeleccionado.stock = colorSeleccionado.stock - 1;
     } else {
       this.alertService.alertConfirmacion('Confirmacion', 'ya no puedes descontar stock, ¿quieres eliminarlo de los colores disponbiles?', 'Si', () => {
-        let indexABorrar = this.producto.coloresDisponibles?.findIndex(color => color.denominacionColor == colorSeleccionado.denominacionColor);
+        let indexABorrar = this.producto.coloresDisponibles?.findIndex((color:any) => color.denominacionColor == colorSeleccionado.denominacionColor);
         if ((indexABorrar || indexABorrar == 0) && indexABorrar != -1) {
           console.log(indexABorrar)
           this.producto.coloresDisponibles?.splice(indexABorrar, 1);
@@ -60,11 +61,11 @@ export class CambiarStockProductoComponent implements OnInit {
     }
   }
   guardarProducto() {
-    
+
     this.producto.stockTotal = this.producto.coloresDisponibles?.reduce((total: number, color: any) => {
       return total + color.stock;
     }, 0) || 0
-    
+
     this.modalController.dismiss(this.producto, 'Guardar');
 
   }

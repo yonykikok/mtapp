@@ -27,7 +27,7 @@
         <small>{{trabajo.fechaRetiro|date}}</small>
       </ion-chip>
       <ng-template #btnRetirar>
-        <ion-chip class="no-radius" color="success" slot="end"  (click)="marcarComoRetirado()">
+        <ion-chip class="no-radius" color="success" slot="end" (click)="marcarComoRetirado()">
           <small>Marcar como retirado</small>
         </ion-chip>
       </ng-template>
@@ -58,6 +58,33 @@
         <ion-text>
           {{trabajo.trabajo|titlecase}}
         </ion-text>
+        <div *ngIf="trabajo.trabajo=='Liberacion'" class="flexColumn">
+          <ion-text>
+            <small>
+              Imei original: {{trabajo.imeiOriginal|titlecase}}
+            </small>
+          </ion-text>
+          <ion-text>
+            <small>
+              Version de android original: {{trabajo.versionAndroidOriginal}}
+            </small>
+          </ion-text>
+          
+          <ion-text *ngIf="trabajo.imeiNuevo">
+            <ion-chip>
+              <small>
+                Imei nuevo: {{trabajo.imeiNuevo|titlecase}}
+              </small>
+            </ion-chip>
+          </ion-text>
+          <ion-text *ngIf="trabajo.versionAndroidNuevo">
+            <ion-chip>
+              <small>
+                Version de android nuevo: {{trabajo.versionAndroidNuevo}}
+              </small>
+            </ion-chip>
+          </ion-text>
+        </div>
       </ion-item-divider>
 
       <ion-item-divider class="ion-padding-bottom ">

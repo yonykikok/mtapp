@@ -153,6 +153,10 @@ const routes: Routes = [
     path: 'nuevo-libro-diario',
     loadChildren: () => import('./pages/nuevo-libro-diario/nuevo-libro-diario.module').then( m => m.NuevoLibroDiarioPageModule)
   },
+  {
+    path: 'slide-de-productos',
+    loadChildren: () => import('./pages/slide-de-productos/slide-de-productos.module').then( m => m.SlideDeProductosPageModule)
+  },
 
 
 

@@ -13,8 +13,26 @@
       </ion-item>
 
       <ion-item>
+        <ion-select [ngModelOptions]="{standalone: true}" [(ngModel)]="tipoDeTrabajoSeleccionado"
+          label="Trabajo a realizar" labelPlacement="floating" mode="md" placeholder="Liberacion, Cuenta, etc.">
+          <ion-select-option *ngFor="let trabajo of tiposDeTrabajosTercerizados" [value]="trabajo">
+            {{trabajo}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item *ngIf="tipoDeTrabajoSeleccionado==tiposDeTrabajosTercerizadosEnum.Otro">
         <ion-input label="Trabajo a realizar" labelPlacement="floating" formControlName="trabajo"
-          placeholder="Liberacion, Flasheo, etc."></ion-input>
+          placeholder="Describa el trabajo"></ion-input>
+      </ion-item>
+
+      <ion-item *ngIf="tipoDeTrabajoSeleccionado==tiposDeTrabajosTercerizadosEnum.Liberacion">
+        <ion-input label="Numero de IMEI" labelPlacement="floating" formControlName="imeiOriginal"
+          placeholder="Escriba el IMEI original marcando *06#"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="tipoDeTrabajoSeleccionado==tiposDeTrabajosTercerizadosEnum.Liberacion">
+        <ion-input label="Version de android" labelPlacement="floating" formControlName="versionAndroidOriginal"
+          placeholder="Especifique en que version se lleva."></ion-input>
       </ion-item>
 
       <ion-item>
@@ -32,7 +50,7 @@
           placeholder="El equipo lo mandamos con la tapa despegada, y el equipo astillado"></ion-textarea>
       </ion-item>
 
-      <ion-button class="ion-margin" expand="full" type="submit" [disabled]="formulario.invalid">
+      <ion-button class="ion-margin" expand="full" type="submit" [disabled]="!formularioCompleto()">
         Agregar trabajo tercerizado
       </ion-button>
     </form>

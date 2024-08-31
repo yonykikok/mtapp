@@ -1,0 +1,37 @@
+<!-- <ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>slideDeProductos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Product Display</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-slides [options]="slideOpts" pager="true">
+      <ion-slide *ngFor="let producto of productos">
+        <ion-card>
+          <img [src]="producto.imgUrlsRef ? producto.imgUrlsRef[0] : 'assets/default-product.png'" />
+          <ion-card-header>
+            <ion-card-title>{{ producto.producto }}</ion-card-title>
+            <ion-card-subtitle>{{ producto.marca }}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <p>Categoría: {{ producto.categoria }}</p>
+            <p>Precio: {{ producto.precio | currency }}</p>
+            <p>Stock Total: {{ producto.stockTotal }}</p>
+            <ion-badge *ngIf="producto.coloresDisponibles?.length > 0">
+              {{ producto.coloresDisponibles[0].denominacionColor }}: {{ producto.coloresDisponibles[0].stock }} en
+              stock
+            </ion-badge>
+          </ion-card-content>
+        </ion-card>
+      </ion-slide>
+    </ion-slides>
+  </ion-content>
+
+</ion-content> -->

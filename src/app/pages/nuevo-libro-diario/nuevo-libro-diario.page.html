@@ -35,32 +35,43 @@
       <ion-button class="ion-margin" expand="block" (click)="mostrarModalAbrirCaja()">Abrir caja</ion-button>
     </ng-template>
 
-    <ion-item-divider class="ion-no-padding" *ngIf="libroDiarioHoy&&libroDiarioHoy.ventas"
-      style="flex-direction: column; ;">
-
+    <div class="ion-no-padding" *ngIf="libroDiarioHoy&&libroDiarioHoy.ventas">
       <div *ngFor="let venta of libroDiarioHoy.ventas">
         <div *ngIf="venta.carrito && venta.carrito.items">
-          <ion-chip (click)="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)?mostrarModalEditarVenta(item):''"
-            style="width: 90%; justify-content: space-between;" *ngFor="let item of venta.carrito.items">
-            <!-- [ngStyle]="{'background-color': item.boleta ? 'rgb(168 231 232)' : '' ,
-          'border': item.medioDePago!='efectivo' ? '2px solid orange' : 'none' }" -->
-            <label [ngStyle]="{'color': item.precio<0 ? 'red' : '' }">{{item.precio|currency}}</label>
+          <ion-item-sliding *ngFor="let item of venta.carrito.items"
+            (click)="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)?mostrarModalEditarVenta(item):''">
+            <ion-item>
+              <ion-avatar *ngIf="item.images && item.images.length>0" class="ion-margin-end">
+                <img [src]="item.images[0]" />
+              </ion-avatar>
+              <div class="flexColumn">
+                <ion-text [color]="!item.idProducto?'danger':''">{{ item.marca|titlecase }}</ion-text>
+                <ion-text color="tertiary">{{ item.descripcion|titlecase }} </ion-text>
+                <ion-text *ngIf="item.boleta">Boleta: ({{item.boleta}})</ion-text>
+                <ion-text [color]="item.precio>0?'success':'danger'">({{ item.cantidad }}) x
+                  {{ item.precio|redondearPrecio:'pesos' | currency }} 
+                  <small style="color: rgb(77, 77, 255);">(Total: {{(item.precio*item.cantidad)|redondearPrecio:'pesos' | currency }})</small>
+                </ion-text>
 
-            <b>{{item.descripcion|maxLength:25}} </b>
+              </div>
+            </ion-item>
 
-            <label> {{item.boleta?'('+item.boleta+')':''}}</label>
-          </ion-chip>
+            <!-- Opciones de acción de deslizamiento -->
+            <ion-item-options side="end">
+              <ion-item-option color="danger">
+                Eliminar
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
         </div>
       </div>
-    </ion-item-divider>
+    </div>
 
 
 
 
     <!-- modal cierre de caja -->
-    <div
-      style="position: fixed; top: 20%; display: flex; justify-content: center;align-items: center; width: 100%; z-index: 999;"
-      (click)="mostrarModalCierreDeCaja=false" *ngIf="mostrarModalCierreDeCaja">
+    <div (click)="mostrarModalCierreDeCaja=false" *ngIf="mostrarModalCierreDeCaja">
 
       <ion-card style="padding: 2rem;" (click)="detenerPropagacion($event)">
         <ion-card-title style="margin: 1rem;">Cierre de caja</ion-card-title>

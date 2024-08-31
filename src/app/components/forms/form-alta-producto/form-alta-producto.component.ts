@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DataBaseService } from 'src/app/services/database.service';
 import { environment } from 'src/environments/environment';
-import { Producto } from '../../nueva-funcionalidad/nueva-funcionalidad.component';
+// import { Producto } from '../../nueva-funcionalidad/nueva-funcionalidad.component';
 import { SpinnerService } from 'src/app/services/spinner.service';
 import { ModalController } from '@ionic/angular';
 import { CargarCategoriaComponent } from '../../cargar-categoria/cargar-categoria.component';
@@ -10,6 +10,7 @@ import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { Roles, User } from 'src/app/clases/user';
 import { roles } from 'src/app/services/info-compartida.service';
+import { Producto } from 'src/app/pages/lista-productos/lista-productos.page';
 
 @Component({
   selector: 'app-form-alta-producto',
@@ -98,6 +99,10 @@ export class FormAltaProductoComponent implements OnInit {
         stockTotal: productoForm.cantidad = productoForm.coloresDisponibles?.reduce((total: number, color: any) => {
           return total + color.stock;
         }, 0) || 0,
+        cantidad: 0,
+        images: [],
+        imgUrlsRef: [],
+        precio: 0
       };
       console.log(producto)
 

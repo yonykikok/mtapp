@@ -30,6 +30,7 @@ export interface Producto {
   coloresDisponibles?: { stock: number; color: string; denominacionColor: string; }[],
   cantidad: number,
   categoria: string,
+  stockTotal: number,
   costo: number,
   iva?: number,
   producto: string,
@@ -52,10 +53,12 @@ export class ListaProductosPage implements OnInit {
     margen: number
   };
   precioDolarBlue: number = 0;
-  productos: any[] = [];
+  productos: Producto[] = [];
   camposSeleccionados = ['producto', 'codigo', 'cantidad', 'precio'];
   productosAMostrar: Producto[] = [];
-  loggedUser!: User;
+  cantidadPorPagina = 35; // Cantidad de productos a mostrar por página
+  infiniteScrollDisabled = false; // Variable para controlar el estado del infinite scroll
+  loggedUser!: User; 
   isActionSheetOpen = false;
   productoSeleccionado!: Producto;
   actionSheetButtons: any[] = [];
@@ -111,6 +114,24 @@ export class ListaProductosPage implements OnInit {
       this.loggedUser = res;
     })
   }
+
+  loadData(event:any) {
+    setTimeout(() => {
+      const inicio = this.productosAMostrar.length;
+      const fin = inicio + this.cantidadPorPagina;
+
+      const nuevosProductos = this.productos.slice(inicio, fin);
+      this.productosAMostrar = [...this.productosAMostrar, ...nuevosProductos];
+
+      event.target.complete();
+
+      // Desactiva el infinite scroll si todos los productos están cargados
+      if (this.productosAMostrar.length >= this.productos.length) {
+        event.target.disabled = true;
+      }
+    }, 500);
+  }
+  
   mostrarCostoToggle(e: Event) {
     e.stopPropagation();
     if (this.funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)) {
@@ -142,57 +163,40 @@ export class ListaProductosPage implements OnInit {
   }
 
   ionViewWillEnter() {
-
     this.database.obtenerPorId(environment.TABLAS.cotizacion_dolar, 'dolarBlue').subscribe((res: any) => {
       this.precioDolarBlue = res.payload.data().price;
     });
 
     this.actionSheetButtons = [...this.actionSheetButtonsOrigial];
     this.database.obtenerPorId(environment.TABLAS.recargosProductos, 'recargos').subscribe((res: any) => {
-
       this.recargos = res.payload.data();
     });
 
     let subs = this.database.obtenerTodos(environment.TABLAS.productos).subscribe((docsProductosRef: any) => {
       subs.unsubscribe();
       if (docsProductosRef.length <= 0) return;
+
       let lista = docsProductosRef.map((productoRef: any) => {
         let producto: Producto = productoRef.payload.doc.data();
         producto['id'] = productoRef.payload.doc.id;
         producto.precio = (this.calcularPrecioConRecargos(producto) * this.precioDolarBlue);
         return producto;
       });
+
       lista = this.ordenarListaPor(lista, 'producto', 'marca');
       this.productos = lista;
-      this.productosAMostrar = [...this.productos];
+      this.productosAMostrar = this.productos.slice(0, this.cantidadPorPagina); // Inicialmente muestra solo los primeros productos
+
       console.log(this.productos);
-      // lista.forEach((element:any) => {
-      //     this.database.actualizar(environment.TABLAS.productos,element,element.id)?.then(res=>{
-      //     })
-      // });
-    });
 
-
-
-    this.productos.forEach((obj: any) => {
-      Object.keys(obj).forEach(key => {
-        if (obj[key] === "") {
-          obj[key] = null;
-        }
+      this.productos.forEach((obj: any) => {
+        Object.keys(obj).forEach(key => {
+          if (obj[key] === "") {
+            obj[key] = null;
+          }
+        });
       });
     });
-
-
-    // productoseas.forEach((element, i) => {
-    //   this.database.crear(environment.TABLAS.productos, element).then(res => {
-    //     console.log(i)
-
-    //   });
-    // });
-    // let productos = this.productos.map(produ => {
-    //   produ.precio_con_iva = Number(produ.precio_con_iva);
-    //   return produ;
-    // })
   }
 
   ngOnInit() {
@@ -247,21 +251,24 @@ export class ListaProductosPage implements OnInit {
 
   filtrarProductos(event: any) {
     const valorBusqueda = event.target.value.toLowerCase();
-    this.productosAMostrar = this.productos.filter((producto: Producto) => {
+    const productosFiltrados = this.productos.filter((producto: Producto) => {
       // Verificar si el producto contiene el valor de búsqueda
-      if (
+      return (
         producto.producto.toLowerCase().includes(valorBusqueda) ||
         (producto.codigo && producto.codigo.toLowerCase().includes(valorBusqueda)) ||
         producto.categoria.toLowerCase().includes(valorBusqueda) ||
         producto.marca.toLowerCase().includes(valorBusqueda)
-      ) {
-        return producto;
-      }
-      return null;
+      );
     });
 
-    this.ordenarPorPrecio(true);
+    // Actualizar la lista mostrada solo con los productos filtrados
+    this.productosAMostrar = productosFiltrados.slice(0, this.cantidadPorPagina); // Limitar la cantidad de productos mostrados
 
+    // Restablecer el infinite scroll
+    this.infiniteScrollDisabled = false; // Habilitar de nuevo si estaba deshabilitado
+
+    // Llamar a la función de ordenamiento si es necesario
+    this.ordenarPorPrecio(true);
   }
   ordenarPorPrecio(ascendente: boolean = true): void {
     this.productosAMostrar = this.productosAMostrar.sort((a: Producto, b: Producto) => {
@@ -465,13 +472,6 @@ export class ListaProductosPage implements OnInit {
 
     })
     modal.present();
-  }
-
-  calcularPrecioConRecargos2(costo: number) {
-    let precioConMargen = (costo * Number(`1.${this.recargos.margen}`));
-    let precioConIva = (precioConMargen * Number(`1.${this.recargos.iva}`));
-    let precioConFinanciamiento = (precioConIva * Number(`1.${this.recargos.financiamiento < 10 ? '0' + this.recargos.financiamiento : this.recargos.financiamiento}`));
-    return precioConFinanciamiento;
   }
 
   calcularPrecioConRecargos(producto: Producto) {

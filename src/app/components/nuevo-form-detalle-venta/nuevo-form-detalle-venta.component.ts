@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActionSheetButton, ActionSheetController, AlertController, ModalController } from '@ionic/angular';
 import { AlertService } from 'src/app/services/alert.service';
 import { MediosDePago, RecargoPorMediosDePago } from '../forms/form-detalle-venta/form-detalle-venta.component';
-import { Producto } from '../nueva-funcionalidad/nueva-funcionalidad.component';
+// import { Producto } from '../nueva-funcionalidad/nueva-funcionalidad.component';
 import { VisualizadorDeImagenComponent } from '../views/visualizador-de-imagen/visualizador-de-imagen.component';
+import { Producto } from 'src/app/pages/lista-productos/lista-productos.page';
 @Component({
   selector: 'app-nuevo-form-detalle-venta',
   templateUrl: './nuevo-form-detalle-venta.component.html',

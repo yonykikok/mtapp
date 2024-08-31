@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Producto } from '../../nueva-funcionalidad/nueva-funcionalidad.component';
+// import { Producto } from '../../nueva-funcionalidad/nueva-funcionalidad.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DataBaseService } from 'src/app/services/database.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { environment } from 'src/environments/environment';
 import { ModalController } from '@ionic/angular';
+import { Producto } from 'src/app/pages/lista-productos/lista-productos.page';
 
 @Component({
   selector: 'app-form-aumento-porcentual',

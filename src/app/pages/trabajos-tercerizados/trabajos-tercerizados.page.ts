@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DocumentChangeAction } from '@angular/fire/compat/firestore';
 import { ModalController } from '@ionic/angular';
 import { User } from 'src/app/clases/user';
-import { FormAltaTrabajoTercerizadoComponent } from 'src/app/components/forms/form-alta-trabajo-tercerizado/form-alta-trabajo-tercerizado.component';
+import { FormAltaTrabajoTercerizadoComponent, TiposDeTrabajosTercerizadosEnum } from 'src/app/components/forms/form-alta-trabajo-tercerizado/form-alta-trabajo-tercerizado.component';
 import { DetalleTrabajoTercerizadoComponent } from 'src/app/components/views/detalle-trabajo-tercerizado/detalle-trabajo-tercerizado.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
@@ -12,14 +12,18 @@ export interface trabajoTercerizado {
   responsable: string,
   fecha: number,
   modelo: string,
-  trabajo: string,
+  trabajo: TiposDeTrabajosTercerizadosEnum | string,
   boleta: number,
   detallesDelEquipo: string,
-  fechaRetiro: number,
-  costo: number,
-  precio: number,
+  fechaRetiro?: number,
+  costo?: number,
+  precio?: number,
   reparado: boolean,
-  id?: string
+  id?: string,
+  imeiOriginal?: string,
+  imeiNuevo?: string,
+  versionAndroidOriginal?: number,
+  versionAndroidNuevo?: number
 }
 @Component({
   selector: 'app-trabajos-tercerizados',
@@ -37,6 +41,39 @@ export class TrabajosTercerizadosPage implements OnInit {
 
   ionViewDidEnter(): void {
     this.getCurrentUser();
+
+    this.database.obtenerUltimos60dias(environment.TABLAS.trabajos_tercerizados).subscribe(listEquiposTercerizadosRef => {
+      let currentDay = new Date();
+      let trabajosTercerizados = listEquiposTercerizadosRef.map((equipoTercerizadoRef: DocumentChangeAction<any>) => {
+        let trabajoTercerizado = equipoTercerizadoRef.payload.doc.data();
+        trabajoTercerizado['id'] = equipoTercerizadoRef.payload.doc.id;
+        return trabajoTercerizado;
+      });
+
+
+      this.trabajosTercerizados = trabajosTercerizados.sort((a, b) => {
+        // Si ambos tienen fechaRetiro == -1, mantenlos en el orden original
+        if (a.fecha === -1 && b.fecha === -1) {
+          return 0;
+        }
+        // Si solo uno de ellos tiene fechaRetiro == -1, colócalo primero
+        else if (a.fecha === -1) {
+          return -1;
+        } else if (b.fecha === -1) {
+          return 1;
+        }
+        // Ordena por fecha de retiro (en orden descendente)
+        else {
+          return b.fecha - a.fecha;
+        }
+        //TODO sort fecha mas reciente.      
+      });
+    });
+
+
+
+  }
+  cargarTodosLosTrabajos() {
     this.database.obtenerTodos(environment.TABLAS.trabajos_tercerizados).subscribe(listEquiposTercerizadosRef => {
       let trabajosTercerizados = listEquiposTercerizadosRef.map((equipoTercerizadoRef: DocumentChangeAction<any>) => {
         let trabajoTercerizado = equipoTercerizadoRef.payload.doc.data();
@@ -45,24 +82,23 @@ export class TrabajosTercerizadosPage implements OnInit {
       });
 
       this.trabajosTercerizados = trabajosTercerizados.sort((a, b) => {
-         // Si ambos tienen fechaRetiro == -1, mantenlos en el orden original
+        // Si ambos tienen fechaRetiro == -1, mantenlos en el orden original
         if (a.fecha === -1 && b.fecha === -1) {
-            return 0;
+          return 0;
         }
         // Si solo uno de ellos tiene fechaRetiro == -1, colócalo primero
         else if (a.fecha === -1) {
-            return -1;
+          return -1;
         } else if (b.fecha === -1) {
-            return 1;
+          return 1;
         }
         // Ordena por fecha de retiro (en orden descendente)
         else {
-            return b.fecha - a.fecha;
+          return b.fecha - a.fecha;
         }
-    });
-    
-    });
+      });
 
+    });
   }
   ngOnInit() {
   }

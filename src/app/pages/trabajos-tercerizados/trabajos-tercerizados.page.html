@@ -4,6 +4,9 @@
 
 
 <ion-content *ngIf="loggedUser;">
+  <div class="ion-text-center">
+    <ion-chip class="ion-margin no-radius ion-padding" color="tertiary">Estos son los trabajos tercerizados en los ultimos 60 dias</ion-chip>
+  </div>
 
   <ion-grid class="ion-text-center" *ngIf="trabajosTercerizados">
     <ion-row>
@@ -12,12 +15,16 @@
       <ion-col><b>Boleta</b></ion-col>
     </ion-row>
     <ion-row *ngFor="let trabajo of trabajosTercerizados"
-      [ngStyle]="{'background':!trabajo.fechaRetiro||trabajo.fechaRetiro==-1?'lightgreen':''}" (click)="mostrarDetalle(trabajo)">
+      [ngStyle]="{'background':!trabajo.fechaRetiro||trabajo.fechaRetiro==-1?'lightgreen':''}"
+      (click)="mostrarDetalle(trabajo)">
       <ion-col>{{trabajo.modelo|titlecase}}</ion-col>
       <ion-col>{{trabajo.trabajo|titlecase}}</ion-col>
       <ion-col>{{trabajo.boleta}}</ion-col>
     </ion-row>
   </ion-grid>
+  <div class="ion-text-center">
+    <ion-button color="warning" (click)="cargarTodosLosTrabajos()"> Ver todos</ion-button>
+  </div>
 
 
   <ion-fab slot="fixed" vertical="bottom" horizontal="end" (click)="abrirFormTrabajoTercerizado()">

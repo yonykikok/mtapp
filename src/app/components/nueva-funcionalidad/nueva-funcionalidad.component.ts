@@ -16,6 +16,8 @@ import { VisualizadorDeImagenComponent } from '../views/visualizador-de-imagen/v
 import { AlertService } from 'src/app/services/alert.service';
 import { SpinnerService } from 'src/app/services/spinner.service';
 import { CambiarStockProductoComponent } from '../cambiar-stock-producto/cambiar-stock-producto.component';
+import { Producto } from 'src/app/pages/lista-productos/lista-productos.page';
+// import { Producto } from 'src/app/pages/lista-productos/lista-productos.page';
 
 export interface ProductoCarrito {
   id: string,//sera puesto por firebase
@@ -35,22 +37,38 @@ export interface ProductoCarrito {
   financiamiento?: number,
   precio: number;
 }
-export interface Producto {
-  id: string,//sera puesto por firebase
-  codigo?: string,
-  imgUrlsRef?: string[],
-  images?: string[],
-  marca: string,
-  coloresDisponibles?: { stock: number; color: string; denominacionColor: string; }[],
-  stockTotal: number,
-  categoria: string,
-  costo: number,
-  iva?: number,
-  producto: string,
-  margen?: number,
-  financiamiento?: number,
-  precio?: number;
-}
+// export interface Producto {
+//   id: string,//sera puesto por firebase
+//   codigo?: string,
+//   imgUrlsRef?: string[],
+//   images?: string[],
+//   marca: string,
+//   coloresDisponibles?: { stock: number; color: string; denominacionColor: string; }[],
+//   cantidad: number,
+//   categoria: string,
+//   costo: number,
+//   iva?: number,
+//   producto: string,
+//   margen?: number,
+//   financiamiento?: number,
+//   precio?: number;
+// }
+// export interface Producto {
+//   id: string,//sera puesto por firebase
+//   codigo?: string,
+//   imgUrlsRef?: string[],
+//   images?: string[],
+//   marca: string,
+//   coloresDisponibles?: { stock: number; color: string; denominacionColor: string; }[],
+//   stockTotal: number,
+//   categoria: string,
+//   costo: number,
+//   iva?: number,
+//   producto: string,
+//   margen?: number,
+//   financiamiento?: number,
+//   precio?: number;
+// }
 @Component({
   selector: 'app-nueva-funcionalidad',
   templateUrl: './nueva-funcionalidad.component.html',
@@ -344,7 +362,7 @@ export class NuevaFuncionalidadComponent implements OnInit {
       if (producto.imgUrlsRef && producto.imgUrlsRef.length > 0) {
         this.spinnerService.showLoading("Eliminando producto...");
         console.log(producto)
-        producto.imgUrlsRef?.forEach(async (imgRef) => {
+        producto.imgUrlsRef?.forEach(async (imgRef:string) => {
           try {
             let result = await this.storageService.borrarImagen(imgRef);
 

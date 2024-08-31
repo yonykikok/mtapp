@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Producto } from '../nueva-funcionalidad/nueva-funcionalidad.component';
+import { Producto } from 'src/app/pages/lista-productos/lista-productos.page';
 
 @Component({
   selector: 'app-carrito',

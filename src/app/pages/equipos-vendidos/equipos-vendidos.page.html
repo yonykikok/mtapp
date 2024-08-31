@@ -18,7 +18,7 @@
               <div slot="content">
                 <ul>
                   <li><b>Fecha de venta: </b> {{equipo.fecha|date:'medium'}}</li>
-                  <li><b>Equipo: </b>{{equipo.marca}} {{equipo.modelo}}</li>
+                  <li><b>Equipo: </b><span *ngIf="equipo.marca!='otro'">{{equipo.marca|titlecase}}</span> {{equipo.modelo}}</li>
                   <li><b>Imei: </b>{{equipo.imei}}</li>
                   <li><b>Precio: </b> {{equipo.precio|currency:'USD':'symbol':'1.0-0'}}</li>
                   <li><b>Se vendio hace: </b> ({{equipo['tiempoTranscurrido']}}) dias</li>
