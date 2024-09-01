@@ -4,8 +4,10 @@ import { ModalController } from '@ionic/angular';
 import { User } from 'src/app/clases/user';
 import { FormAltaTrabajoTercerizadoComponent, TiposDeTrabajosTercerizadosEnum } from 'src/app/components/forms/form-alta-trabajo-tercerizado/form-alta-trabajo-tercerizado.component';
 import { DetalleTrabajoTercerizadoComponent } from 'src/app/components/views/detalle-trabajo-tercerizado/detalle-trabajo-tercerizado.component';
+import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 import { environment } from 'src/environments/environment';
 
 export interface trabajoTercerizado {
@@ -36,39 +38,47 @@ export class TrabajosTercerizadosPage implements OnInit {
   constructor(
     private authService: AuthService,
     private database: DataBaseService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private alertService: AlertService,
+    private spinnerService: SpinnerService
   ) { }
 
   ionViewDidEnter(): void {
+    this.spinnerService.showLoading('Cargando ultimos trabajos tercerizados..');
     this.getCurrentUser();
 
-    this.database.obtenerUltimos60dias(environment.TABLAS.trabajos_tercerizados).subscribe(listEquiposTercerizadosRef => {
-      let currentDay = new Date();
-      let trabajosTercerizados = listEquiposTercerizadosRef.map((equipoTercerizadoRef: DocumentChangeAction<any>) => {
-        let trabajoTercerizado = equipoTercerizadoRef.payload.doc.data();
-        trabajoTercerizado['id'] = equipoTercerizadoRef.payload.doc.id;
-        return trabajoTercerizado;
-      });
+    this.database.obtenerUltimos60dias(environment.TABLAS.trabajos_tercerizados).subscribe({
+      next: (listEquiposTercerizadosRef: any) => {
+        let currentDay = new Date();
+        let trabajosTercerizados = listEquiposTercerizadosRef.map((equipoTercerizadoRef: DocumentChangeAction<any>) => {
+          let trabajoTercerizado = equipoTercerizadoRef.payload.doc.data();
+          trabajoTercerizado['id'] = equipoTercerizadoRef.payload.doc.id;
+          return trabajoTercerizado;
+        });
 
 
-      this.trabajosTercerizados = trabajosTercerizados.sort((a, b) => {
-        // Si ambos tienen fechaRetiro == -1, mantenlos en el orden original
-        if (a.fecha === -1 && b.fecha === -1) {
-          return 0;
-        }
-        // Si solo uno de ellos tiene fechaRetiro == -1, colócalo primero
-        else if (a.fecha === -1) {
-          return -1;
-        } else if (b.fecha === -1) {
-          return 1;
-        }
-        // Ordena por fecha de retiro (en orden descendente)
-        else {
-          return b.fecha - a.fecha;
-        }
-        //TODO sort fecha mas reciente.      
-      });
-    });
+        this.trabajosTercerizados = trabajosTercerizados.sort((a: any, b: any) => {
+          // Si ambos tienen fechaRetiro == -1, mantenlos en el orden original
+          if (a.fecha === -1 && b.fecha === -1) {
+            return 0;
+          }
+          // Si solo uno de ellos tiene fechaRetiro == -1, colócalo primero
+          else if (a.fecha === -1) {
+            return -1;
+          } else if (b.fecha === -1) {
+            return 1;
+          }
+          // Ordena por fecha de retiro (en orden descendente)
+          else {
+            return b.fecha - a.fecha;
+          }
+          //TODO sort fecha mas reciente.      
+        });
+        this.spinnerService.stopLoading();
+
+      }
+    })
+
 
 
 
@@ -174,5 +184,22 @@ export class TrabajosTercerizadosPage implements OnInit {
     }
   }
 
+  async eliminarTrabajo(event: Event, trabajo: trabajoTercerizado, indiceAEliminar: number) {
+    event.stopPropagation();
 
+    this.alertService.alertConfirmacion('Confirmación', "¿Seguro de eliminar esta boleta?", 'Si', () => {
+      this.spinnerService.showLoading('Borrando trabajo...');
+      if (trabajo.id) {
+
+        this.database.eliminar(environment.TABLAS.trabajos_tercerizados, trabajo.id)
+          .catch((error) => {
+            console.error('Error al eliminar en la base de datos:', error);
+          })
+          .finally(() => {
+            this.spinnerService.stopLoading();
+          })
+
+      }
+    });
+  }
 }

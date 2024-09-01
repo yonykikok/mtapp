@@ -41,7 +41,7 @@ export class FormAltaTrabajoTercerizadoComponent implements OnInit {
       trabajo: [null, []],
       boleta: [null, Validators.required],
       responsable: ["Yanke", Validators.required],
-      detallesDelEquipo: [null, Validators.required],
+      detallesDelEquipo: [null],
       imeiOriginal: [null, []],
       versionAndroidOriginal: [null, []],
     });
@@ -82,7 +82,13 @@ export class FormAltaTrabajoTercerizadoComponent implements OnInit {
       // Formulario inválido, mostrar errores o tomar acción adicional
     }
   }
-
+  actualizarDatos(event: any) {
+    if (event.detail.value != TiposDeTrabajosTercerizadosEnum.Liberacion) {
+      this.formulario.controls['imeiOriginal'].setValue(null);
+      this.formulario.controls['versionAndroidOriginal'].setValue(null);
+    }
+    console.log(event)
+  }
   formularioCompleto(): boolean {
     let retorno = false;
     let { trabajo, imeiOriginal, versionAndroidOriginal } = this.formulario.value

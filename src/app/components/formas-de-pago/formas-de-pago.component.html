@@ -23,8 +23,8 @@
             <ion-col size="3" style="display: flex;">
               <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Efectivo'"
                 [src]="'assets/svg/icons/cashcard.svg'" />
-              <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Dolares'"
-                [src]="'assets/svg/icons/dolarcard.svg'" />
+              <!-- <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Dolares'"
+                [src]="'assets/svg/icons/dolarcard.svg'" /> -->
               <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Tarjeta de Crédito'"
                 [src]="'assets/svg/icons/creditcard.svg'" />
               <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Tarjeta de Débito'"
@@ -40,7 +40,7 @@
               <ion-select label="Forma de Pago" labelPlacement="floating" fill="outline" mode="md"
                 [(ngModel)]="pagoActual.formaDePago">
                 <ion-select-option value="Efectivo">Efectivo</ion-select-option>
-                <ion-select-option value="Dolares">Dolares</ion-select-option>
+                <!-- <ion-select-option value="Dolares">Dolares</ion-select-option> -->
                 <ion-select-option value="Tarjeta de Crédito">Tarjeta de Crédito</ion-select-option>
                 <ion-select-option value="Tarjeta de Débito">Tarjeta de Débito</ion-select-option>
                 <ion-select-option value="Transferencia">Transferencia</ion-select-option>
@@ -73,10 +73,10 @@
               <img style="max-width: 4rem;" [src]="'assets/svg/icons/cashcard.svg'" />
               {{ pago.formaDePago }}
             </div>
-            <div class="flexColumn" *ngIf="pago.formaDePago=='Dolares'">
+            <!-- <div class="flexColumn" *ngIf="pago.formaDePago=='Dolares'">
               <img style="max-width: 4rem;" [src]="'assets/svg/icons/dolarcard.svg'" />
               {{ pago.formaDePago }}
-            </div>
+            </div> -->
             <div class="flexColumn" *ngIf="pago.formaDePago=='Tarjeta de Crédito'">
               <img style="max-width: 4rem;" [src]="'assets/svg/icons/creditcard.svg'" />
               {{ pago.formaDePago }}

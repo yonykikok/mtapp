@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { Modulo, StockModulo } from 'src/app/services/info-compartida.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 
@@ -37,6 +38,8 @@ export class StockModulosPage implements OnInit {
   constructor(private dataBase: DataBaseService,
     private toastService: ToastService,
     private modalController: ModalController,
+    private spinnerService: SpinnerService,
+    private database: DataBaseService,
     private alertService: AlertService,
     public funcionesUtiles: FuncionesUtilesService,
     private authService: AuthService,
@@ -247,8 +250,8 @@ export class StockModulosPage implements OnInit {
       });
 
     });
-    
-    this.listaDeModulosAMostrar = listaStockBajo.sort((a:any, b:any) => {
+
+    this.listaDeModulosAMostrar = listaStockBajo.sort((a: any, b: any) => {
       if (a.modelo < b.modelo) return -1;
       if (a.modelo > b.modelo) return 1;
       if (a.tipo < b.tipo) return -1;
@@ -271,5 +274,23 @@ export class StockModulosPage implements OnInit {
       this.listaDeAtributos = ['modelo', 'calidad', 'tipo', 'color', 'cantidad'];
       this.mostrarStockBajo()
     }
+  }
+
+  async eliminarModelo(event: Event, modulo: StockModulo, indiceAEliminar?: number) {
+    event.stopPropagation();
+
+    this.alertService.alertConfirmacion('Confirmación', "¿Seguro de eliminar esta modelo?", 'Si', () => {
+      this.spinnerService.showLoading('Borrando modelo...');
+      if (modulo.id) {
+        this.database.eliminar(environment.TABLAS.stockModulos, modulo.id)
+          .catch((error) => {
+            console.error('Error al eliminar en la base de datos:', error);
+          })
+          .finally(() => {
+            this.spinnerService.stopLoading();
+          })
+
+      }
+    });
   }
 }

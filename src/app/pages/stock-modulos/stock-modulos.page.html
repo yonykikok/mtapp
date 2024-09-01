@@ -41,44 +41,53 @@
     <ion-row
       (click)="(loggedUser && funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)&& listaSeleccionada=='completa')?seleccionar(modulo):null"
       *ngFor="let modulo of listaDeModulosAMostrar">
-      <ion-col *ngFor='let atributo of displayedColumnKeys.value'>
-        <ion-text *ngIf="atributo!='c/m' && atributo!='s/m';else formatoStock">
-          {{modulo[atributo]|titlecase}}
-        </ion-text>
 
-        <ng-template #formatoStock>
-          <div *ngIf="atributo=='c/m'; else sinMarco">
-            <div *ngFor="let auxStock of modulo.stock.conMarco">
-              <ion-chip outline="true" *ngIf="auxStock.color=='Blanco'" [ngStyle]="{
+      <ion-item-sliding>
+        <ion-item class="ion_item" lines="none">
+          <ion-col *ngFor='let atributo of displayedColumnKeys.value'>
+            <ion-text *ngIf="atributo!='c/m' && atributo!='s/m';else formatoStock">
+              {{modulo[atributo]|titlecase}}
+            </ion-text>
+
+            <ng-template #formatoStock>
+              <div *ngIf="atributo=='c/m'; else sinMarco">
+                <div *ngFor="let auxStock of modulo.stock.conMarco">
+                  <ion-chip outline="true" *ngIf="auxStock.color=='Blanco'" [ngStyle]="{
                 'background-color':auxStock.color|colores,
                 'border':auxStock.cantidad==0?'2px solid red':''
               }" (click)="seleccionarColorYTipo($event,auxStock,modulo,'conMarco')">{{auxStock.cantidad}}C/M
-              </ion-chip>
+                  </ion-chip>
 
-              <ion-chip outline="true" *ngIf="auxStock.color!='Blanco'" style="color: white;" [ngStyle]="{'background-color':auxStock.color|colores,
+                  <ion-chip outline="true" *ngIf="auxStock.color!='Blanco'" style="color: white;" [ngStyle]="{'background-color':auxStock.color|colores,
                 'border':auxStock.cantidad==0?'2px solid red':''}"
-                (click)="seleccionarColorYTipo($event,auxStock,modulo,'conMarco')">
-                {{auxStock.cantidad}} C/M
-              </ion-chip>
-            </div>
+                    (click)="seleccionarColorYTipo($event,auxStock,modulo,'conMarco')">
+                    {{auxStock.cantidad}} C/M
+                  </ion-chip>
+                </div>
 
-          </div>
+              </div>
 
-          <ng-template #sinMarco>
-            <div *ngFor="let auxStock of modulo.stock.sinMarco">
-              <ion-chip outline="true" *ngIf="auxStock.color=='Blanco'" [ngStyle]="{'background-color':auxStock.color|colores,
+              <ng-template #sinMarco>
+                <div *ngFor="let auxStock of modulo.stock.sinMarco">
+                  <ion-chip outline="true" *ngIf="auxStock.color=='Blanco'" [ngStyle]="{'background-color':auxStock.color|colores,
                 'border':auxStock.cantidad==0?'2px solid red':''}"
-                (click)="seleccionarColorYTipo($event,auxStock,modulo,'sinMarco')">{{auxStock.cantidad}} S/M
-              </ion-chip>
+                    (click)="seleccionarColorYTipo($event,auxStock,modulo,'sinMarco')">{{auxStock.cantidad}} S/M
+                  </ion-chip>
 
-              <ion-chip outline="true" *ngIf="auxStock.color!='Blanco'" style="color: white;" [ngStyle]="{'background-color':auxStock.color|colores,
+                  <ion-chip outline="true" *ngIf="auxStock.color!='Blanco'" style="color: white;" [ngStyle]="{'background-color':auxStock.color|colores,
                 'border':auxStock.cantidad==0?'2px solid red':''}"
-                (click)="seleccionarColorYTipo($event,auxStock,modulo,'sinMarco')">{{auxStock.cantidad}} S/M
-              </ion-chip>
-            </div>
-          </ng-template>
-        </ng-template>
-      </ion-col>
+                    (click)="seleccionarColorYTipo($event,auxStock,modulo,'sinMarco')">{{auxStock.cantidad}} S/M
+                  </ion-chip>
+                </div>
+              </ng-template>
+            </ng-template>
+          </ion-col>
+        </ion-item>
+
+        <ion-item-options>
+          <ion-item-option color="danger" (click)="eliminarModelo($event,modulo)">Eliminar</ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
     </ion-row>
   </ion-grid>
   <!-- FIN TABLA -->

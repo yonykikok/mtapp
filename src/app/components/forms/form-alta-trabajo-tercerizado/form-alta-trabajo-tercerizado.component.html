@@ -14,7 +14,8 @@
 
       <ion-item>
         <ion-select [ngModelOptions]="{standalone: true}" [(ngModel)]="tipoDeTrabajoSeleccionado"
-          label="Trabajo a realizar" labelPlacement="floating" mode="md" placeholder="Liberacion, Cuenta, etc.">
+          (ionChange)="actualizarDatos($event)" label="Trabajo a realizar" labelPlacement="floating" mode="md"
+          placeholder="Liberacion, Cuenta, etc.">
           <ion-select-option *ngFor="let trabajo of tiposDeTrabajosTercerizados" [value]="trabajo">
             {{trabajo}}
           </ion-select-option>

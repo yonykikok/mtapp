@@ -5,7 +5,8 @@
 
 <ion-content *ngIf="loggedUser;">
   <div class="ion-text-center">
-    <ion-chip class="ion-margin no-radius ion-padding" color="tertiary">Estos son los trabajos tercerizados en los ultimos 60 dias</ion-chip>
+    <ion-chip class="ion-margin no-radius ion-padding" color="tertiary">Estos son los trabajos tercerizados en los
+      ultimos 60 dias</ion-chip>
   </div>
 
   <ion-grid class="ion-text-center" *ngIf="trabajosTercerizados">
@@ -14,12 +15,20 @@
       <ion-col><b>Trabajo</b></ion-col>
       <ion-col><b>Boleta</b></ion-col>
     </ion-row>
-    <ion-row *ngFor="let trabajo of trabajosTercerizados"
-      [ngStyle]="{'background':!trabajo.fechaRetiro||trabajo.fechaRetiro==-1?'lightgreen':''}"
-      (click)="mostrarDetalle(trabajo)">
-      <ion-col>{{trabajo.modelo|titlecase}}</ion-col>
-      <ion-col>{{trabajo.trabajo|titlecase}}</ion-col>
-      <ion-col>{{trabajo.boleta}}</ion-col>
+    <ion-row *ngFor="let trabajo of trabajosTercerizados;let index=index" (click)="mostrarDetalle(trabajo)">
+
+      <ion-item-sliding>
+        <ion-item class="ion_item" lines="none"
+          [ngStyle]="{'--background':!trabajo.fechaRetiro||trabajo.fechaRetiro==-1?'lightgreen':''}">
+          <ion-col>{{trabajo.modelo|titlecase}}</ion-col>
+          <ion-col>{{trabajo.trabajo|titlecase}}</ion-col>
+          <ion-col>{{trabajo.boleta}}</ion-col>
+        </ion-item>
+
+        <ion-item-options>
+          <ion-item-option color="danger" (click)="eliminarTrabajo($event,trabajo,index)">Eliminar</ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
     </ion-row>
   </ion-grid>
   <div class="ion-text-center">
