@@ -207,33 +207,28 @@ export class EquiposDisponiblesPage implements OnInit {
       }
     });
 
-    modal.onDidDismiss().then(async (result) => {
+    modal.onDidDismiss().then(result => {
       if (result.role == 'guardar') {
         this.database.actualizar(environment.TABLAS.equipos_disponibles, { ...equipo, especificaciones: result.data }, equipo.id);
 
-        try {
-          const res: any = await this.database.obtenerPorId(environment.TABLAS.especificacionesDeEquipos, equipo.marca.toLowerCase());
-          console.log(res)
-
-          let especificacionesExistentePorMarca: EspecificacionesEquipo[] = res.payload ? res.payload.data().especificaciones || [] : [];
-
-          especificacionesExistentePorMarca.push({
-            marca: equipo.marca,
-            modelo: equipo.modelo,
-            especificaciones: result.data
-          });
-
+      let subs=  this.database.obtenerPorId(environment.TABLAS.especificacionesDeEquipos, equipo.marca.toLowerCase()).subscribe((res: any) => {
+        subs.unsubscribe();
+          let especificacionesExistentePorMarca: EspecificacionesEquipo[] = res.payload.data().especificaciones || [];
           console.log(especificacionesExistentePorMarca);
-          await this.database.actualizar(
-            environment.TABLAS.especificacionesDeEquipos,
-            { especificaciones: especificacionesExistentePorMarca },
-            equipo.marca
-          );
+          // return;
+          let especificacionEncontrada = especificacionesExistentePorMarca.find(especificacion => especificacion.modelo == equipo.modelo);
+          if (especificacionEncontrada) {
+            especificacionEncontrada.especificaciones = result.data;
+          } else {
+            especificacionesExistentePorMarca.push({
+              marca: equipo.marca,
+              modelo: equipo.modelo,
+              especificaciones: result.data
+            });
+          }
 
-        } catch (error) {
-          console.error('Error al actualizar las especificaciones:', error);
-        }
-
+          this.database.actualizar(environment.TABLAS.especificacionesDeEquipos, { especificaciones: especificacionesExistentePorMarca }, equipo.marca);
+        })
 
         // this.database.actualizar(environment.TABLAS.equipos_disponibles, { ...equipo, especificaciones: result.data }, equipo.id);
       }
