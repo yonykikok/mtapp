@@ -16,6 +16,7 @@ import { SpinnerService } from 'src/app/services/spinner.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
+import { EspecificacionesEquipo } from '../dashboard/dashboard.page';
 
 @Component({
   selector: 'app-equipos-disponibles',
@@ -206,9 +207,35 @@ export class EquiposDisponiblesPage implements OnInit {
       }
     });
 
-    modal.onDidDismiss().then(result => {
+    modal.onDidDismiss().then(async (result) => {
       if (result.role == 'guardar') {
         this.database.actualizar(environment.TABLAS.equipos_disponibles, { ...equipo, especificaciones: result.data }, equipo.id);
+
+        try {
+          const res: any = await this.database.obtenerPorId(environment.TABLAS.especificacionesDeEquipos, equipo.marca.toLowerCase());
+          console.log(res)
+
+          let especificacionesExistentePorMarca: EspecificacionesEquipo[] = res.payload ? res.payload.data().especificaciones || [] : [];
+
+          especificacionesExistentePorMarca.push({
+            marca: equipo.marca,
+            modelo: equipo.modelo,
+            especificaciones: result.data
+          });
+
+          console.log(especificacionesExistentePorMarca);
+          await this.database.actualizar(
+            environment.TABLAS.especificacionesDeEquipos,
+            { especificaciones: especificacionesExistentePorMarca },
+            equipo.marca
+          );
+
+        } catch (error) {
+          console.error('Error al actualizar las especificaciones:', error);
+        }
+
+
+        // this.database.actualizar(environment.TABLAS.equipos_disponibles, { ...equipo, especificaciones: result.data }, equipo.id);
       }
     })
 

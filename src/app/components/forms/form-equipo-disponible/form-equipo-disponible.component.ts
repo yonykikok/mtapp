@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
+import { EspecificacionesEquipo } from 'src/app/pages/dashboard/dashboard.page';
 import { DataBaseService } from 'src/app/services/database.service';
 import { EquipoDisponible } from 'src/app/services/info-compartida.service';
 import { SpinnerService } from 'src/app/services/spinner.service';
@@ -14,6 +15,9 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./form-equipo-disponible.component.scss'],
 })
 export class FormEquipoDisponibleComponent implements OnInit {
+  especificacionSeleccionada!: EspecificacionesEquipo|null;
+  especificacionesFiltradas: EspecificacionesEquipo[] = [];
+  especificacionesExistentes: EspecificacionesEquipo[] = [];
   modoModificarEquipo: boolean = false;
   step = 2;
   imagenes: string[] = [];
@@ -44,7 +48,16 @@ export class FormEquipoDisponibleComponent implements OnInit {
   ) { }
 
   ionViewWillEnter() {
-    
+   let subs= this.dataBase.obtenerTodos(environment.TABLAS.especificacionesDeEquipos).subscribe((especificacionesListRef: any) => {
+      especificacionesListRef.forEach((especificacionRef: any) => {
+        let especificacion = especificacionRef.payload.doc.data();
+        this.especificacionesExistentes = [...especificacion.especificaciones, ...this.especificacionesExistentes];
+      })
+      subs.unsubscribe();
+
+      console.log(this.especificacionesExistentes)
+    })
+
     if (this.modoModificarEquipo) {
       this.step2FormGroup.patchValue(this.equipoDisponible);
       this.step3FormGroup.patchValue(this.equipoDisponible);
@@ -102,7 +115,10 @@ export class FormEquipoDisponibleComponent implements OnInit {
       ...this.step4FormGroup.value,
       fecha: Date.now()
     }
-    console.log(this.equipoDisponible.images)
+    if (this.especificacionSeleccionada) {
+      this.equipoDisponible.especificaciones = this.especificacionSeleccionada.especificaciones;
+    }
+
     this.uploadImages(this.equipoDisponible.images, `equipos_disponibles/`);
 
 
@@ -116,7 +132,7 @@ export class FormEquipoDisponibleComponent implements OnInit {
       ...this.step3FormGroup.value,
       ...this.step4FormGroup.value,
     }
-    
+
     this.dataBase.actualizar(environment.TABLAS.equipos_disponibles, this.equipoDisponible, this.equipoDisponible.id)?.then(res => {
       this.spinnerService.stopLoading();
       this.modalController.dismiss();
@@ -160,4 +176,29 @@ export class FormEquipoDisponibleComponent implements OnInit {
     });
   }
 
+
+  onInput(event: any) {
+    this.especificacionSeleccionada = null;
+    const valor = event.target.value;
+
+    if (valor && valor.trim() !== '') {
+      this.especificacionesFiltradas = this.especificacionesExistentes.filter(especificacion =>
+        especificacion.modelo.toLowerCase().includes(valor.toLowerCase())
+      );
+    } else {
+      this.especificacionesFiltradas = [];
+    }
+  }
+
+  // Método para manejar la selección de un modelo
+  seleccionarModelo(especificacion: EspecificacionesEquipo) {
+    this.especificacionSeleccionada = especificacion;
+    this.step2FormGroup.patchValue({
+      marca: especificacion.marca,
+      modelo: especificacion.modelo,
+    })
+    // this.step2FormGroup.controls['marca'].setValue('especificacion.marca');
+    // this.step2FormGroup.controls['modelo'].setValue('especificacion.modelo');
+    this.especificacionesFiltradas = [];
+  }
 }

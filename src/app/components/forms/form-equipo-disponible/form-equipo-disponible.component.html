@@ -4,44 +4,63 @@
 
 
 <ion-content>
-  <ion-card *ngIf="step==2">
-    <ion-card-header>
-      <ion-card-title class="ion-text-center">Datos del equipo</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
+  <div *ngIf="step==2">
 
-      <form [formGroup]="step2FormGroup">
-        <ion-item class="ion-margin">
-          <ion-select placeholder="Seleccione la marca" formControlName="marca">
-            <ion-select-option
-              *ngFor="let marca of ['apple', 'alcatel', 'huawei', 'lg', 'motorola', 'nokia', 'samsung','sony','xiaomi','otro']"
-              [value]="marca">{{marca}}</ion-select-option>
-          </ion-select>
-        </ion-item>
+    <form [formGroup]="step2FormGroup">
+      <ion-card>
+        <ion-toolbar>
+          <ion-title>Marca y modelo</ion-title>
+        </ion-toolbar>
+        <ion-card-content class="ion-no-padding">
+          <ion-item class="ion-margin">
+            <ion-select placeholder="Seleccione la marca" formControlName="marca">
+              <ion-select-option
+                *ngFor="let marca of ['apple', 'alcatel', 'huawei', 'lg', 'motorola', 'nokia', 'samsung','sony','xiaomi','otro']"
+                [value]="marca">{{marca}}</ion-select-option>
+            </ion-select>
+          </ion-item>
 
-        <ion-item class="ion-margin">
-          <ion-input label="Modelo" labelPlacement="floating" formControlName="modelo"
-            placeholder="Ingrese modelo del equipo" required></ion-input>
-        </ion-item>
-        <ion-item class="ion-margin">
-          <ion-input label="Imei" labelPlacement="floating" formControlName="imei" placeholder="Ingrese imei del equipo"
-            required></ion-input>
-        </ion-item>
-        <ion-item class="ion-margin">
-          <ion-input label="Precio" labelPlacement="floating" formControlName="precio"
-            placeholder="Ingrese precio del equipo" required></ion-input>
-        </ion-item>
-        <ion-item class="ion-margin">
-          <ion-textarea label="Detalles" labelPlacement="floating" formControlName="detalles"
-            placeholder="Pantalla astillada, cubrelente dañado, no toma la huella"></ion-textarea>
-        </ion-item>
-        <div class="ion-text-center">
-          <ion-button color="warning" (click)="step=step-1">Atras</ion-button>
-          <ion-button color="primary" (click)="step=step+1" [disabled]="!step2FormGroup.valid">Siguiente</ion-button>
-        </div>
-      </form>
-    </ion-card-content>
-  </ion-card>
+          <ion-item class="ion-margin">
+            <ion-input label="Modelo" labelPlacement="floating" formControlName="modelo"
+              placeholder="Ingrese modelo del equipo" required (ionInput)="onInput($event)"></ion-input>
+          </ion-item>
+
+          <!-- Lista de autocompletado -->
+          <ion-list *ngIf="especificacionesFiltradas.length > 0" class="autocomplete-list">
+            <ion-item *ngFor="let especificacion of especificacionesFiltradas"
+              (click)="seleccionarModelo(especificacion)">
+              {{ especificacion.marca }} {{ especificacion.modelo }}
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+
+
+      <ion-card>
+        <ion-toolbar>
+          <ion-title>Detalles del equipo</ion-title>
+        </ion-toolbar>
+        <ion-card-content class="ion-no-padding">
+          <ion-item class="ion-margin">
+            <ion-input label="Imei" labelPlacement="floating" formControlName="imei"
+              placeholder="Ingrese imei del equipo" required></ion-input>
+          </ion-item>
+          <ion-item class="ion-margin">
+            <ion-input label="Precio" labelPlacement="floating" formControlName="precio"
+              placeholder="Ingrese precio del equipo" required></ion-input>
+          </ion-item>
+          <ion-item class="ion-margin">
+            <ion-textarea label="Detalles" labelPlacement="floating" formControlName="detalles"
+              placeholder="Pantalla astillada, cubrelente dañado, no toma la huella"></ion-textarea>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+      <div class="ion-text-center">
+        <ion-button color="warning" (click)="step=step-1">Atras</ion-button>
+        <ion-button color="primary" (click)="step=step+1" [disabled]="!step2FormGroup.valid">Siguiente</ion-button>
+      </div>
+    </form>
+  </div>
 
 
   <ion-card *ngIf="step==3">

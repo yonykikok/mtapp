@@ -10,6 +10,19 @@ import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.servic
 import { environment } from 'src/environments/environment';
 import { boleta } from '../mis-reparaciones/mis-reparaciones.page';
 import { StorageService } from 'src/app/services/storage.service';
+export interface EspecificacionesEquipo {
+  marca: string;
+  modelo: string;
+  especificaciones?: {
+    pantalla: number;
+    resolucion: string;
+    camaraFrontal: number;
+    memoria: number;
+    almacenamiento: number;
+    procesador: string;
+    camaraPrincipal: number;
+  };
+}
 
 @Component({
   selector: 'app-dashboard',

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { Share } from '@capacitor/share';
 import { ModalController } from '@ionic/angular';
@@ -46,6 +46,8 @@ export interface Producto {
   styleUrls: ['./lista-productos.page.scss'],
 })
 export class ListaProductosPage implements OnInit {
+  codigoDeBarras: string = ''; // Para almacenar el código de barras temporalmente
+  tiempoDeEspera: any; // Para controlar el tiempo de espera entre caracteres
   mostrarCosto: boolean = false;
   recargos!: {
     financiamiento: number,
@@ -58,7 +60,7 @@ export class ListaProductosPage implements OnInit {
   productosAMostrar: Producto[] = [];
   cantidadPorPagina = 35; // Cantidad de productos a mostrar por página
   infiniteScrollDisabled = false; // Variable para controlar el estado del infinite scroll
-  loggedUser!: User; 
+  loggedUser!: User;
   isActionSheetOpen = false;
   productoSeleccionado!: Producto;
   actionSheetButtons: any[] = [];
@@ -115,7 +117,7 @@ export class ListaProductosPage implements OnInit {
     })
   }
 
-  loadData(event:any) {
+  loadData(event: any) {
     setTimeout(() => {
       const inicio = this.productosAMostrar.length;
       const fin = inicio + this.cantidadPorPagina;
@@ -131,7 +133,7 @@ export class ListaProductosPage implements OnInit {
       }
     }, 500);
   }
-  
+
   mostrarCostoToggle(e: Event) {
     e.stopPropagation();
     if (this.funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)) {
@@ -636,5 +638,53 @@ export class ListaProductosPage implements OnInit {
       );
   }
 
+
+
+
+
+
+
+  // Maneja los eventos de teclado
+  @HostListener('window:keydown', ['$event'])
+  onKeydown(event: KeyboardEvent) {
+    // Filtra las teclas modificadoras
+    if (event.key.length === 1) { // Solo considera teclas de un solo carácter
+      console.log("ENTRA!");
+      this.codigoDeBarras += event.key;
+    }
+    // Verifica si la tecla presionada es Enter
+    if (event.key === 'Enter') {
+      console.log("ENTRA2!");
+      this.procesarCodigoDeBarras(this.codigoDeBarras);
+      this.codigoDeBarras = ''; // Limpia el código de barras después de procesarlo
+    }
+
+    // Configura un tiempo de espera para evitar que se procese código de barras parcial
+    clearTimeout(this.tiempoDeEspera);
+    this.tiempoDeEspera = setTimeout(() => {
+      console.log("ENTRA3!");
+      if (this.codigoDeBarras) {
+        this.procesarCodigoDeBarras(this.codigoDeBarras);
+        this.codigoDeBarras = ''; // Limpia el código de barras después de procesarlo
+      }
+    }, 200); // Ajusta el tiempo de espera según tus necesidades
+  }
+
+  // Procesa el código de barras leído
+  procesarCodigoDeBarras(codigo: string) {
+    // Aquí puedes buscar el producto por el código y agregarlo al carrito
+    let producto: any = this.productos.find(p => p.codigo === codigo);
+
+    if (producto) {
+      console.log("MOSTRAR ", producto)
+      let productosMostradosAntesDeEscanear = this.funcionesUtiles.clonarObjeto(this.productosAMostrar);
+      this.productosAMostrar = [producto];
+      setTimeout(() => {
+        const inicio = this.productosAMostrar.length;
+        const fin = inicio + this.cantidadPorPagina;
+        this.productosAMostrar = this.funcionesUtiles.clonarObjeto(this.productos).slice(inicio, fin);
+      }, 10000);
+    }
+  }
 
 }

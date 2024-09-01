@@ -55,7 +55,7 @@ export class EquiposVendidosPage implements OnInit {
         return equipoVendido;
       });
 
-      
+
       this.listaEquiposVendidos.sort((equipoA, equipoB) => {
         if (equipoA['fecha'] > equipoB['fecha']) {
           return -1;
@@ -86,8 +86,11 @@ export class EquiposVendidosPage implements OnInit {
         console.log(equipoVendido.precio, " ", equipoVendido.id)
         return equipoVendido;
       });
-
-      
+      const equiposUnicos = Array.from(new Set(this.listaEquiposVendidos.map(equipo => equipo.marca + equipo.modelo)))
+      .map(combinacion => {
+        return this.listaEquiposVendidos.find(equipo => equipo.marca + equipo.modelo === combinacion);
+      });
+      console.log(equiposUnicos);
       this.listaEquiposVendidos.sort((equipoA, equipoB) => {
         if (equipoA['fecha'] > equipoB['fecha']) {
           return -1;
@@ -173,7 +176,7 @@ export class EquiposVendidosPage implements OnInit {
       equipo.imgUrlsRef?.forEach(async (imgRef) => {
         try {
           let result = await this.storageService.borrarImagen(imgRef);
-          
+
 
         } catch (error) {
           console.error(error);
