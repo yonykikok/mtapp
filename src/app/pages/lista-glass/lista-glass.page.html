@@ -27,12 +27,13 @@
       <ion-col *ngIf="camposSeleccionados.includes('stock')"><b>Cantidad</b></ion-col>
     </ion-row>
     <ion-row *ngFor="let glass of glassesAMostrar"
-      (click)=" funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)?seleccionar(glass):''">
+      (click)=" funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)?seleccionar(glass):''"
+      >
       <ion-col *ngIf="camposSeleccionados.includes('marca')">{{glass.marca|titlecase}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('modelo')">{{glass.modelo|titlecase}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('precio')">
         {{(glass.precio*precioDolarBlue)|currency:'USD':'symbol':'1.0-0' }}</ion-col>
-      <ion-col *ngIf="camposSeleccionados.includes('stock')">
+      <ion-col *ngIf="camposSeleccionados.includes('stock')" (click)="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)?mostrarEditorStockRapido($event,glass):''">
         <ion-text [color]="glass.stock<1
         ?'danger'
         :(glass.stock>=1&&glass.stock<3)
@@ -51,3 +52,31 @@
   </ion-fab>
 
 </ion-content>
+<!-- FORM MODIFICAR STOCK RAPIDO -->
+<div *ngIf="showStockDialog" (click)="this.showStockDialog = false;" class="flexCenterCenter customModal">
+  <ion-card (click)="$event.stopPropagation();">
+    <ion-card-header>
+
+      <ion-item-divider class="ion-padding">
+        <ion-chip class="ion-text-center" slot="start" color="danger" outline="true"
+          (click)="cambiarCantidad('disminuir')">
+          <ion-icon class="ion-no-margin" name="remove-outline"></ion-icon>
+        </ion-chip>
+
+        <ion-card class="ion-padding">
+          {{this.modeloSeleccionadoEditable.stock}}
+        </ion-card>
+
+        <ion-chip class="ion-text-center" slot="end" color="success" outline="true"
+          (click)="cambiarCantidad('aumentar')">
+          <ion-icon class="ion-no-margin" name="add-outline"></ion-icon>
+        </ion-chip>
+      </ion-item-divider>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-button expand="block" class="ion-margin" color="primary" (click)="guardarCambios()">Guardar
+        cambios</ion-button>
+    </ion-card-content>
+  </ion-card>
+</div>
+<!-- FIN FORM MODIFICAR STOCK RAPIDO -->

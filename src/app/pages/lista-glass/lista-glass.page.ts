@@ -1,11 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
+import { Glass } from 'src/app/clases/glass';
 import { User } from 'src/app/clases/user';
 import { FormAltaGlassComponent } from 'src/app/components/forms/form-alta-glass/form-alta-glass.component';
 import { DetalleGlassComponent } from 'src/app/components/views/detalle-glass/detalle-glass.component';
+import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
+import { SpinnerService } from 'src/app/services/spinner.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 
@@ -15,10 +18,13 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./lista-glass.page.scss'],
 })
 export class ListaGlassPage implements OnInit {
+  showStockDialog: boolean = false;
+  modeloSeleccionado!: Glass;
+  modeloSeleccionadoEditable!: Glass;
   loggedUser!: User;
-  camposSeleccionados = ['marca', 'modelo', 'precio','stock'];
-  glasses: any[] = [];
-  glassesAMostrar: any[] = [];
+  camposSeleccionados = ['marca', 'modelo', 'precio', 'stock'];
+  glasses: Glass[] = [];
+  glassesAMostrar: Glass[] = [];
 
   mostrarFormGlass = true;
 
@@ -28,6 +34,8 @@ export class ListaGlassPage implements OnInit {
     private authService: AuthService,
     public funcionesUtiles: FuncionesUtilesService,
     private modalController: ModalController,
+    private alertService: AlertService,
+    private spinnerService: SpinnerService,
     private database: DataBaseService,
     private toastService: ToastService) {
 
@@ -40,7 +48,7 @@ export class ListaGlassPage implements OnInit {
     });
   }
   ngOnInit(): void {
-    
+
     let lista = [];
     this.dataBase.obtenerTodos(environment.TABLAS.glasses).subscribe((docsGlasssRef: any) => {
       if (docsGlasssRef.length <= 0) return;
@@ -62,7 +70,7 @@ export class ListaGlassPage implements OnInit {
     return lista.sort((a, b) => a[criterio].localeCompare(b[criterio]) || a[criterio2] - b[criterio2]);
   }
 
-  async seleccionar(glass: any) {
+  async seleccionar(glass: Glass) {
     try {
       const modal = await this.modalController.create({
         component: DetalleGlassComponent,
@@ -70,7 +78,7 @@ export class ListaGlassPage implements OnInit {
           repuesto: glass,
           ruta: '/repuestos/lista-glasses',
           glassesCargados: this.funcionesUtiles.clonarObjeto(this.glasses),
-          precioDolarBlue:this.precioDolarBlue
+          precioDolarBlue: this.precioDolarBlue
         },
       })
 
@@ -145,4 +153,43 @@ export class ListaGlassPage implements OnInit {
 
   }
 
+
+  cambiarCantidad(accion: string) {
+    let modelo = this.modeloSeleccionadoEditable;
+
+    if (accion == 'aumentar') {
+      modelo.stock = Number(modelo.stock) + 1
+    } else {
+      if (modelo.stock == 0) {
+        return;
+      };
+      modelo.stock = Number(modelo.stock) - 1;
+    }
+    // this.actualizarCantidadTotal();
+  }
+  guardarCambios() {
+    this.alertService.alertConfirmacion('Confirmación', "¿Quiere modificar el stock actual?", 'Si, modificar', () => {
+      this.modeloSeleccionado = this.modeloSeleccionadoEditable;
+      this.showStockDialog = false;
+      this.actualizarModuloEnFirebase();
+    });
+  }
+  async actualizarModuloEnFirebase() {
+    this.spinnerService.showLoading('Actualizando...');
+    try {
+      await this.dataBase.actualizar(environment.TABLAS.glasses, this.modeloSeleccionado, this.modeloSeleccionado.id);
+
+    } catch (err) {
+    } finally {
+      this.spinnerService.stopLoading();
+    }
+  }
+  mostrarEditorStockRapido(event: Event, glass: Glass) {
+    
+    this.modeloSeleccionado = glass;
+    this.modeloSeleccionadoEditable = this.funcionesUtiles.clonarObjeto(glass);
+    console.log(this.modeloSeleccionado);
+    event.stopPropagation();
+    this.showStockDialog = true;
+  }
 }
