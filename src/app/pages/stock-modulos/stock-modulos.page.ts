@@ -280,15 +280,8 @@ export class StockModulosPage implements OnInit {
     event.stopPropagation();
 
     this.alertService.alertConfirmacion('Confirmación', "¿Seguro de eliminar esta modelo?", 'Si', () => {
-      this.spinnerService.showLoading('Borrando modelo...');
       if (modulo.id) {
-        this.database.eliminar(environment.TABLAS.stockModulos, modulo.id)
-          .catch((error) => {
-            console.error('Error al eliminar en la base de datos:', error);
-          })
-          .finally(() => {
-            this.spinnerService.stopLoading();
-          })
+        this.database.eliminar(environment.TABLAS.stockModulos, modulo.id);
 
       }
     });

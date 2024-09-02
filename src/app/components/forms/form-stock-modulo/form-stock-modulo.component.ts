@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { DataBaseService } from 'src/app/services/database.service';
@@ -56,6 +57,7 @@ export class FormStockModuloComponent implements OnInit {
 
   constructor(
     private infoConpatida: InfoCompartidaService,
+    private modalController:ModalController,
     private dataBase: DataBaseService,
     private afs: AngularFirestore,
     private toastService: ToastService) {
@@ -114,6 +116,7 @@ export class FormStockModuloComponent implements OnInit {
   agregarModulo(nuevoModulo: any) {
     this.dataBase.crear(environment.TABLAS.stockModulos, nuevoModulo).then(() => {
       this.toastService.simpleMessage('Exito', 'Modulo agregado', ToastColor.success);
+      this.modalController.dismiss();
       // this.snackBar.open('Modulo agregado', 'Cerrar', { duration: 5000, panelClass: ['successSnackBar'] });
 
     });
