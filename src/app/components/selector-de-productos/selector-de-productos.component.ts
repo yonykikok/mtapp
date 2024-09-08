@@ -423,6 +423,9 @@ export class SelectorDeProductosComponent {
     modal.onDidDismiss().then((resultado: any) => {
       if (resultado.data) {
         // Procesar la venta con los pagos seleccionados
+        if(resultado.role=='confirmar'){
+          console.log("Guardar en firabes")
+        }
         this.procesarVenta(resultado.data);
       }
     });

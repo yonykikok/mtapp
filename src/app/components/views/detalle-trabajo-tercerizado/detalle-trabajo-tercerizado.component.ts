@@ -71,7 +71,9 @@ export class DetalleTrabajoTercerizadoComponent implements OnInit {
         // this.guardarInformacionEnFirebase();
         if (this.trabajo.trabajo == TiposDeTrabajosTercerizadosEnum.Liberacion) {
           this.consultarNuevoImei();
+          return;
         }
+        this.guardarInformacionEnFirebase();
 
       }, () => {
         delete this.trabajo.costo;

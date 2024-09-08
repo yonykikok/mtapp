@@ -121,7 +121,8 @@ export class NuevoLibroDiarioPage implements OnInit {
                 component: AperturaDeCajaComponent,
                 componentProps: {
                     isModal: false,
-                    libroDiarioHoy: this.libroDiarioHoy
+                    libroDiarioHoy: this.libroDiarioHoy,
+                    ruta:'/nuevo-libro-diario'
                 },
             })
 
@@ -292,7 +293,8 @@ export class NuevoLibroDiarioPage implements OnInit {
             const modal = await this.modalController.create({
                 component: FormActualizarItemLibroDiarioComponent,
                 componentProps: {
-                    item: venta
+                    item: venta,
+                    ruta:'/nuevo-libro-diario'
                 },
             })
 
@@ -301,31 +303,31 @@ export class NuevoLibroDiarioPage implements OnInit {
                 let necesitaActualizar = false;
 
 
-                // if (result.role == 'confirmarActualizacion') {
-                //     necesitaActualizar = true;
+                if (result.role == 'confirmarActualizacion') {
+                    necesitaActualizar = true;
 
-                // } else if (result.role == 'eliminarItemVenta') {
-                //     let indexAEliminar: number = this.libroDiarioHoy.ventas.findIndex(auxVenta => auxVenta == venta);
-                //     //console.log(indexAEliminar)
-                //     if (indexAEliminar != -1) {
-                //         this.libroDiarioHoy.ventas.splice(indexAEliminar, 1);
-                //         necesitaActualizar = true;
-                //     }
+                } else if (result.role == 'eliminarItemVenta') {
+                    let indexAEliminar: number = this.libroDiarioHoy.ventas.findIndex(auxVenta => auxVenta == venta);
+                    //console.log(indexAEliminar)
+                    if (indexAEliminar != -1) {
+                        this.libroDiarioHoy.ventas.splice(indexAEliminar, 1);
+                        necesitaActualizar = true;
+                    }
 
-                // }
-                // if (necesitaActualizar) {
-                //     this.libroDiarioHoy.montoTotalEfectivo = this.obtenerMontoTotalPorMedioDePago(FormasDePago.EFECTIVO);//total en efectivo
-                //     this.libroDiarioHoy.montoTotalTransferencia = this.obtenerMontoTotalPorMedioDePago(FormasDePago.TRANSFERENCIA);//total en efectivo
-                //     this.libroDiarioHoy.montoTotalMercadoPago = this.obtenerMontoTotalPorMedioDePago(FormasDePago.MERCADO_PAGO);//total en efectivo
-                //     this.libroDiarioHoy.montoTotalCredito = this.obtenerMontoTotalPorMedioDePago(FormasDePago.TARJETA_CREDITO);//total en efectivo
-                //     this.libroDiarioHoy.montoTotalDebito = this.obtenerMontoTotalPorMedioDePago(FormasDePago.TARJETA_DEBITO);//total en efectivo
-                //     this.libroDiarioHoy.montoTotalVale = this.obtenerMontoTotalPorMedioDePago(FormasDePago.VALE);//total en efectivo
-                //     this.libroDiarioHoy.montoTotalNegativo = this.obtenerMontoTotalPorNegativo();//total negativo
+                }
+                if (necesitaActualizar) {
+                    this.libroDiarioHoy.montoTotalEfectivo = this.obtenerMontoTotalPorMedioDePago(FormasDePago.EFECTIVO);//total en efectivo
+                    this.libroDiarioHoy.montoTotalTransferencia = this.obtenerMontoTotalPorMedioDePago(FormasDePago.TRANSFERENCIA);//total en efectivo
+                    this.libroDiarioHoy.montoTotalMercadoPago = this.obtenerMontoTotalPorMedioDePago(FormasDePago.MERCADO_PAGO);//total en efectivo
+                    this.libroDiarioHoy.montoTotalCredito = this.obtenerMontoTotalPorMedioDePago(FormasDePago.TARJETA_CREDITO);//total en efectivo
+                    this.libroDiarioHoy.montoTotalDebito = this.obtenerMontoTotalPorMedioDePago(FormasDePago.TARJETA_DEBITO);//total en efectivo
+                    this.libroDiarioHoy.montoTotalVale = this.obtenerMontoTotalPorMedioDePago(FormasDePago.VALE);//total en efectivo
+                    this.libroDiarioHoy.montoTotalNegativo = this.obtenerMontoTotalPorNegativo();//total negativo
 
-                //     this.database.actualizar(environment.TABLAS.ingresosNuevoLibro, this.libroDiarioHoy, this.libroDiarioHoy.id)?.then(res => {
-                //         this.toastService.simpleMessage('Exito', 'Se modifico la venta', ToastColor.success);
-                //     });
-                // }
+                    this.database.actualizar(environment.TABLAS.ingresosNuevoLibro, this.libroDiarioHoy, this.libroDiarioHoy.id)?.then(res => {
+                        this.toastService.simpleMessage('Exito', 'Se modifico la venta', ToastColor.success);
+                    });
+                }
 
             })
             return await modal.present();
@@ -422,7 +424,7 @@ export class NuevoLibroDiarioPage implements OnInit {
                     // this.libroDiarioHoy.montoTotalDebito = this.obtenerMontoTotalPorMedioDePago(this.libroDiarioHoy, FormasDePago.TARJETA_DEBITO);//total en efectivo
                     // this.libroDiarioHoy.montoTotalVale = this.obtenerMontoTotalPorMedioDePago(this.libroDiarioHoy, FormasDePago.VALE);//total en efectivo
 
-                    //   this.database.actualizar(environment.TABLAS.ingresosNuevoLibro, this.libroDiarioHoy, this.libroDiarioHoy.id);
+                      this.database.actualizar(environment.TABLAS.ingresosNuevoLibro, this.libroDiarioHoy, this.libroDiarioHoy.id);
                 }
 
             });

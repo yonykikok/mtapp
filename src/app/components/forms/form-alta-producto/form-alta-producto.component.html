@@ -68,7 +68,7 @@
       </ion-text>
     </ion-toolbar>
     <ion-card-content>
-      <form [formGroup]="stockForm" (ngSubmit)="guardarProducto()">
+      <form [formGroup]="stockForm" (ngSubmit)="modoActualizarInformacion?guardarNuevaInfoDelProducto():guardarProducto()">
         <div style="display: flex; align-items: center;">
           <input style="height: 3rem;" type="color" formControlName="color" (change)="onColorChange($event)">
           <ion-item>

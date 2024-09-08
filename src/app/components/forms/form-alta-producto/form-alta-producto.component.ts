@@ -86,7 +86,7 @@ export class FormAltaProductoComponent implements OnInit {
 
     if (productoForm.marca && productoForm.costo && productoForm.producto) {
       let producto: Producto = {
-        id: this.modoActualizarInformacion ? this.productoAModificar.id : 'idtemporal',
+        id: 'idtemporal',
         categoria: this.categoria,
         producto: productoForm.producto,
         marca: productoForm.marca,
@@ -96,47 +96,63 @@ export class FormAltaProductoComponent implements OnInit {
         iva: this.recargos.iva,
         margen: this.recargos.margen,
         coloresDisponibles: productoForm.coloresDisponibles,
-        stockTotal: productoForm.cantidad = productoForm.coloresDisponibles?.reduce((total: number, color: any) => {
+        stockTotal: productoForm.coloresDisponibles?.reduce((total: number, color: any) => {
           return total + color.stock;
-        }, 0) || 0,
-        cantidad: 0,
+        }, 0),
+        // cantidad: 0,
         images: [],
         imgUrlsRef: [],
         precio: 0
       };
       console.log(producto)
 
-      if (this.modoActualizarInformacion) {
-        this.productoAModificar = { ...this.productoAModificar, ...producto };
-        this.spinnerService.showLoading('Actualizando producto');
-        //@ts-ignore
-        this.database.actualizar(environment.TABLAS.productos, producto, producto.id).then((res) => {
-          this.productoForm.reset();
-          this.stockForm.reset();
-          this.modalController.dismiss();
+      this.spinnerService.showLoading('Creando producto');
+      this.database.crear(environment.TABLAS.productos, producto).then((res) => {
+        this.productoForm.reset();
+        this.stockForm.reset();
+        this.coloresSeleccionados = [];
+      }).catch((err) => {
+        console.error(err);
+      }).finally(() => {
+        ``
+        this.spinnerService.stopLoading();
+      })
 
-        }).catch((err) => {
-          console.error(err);
-        }).finally(() => {
-          this.spinnerService.stopLoading();
-        })
-
-      } else {
-        this.spinnerService.showLoading('Creando producto');
-        this.database.crear(environment.TABLAS.productos, producto).then((res) => {
-          this.productoForm.reset();
-          this.stockForm.reset();
-          this.coloresSeleccionados = [];
-        }).catch((err) => {
-          console.error(err);
-        }).finally(() => {
-          this.spinnerService.stopLoading();
-        })
-      }
     }
-
-
   }
+  guardarNuevaInfoDelProducto() {
+    if (this.modoActualizarInformacion) {
+
+      let productoForm: any = { ...this.productoForm.value, coloresDisponibles: this.coloresSeleccionados };
+      console.log(productoForm)
+      this.productoAModificar.categoria = this.categoria,
+        this.productoAModificar.producto = productoForm.producto,
+        this.productoAModificar.marca = productoForm.marca,
+        this.productoAModificar.codigo = productoForm.codigo ? productoForm.codigo : this.generarCodigoDebarras(),
+        this.productoAModificar.costo = (productoForm.costo / this.precioDolarBlue),
+        this.productoAModificar.coloresDisponibles = productoForm.coloresDisponibles,
+        this.productoAModificar.stockTotal = productoForm.coloresDisponibles.reduce((total: number, color: any) => {
+          return total + color.stock;
+        }, 0),
+        console.log(this.productoAModificar);
+      // this.productoAModificar.
+      this.spinnerService.showLoading('Actualizando producto');
+      //@ts-ignore
+      this.database.actualizar(environment.TABLAS.productos, this.productoAModificar, this.productoAModificar.id).then((res) => {
+        this.productoForm.reset();
+        this.stockForm.reset();
+        this.modalController.dismiss();
+
+      }).catch((err) => {
+        console.error(err);
+      }).finally(() => {
+        this.spinnerService.stopLoading();
+      })
+
+    } else {
+    }
+  }
+
   onColorChange(event: Event): void {
     const input = event.target as HTMLInputElement;
     const color = input.value;
@@ -159,14 +175,15 @@ export class FormAltaProductoComponent implements OnInit {
   // }
 
   calcularPrecioConRecargos(costo: number): number {
+    if (!this.recargos) return 0;
     // Los recargos son números entre 1 y 100, por lo que deben ser convertidos a porcentajes
     let precioConMargen = costo * (1 + this.recargos.margen / 100);
-    console.log('precioConMargen', precioConMargen);
+    // console.log('precioConMargen', precioConMargen);
     let precioConIva = precioConMargen * (1 + this.recargos.iva / 100);
-    console.log('precioConIva', precioConIva);
+    // console.log('precioConIva', precioConIva);
     let precioConFinanciamiento = precioConIva * (1 + this.recargos.financiamiento / 100);
 
-    console.log('precioConFinanciamiento', precioConFinanciamiento);
+    // console.log('precioConFinanciamiento', precioConFinanciamiento);
     return precioConFinanciamiento;
   }
 

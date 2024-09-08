@@ -12,6 +12,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./apertura-de-caja.component.scss'],
 })
 export class AperturaDeCajaComponent implements OnInit {
+  ruta:string='/libro-diario';
   montoIngresado: number = 0;
   montoInicialOriginal: number = 0;
   libroDiarioHoy!: LibroDiario;

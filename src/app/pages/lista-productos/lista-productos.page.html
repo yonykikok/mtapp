@@ -17,7 +17,7 @@
           <div class="flexColumn" style="align-items: center;border-right: 1px solid #cbcbcb;margin-right: 0.5rem;">
             <ion-avatar style="width: 70px; height: 70px;" *ngIf="producto.images; else sinImagen"
               class="flexCenterCenter" (click)="mostrarImagenCompleta($event, producto.images[0])">
-              <ion-chip *ngIf="producto.cantidad <= 0" color="danger" class="no-radius"
+              <ion-chip *ngIf="producto.stockTotal <= 0" color="danger" class="no-radius"
                 style="position: absolute; background: black;"><small><b>SIN STOCK</b></small></ion-chip>
               <img [src]="producto.images[0]" />
             </ion-avatar>
@@ -36,7 +36,7 @@
           </div>
           <div style="display: flex; flex-direction: column; align-items: start;">
             <ion-text *ngIf="producto.marca"><b>Marca:</b> {{ producto.marca | titlecase }}</ion-text>
-            <ion-text *ngIf="producto.cantidad"><b>Cantidad:</b> {{ producto.cantidad }}</ion-text>
+            <ion-text *ngIf="producto.stockTotal"><b>Cantidad:</b> {{ producto.stockTotal }}</ion-text>
             <ion-chip [color]="mostrarCosto ? 'danger' : 'success'" class="ion-text-center"
               (click)="mostrarCostoToggle($event)">
               <ion-icon name="cash-outline"></ion-icon>

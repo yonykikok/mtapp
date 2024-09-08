@@ -28,7 +28,7 @@ export interface Producto {
   images?: string[],
   marca: string,
   coloresDisponibles?: { stock: number; color: string; denominacionColor: string; }[],
-  cantidad: number,
+  // cantidad: number,
   categoria: string,
   stockTotal: number,
   costo: number,

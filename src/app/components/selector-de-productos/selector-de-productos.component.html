@@ -1,5 +1,7 @@
 <ion-content>
-
+  <ion-header>
+    <app-clasic-toolbar [ruta]="'/nuevo-libro-diario'" [title]="'Carritos actuales'"></app-clasic-toolbar>
+  </ion-header>
   <!-- Lista de Carritos -->
   <ion-list>
     <ion-item-sliding *ngFor="let carrito of carritos">

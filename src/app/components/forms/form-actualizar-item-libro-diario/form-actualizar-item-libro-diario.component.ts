@@ -8,6 +8,7 @@ import { AlertService } from 'src/app/services/alert.service';
   styleUrls: ['./form-actualizar-item-libro-diario.component.scss'],
 })
 export class FormActualizarItemLibroDiarioComponent implements OnInit {
+  ruta: string = '/libro-diario';
   item = {
     precio: null,
     boleta: '',
