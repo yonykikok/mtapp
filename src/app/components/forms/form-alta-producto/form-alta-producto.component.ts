@@ -35,7 +35,7 @@ export class FormAltaProductoComponent implements OnInit {
     producto: new FormControl('', [Validators.required, Validators.minLength(2)]),
     marca: new FormControl('', []),
     codigo: new FormControl('', []),
-    costo: new FormControl(null, [Validators.required]),
+    costo: new FormControl(0, [Validators.required]),
   })
   stockForm = new FormGroup({
     color: new FormControl('#000000', [Validators.required]),
@@ -84,14 +84,14 @@ export class FormAltaProductoComponent implements OnInit {
     let productoForm = { ...this.productoForm.value, coloresDisponibles: this.coloresSeleccionados, cantidad: 0 };
     //crear uno si no existe.
 
-    if (productoForm.marca && productoForm.costo && productoForm.producto) {
+    if (productoForm.marca && (productoForm.costo || productoForm.costo == 0) && productoForm.producto) {
       let producto: Producto = {
         id: 'idtemporal',
         categoria: this.categoria,
         producto: productoForm.producto,
         marca: productoForm.marca,
         codigo: productoForm.codigo ? productoForm.codigo : this.generarCodigoDebarras(),
-        costo: (productoForm.costo / this.precioDolarBlue),
+        costo: (productoForm.costo / this.precioDolarBlue)||0,
         financiamiento: this.recargos.financiamiento,
         iva: this.recargos.iva,
         margen: this.recargos.margen,
@@ -129,7 +129,7 @@ export class FormAltaProductoComponent implements OnInit {
         this.productoAModificar.producto = productoForm.producto,
         this.productoAModificar.marca = productoForm.marca,
         this.productoAModificar.codigo = productoForm.codigo ? productoForm.codigo : this.generarCodigoDebarras(),
-        this.productoAModificar.costo = (productoForm.costo / this.precioDolarBlue),
+        this.productoAModificar.costo = (productoForm.costo / this.precioDolarBlue)||0,
         this.productoAModificar.coloresDisponibles = productoForm.coloresDisponibles,
         this.productoAModificar.stockTotal = productoForm.coloresDisponibles.reduce((total: number, color: any) => {
           return total + color.stock;

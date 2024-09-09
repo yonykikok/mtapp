@@ -1,0 +1,30 @@
+<ion-content>
+  <ion-header>
+    <app-clasic-toolbar [ruta]="ruta" [title]="'Actualizador de precio'"></app-clasic-toolbar>
+  </ion-header>
+   <ion-card>
+    <ion-card-content>
+      <form [formGroup]="costoForm" (ngSubmit)="guardarProducto()">
+        <ion-input fill="outline" mode="md" labelPlacement="floating" label="Costo del producto en PESOS"
+          formControlName="costo" type="number"></ion-input>
+        <div class="flexCenterCenter" style="justify-content: space-evenly;"
+          *ngIf="funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)">
+    
+          <ion-chip slot="end" *ngIf="costoForm.controls['costo'].value" class="flexColumn" color="success">
+            <ion-label>En dolares</ion-label>
+            <ion-label
+              *ngIf="costoForm.controls['costo'].value">{{(costoForm.controls['costo'].value/precioDolarBlue)|currency:'USD'}}</ion-label>
+          </ion-chip>
+          <ion-chip slot="end" *ngIf="costoForm.controls['costo'].value" class="flexColumn" color="danger">
+            <ion-label>Final cliente</ion-label>
+            <ion-label>{{
+              (calcularPrecioConRecargos(costoForm.controls['costo'].value))|currency:'USD':'symbol':'1.0-0'}}</ion-label>
+          </ion-chip>
+        </div>
+        <ion-button class="ion-margin" expand="block" shape="round" type="submit">
+          Guardar
+        </ion-button>
+      </form>
+    </ion-card-content>
+   </ion-card>
+</ion-content>

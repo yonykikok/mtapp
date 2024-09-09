@@ -15,14 +15,15 @@
         </ion-toolbar>
         <ion-card-content style="display: flex; align-items: center;">
           <div class="flexColumn" style="align-items: center;border-right: 1px solid #cbcbcb;margin-right: 0.5rem;">
-            <ion-avatar style="width: 70px; height: 70px;" *ngIf="producto.images; else sinImagen"
-              class="flexCenterCenter" (click)="mostrarImagenCompleta($event, producto.images[0])">
+            <ion-avatar style="width: 70px; height: 70px;"
+              *ngIf="producto.images && producto.images.length>0; else sinImagen" class="flexCenterCenter"
+              (click)="mostrarImagenCompleta($event, producto.images[0])">
               <ion-chip *ngIf="producto.stockTotal <= 0" color="danger" class="no-radius"
                 style="position: absolute; background: black;"><small><b>SIN STOCK</b></small></ion-chip>
               <img [src]="producto.images[0]" />
             </ion-avatar>
-            <ion-chip *ngIf="producto.images" style="padding: 0.2rem;" color="tertiary" class="no-radius"
-              (click)="actualizarImagen($event, producto)">
+            <ion-chip *ngIf="producto.images && producto.images.length>0;" style="padding: 0.2rem;" color="tertiary"
+              class="no-radius" (click)="actualizarImagen($event, producto)">
               <small>Cambiar imagen</small>
             </ion-chip>
             <ng-template #sinImagen>
@@ -37,16 +38,22 @@
           <div style="display: flex; flex-direction: column; align-items: start;">
             <ion-text *ngIf="producto.marca"><b>Marca:</b> {{ producto.marca | titlecase }}</ion-text>
             <ion-text *ngIf="producto.stockTotal"><b>Cantidad:</b> {{ producto.stockTotal }}</ion-text>
-            <ion-chip [color]="mostrarCosto ? 'danger' : 'success'" class="ion-text-center"
-              (click)="mostrarCostoToggle($event)">
-              <ion-icon name="cash-outline"></ion-icon>
-              <ion-text *ngIf="producto.precio">
-                <b *ngIf="mostrarCosto"> {{ (producto.costo * precioDolarBlue) | redondearPrecio: 'pesos' | currency }}
-                  <small>
-                    ({{ producto.costo | redondearPrecio: 'dolares' | currency }})</small></b>
-                <b *ngIf="!mostrarCosto">{{ producto.precio | redondearPrecio: 'pesos' | currency }}</b>
-              </ion-text>
-            </ion-chip>
+            <div class="flexCenterCenter">
+              <ion-chip [color]="mostrarCosto ? 'danger' : 'success'" class="ion-text-center"
+                (click)="mostrarCostoToggle($event)">
+                <ion-icon name="cash-outline"></ion-icon>
+                <ion-text *ngIf="producto.precio">
+                  <b *ngIf="mostrarCosto"> {{ (producto.costo * precioDolarBlue) | redondearPrecio: 'pesos' | currency
+                    }}
+                    <small>
+                      ({{ producto.costo | redondearPrecio: 'dolares' | currency }})</small></b>
+                  <b *ngIf="!mostrarCosto">{{ producto.precio | redondearPrecio: 'pesos' | currency }}</b>
+                </ion-text>
+              </ion-chip>
+              <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)" style="padding-left: 0;" (click)="actualizarPrecio($event,producto)">
+                <ion-icon class="ion-margin-start" name="create-outline"></ion-icon>
+              </ion-chip>
+            </div>
           </div>
         </ion-card-content>
         <ion-footer>

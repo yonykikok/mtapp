@@ -20,6 +20,7 @@ import { FormImpuestosProductoComponent } from 'src/app/components/forms/form-im
 import { roles } from 'src/app/services/info-compartida.service';
 import { FormAumentoPorcentualComponent } from 'src/app/components/forms/form-aumento-porcentual/form-aumento-porcentual.component';
 import { GeneradorDeCodigosDeBarraComponent } from 'src/app/components/generador-de-codigos-de-barra/generador-de-codigos-de-barra.component';
+import { ActualizadorDePrecioProductoComponent } from 'src/app/components/actualizador-de-precio-producto/actualizador-de-precio-producto.component';
 
 export interface Producto {
   id: string,//sera puesto por firebase
@@ -46,6 +47,7 @@ export interface Producto {
   styleUrls: ['./lista-productos.page.scss'],
 })
 export class ListaProductosPage implements OnInit {
+  roles=roles;
   codigoDeBarras: string = ''; // Para almacenar el código de barras temporalmente
   tiempoDeEspera: any; // Para controlar el tiempo de espera entre caracteres
   mostrarCosto: boolean = false;
@@ -685,6 +687,30 @@ export class ListaProductosPage implements OnInit {
         this.productosAMostrar = this.funcionesUtiles.clonarObjeto(this.productos).slice(inicio, fin);
       }, 10000);
     }
+  }
+
+
+  async actualizarPrecio(e: Event, producto: Producto) {
+    e.stopPropagation();
+    console.log(producto)
+    let modal = await this.modalController.create({
+      component: ActualizadorDePrecioProductoComponent,
+      componentProps: {
+        producto,
+        loggedUser: this.loggedUser,
+        precioDolarBlue: this.precioDolarBlue,
+        ruta: '/lista-productos'
+      }
+    })
+    modal.onDidDismiss().then((result: any) => {
+      console.log(`result `, result);
+      if (result.role == 'actualizado') {
+        this.ionViewWillEnter();
+      }
+    })
+    modal.present();
+    // producto.costo = (productoForm.costo / this.precioDolarBlue) || 0,
+
   }
 
 }
