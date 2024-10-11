@@ -10,6 +10,7 @@ import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.servic
 import { EquipoVendido } from 'src/app/services/info-compartida.service';
 import { SpinnerService } from 'src/app/services/spinner.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -37,6 +38,7 @@ export class EquiposVendidosPage implements OnInit {
     private modalController: ModalController,
     private spinnerService: SpinnerService,
     private funcionesUtiles: FuncionesUtilesService,
+    private toastService: ToastService,
     private alertService: AlertService) { }
 
   ngOnInit(): void {
@@ -87,9 +89,9 @@ export class EquiposVendidosPage implements OnInit {
         return equipoVendido;
       });
       const equiposUnicos = Array.from(new Set(this.listaEquiposVendidos.map(equipo => equipo.marca + equipo.modelo)))
-      .map(combinacion => {
-        return this.listaEquiposVendidos.find(equipo => equipo.marca + equipo.modelo === combinacion);
-      });
+        .map(combinacion => {
+          return this.listaEquiposVendidos.find(equipo => equipo.marca + equipo.modelo === combinacion);
+        });
       console.log(equiposUnicos);
       this.listaEquiposVendidos.sort((equipoA, equipoB) => {
         if (equipoA['fecha'] > equipoB['fecha']) {
@@ -170,38 +172,46 @@ export class EquiposVendidosPage implements OnInit {
   }
 
   async eliminarVenta(equipo: EquipoVendido) {
+    if (this.funcionesUtiles.roleMinimoNecesario('ADMIN', this.loggedUser)) {
 
-    this.alertService.alertConfirmacion("Confirmación", '¿Seguro de borrar esta venta?', "Si, borrar", () => {
-      this.spinnerService.showLoading("Eliminando venta...");
-      equipo.imgUrlsRef?.forEach(async (imgRef) => {
-        try {
-          let result = await this.storageService.borrarImagen(imgRef);
+      this.alertService.alertConfirmacion("Confirmación", '¿Seguro de borrar esta venta?', "Si, borrar", () => {
+        this.spinnerService.showLoading("Eliminando venta...");
+        equipo.imgUrlsRef?.forEach(async (imgRef) => {
+          try {
+            let result = await this.storageService.borrarImagen(imgRef);
 
 
-        } catch (error) {
-          console.error(error);
-        } finally {
-          this.database.eliminar(environment.TABLAS.equipos_vendidos, equipo.id).finally(() => {
-            this.spinnerService.stopLoading();
-          });
-        }
+          } catch (error) {
+            console.error(error);
+          } finally {
+            this.database.eliminar(environment.TABLAS.equipos_vendidos, equipo.id).finally(() => {
+              this.spinnerService.stopLoading();
+            });
+          }
+        });
       });
-    });
+    } else {
+      this.toastService.simpleMessage('No permitido', 'No tiene permisos', ToastColor.warning);
+    }
   }
 
   cancelarVenta(equipo: EquipoVendido) {
-    this.alertService.alertConfirmacion('Confirmar', '¿Seguro que quiere parasar este equipo a disponible?', 'Si', () => {
-      let ventaCancelada = this.funcionesUtiles.clonarObjeto(equipo);
-      delete ventaCancelada.id;
-      delete ventaCancelada.dni;
-      ventaCancelada.fecha = Date.now();
-      console.log(equipo)
-      console.log(ventaCancelada)
+    if (this.funcionesUtiles.roleMinimoNecesario('ADMIN', this.loggedUser)) {
+      this.alertService.alertConfirmacion('Confirmar', '¿Seguro que quiere parasar este equipo a disponible?', 'Si', () => {
+        let ventaCancelada = this.funcionesUtiles.clonarObjeto(equipo);
+        delete ventaCancelada.id;
+        delete ventaCancelada.dni;
+        ventaCancelada.fecha = Date.now();
+        console.log(equipo)
+        console.log(ventaCancelada)
 
-      this.database.crear(environment.TABLAS.equipos_disponibles, ventaCancelada).then(res => {
-        this.database.eliminar(environment.TABLAS.equipos_vendidos, equipo.id).then(res => {
+        this.database.crear(environment.TABLAS.equipos_disponibles, ventaCancelada).then(res => {
+          this.database.eliminar(environment.TABLAS.equipos_vendidos, equipo.id).then(res => {
+          });
         });
-      });
-    })
+      })
+    } else {
+      this.toastService.simpleMessage('No permitido', 'No tiene permisos', ToastColor.warning);
+    }
   }
 }

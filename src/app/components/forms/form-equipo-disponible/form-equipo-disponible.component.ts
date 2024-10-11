@@ -15,7 +15,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./form-equipo-disponible.component.scss'],
 })
 export class FormEquipoDisponibleComponent implements OnInit {
-  especificacionSeleccionada!: EspecificacionesEquipo|null;
+  especificacionSeleccionada!: EspecificacionesEquipo | null;
   especificacionesFiltradas: EspecificacionesEquipo[] = [];
   especificacionesExistentes: EspecificacionesEquipo[] = [];
   modoModificarEquipo: boolean = false;
@@ -48,7 +48,7 @@ export class FormEquipoDisponibleComponent implements OnInit {
   ) { }
 
   ionViewWillEnter() {
-   let subs= this.dataBase.obtenerTodos(environment.TABLAS.especificacionesDeEquipos).subscribe((especificacionesListRef: any) => {
+    let subs = this.dataBase.obtenerTodos(environment.TABLAS.especificacionesDeEquipos).subscribe((especificacionesListRef: any) => {
       especificacionesListRef.forEach((especificacionRef: any) => {
         let especificacion = especificacionRef.payload.doc.data();
         this.especificacionesExistentes = [...especificacion.especificaciones, ...this.especificacionesExistentes];
@@ -118,6 +118,8 @@ export class FormEquipoDisponibleComponent implements OnInit {
     if (this.especificacionSeleccionada) {
       this.equipoDisponible.especificaciones = this.especificacionSeleccionada.especificaciones;
     }
+    console.log(this.especificacionSeleccionada)
+    console.log(this.equipoDisponible)
 
     this.uploadImages(this.equipoDisponible.images, `equipos_disponibles/`);
 
@@ -151,26 +153,33 @@ export class FormEquipoDisponibleComponent implements OnInit {
     this.spinnerService.showLoading('Subiendo equipo');
     let imgUrls: string[] = [];
     let imgUrlsRef: string[] = [];//referencia para eliminar
+
     let contador = 0;
     images.forEach((imgBase64, index) => {
       this.storageService.subirImagen(imgPath + `${this.equipoDisponible.fecha}-${this.equipoDisponible.marca}-${this.equipoDisponible.imei}-${index}`, imgBase64).then((urlImagen) => {
+
         imgUrls.push(urlImagen as string);
         imgUrlsRef.push(imgPath + `${this.equipoDisponible.fecha}-${this.equipoDisponible.marca}-${this.equipoDisponible.imei}-${index}`);//referencia para eliminar
         contador++;
         if (contador == images.length) {
           this.equipoDisponible.images = imgUrls;
           this.equipoDisponible.imgUrlsRef = imgUrlsRef;//referencia para eliminar
+          if (!this.equipoDisponible.especificaciones) {
+            delete this.equipoDisponible.especificaciones;
+          }
           this.dataBase.crear(environment.TABLAS.equipos_disponibles, this.equipoDisponible).then(res => {
-            this.spinnerService.stopLoading();
             this.toastService.simpleMessage('Existo', 'Nuevo equipo añadido a disponibles', ToastColor.success);
             this.cerrarFormulario();
 
 
           }).catch(err => {
             this.toastService.simpleMessage('Error', 'No se pudo agregar el equipo a "equipos disponibles"', ToastColor.danger);
+          }).finally(() => {
+            this.spinnerService.stopLoading();
           })
         }
       }).catch(err => {
+        console.log(err)
         this.toastService.simpleMessage('Error', 'al subir la image ocurrio un error ("equipos disponibles")', ToastColor.danger);
       });
     });
@@ -192,6 +201,7 @@ export class FormEquipoDisponibleComponent implements OnInit {
 
   // Método para manejar la selección de un modelo
   seleccionarModelo(especificacion: EspecificacionesEquipo) {
+    console.log(especificacion);
     this.especificacionSeleccionada = especificacion;
     this.step2FormGroup.patchValue({
       marca: especificacion.marca,

@@ -35,7 +35,7 @@ export class FormAltaProductoComponent implements OnInit {
     producto: new FormControl('', [Validators.required, Validators.minLength(2)]),
     marca: new FormControl('', []),
     codigo: new FormControl('', []),
-    costo: new FormControl(0, [Validators.required]),
+    costo: new FormControl(0, []),
   })
   stockForm = new FormGroup({
     color: new FormControl('#000000', [Validators.required]),
@@ -91,7 +91,7 @@ export class FormAltaProductoComponent implements OnInit {
         producto: productoForm.producto,
         marca: productoForm.marca,
         codigo: productoForm.codigo ? productoForm.codigo : this.generarCodigoDebarras(),
-        costo: (productoForm.costo / this.precioDolarBlue)||0,
+        costo: (productoForm.costo / this.precioDolarBlue) || 0,
         financiamiento: this.recargos.financiamiento,
         iva: this.recargos.iva,
         margen: this.recargos.margen,
@@ -109,6 +109,7 @@ export class FormAltaProductoComponent implements OnInit {
       this.spinnerService.showLoading('Creando producto');
       this.database.crear(environment.TABLAS.productos, producto).then((res) => {
         this.productoForm.reset();
+        this.productoForm.patchValue({ costo: 0 });
         this.stockForm.reset();
         this.coloresSeleccionados = [];
       }).catch((err) => {
@@ -129,7 +130,7 @@ export class FormAltaProductoComponent implements OnInit {
         this.productoAModificar.producto = productoForm.producto,
         this.productoAModificar.marca = productoForm.marca,
         this.productoAModificar.codigo = productoForm.codigo ? productoForm.codigo : this.generarCodigoDebarras(),
-        this.productoAModificar.costo = (productoForm.costo / this.precioDolarBlue)||0,
+        this.productoAModificar.costo = (productoForm.costo / this.precioDolarBlue) || 0,
         this.productoAModificar.coloresDisponibles = productoForm.coloresDisponibles,
         this.productoAModificar.stockTotal = productoForm.coloresDisponibles.reduce((total: number, color: any) => {
           return total + color.stock;

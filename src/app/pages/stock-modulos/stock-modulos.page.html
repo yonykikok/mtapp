@@ -39,7 +39,7 @@
     </ion-row>
 
     <ion-row
-      (click)="(loggedUser && funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)&& listaSeleccionada=='completa')?seleccionar(modulo):null"
+      (click)="(loggedUser && funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)&& listaSeleccionada=='completa')?seleccionar(modulo):null"
       *ngFor="let modulo of listaDeModulosAMostrar">
 
       <ion-item-sliding>
@@ -124,7 +124,7 @@
 
   <!-- FAB AGREGAR NUEVO -->
   <ion-fab slot="fixed" horizontal="end" vertical="bottom" color="secondary" (click)="openDialog()"
-    *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser) && listaSeleccionada!='stockBajo'">
+    *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser) && listaSeleccionada!='stockBajo'">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

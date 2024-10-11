@@ -14,11 +14,11 @@ export class ControlDeHorasTrabajadasComponent implements OnInit {
   constructor(private databaseService: DataBaseService) { }
 
   ngOnInit() {
-    this.databaseService.obtenerTodos(environment.TABLAS.users).subscribe((usersListRef) => {
-      let users = usersListRef.map(res => res.payload.doc.data());
-      let empleados = users.filter((user: any) => (user.role == roles.EMPLEADO || user.role == roles.ADMIN))
-      console.log(empleados)
-    })
+    // this.databaseService.obtenerTodos(environment.TABLAS.users).subscribe((usersListRef) => {
+    //   let users = usersListRef.map(res => res.payload.doc.data());
+    //   let empleados = users.filter((user: any) => (user.role == roles.EMPLEADO || user.role == roles.ADMIN))
+    //   console.log(empleados)
+    // })
   }
 
 }

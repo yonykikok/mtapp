@@ -45,7 +45,7 @@
   </ng-template>
   <!-- FAB AGREGAR NUEVO -->
   <ion-fab slot="fixed" horizontal="end" vertical="bottom" color="secondary" (click)="openDialog()"
-    *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)">
+    *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

@@ -47,7 +47,7 @@ export interface Producto {
   styleUrls: ['./lista-productos.page.scss'],
 })
 export class ListaProductosPage implements OnInit {
-  roles=roles;
+  roles = roles;
   codigoDeBarras: string = ''; // Para almacenar el código de barras temporalmente
   tiempoDeEspera: any; // Para controlar el tiempo de espera entre caracteres
   mostrarCosto: boolean = false;
@@ -97,7 +97,11 @@ export class ListaProductosPage implements OnInit {
     text: 'Eliminar',
     icon: 'trash-outline',
     handler: async () => {
-      this.confirmarEliminacion(this.productoSeleccionado)
+      if (this.funcionesUtiles.roleMinimoNecesario(roles.ADMIN, this.loggedUser)) {
+        this.confirmarEliminacion(this.productoSeleccionado)
+      } else {
+        alert("No tienes permisos para esta acción.")
+      }
     },
   }, {
     text: 'Cancelar',
@@ -167,6 +171,34 @@ export class ListaProductosPage implements OnInit {
   }
 
   ionViewWillEnter() {
+
+    // this.solicitarConfirmacion(null, {
+    //   "id": "DBB9mRoRgPrNFjFG2pVq",
+    //   "iva": 0,
+    //   "margen": 100,
+    //   "producto": "adaptador 1 macho iphone y dos hembra iphone",
+    //   "categoria": "Cables",
+    //   "images": [
+    //     "https://firebasestorage.googleapis.com/v0/b/multitask-web.appspot.com/o/productos%2F1725758645053?alt=media&token=52545d40-8068-4cab-b81d-e37a52da1902"
+    //   ],
+    //   "stockTotal": 13,
+    //   "codigo": "300968757635",
+    //   "imgUrlsRef": [
+    //     "productos/1725758645053"
+    //   ],
+    //   "marca": "lightning splitter",
+    //   "costo": 3.0291970802919708,
+    //   // "cantidad": 0,
+    //   "coloresDisponibles": [
+    //     {
+    //       "stock": 13,
+    //       "denominacionColor": "Negro",
+    //       "color": "#000000"
+    //     }
+    //   ],
+    //   "precio": 8964,
+    //   "financiamiento": 8
+    // })
     this.database.obtenerPorId(environment.TABLAS.cotizacion_dolar, 'dolarBlue').subscribe((res: any) => {
       this.precioDolarBlue = res.payload.data().price;
     });
@@ -176,6 +208,7 @@ export class ListaProductosPage implements OnInit {
       this.recargos = res.payload.data();
     });
 
+    // return;
     let subs = this.database.obtenerTodos(environment.TABLAS.productos).subscribe((docsProductosRef: any) => {
       subs.unsubscribe();
       if (docsProductosRef.length <= 0) return;
@@ -206,12 +239,13 @@ export class ListaProductosPage implements OnInit {
   ngOnInit() {
 
   }
-  async solicitarConfirmacion(e: Event, producto: Producto) {
-    e.stopPropagation();
+  async solicitarConfirmacion(e: any, producto: Producto) {
+    e?.stopPropagation();
     let modal = await this.modalController.create({
       component: GeneradorDeCodigosDeBarraComponent,
       componentProps: {
-        codigo: producto.codigo
+        codigo: producto.codigo,
+        barcodeTitle: producto.producto
       }
     })
     modal.onDidDismiss().then((result) => {
@@ -328,8 +362,8 @@ export class ListaProductosPage implements OnInit {
   }
 
 
-  async agregarCodigoDeBarra(event: Event, producto: any) {
-    event.stopPropagation();
+  async agregarCodigoDeBarra(event: any, producto: any) {
+    event?.stopPropagation();
     try {
       const modal = await this.modalController.create({
         component: BarcodeScannerComponent,

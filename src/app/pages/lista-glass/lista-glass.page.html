@@ -27,13 +27,13 @@
       <ion-col *ngIf="camposSeleccionados.includes('stock')"><b>Cantidad</b></ion-col>
     </ion-row>
     <ion-row *ngFor="let glass of glassesAMostrar"
-      (click)=" funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)?seleccionar(glass):''"
+      (click)=" funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)?seleccionar(glass):''"
       >
       <ion-col *ngIf="camposSeleccionados.includes('marca')">{{glass.marca|titlecase}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('modelo')">{{glass.modelo|titlecase}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('precio')">
         {{(glass.precio*precioDolarBlue)|currency:'USD':'symbol':'1.0-0' }}</ion-col>
-      <ion-col *ngIf="camposSeleccionados.includes('stock')" (click)="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)?mostrarEditorStockRapido($event,glass):''">
+      <ion-col *ngIf="camposSeleccionados.includes('stock')" (click)="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)?mostrarEditorStockRapido($event,glass):''">
         <ion-text [color]="glass.stock<1
         ?'danger'
         :(glass.stock>=1&&glass.stock<3)
@@ -43,7 +43,7 @@
   </ion-grid>
 
 
-  <ion-fab *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)" slot="fixed" vertical="bottom"
+  <ion-fab *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)" slot="fixed" vertical="bottom"
     horizontal="end" (click)="abrirFormGlass()">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
