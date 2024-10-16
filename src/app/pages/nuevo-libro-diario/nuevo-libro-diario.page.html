@@ -37,9 +37,9 @@
     <div class="ion-no-padding" *ngIf="libroDiarioHoy&&libroDiarioHoy.ventas">
       <div *ngFor="let venta of libroDiarioHoy.ventas">
         <div *ngIf="venta.carrito && venta.carrito.items">
-          <ion-item-sliding *ngFor="let item of venta.carrito.items"
-            (click)="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)?mostrarModalEditarVenta(item):''">
-            <ion-item>
+          <ion-item-sliding *ngFor="let item of venta.carrito.items; let indiceItemCarrito=index">
+            <ion-item
+              (click)="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)?mostrarModalEditarVenta(item):''">
               <ion-avatar *ngIf="item.images && item.images.length>0" class="ion-margin-end">
                 <img [src]="item.images[0]" />
               </ion-avatar>
@@ -58,12 +58,13 @@
 
             <!-- Opciones de acción de deslizamiento -->
             <ion-item-options side="end">
-              <ion-item-option color="danger">
+              <ion-item-option color="danger" (click)="eliminarItemVenta(venta,indiceItemCarrito)">
                 Eliminar
               </ion-item-option>
             </ion-item-options>
           </ion-item-sliding>
         </div>
+
       </div>
     </div>
 

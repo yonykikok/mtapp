@@ -97,8 +97,7 @@
   </div>
 
 
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end" (click)="openDialog()"
-    *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)" && libroDiarioHoy &&libroDiarioHoy.montoInicial
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" (click)="openDialog()" *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser) && libroDiarioHoy &&libroDiarioHoy.montoInicial
     &&libroDiarioHoy.montoInicial>0">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>

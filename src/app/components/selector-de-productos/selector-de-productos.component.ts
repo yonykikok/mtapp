@@ -11,6 +11,7 @@ import { ItemFueraDelSistemaModalComponent } from '../item-fuera-del-sistema-mod
 import { ProductosService } from 'src/app/services/productos.service';
 import { Producto } from 'src/app/pages/lista-productos/lista-productos.page';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
+import { ProductoCarrito } from '../nueva-funcionalidad/nueva-funcionalidad.component';
 
 export interface Venta {
   id: string; // ID único para la venta
@@ -18,6 +19,7 @@ export interface Venta {
   total: number; // Total de la venta
   pagos: Pago[]; // Lista de pagos realizados
   fecha: Date; // Fecha de la venta
+  cuentaSaldada: boolean
 }
 
 export interface Pago {
@@ -35,9 +37,14 @@ export enum FormasDePago {
   VALE = 'Vale de compra',
   OTRO = 'Otro'
 }
+export enum EstadoCarrito {
+  PENDIENTE = 'Pendiente',
+  ABONADO = 'Abonado',
+}
 
 
 export interface Carrito {
+  estado: EstadoCarrito,
   id: string,
   items: ItemCarrito[]
 }
@@ -60,6 +67,8 @@ export interface ItemFueraDelSistema { precio: number, boleta: number | null, de
 })
 
 export class SelectorDeProductosComponent {
+
+  segmentSeleccionado = 'abiertos';
   precioDolarBlue: number = 0;
   itemFuraDelSistema: ItemFueraDelSistema = { precio: 0, boleta: null, descripcion: '', cantidad: 0 };
   itemsFueraDelSistema: ItemFueraDelSistema[] = [];
@@ -67,6 +76,7 @@ export class SelectorDeProductosComponent {
   productos: Producto[] = [];
   productosAMostrar: Producto[] = [];
   carritos: Carrito[] = [];
+  carritoSeleccionado!: Carrito;
   idCarritoSeleccionado: string | null = null;
   itemsCarritoSeleccionado: any[] = [];
   textoABuscar: string = '';
@@ -215,12 +225,44 @@ export class SelectorDeProductosComponent {
   }
 
   // Selecciona un carrito
-  seleccionarCarrito(idCarrito: string) {
-    this.idCarritoSeleccionado = idCarrito;
-    this.itemsCarritoSeleccionado = this.carritos.find(carrito => carrito.id === idCarrito)?.items || [];
+  seleccionarCarrito(carritoSeleccionado: Carrito) {
+    this.carritoSeleccionado = carritoSeleccionado;
+    this.idCarritoSeleccionado = carritoSeleccionado.id;
+    this.itemsCarritoSeleccionado = this.carritos.find(carrito => carrito.id === carritoSeleccionado.id)?.items || [];
   }
 
-  // Elimina un producto del carrito
+  cambiarPrecio(item: ProductoCarrito) {
+    this.alertController.create({
+      header: 'Ingrese el precio por unidad',
+      inputs: [
+        {
+          name: 'precio',
+          type: 'number',
+          placeholder: 'Nuevo precio',
+          value: item.precio
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Aceptar',
+          handler: (data) => {
+            const nuevoPrecio = parseFloat(data.precio);
+            if (!isNaN(nuevoPrecio) && nuevoPrecio > 0) {
+              item.precio = nuevoPrecio;
+              // this.updateLocalStorage();
+            } else {
+              console.log('Precio no válido');
+            }
+          }
+        }
+      ]
+    }).then(alert => alert.present());
+  }
+
   eliminarDelCarrito(idProducto: string) {
     const carrito = this.carritos.find(carrito => carrito.id === this.idCarritoSeleccionado);
     if (carrito) {
@@ -257,7 +299,8 @@ export class SelectorDeProductosComponent {
     const nuevoIdCarrito = this.generarIdUnicoCarrito(); // O usa algún otro método para generar un ID único
     this.carritos.push({
       id: nuevoIdCarrito,
-      items: []
+      items: [],
+      estado: EstadoCarrito.PENDIENTE
     });
     this.idCarritoSeleccionado = nuevoIdCarrito;
     this.itemsCarritoSeleccionado = [];
@@ -397,10 +440,11 @@ export class SelectorDeProductosComponent {
     const totalVenta = this.obtenerPrecioTotal(this.idCarritoSeleccionado || '');
     const nuevaVenta: Venta = {
       id: this.generarIdUnicoVenta(),
-      carrito: this.carritos.find(c => c.id === this.idCarritoSeleccionado) || { id: '', items: [] },
+      carrito: this.carritos.find(c => c.id === this.idCarritoSeleccionado) || { id: '', items: [], estado: EstadoCarrito.PENDIENTE },
       total: totalVenta,
       pagos: [],
-      fecha: new Date()
+      fecha: new Date(),
+      cuentaSaldada: false
     };
 
     this.mostrarModalFormasDePago(nuevaVenta);
@@ -423,8 +467,11 @@ export class SelectorDeProductosComponent {
     modal.onDidDismiss().then((resultado: any) => {
       if (resultado.data) {
         // Procesar la venta con los pagos seleccionados
-        if(resultado.role=='confirmar'){
+        if (resultado.role == 'confirmar') {
+          this.carritoSeleccionado.estado = EstadoCarrito.ABONADO
+          this.updateLocalStorage();
           console.log("Guardar en firabes")
+          console.log(resultado.data);
         }
         this.procesarVenta(resultado.data);
       }
@@ -500,7 +547,7 @@ export class SelectorDeProductosComponent {
   // Ejemplo de cómo llamar a updateLocalStorage cuando se actualicen los datos
   agregarCarrito() {
     const nuevoId = this.generarIdUnicoCarrito();
-    this.carritos.push({ id: nuevoId, items: [] });
+    this.carritos.push({ id: nuevoId, items: [], estado: EstadoCarrito.PENDIENTE });
     this.idCarritoSeleccionado = nuevoId;
     this.updateLocalStorage();
   }

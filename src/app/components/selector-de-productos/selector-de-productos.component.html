@@ -3,10 +3,30 @@
     <app-clasic-toolbar [ruta]="'/nuevo-libro-diario'" [title]="'Carritos actuales'"></app-clasic-toolbar>
   </ion-header>
   <!-- Lista de Carritos -->
+
+  <ion-segment [(ngModel)]="segmentSeleccionado" mode="ios" >
+    <ion-segment-button value="abiertos" class="ion-padding">
+      <ion-label>Carritos abiertos</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="cerrados" class="ion-padding">
+      <ion-label>Carritos cerrados</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
   <ion-list>
     <ion-item-sliding *ngFor="let carrito of carritos">
-      <ion-item color="light" [class.selected]="carrito.id === idCarritoSeleccionado"
-        (click)="seleccionarCarrito(carrito.id)">
+      <ion-item *ngIf="segmentSeleccionado=='abiertos' && carrito.estado=='Pendiente'" [color]="'light'"
+        [class.selected]="carrito.id === idCarritoSeleccionado" (click)="seleccionarCarrito(carrito)">
+        <ion-icon slot="start" name="cart-outline" color="success"></ion-icon>
+        <ion-label>
+          <h2>Carrito {{ carrito.id }}</h2>
+          <p>Total: {{ obtenerPrecioTotal(carrito.id) | currency }}</p>
+        </ion-label>
+        <ion-icon color="success" slot="end" name="checkbox-outline"
+          *ngIf="carrito.id === idCarritoSeleccionado"></ion-icon>
+      </ion-item>
+      <ion-item *ngIf="segmentSeleccionado=='cerrados' && carrito.estado=='Abonado'" [color]="'medium'"
+        [class.selected]="carrito.id === idCarritoSeleccionado" (click)="seleccionarCarrito(carrito)">
         <ion-icon slot="start" name="cart-outline" color="success"></ion-icon>
         <ion-label>
           <h2>Carrito {{ carrito.id }}</h2>
@@ -27,6 +47,9 @@
 
 
   <!-- Lista de Productos en el Carrito Seleccionado -->
+
+
+
   <ion-list *ngIf="itemsCarritoSeleccionado.length > 0" class="ion-no-padding">
     <ion-item-sliding *ngFor="let item of itemsCarritoSeleccionado">
       <ion-item>
@@ -50,13 +73,17 @@
 
       <!-- Opciones de acción de deslizamiento -->
       <ion-item-options side="end">
+        <ion-item-option (click)="cambiarPrecio(item)" color="warning">
+          Cambiar precio
+        </ion-item-option>
         <ion-item-option (click)="eliminarDelCarrito(item.idProducto)" color="danger">
           Eliminar
         </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
-    <ion-button expand="full" class="ion-margin" color="tertiary" (click)="confirmarVenta()">Pasar a formas de
-      pago</ion-button>
+    <ion-button *ngIf="carritoSeleccionado && carritoSeleccionado.estado=='Pendiente'" expand="full" class="ion-margin"
+      color="tertiary" (click)="confirmarVenta()">
+      Pasar a formas de pago</ion-button>
   </ion-list>
 
 

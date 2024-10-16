@@ -110,8 +110,48 @@ export class NuevoLibroDiarioPage implements OnInit {
     }
 
 
+    eliminarItemVenta(venta: Venta, indiceItemCarrito: number): void {
+        // Verificar si el índice del item es válido
+        if (indiceItemCarrito < 0 || indiceItemCarrito >= venta.carrito.items.length) {
+          console.error('Índice del item no válido');
+          return;
+        }
+      
+        // Obtener el precio del item que será eliminado
+        const precioItem = venta.carrito.items[indiceItemCarrito].precio;
+      
+        // Eliminar el item del carrito
+        venta.carrito.items.splice(indiceItemCarrito, 1);
+      
+        // Restar el precio del item a los pagos, empezando por el último
+        let montoARestar = (precioItem*venta.carrito.items[indiceItemCarrito].cantidad);
+        
+        for (let i = venta.pagos.length - 1; i >= 0 && montoARestar > 0; i--) {
+          if (venta.pagos[i].cantidad <= montoARestar) {
+            // Resta la cantidad completa del pago y sigue restando
+            montoARestar -= venta.pagos[i].cantidad;
+            venta.pagos[i].cantidad = 0; // El pago se consume totalmente
+          } else {
+            // Si el pago cubre el monto restante, solo se resta esa cantidad
+            venta.pagos[i].cantidad -= montoARestar;
+            montoARestar = 0; // Todo ha sido restado
+          }
+        }
+      
+        // Verificar si la cuenta sigue saldada
+        const totalPagado = venta.pagos.reduce((sum, pago) => sum + pago.cantidad, 0);
+        const totalCarrito = venta.carrito.items.reduce((sum, item) => sum + item.precio, 0);
+        venta.cuentaSaldada = totalPagado >= totalCarrito;
+      
+        // Actualizar el total de la venta
+        venta.total = totalCarrito;
+        console.log(venta)
+      }
+      
 
-
+    obtenerPrecioTotal(carrito: Carrito): number {
+        return carrito.items.reduce((total: number, item: any) => total + item.precio * item.cantidad, 0);
+    }
 
 
 
@@ -122,7 +162,7 @@ export class NuevoLibroDiarioPage implements OnInit {
                 componentProps: {
                     isModal: false,
                     libroDiarioHoy: this.libroDiarioHoy,
-                    ruta:'/nuevo-libro-diario'
+                    ruta: '/nuevo-libro-diario'
                 },
             })
 
@@ -294,7 +334,7 @@ export class NuevoLibroDiarioPage implements OnInit {
                 component: FormActualizarItemLibroDiarioComponent,
                 componentProps: {
                     item: venta,
-                    ruta:'/nuevo-libro-diario'
+                    ruta: '/nuevo-libro-diario'
                 },
             })
 
@@ -424,7 +464,7 @@ export class NuevoLibroDiarioPage implements OnInit {
                     // this.libroDiarioHoy.montoTotalDebito = this.obtenerMontoTotalPorMedioDePago(this.libroDiarioHoy, FormasDePago.TARJETA_DEBITO);//total en efectivo
                     // this.libroDiarioHoy.montoTotalVale = this.obtenerMontoTotalPorMedioDePago(this.libroDiarioHoy, FormasDePago.VALE);//total en efectivo
 
-                      this.database.actualizar(environment.TABLAS.ingresosNuevoLibro, this.libroDiarioHoy, this.libroDiarioHoy.id);
+                    this.database.actualizar(environment.TABLAS.ingresosNuevoLibro, this.libroDiarioHoy, this.libroDiarioHoy.id);
                 }
 
             });

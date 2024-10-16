@@ -92,7 +92,10 @@ ion-chip {
 ion-toolbar {
     text-align: center;
 }
-
+ion-modal{
+    --width:100vw;
+    --height: 100vh;
+}
 
 .ion_item_noPaddingEnd {
     --inner-padding-end: none !important;
