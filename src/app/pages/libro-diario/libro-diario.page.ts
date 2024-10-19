@@ -25,6 +25,7 @@ export class LibroDiarioPage implements OnInit {
   montoInicialOriginal: number = 0;
   mostrarModalCierreDeCaja = false;
   resultadoDeCaja: number = 0;
+  mostrarMensajeDeCierreDeCaja: boolean = false;
   montoDeCaja = null;
   libroDiarioHoy: LibroDiario = {
     id: '',
@@ -62,10 +63,10 @@ export class LibroDiarioPage implements OnInit {
     const dia = fechaActual.getDate().toString().padStart(2, '0');
 
     const idDiaActual = `${anio}-${mes}-${dia}`;
-    console.log(environment.TABLAS.ingresos,idDiaActual);
+    console.log(environment.TABLAS.ingresos, idDiaActual);
 
     this.database.obtenerPorId(environment.TABLAS.ingresos, idDiaActual).subscribe(res => {
-      
+
       if (!res.payload.exists) {
         this.libroDiarioHoy = this.obtenerNuevoLibroDiario(idDiaActual);//aca debe estar el problema
         this.database.crearConCustomId(environment.TABLAS.ingresos, this.libroDiarioHoy.id, this.libroDiarioHoy);
@@ -227,6 +228,7 @@ export class LibroDiarioPage implements OnInit {
   }
 
   comprobar() {
+    this.mostrarMensajeDeCierreDeCaja = true;
     if (this.libroDiarioHoy.montoTotalEfectivo && this.libroDiarioHoy.montoInicial && this.montoDeCaja) {
 
       this.resultadoDeCaja = (this.libroDiarioHoy.montoTotalEfectivo + this.libroDiarioHoy.montoInicial) - this.montoDeCaja;
@@ -254,6 +256,9 @@ export class LibroDiarioPage implements OnInit {
       });
 
       this.database.actualizar(environment.TABLAS.ingresos, this.libroDiarioHoy, this.libroDiarioHoy.id);
+      setTimeout(() => {
+        this.mostrarMensajeDeCierreDeCaja = false;
+      }, 5000);
     }
 
   }

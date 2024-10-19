@@ -66,20 +66,21 @@
               placeholder="Ingrese el monto total" [(ngModel)]="montoDeCaja"
               [ngModelOptions]="{standalone: true}"></ion-input>
           </ion-item>
+          <div *ngIf="mostrarMensajeDeCierreDeCaja">
+            <ion-chip *ngIf="this.resultadoDeCaja>0;" color="danger">
+              Algo esta mal:
+              <br>(falta plata en la caja)
+            </ion-chip>
 
-          <ion-chip *ngIf="this.resultadoDeCaja>0;" color="danger">
-            Algo esta mal:
-            <br>(falta plata en la caja)
-          </ion-chip>
-
-          <ion-chip *ngIf="this.resultadoDeCaja<0;" color="primary">
-            Algo esta mal:
-            <br>(hay de mas en la caja)
-          </ion-chip>
-
-          <ion-chip *ngIf="this.resultadoDeCaja===0" color="success">Excelente!
-            <br> Cerro perfecto!
-          </ion-chip>
+            <ion-chip *ngIf="this.resultadoDeCaja<0;" color="primary">
+              Algo esta mal:
+              <br>(hay de mas en la caja)
+            </ion-chip>
+            
+            <ion-chip *ngIf="this.resultadoDeCaja===0" color="success">Excelente!
+              <br> Cerro perfecto!
+            </ion-chip>
+          </div>
 
           <p *ngIf="this.resultadoDeCaja!=0">{{this.resultadoDeCaja|currency}}</p>
 

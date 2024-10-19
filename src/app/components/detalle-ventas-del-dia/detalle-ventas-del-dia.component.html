@@ -1,9 +1,12 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/historial-caja'" [title]="'Ventas del dia'"></app-clasic-toolbar>
+  <app-clasic-toolbar [ruta]="'/historial-caja'" [title]="'Ventas del dia'" (opcionesClick)="mostrarOpciones()" [mostrarOpciones]="true"> </app-clasic-toolbar>
+
 </ion-header>
 
 
 <ion-content *ngIf="libroDiario">
+  <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Acciones" [buttons]="actionSheetButtons"
+  (didDismiss)="setOpen(false)"></ion-action-sheet>
   <ion-card>
 
     <ion-card-header>

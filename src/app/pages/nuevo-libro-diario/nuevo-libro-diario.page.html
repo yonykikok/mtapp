@@ -36,6 +36,7 @@
 
     <div class="ion-no-padding" *ngIf="libroDiarioHoy&&libroDiarioHoy.ventas">
       <div *ngFor="let venta of libroDiarioHoy.ventas">
+       <ion-item-divider style="width: 100%;" (click)="eliminarVentaCompleta(venta)">
         <div *ngIf="venta.carrito && venta.carrito.items">
           <ion-item-sliding *ngFor="let item of venta.carrito.items; let indiceItemCarrito=index">
             <ion-item
@@ -63,7 +64,8 @@
               </ion-item-option>
             </ion-item-options>
           </ion-item-sliding>
-        </div>
+        </div>  
+       </ion-item-divider>
 
       </div>
     </div>

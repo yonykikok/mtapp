@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { LibroDiario } from 'src/app/clases/libro-diario';
-import { FormDetalleVentaComponent } from '../forms/form-detalle-venta/form-detalle-venta.component';
+import { FormDetalleVentaComponent, MediosDePago } from '../forms/form-detalle-venta/form-detalle-venta.component';
 import { environment } from 'src/environments/environment';
 import { DataBaseService } from 'src/app/services/database.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
@@ -15,11 +15,50 @@ import { AlertService } from 'src/app/services/alert.service';
 export class DetalleVentasDelDiaComponent implements OnInit {
   montoIngresado = 0;
   libroDiario!: LibroDiario;
+  isActionSheetOpen = false;
+  actionSheetButtons: any[] = [{
+    text: 'Recalcular monto total',
+    icon: 'calculator-outline',
+    handler: async () => {
+
+      this.libroDiario.montoTotalEfectivo = this.obtenerMontoTotalPorMedioDePago(this.libroDiario, MediosDePago.Efectivo);//total en efectivo
+      this.libroDiario.montoTotalTransferencia = this.obtenerMontoTotalPorMedioDePago(this.libroDiario, MediosDePago.Transferencia);//total en efectivo
+      this.libroDiario.montoTotalMercadoPago = this.obtenerMontoTotalPorMedioDePago(this.libroDiario, MediosDePago.MercadoPago);//total en efectivo
+      this.libroDiario.montoTotalNegativo = this.obtenerMontoTotalPorNegativo(this.libroDiario);//total negativo
+
+      console.log(this.libroDiario)
+      this.database.actualizar(environment.TABLAS.ingresos, this.libroDiario, this.libroDiario.id);
+
+    }
+  }, {
+    text: 'Cancelar',
+    role: 'cancel',
+    icon: 'close',
+    handler: () => { },
+  }];
   constructor(private modalController: ModalController,
     private database: DataBaseService,
     private toastService: ToastService,
     private alertService: AlertService) { }
 
+  obtenerMontoTotalPorMedioDePago(libroDiarioHoy: any, medioDePago: MediosDePago) {
+    let acumulador = 0;
+    libroDiarioHoy.ventas.forEach((venta: any) => {
+      if (venta.medioDePago == medioDePago) {
+        acumulador += venta.precio;
+      }
+    });
+    return acumulador;
+  }
+  obtenerMontoTotalPorNegativo(libroDiarioHoy: any) {
+    let acumuladorNegativo = 0;
+    libroDiarioHoy.ventas.forEach((venta: any) => {
+      if (venta.precio < 0) {
+        acumuladorNegativo += venta.precio;
+      }
+    });
+    return acumuladorNegativo;
+  }
   ngOnInit(): void {
   }
   async cargarMontoInicial() {
@@ -40,11 +79,20 @@ export class DetalleVentasDelDiaComponent implements OnInit {
         this.libroDiario.ventas = [...this.libroDiario.ventas, ...result.data];
 
         this.database.actualizar(environment.TABLAS.ingresos, this.libroDiario, this.libroDiario.id)?.then(res => {
-          
+
           this.toastService.simpleMessage('Exito', 'Se agregaron las ventas al dia seleccionado', ToastColor.success);
         });
       }
     });
     modal.present();
   }
+
+  mostrarOpciones() {
+    console.log("EMNTRA")
+    this.setOpen(true);
+  }
+  setOpen(isOpen: boolean) {
+    this.isActionSheetOpen = isOpen;
+  }
+
 }
