@@ -22,6 +22,8 @@ import { DetalleGlassComponent } from 'src/app/components/views/detalle-glass/de
   ],
   declarations: [ListaGlassPage,
     FormAltaGlassComponent,
-    SelectorDeModelosCompatiblesComponent, DetalleGlassComponent]
+    SelectorDeModelosCompatiblesComponent, DetalleGlassComponent],
+  exports: [ListaGlassPage]
+
 })
 export class ListaGlassPageModule { }

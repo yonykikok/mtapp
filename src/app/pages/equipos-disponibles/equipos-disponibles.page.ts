@@ -535,7 +535,7 @@ export class EquiposDisponiblesPage implements OnInit {
           imagenesArray: equipo.images,
           isModal: true,
           permitirGirarImagen: true,
-          mostrarOpcionesIcon: true,
+          mostrarOpcionesIcon: this.funcionesUtiles.roleMinimoNecesario('EMPLEADO',this.loggedUser),
           actualizarImagenMethod
         },
       })

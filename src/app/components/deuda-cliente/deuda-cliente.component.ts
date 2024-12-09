@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
@@ -10,6 +10,8 @@ import { FormAgregarItemDeudaComponent } from '../forms/form-agregar-item-deuda/
 import { FormAgregarPagoDeudaComponent } from '../forms/form-agregar-pago-deuda/form-agregar-pago-deuda.component';
 import { VerificationCodeComponent } from '../verification-code/verification-code.component';
 import { User } from 'src/app/clases/user';
+import { Deudor } from 'src/app/pages/deudores/cuentas-clientes.page';
+import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 
 @Component({
   selector: 'app-deuda-cliente',
@@ -18,8 +20,8 @@ import { User } from 'src/app/clases/user';
 })
 export class DeudaClienteComponent {
   panelOpenState = false;
-  @Input() deudor:any;
-  @Input() loggedUser!:User;
+  @Input() deudor: any;
+  @Input() loggedUser!: User;
 
 
 
@@ -29,18 +31,22 @@ export class DeudaClienteComponent {
     private alertService: AlertService,
     private toastService: ToastService,
     private modalController: ModalController,
-  ) { }
+    private alertController: AlertController,
+    public funcionesUtiles: FuncionesUtilesService,
+  ) {
+
+  }
 
 
   calcularDeuda() {
     if (!this.deudor.items) return;
-    return Array.isArray(this.deudor.items) ? this.deudor.items.reduce((suma:number, item:any) => suma + item.precio, 0) : 0;
+    return Array.isArray(this.deudor.items) ? this.deudor.items.reduce((suma: number, item: any) => suma + item.precio, 0) : 0;
 
   }
 
   calcularPagos() {
     if (!this.deudor.pagos) return;
-    return Array.isArray(this.deudor.items) ? this.deudor.pagos.reduce((suma:number, pago:any) => suma + pago.monto, 0) : 0;
+    return Array.isArray(this.deudor.items) ? this.deudor.pagos.reduce((suma: number, pago: any) => suma + pago.monto, 0) : 0;
 
   }
   calcularRestante() {
@@ -145,4 +151,74 @@ export class DeudaClienteComponent {
 
   }
 
+  async presentAlertPrompt(cliente: Deudor) {
+    const alert = await this.alertController.create({
+      header: 'Editar Datos',
+      inputs: [
+        {
+          value: cliente.nombre,
+          name: 'nombre',
+          type: 'text',
+          placeholder: 'Nombre'
+        },
+        {
+          value: cliente.apellido,
+          name: 'apellido',
+          type: 'text',
+          placeholder: 'Apellido'
+        },
+        {
+          value: cliente.dni,
+          name: 'dni',
+          type: 'number',
+          placeholder: 'DNI'
+        },
+        {
+          value: cliente.direccion,
+          name: 'direccion',
+          type: 'text',
+          placeholder: 'Dirección'
+        },
+        {
+          value: cliente.telefono,
+          name: 'telefono',
+          type: 'tel',
+          placeholder: 'Teléfono'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {
+            console.log('Edición cancelada');
+          }
+        },
+        {
+          text: 'Guardar',
+          handler: (data) => {
+            cliente = { ...cliente, ...data };
+            console.log('Datos guardados:', cliente);
+
+            this.database.actualizar(environment.TABLAS.deudores, cliente, cliente.id);
+            // Aquí puedes manejar los datos ingresados
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  solicitarConfirmacion(event: any, deudor: Deudor) {
+    event.stopPropagation();
+    this.alertService.alertConfirmacion('Confirmación', '¿Quiere enviarle un mensaje al cliente en este momento?', 'Si', () => {
+      this.abrirWhatsApp(deudor,'')
+    });
+  }
+
+  abrirWhatsApp(deudor: Deudor, mensaje: string) {
+    const url = `https://api.whatsapp.com/send?phone=+54${deudor.telefono}&text=${encodeURIComponent(mensaje)}`;
+    window.open(url, '_system');
+  }
 }

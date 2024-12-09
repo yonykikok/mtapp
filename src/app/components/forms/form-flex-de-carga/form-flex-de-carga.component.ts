@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { AlertService } from 'src/app/services/alert.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
+import { DetallesFinancieros } from '../form-bateria/form-bateria.component';
 
 
 export interface PlacaDecarga {
@@ -16,9 +17,10 @@ export interface PlacaDecarga {
   calidad: string,
   modelo: string,
   marca: string,
-  precio: number,
+  // precio: number,
   version?: string,
   stock: number
+  detallesFinancieros: DetallesFinancieros;
 }
 @Component({
   selector: 'app-form-flex-de-carga',
@@ -31,8 +33,14 @@ export class FormFlexDeCargaComponent implements OnInit {
     calidad: '',
     modelo: '',
     marca: '',
-    precio: 0,
+    // precio: 0,
     stock: 0,
+    detallesFinancieros: {
+      colocacion: 0,
+      costo: 0,
+      margen: 0,
+      precio: 0
+    }
   }
 
 
@@ -51,7 +59,7 @@ export class FormFlexDeCargaComponent implements OnInit {
 
   formFlexDeCarga: FormGroup = new FormGroup({
     modelo: new FormControl('', Validators.required),
-    precio: new FormControl('', Validators.required),
+    // precio: new FormControl('', Validators.required),
     marca: new FormControl('Samsung', Validators.required),
     calidad: new FormControl('AAA', Validators.required),
     stock: new FormControl(1, Validators.required),

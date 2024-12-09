@@ -1,0 +1,153 @@
+<ion-content>
+  <ion-header>
+    <app-clasic-toolbar [ruta]="'/nuevo-libro-diario'" [title]="'Carritos actuales'"></app-clasic-toolbar>
+  </ion-header>
+  <!-- Lista de Carritos -->
+
+  <ion-segment [(ngModel)]="segmentSeleccionado" mode="ios">
+    <ion-segment-button value="abiertos" class="ion-padding">
+      <ion-label>Carritos abiertos</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="cerrados" class="ion-padding">
+      <ion-label>Carritos cerrados</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-list>
+    <ion-item-sliding *ngFor="let carrito of carritos">
+      <ion-item *ngIf="segmentSeleccionado=='abiertos' && carrito.estado=='Pendiente'" [color]="'light'"
+        [class.selected]="carrito.id === idCarritoSeleccionado" (click)="seleccionarCarrito(carrito)">
+        <ion-icon slot="start" name="cart-outline" color="success"></ion-icon>
+        <ion-label>
+          <h2>Carrito {{ carrito.id }}</h2>
+          <p>Total: {{ obtenerPrecioTotal(carrito.id) | currency }}</p>
+        </ion-label>
+        <ion-icon color="success" slot="end" name="checkbox-outline"
+          *ngIf="carrito.id === idCarritoSeleccionado"></ion-icon>
+      </ion-item>
+      <ion-item *ngIf="segmentSeleccionado=='cerrados' && carrito.estado=='Abonado'" [color]="'medium'"
+        [class.selected]="carrito.id === idCarritoSeleccionado" (click)="seleccionarCarrito(carrito)">
+        <ion-icon slot="start" name="cart-outline" color="success"></ion-icon>
+        <ion-label>
+          <h2>Carrito {{ carrito.id }}</h2>
+          <p>Total: {{ obtenerPrecioTotal(carrito.id) | currency }}</p>
+        </ion-label>
+        <ion-icon color="success" slot="end" name="checkbox-outline"
+          *ngIf="carrito.id === idCarritoSeleccionado"></ion-icon>
+      </ion-item>
+
+      <!-- Opciones de acción de deslizamiento -->
+      <ion-item-options side="end">
+        <ion-item-option (click)="borrarCarrito(carrito.id)" color="danger">
+          Borrar
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+
+  <!-- Lista de Productos en el Carrito Seleccionado -->
+
+
+
+  <ion-list *ngIf="itemsCarritoSeleccionado.length > 0" class="ion-no-padding">
+    <ion-item-sliding *ngFor="let item of itemsCarritoSeleccionado">
+      <ion-item>
+        <ion-avatar *ngIf="item.images && item.images.length>0" class="ion-margin-end">
+          <img [src]="item.images[0]" />
+        </ion-avatar>
+        <ion-label>
+          <ion-text [color]="!item.idProducto?'danger':''">{{ item.marca|titlecase }}</ion-text>
+          <h2><b>{{ item.descripcion|titlecase }}</b> </h2>
+          <ion-text *ngIf="item.boleta">Boleta: ({{item.boleta}})</ion-text>
+          <p>{{ item.cantidad }} x {{ item.precio|redondearPrecio:'pesos' | currency }}</p>
+        </ion-label>
+
+        <div slot="end" class="flexColumn" style="font-size: 2rem;">
+          <ion-icon name="caret-up-outline" (click)="cambiarCantidad(item,1)"></ion-icon>
+          <ion-icon name="caret-down-outline" (click)="cambiarCantidad(item,-1)"></ion-icon>
+        </div>
+        <!-- <ion-input type="number" [(ngModel)]="item.cantidad" (ngModelChange)="actualizarCantidad(item.idProducto, $event)"
+            min="1" style="width: 80px;"></ion-input> -->
+      </ion-item>
+
+      <!-- Opciones de acción de deslizamiento -->
+      <ion-item-options side="end">
+        <ion-item-option (click)="cambiarPrecio(item)" color="warning">
+          Cambiar precio
+        </ion-item-option>
+        <ion-item-option (click)="eliminarDelCarrito(item.idProducto)" color="danger">
+          Eliminar
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+    <ion-button *ngIf="carritoSeleccionado && carritoSeleccionado.estado=='Pendiente' " expand="full" class="ion-margin"
+      color="tertiary" (click)="confirmarVenta()">
+      Pasar a formas de pago
+    </ion-button>
+    <!-- <ion-button *ngIf="obtenerPrecioTotal(this.idCarritoSeleccionado || '')<0" expand="full" class="ion-margin"
+      color="tertiary" (click)="finalizarDescuento()">
+      Finalizar descuento
+    </ion-button> -->
+  </ion-list>
+
+
+  <!-- Botón para Crear un Nuevo Carrito -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="start" (click)="crearNuevoCarrito()">
+    <ion-fab-button>
+      <ion-icon name="cart"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <!-- <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-chip class="no-radius" color="tertiary" 
+    style="width: 10rem; display: flex; justify-content: space-between; border: 2px solid black; font-size:1.1rem">
+    <ion-icon name="hammer-outline"></ion-icon><b>Reparación</b>
+  </ion-chip>
+    <ion-fab-button>
+      <ion-icon name="chevron-up-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top" style="right: 0;">
+      <ion-chip class="no-radius" color="success" (click)="mostrarAlerta()"
+        style="width: 10rem; display: flex; justify-content: space-between; border: 2px solid black; font-size:1.1rem">
+        <ion-icon name="pricetag-outline"></ion-icon><b>Producto</b>
+      </ion-chip>
+      <ion-chip class="no-radius" color="tertiary" 
+        style="width: 10rem; display: flex; justify-content: space-between; border: 2px solid black; font-size:1.1rem">
+        <ion-icon name="hammer-outline"></ion-icon><b>Reparación</b>
+      </ion-chip>
+    </ion-fab-list>
+  </ion-fab> -->
+
+
+  <!-- <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button color="warning" (click)="openDialog()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab> -->
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+
+    <ion-fab-list side="top" style="right: 0;">
+      <!-- <ion-chip color="danger" style="width: 10rem; background: white; border: 1px solid;" >
+        Saldo NEGATIVO
+      </ion-chip> -->
+      <ion-chip color="tertiary" style="width: 10rem; background: white; border: 1px solid;" (click)="openDialog()">
+        Reparación
+      </ion-chip>
+      <ion-chip style="width: 10rem; background: white; border: 1px solid;" (click)="openDialog()">
+        Producto fuera del sistema
+      </ion-chip>
+      <ion-chip color="primary" style="width: 10rem; background: white; border: 1px solid;"
+        (click)="mostrarSelectorDeProductos()">
+        Producto de lista
+      </ion-chip>
+
+
+    </ion-fab-list>
+  </ion-fab>
+
+</ion-content>

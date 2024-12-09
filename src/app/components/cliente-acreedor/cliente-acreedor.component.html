@@ -24,8 +24,18 @@
                 <li>Apellido: <b>{{acreedor?.apellido}}</b></li>
                 <li>Dni: <b>{{acreedor?.dni}}</b></li>
                 <li>Direccion: <b>{{acreedor?.direccion}}</b></li>
-                <li>Telefono: <b>{{acreedor?.telefono}}</b></li>
+                <li>Telefono: <b>{{acreedor?.telefono}}</b>
+                  <ion-chip color="success" class="ion-no-margin"
+                    *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser) && acreedor.telefono">
+                    <ion-icon (click)="solicitarConfirmacionDeMensaje($event,acreedor)" color="success"
+                      name="logo-whatsapp"></ion-icon>
+                  </ion-chip>
+                </li>
+
               </ul>
+              <ion-button style="position: absolute;bottom: 0;right: 1rem;" (click)="presentAlertPrompt(acreedor)">
+                Editar datos
+              </ion-button>
             </div>
           </ion-accordion>
           <!-- fin datos del cliente -->

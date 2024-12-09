@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Detalles Financieros</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+      <form [formGroup]="detallesFinancierosForm" (ngSubmit)="onSubmit()">
+
+        <ion-input label="Costo en dolares" labelPlacement="floating" fill="outline" mode="md" type="number"
+          formControlName="costo"></ion-input>
+
+        <small
+          *ngIf="detallesFinancierosForm.controls['costo'].invalid && detallesFinancierosForm.controls['costo'].touched">
+          <ion-text color="danger">Ingrese un costo válido</ion-text>
+        </small>
+
+        <ion-input label="Margen en dolares" labelPlacement="floating" fill="outline" mode="md" type="number"
+          formControlName="margen"></ion-input>
+        <small
+          *ngIf="detallesFinancierosForm.controls['margen'].invalid && detallesFinancierosForm.controls['margen'].touched">
+          <ion-text color="danger">Ingrese un margen válido</ion-text>
+        </small>
+
+        <ion-input label="Colocación en dolares" labelPlacement="floating" fill="outline" mode="md" type="number"
+          formControlName="colocacion"></ion-input>
+        <small
+          *ngIf="detallesFinancierosForm.controls['colocacion'].invalid && detallesFinancierosForm.controls['colocacion'].touched">
+          <ion-text color="danger">Ingrese un valor de colocación válido</ion-text>
+        </small>
+
+        <ion-input label="Precio" labelPlacement="floating" fill="outline" mode="md" type="number"
+          formControlName="precio"></ion-input>
+
+        <ion-button expand="block" type="submit" [disabled]="detallesFinancierosForm.invalid" >
+          Guardar
+        </ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

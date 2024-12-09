@@ -2,48 +2,63 @@
   <ion-toolbar class="header">
     <ion-menu-button [id]="'home-menu'" slot="start"></ion-menu-button>
     <ion-title class="ion-text-center">
-      <b> Multitask </b> <!-- //TODO:  -->
+      <!-- <b> Multitask </b>  -->
 
     </ion-title>
-    <ion-icon [routerLink]="['/notificaciones']" routerLinkActive="router-link-active" slot="end" name="notifications"
+    <!-- <ion-icon [routerLink]="['/notificaciones']" routerLinkActive="router-link-active" slot="end" name="notifications"
       class="ion-margin" style="font-size: 130%;">
-    </ion-icon>
+    </ion-icon> -->
 
   </ion-toolbar>
 </ion-header>
 
+
+
+
 <ion-content>
-  <ion-menu menuId="first-menu" contentId="main-content">
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Menu Content</ion-title>
-      </ion-toolbar>
-    </ion-header>
+
+
+
+  <ion-menu menuId="first-menu" contentId="main-content" style="position: fixed; margin-top: 3.5rem;">
+
     <ion-content class="ion-padding">
 
 
       <ion-list mode="md">
         <ion-menu-toggle auto-hide="true">
 
-          <ion-item [routerLink]="['/mi-cuenta']" routerLinkActive="router-link-active">
-            <ion-icon name="person-circle"></ion-icon>
-            <ion-text class="ion-margin-start ion-text-capitalize"> <b> Mi cuenta</b></ion-text>
+          <div>
+            <ion-item *ngIf="!userLogged" [routerLink]="['/login']" routerLinkActive="router-link-active">
+              <ion-icon color="success" name="log-in-outline"></ion-icon>
+              <ion-text class="ion-margin-start ion-text-capitalize"> <b> Iniciar sesión</b></ion-text>
+              <ion-icon slot="end" name="arrow-forward"></ion-icon>
+            </ion-item>
+
+            <ion-item *ngIf="userLogged" [routerLink]="['/mi-cuenta']" routerLinkActive="router-link-active">
+              <ion-icon name="person-circle"></ion-icon>
+              <ion-text class="ion-margin-start ion-text-capitalize"> <b> Mi cuenta</b></ion-text>
+              <ion-icon slot="end" name="arrow-forward"></ion-icon>
+            </ion-item>
+
+            <ion-item *ngIf="funcionesUtiles.roleMinimoNecesario('ST',userLogged)" [routerLink]="['/dashboard']"
+              routerLinkActive="router-link-active">
+              <ion-icon name="options-outline"></ion-icon>
+              <ion-text class="ion-margin-start ion-text-capitalize"> <b> Panel de control</b></ion-text>
+              <ion-icon slot="end" name="arrow-forward"></ion-icon>
+            </ion-item>
+
+            <ion-item *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',userLogged)" (click)="irAajustesDeRepuestos()">
+              <ion-icon name="settings-outline"></ion-icon>
+              <ion-text class="ion-margin-start ion-text-capitalize"> <b> Ajustes de repuestos</b></ion-text>
+              <ion-icon slot="end" name="arrow-forward"></ion-icon>
+            </ion-item>
+          </div>
+          <ion-item [routerLink]="['/lista-productos']" routerLinkActive="router-link-active">
+            <ion-icon color="tertiary" name="bag-handle-outline"></ion-icon>
+            <ion-text class="ion-margin-start ion-text-capitalize"> <b> Ver lista de productos</b></ion-text>
             <ion-icon slot="end" name="arrow-forward"></ion-icon>
           </ion-item>
-
-          <ion-item [routerLink]="['/dashboard']" routerLinkActive="router-link-active">
-            <ion-icon name="options-outline"></ion-icon>
-            <ion-text class="ion-margin-start ion-text-capitalize"> <b> Panel de control</b></ion-text>
-            <ion-icon slot="end" name="arrow-forward"></ion-icon>
-          </ion-item>
-
-          <ion-item *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',userLogged)" (click)="irAajustesDeRepuestos()">
-            <ion-icon name="settings-outline"></ion-icon>
-            <ion-text class="ion-margin-start ion-text-capitalize"> <b> Ajustes de repuestos</b></ion-text>
-            <ion-icon slot="end" name="arrow-forward"></ion-icon>
-          </ion-item>
-
-          <ion-item [routerLink]="['/login']" routerLinkActive="router-link-active">
+          <ion-item *ngIf="userLogged" [routerLink]="['/login']" routerLinkActive="router-link-active">
             <ion-icon color="danger" name="exit-outline"></ion-icon>
             <ion-text class="ion-margin-start ion-text-capitalize"> <b> Cerrar sesión</b></ion-text>
             <ion-icon slot="end" name="arrow-forward"></ion-icon>
@@ -55,22 +70,195 @@
     </ion-content>
   </ion-menu>
   <div class="ion-page" id="main-content">
+
   </div>
 
-  <app-story-wrap id="appStoryWrapper"></app-story-wrap>
+  <img [src]="isMobile ? '/assets/images/bannermobile.png' : '/assets/images/banner.png'" alt="Banner">
+  <div class="ion-text-center">
+    <ion-text>
+      <h2 class="section-title"> Localización y contacto</h2>
+    </ion-text>
+  </div>
+  <div style="display: flex; justify-content: space-evenly;">
+    <ion-card (click)="redirecionarA('https://maps.app.goo.gl/WVxqGc9HRdUmZtuf7')">
+      <ion-card-content>
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <ion-text style="font-size: 1.3rem;" color="tertiary" class="ion-margin ion-text-center">
+            <b>Lanus Oeste</b>
+          </ion-text>
+          <img style="width: 60%;" src="/assets/svg/ubicacionIcon.svg" alt="">
+          <ion-text color="tertiary" class="ion-margin ion-text-center"><b>Marcos avellaneda 3835</b></ion-text>
+          <ion-button color="success" (click)="abrirWhatsApp($event,'1138941181')">
+            <ion-icon slot="start" style="font-size: 1.5rem;" name="logo-whatsapp"></ion-icon>
+            Whatsapp
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
 
-  <ion-item-divider style="flex-direction: column;" class="ion-text-center ion-no-padding" color="light">
+    <ion-card (click)="redirecionarA('https://maps.app.goo.gl/Fp6ZCjBrAy4ppRB4A')">
+      <ion-card-content>
+        <div style="display: flex; flex-direction: column; align-items: center;">
+          <ion-text style="font-size: 1.3rem;" color="tertiary" class="ion-margin ion-text-center">
+            <b>Lanus Oeste</b>
+          </ion-text>
+          <img style="width: 60%;" src="/assets/svg/ubicacionIcon.svg" alt="">
+          <ion-text color="tertiary" class="ion-margin ion-text-center"><b>Av San martin 3645</b></ion-text>
+          <ion-button color="success" (click)="abrirWhatsApp($event,'1150453370')">
+            <ion-icon slot="start" style="font-size: 1.5rem;" name="logo-whatsapp"></ion-icon>
+            Whatsapp
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
 
-    <div style="width: 100%; ">
-      <iframe style="width: 100%; height: 35vh;" class="w-100 h-100"
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3279.880934028315!2d-58.42176638809397!3d-34.708182962910804!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bccdaaceaf7f97%3A0xce1675f56da80ef0!2sAv.%20San%20Mart%C3%ADn%203645%2C%20B1824GVN%20Remedios%20de%20Escalada%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1sen!2sar!4v1698528344123!5m2!1sen!2sar"
-        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+  <div class="why-choose-us">
+    <!-- Section Wrapper -->
+    <div class="section-wrapper">
+      <!-- Section Title -->
+      <h2 class="section-title">¿POR QUÉ ELEGIRNOS?</h2>
 
+      <!-- Strengths List -->
+      <div class="strengths-list">
+        <!-- Strength Item -->
+        <div class="strength-item">
+          <ion-icon name="ribbon-outline" class="strength-icon"></ion-icon>
+          <h3 class="strength-title">Técnicos Certificados</h3>
+          <p class="strength-description">Nuestros técnicos están altamente calificados para ofrecer el mejor servicio.
+          </p>
+        </div>
+
+        <div class="strength-item">
+          <ion-icon name="shield-checkmark-outline" class="strength-icon"></ion-icon>
+          <h3 class="strength-title">Garantía en Cada Reparación</h3>
+          <p class="strength-description">Respaldamos nuestro trabajo para tu tranquilidad.</p>
+        </div>
+
+        <div class="strength-item">
+          <ion-icon name="pricetag-outline" class="strength-icon"></ion-icon>
+          <h3 class="strength-title">Precios Competitivos</h3>
+          <p class="strength-description">Ofrecemos los mejores precios del mercado sin comprometer la calidad.</p>
+        </div>
+
+        <div class="strength-item">
+          <ion-icon name="timer-outline" class="strength-icon"></ion-icon>
+          <h3 class="strength-title">Reparación el Mismo Día</h3>
+          <p class="strength-description">Reparamos tu dispositivo rápidamente para que vuelvas a conectarte.</p>
+        </div>
+
+        <div class="strength-item">
+          <ion-icon name="thumbs-up-outline" class="strength-icon"></ion-icon>
+          <h3 class="strength-title">Satisfacción Garantizada</h3>
+          <p class="strength-description">Nos esforzamos por garantizar que cada cliente quede 100% satisfecho.</p>
+        </div>
+
+        <div class="strength-item">
+          <ion-icon name="construct-outline" class="strength-icon"></ion-icon>
+          <h3 class="strength-title">Equipos de Última Generación</h3>
+          <p class="strength-description">Utilizamos tecnología avanzada para asegurar la mejor reparación posible.</p>
+        </div>
+      </div>
     </div>
-  </ion-item-divider>
+  </div>
 
-  <ion-item-divider style="flex-direction: column;" class="ion-text-center ion-no-padding" color="light">
+
+  <!-- <div fullscreen="true" class="main-services">
+
+    <div class="section-wrapper">
+    
+      <h2 class="section-title">SERVICIOS PRINCIPALES</h2>
+  
+    
+      <div class="services-list">
+   
+        <div class="service-item">
+          <ion-icon name="phone-portrait-outline" class="service-icon"></ion-icon>
+          <h3 class="service-title">Cambio de Pantalla</h3>
+          <p class="service-description">Reemplazamos pantallas dañadas con piezas originales y de alta calidad.</p>
+        </div>
+  
+        <div class="service-item">
+          <ion-icon name="battery-charging-outline" class="service-icon"></ion-icon>
+          <h3 class="service-title">Reparación de Batería</h3>
+          <p class="service-description">Solucionamos problemas de batería para mejorar el rendimiento de tu dispositivo.</p>
+        </div>
+  
+        <div class="service-item">
+          <ion-icon name="bug-outline" class="service-icon"></ion-icon>
+          <h3 class="service-title">Solución de Problemas de Software</h3>
+          <p class="service-description">Eliminamos errores y mejoramos el rendimiento del sistema operativo.</p>
+        </div>
+  
+        <div class="service-item">
+          <ion-icon name="cloud-upload-outline" class="service-icon"></ion-icon>
+          <h3 class="service-title">Recuperación de Datos</h3>
+          <p class="service-description">Recuperamos archivos perdidos o eliminados de tu dispositivo.</p>
+        </div>
+  
+        <div class="service-item">
+          <ion-icon name="clipboard-outline" class="service-icon"></ion-icon>
+          <h3 class="service-title">Diagnósticos Gratuitos</h3>
+          <p class="service-description">Evaluamos tu dispositivo sin costo para identificar problemas.</p>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+  <div fullscreen="true" class="main-services-modern">
+    <div class="section-wrapper">
+      <h2 class="section-title ion-text-center">SERVICIOS PRINCIPALES</h2>
+
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="icon-wrapper">
+            <ion-icon name="phone-portrait-outline" class="service-icon"></ion-icon>
+          </div>
+          <h3 class="service-title">Cambio de Pantalla</h3>
+          <p class="service-description">Reemplazamos pantallas dañadas con piezas de alta calidad.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="icon-wrapper">
+            <ion-icon name="battery-charging-outline" class="service-icon"></ion-icon>
+          </div>
+          <h3 class="service-title">Reparación de Batería</h3>
+          <p class="service-description">Solucionamos problemas de batería para mejorar el rendimiento de tu
+            dispositivo.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="icon-wrapper">
+            <ion-icon name="bug-outline" class="service-icon"></ion-icon>
+          </div>
+          <h3 class="service-title">Solución de Problemas de Software</h3>
+          <p class="service-description">Eliminamos errores y mejoramos el rendimiento del sistema operativo.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="icon-wrapper">
+            <ion-icon name="cloud-upload-outline" class="service-icon"></ion-icon>
+          </div>
+          <h3 class="service-title">Recuperación de Datos</h3>
+          <p class="service-description">Recuperamos archivos perdidos o eliminados de tu dispositivo.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="icon-wrapper">
+            <ion-icon name="clipboard-outline" class="service-icon"></ion-icon>
+          </div>
+          <h3 class="service-title">Diagnósticos Gratuitos</h3>
+          <p class="service-description">Evaluamos tu dispositivo sin costo para identificar problemas.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- <ion-item-divider style="flex-direction: column;" class="ion-text-center ion-no-padding" color="light">
 
     <app-form-consulta></app-form-consulta>
-  </ion-item-divider>
+  </ion-item-divider> -->
+
 </ion-content>

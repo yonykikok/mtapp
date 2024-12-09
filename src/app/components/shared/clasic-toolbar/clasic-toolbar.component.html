@@ -9,5 +9,5 @@
     <b> {{title}} </b> <!-- //TODO:  -->
 
   </ion-title>
-  <ion-icon (click)="emitirOpcionesEvent()" slot="end" class="ion-padding" [name]="mostrarOpciones?'ellipsis-vertical-outline':''"> </ion-icon>
+  <ion-icon *ngIf="mostrarOpciones" (click)="emitirOpcionesEvent()" slot="end" class="ion-padding" [name]="mostrarOpciones?'ellipsis-vertical-outline':''"> </ion-icon>
 </ion-toolbar>

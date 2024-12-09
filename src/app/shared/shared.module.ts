@@ -21,6 +21,7 @@ import { GeneradorDeCodigosDeBarraComponent } from '../components/generador-de-c
 import { RedondearPrecioPipe } from 'src/app/redondear-precio.pipe';
 import { SelectorDeProductosComponent } from '../components/selector-de-productos/selector-de-productos.component';
 import { ModificadorDeStockRapidoComponent } from '../components/modificador-de-stock-rapido/modificador-de-stock-rapido.component';
+import { FormDetallesFinancierosComponent } from '../components/form-detalles-financieros/form-detalles-financieros.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { ModificadorDeStockRapidoComponent } from '../components/modificador-de-
     GeneradorDeCodigosDeBarraComponent,
     RedondearPrecioPipe,
     SelectorDeProductosComponent,
-    ModificadorDeStockRapidoComponent
+    ModificadorDeStockRapidoComponent,
+    FormDetallesFinancierosComponent
 
   ],
   imports: [
@@ -72,7 +74,9 @@ import { ModificadorDeStockRapidoComponent } from '../components/modificador-de-
     GeneradorDeCodigosDeBarraComponent,
     RedondearPrecioPipe,
     SelectorDeProductosComponent,
-    ModificadorDeStockRapidoComponent
+    ModificadorDeStockRapidoComponent,
+    FormDetallesFinancierosComponent
+
 
   ]
 })

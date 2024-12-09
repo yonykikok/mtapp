@@ -19,6 +19,8 @@ import { DetalleFlexDeCargaComponent } from 'src/app/components/views/detalle-fl
     ListaFlexDeCargaPageRoutingModule,
     SharedModule
   ],
-  declarations: [ListaFlexDeCargaPage,FormFlexDeCargaComponent,DetalleFlexDeCargaComponent]
+  declarations: [ListaFlexDeCargaPage,FormFlexDeCargaComponent,DetalleFlexDeCargaComponent],
+  exports: [ListaFlexDeCargaPage]
+
 })
 export class ListaFlexDeCargaPageModule {}

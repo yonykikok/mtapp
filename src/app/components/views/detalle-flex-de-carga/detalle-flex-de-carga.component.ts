@@ -2,10 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
-import { InfoCompartidaService } from 'src/app/services/info-compartida.service';
+import { InfoCompartidaService, roles } from 'src/app/services/info-compartida.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 import { PlacaDecarga } from '../../forms/form-flex-de-carga/form-flex-de-carga.component';
+import { User } from 'src/app/clases/user';
+import { FormDetallesFinancierosComponent } from '../../form-detalles-financieros/form-detalles-financieros.component';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-detalle-flex-de-carga',
@@ -13,9 +16,26 @@ import { PlacaDecarga } from '../../forms/form-flex-de-carga/form-flex-de-carga.
   styleUrls: ['./detalle-flex-de-carga.component.scss'],
 })
 export class DetalleFlexDeCargaComponent implements OnInit {
+  isActionSheetOpen = false;
+  actionSheetButtons: any[] = [{
+    text: 'Cambiar detalles financieros',
+    icon: 'calculator-outline',
+    handler: async () => {
+      this.mostrarFormDetallesFinanciero();
+    }
+  }, {
+    text: 'Cancelar',
+    role: 'cancel',
+    icon: 'close',
+    handler: () => { },
+  }];
 
+
+  funcionesUtiles: any;
+  roles = roles;
+  loggedUser!: User;
   editModelo = false;
-  editPrecio = false;
+  // editPrecio = false;
   editMarca = false;
   editCalidad = false;
   editStock = false;
@@ -39,20 +59,21 @@ export class DetalleFlexDeCargaComponent implements OnInit {
     private database: DataBaseService,
     private alertService: AlertService,
     private funcionesUtilesService: FuncionesUtilesService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private modalController: ModalController
   ) { }
 
   ngOnInit(): void {
     this.clonRepuesto = this.funcionesUtilesService.clonarObjeto(this.repuesto);
   }
 
-  mostrar(campo: 'editMarca' | 'editModelo' | 'editPrecio' | 'editCalidad' | 'editStock' | 'editVersion') {
+  mostrar(campo: 'editMarca' | 'editModelo' | 'editCalidad' | 'editStock' | 'editVersion') {
     this.resetBanderas();
     this[campo] = true;
   }
   resetBanderas() {
     this.editModelo = false;
-    this.editPrecio = false;
+    // this.editPrecio = false;
     this.editMarca = false;
     this.editCalidad = false;
     this.editStock = false;
@@ -92,5 +113,31 @@ export class DetalleFlexDeCargaComponent implements OnInit {
 
   showSaveDialog() {
     this.alertService.alertConfirmacion('Confirmación', '¿Esta seguro de guardar los cambios?', 'Si, Guardar cambios', this.guardarCambios.bind(this))
+  }
+
+  async mostrarFormDetallesFinanciero() {
+    let modal = await this.modalController.create({
+      component: FormDetallesFinancierosComponent,
+      componentProps: {
+        producto: this.repuesto
+      }
+    })
+    modal.onDidDismiss().then(result => {
+
+      if (result && result.data && result.role == 'guardarCambios') {
+
+        this.database.actualizar(environment.TABLAS.flexs, result.data, result.data.id)?.finally(() => {
+          this.toastService.simpleMessage('Exito', 'Se actualizo con exito', ToastColor.success);
+        });
+      }
+    })
+    modal.present();
+  }
+  mostrarOpciones() {
+    console.log("EMNTRA")
+    this.setOpen(true);
+  }
+  setOpen(isOpen: boolean) {
+    this.isActionSheetOpen = isOpen;
   }
 }

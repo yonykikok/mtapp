@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DataBaseService } from '../services/database.service';
+import { DetallesFinancieros } from '../components/forms/form-bateria/form-bateria.component';
 export const listaDeEstadosBoletas = [
   { variable: 'PENDIENTE', mensaje: 'Pendiente' },
   { variable: 'EN_REVISION', mensaje: 'En revision' },
@@ -156,10 +157,11 @@ export interface Modulo {
   id?: string;
   marca: string;
   modelo: string;
-  precio: number;
+  detallesFinancieros: DetallesFinancieros;
   // color: string;
   tipo: string;
   calidad: string;
+  precio:number,
   stock: any[]
 }
 export interface StockModulo {

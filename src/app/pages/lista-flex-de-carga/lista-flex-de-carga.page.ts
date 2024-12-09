@@ -18,6 +18,9 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./lista-flex-de-carga.page.scss'],
 })
 export class ListaFlexDeCargaPage implements OnInit {
+  @Input() modoComponent: boolean = false;
+
+  mostrarPrecioSinColocacion:boolean=false;
   showStockDialog: boolean = false
   placaDeCargaSeleccionada!: PlacaDecarga;
 
@@ -25,7 +28,7 @@ export class ListaFlexDeCargaPage implements OnInit {
   loggedUser!: User;
   camposSeleccionados = ['modelo', 'calidad', 'precio', 'stock'];
   flexDeCargas: any[] = [];
-  flexDeCargasAMostrar: any[] = [];
+  flexDeCargasAMostrar: PlacaDecarga[] = [];
 
   precioDolarBlue: number = 0;
   mostrarFormModulo = true;
@@ -48,6 +51,7 @@ export class ListaFlexDeCargaPage implements OnInit {
 
     let lista = [];
     this.dataBase.obtenerTodos(environment.TABLAS.flexs).subscribe((docsModulosRef) => {
+     
       if (docsModulosRef.length <= 0) return;
       lista = docsModulosRef.map((element: any) => {
         let auxElement = element.payload.doc.data();
@@ -57,6 +61,42 @@ export class ListaFlexDeCargaPage implements OnInit {
       lista = this.ordenarListaPor(lista, 'modelo', 'precio');
       this.flexDeCargas = lista;
       this.flexDeCargasAMostrar = [...this.flexDeCargas];
+
+      // this.flexDeCargas.forEach((placa: any) => {
+        // if (placa.calidad == 'AAA') {
+        //   placa.detallesFinancieros = {
+        //     colocacion: 8,
+        //     costo: 4,
+        //     margen: 2,
+        //     precio: 4 + 2 + 8,
+        //   }
+        //   delete placa.precio;
+        // } else if (placa.calidad == 'Mechanic') {
+        //   placa.detallesFinancieros = {
+        //     colocacion: 8,
+        //     costo: 6,
+        //     margen: 3,
+        //     precio: 6 + 3 + 8,
+        //   }
+        //   delete placa.precio;
+        // } else if (placa.calidad == 'Original') {
+        //   placa.detallesFinancieros = {
+        //     colocacion: 8,
+        //     costo: 10,
+        //     margen: 3,
+        //     precio: 6 + 3 + 10,
+        //   }
+        // }
+      //   delete placa.precio;
+      //   let nuevaPlaca=placa;
+        
+      //   console.log(placa)
+      //   this.dataBase.actualizar(environment.TABLAS.flexs, nuevaPlaca, nuevaPlaca.id)?.then(()=>{
+      //     console.log("ok")
+      //   });
+      // });
+
+
     });
 
 
@@ -71,7 +111,9 @@ export class ListaFlexDeCargaPage implements OnInit {
       const modal = await this.modalController.create({
         component: DetalleFlexDeCargaComponent,
         componentProps: {
-          repuesto: flexDeCarga
+          repuesto: flexDeCarga,
+          funcionesUtiles: this.funcionesUtiles,
+          loggedUser: this.loggedUser
         },
       })
 

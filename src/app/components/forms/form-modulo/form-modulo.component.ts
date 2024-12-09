@@ -21,9 +21,15 @@ export class FormModuloComponent implements OnInit {
     calidad: '',
     modelo: '',
     marca: '',
-    precio: 0,
     tipo: '',
-    stock: []
+    stock: [],
+    detallesFinancieros: {
+      colocacion: 0,
+      costo: 0,
+      margen: 0,
+      precio: 0
+    },
+    precio: 0
   }
 
   //auto complete
@@ -145,16 +151,22 @@ export class FormModuloComponent implements OnInit {
   }
 
   obtenerObjetoModulo() {
-    const { calidad, modelo, marca, precio, tipo } = this.formModulo.value;
+    const { calidad, modelo, marca, tipo, precio } = this.formModulo.value;
     let { stock } = this.nuevoModulo;
     stock.length <= 0 ? stock = [{ color: 'Blanco', cantidad: 0 }] : null;
     let modulo: Modulo = {
       calidad,
       modelo,
       marca,
-      precio,
       tipo,
+      precio,
       stock,
+      detallesFinancieros: {
+        colocacion: 0,
+        costo: 0,
+        margen: 0,
+        precio: 0
+      }
     }
     return modulo;
   }

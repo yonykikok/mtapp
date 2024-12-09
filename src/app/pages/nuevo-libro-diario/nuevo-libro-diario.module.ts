@@ -12,6 +12,8 @@ import { NuevoFormDetalleVentaComponent } from 'src/app/components/nuevo-form-de
 import { CarritoComponent } from 'src/app/components/carrito/carrito.component';
 import { FormasDePagoComponent } from 'src/app/components/formas-de-pago/formas-de-pago.component';
 import { ItemFueraDelSistemaModalComponent } from 'src/app/components/item-fuera-del-sistema-modal/item-fuera-del-sistema-modal.component';
+import { DescontarPagoDeItemComponent } from 'src/app/components/descontar-pago-de-item/descontar-pago-de-item.component';
+import { CarritosComponent } from 'src/app/components/carritos/carritos.component';
 
 @NgModule({
   imports: [
@@ -25,7 +27,9 @@ import { ItemFueraDelSistemaModalComponent } from 'src/app/components/item-fuera
     NuevoFormDetalleVentaComponent,
     CarritoComponent,
     FormasDePagoComponent,
-    ItemFueraDelSistemaModalComponent
+    ItemFueraDelSistemaModalComponent,
+    DescontarPagoDeItemComponent,
+    CarritosComponent
 
   ]
 })

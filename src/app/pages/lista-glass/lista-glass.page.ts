@@ -18,6 +18,8 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./lista-glass.page.scss'],
 })
 export class ListaGlassPage implements OnInit {
+  @Input() modoComponent: boolean = false;
+
   showStockDialog: boolean = false;
   modeloSeleccionado!: Glass;
   modeloSeleccionadoEditable!: Glass;

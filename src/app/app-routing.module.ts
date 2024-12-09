@@ -157,6 +157,14 @@ const routes: Routes = [
     path: 'slide-de-productos',
     loadChildren: () => import('./pages/slide-de-productos/slide-de-productos.module').then( m => m.SlideDeProductosPageModule)
   },
+  {
+    path: 'reparaciones-new-version',
+    loadChildren: () => import('./pages/reparaciones-new-version/reparaciones-new-version.module').then( m => m.ReparacionesNewVersionPageModule)
+  },
+  {
+    path: 'dashboard-new-version',
+    loadChildren: () => import('./pages/dashboard-new-version/dashboard-new-version.module').then( m => m.DashboardNewVersionPageModule)
+  },
 
 
 

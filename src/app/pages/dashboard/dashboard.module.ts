@@ -22,7 +22,7 @@ import { CambiarStockProductoComponent } from 'src/app/components/cambiar-stock-
   declarations: [DashboardPage,
     ControlDeHorasTrabajadasComponent,
     NuevaFuncionalidadComponent,
-    CambiarStockProductoComponent
+    CambiarStockProductoComponent,
 
   ],
   providers: [

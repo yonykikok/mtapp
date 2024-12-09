@@ -1,0 +1,67 @@
+<ion-content>
+  <form [formGroup]="descuentoForm" (ngSubmit)="onSubmit()" class="ion-padding">
+
+    <div class="ion-text-center">
+      <div>
+        <img style="max-height: 10rem;" *ngIf="productoEditable.images && productoEditable.images.length>0;" [src]="productoEditable.images[0]" />
+        <ion-chip *ngIf="productoEditable.stockTotal <= 0" color="danger" class="no-radius"
+          style="position: absolute; background: black;"><small><b>SIN STOCK</b></small></ion-chip>
+      </div>
+      <ion-text> {{ productoEditable.producto }} </ion-text>
+      <div class="ion-text-center" *ngIf="productoEditable.descuento && productoEditable.precio && productoEditable.descuento.cantidad>0">
+        <ion-chip color="primary">
+          <ion-text>
+            <b>-{{productoEditable.descuento.cantidad}}
+              {{ productoEditable.descuento.tipo=='porcentaje'?'%':''}}
+            </b>
+          </ion-text>
+        </ion-chip>
+        <ion-text class='precio-tachado'> {{ productoEditable.precio| redondearPrecio: 'pesos' | currency }}</ion-text>
+      </div>
+      <br>
+      <ion-chip outline="true" [color]="'success'" class="ion-text-center no-radius">
+        <!-- <ion-icon name="cash-outline"></ion-icon> -->
+        <ion-text *ngIf="productoEditable.precio">
+          <b>{{ calcularPrecioConDescuento(productoEditable) | redondearPrecio: 'pesos' | currency }}</b>
+        </ion-text>
+      </ion-chip>
+  
+      <ion-card color="danger" *ngIf="mostrarAlertDePerdida">
+        <ion-card-content class="ion-text-center">
+          <ion-text>
+            El descuento aplicado deja el precio final por debajo del costo.
+            <br> <b>Esto generaría una pérdida.</b>
+          </ion-text>
+        </ion-card-content>
+      </ion-card>
+  
+    </div>
+  
+    <ion-select class="ion-margin-bottom ion-margin-top" label="Tipo de descuento" labelPlacement="floating"
+      fill="outline" mode="md" formControlName="tipo">
+      <ion-select-option value="porcentaje">Porcentaje</ion-select-option>
+      <ion-select-option value="valor">Valor</ion-select-option>
+    </ion-select>
+  
+  
+  
+    <ion-input class="ion-margin-bottom" label="Cantidad de descuento" labelPlacement="floating" fill="outline" mode="md"
+      type="number" formControlName="cantidad"></ion-input>
+  
+    <ion-note *ngIf="descuentoForm.controls['cantidad'].invalid && descuentoForm.controls['cantidad'].touched"
+      color="danger"><small>Por favor, ingresa una cantidad válida.</small></ion-note>
+  
+    <ion-input class="ion-margin-bottom" label="Fecha de inicio" labelPlacement="floating" fill="outline" mode="md"
+      type="date" formControlName="fechaInicio"></ion-input>
+    <ion-note *ngIf="descuentoForm.controls['fechaInicio'].invalid && descuentoForm.controls['fechaInicio'].touched"
+      color="danger"><small>Fecha de inicio es requerida.</small></ion-note>
+  
+    <ion-input class="ion-margin-bottom" label="Fecha de fin" labelPlacement="floating" fill="outline" mode="md"
+      type="date" formControlName="fechaFin"></ion-input>
+    <ion-note
+      *ngIf="descuentoForm.errors && descuentoForm.errors['fechaFinAnterior'] && descuentoForm.controls['fechaFin'].touched"
+      color="danger"><small>Fecha de fin debe ser posterior a la fecha de inicio.</small></ion-note>
+  
+    <ion-button  expand="full" type="submit" [disabled]="descuentoForm.invalid||mostrarAlertDePerdida">Agregar Descuento</ion-button>
+  </form>
+</ion-content>

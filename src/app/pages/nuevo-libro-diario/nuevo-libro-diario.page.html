@@ -36,7 +36,6 @@
 
     <div class="ion-no-padding" *ngIf="libroDiarioHoy&&libroDiarioHoy.ventas">
       <div *ngFor="let venta of libroDiarioHoy.ventas">
-       <ion-item-divider style="width: 100%;" (click)="eliminarVentaCompleta(venta)">
         <div *ngIf="venta.carrito && venta.carrito.items">
           <ion-item-sliding *ngFor="let item of venta.carrito.items; let indiceItemCarrito=index">
             <ion-item
@@ -50,12 +49,30 @@
                 <ion-text *ngIf="item.boleta">Boleta: ({{item.boleta}})</ion-text>
                 <ion-text [color]="item.precio>0?'success':'danger'">({{ item.cantidad }}) x
                   {{ item.precio|redondearPrecio:'pesos' | currency }}
-                  <small style="color: rgb(77, 77, 255);">(Total: {{(item.precio*item.cantidad)|redondearPrecio:'pesos'
+                  <small style="color: rgb(77, 77, 255);">(Total:
+                    {{(item.precio*item.cantidad)|redondearPrecio:'pesos'
                     | currency }})</small>
                 </ion-text>
 
               </div>
+              <div slot="end" style="min-width: 10rem;">
+                <label *ngFor="let pagoActual of venta.pagos">
+                  <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Efectivo'"
+                    [src]="'assets/svg/icons/cashcard.svg'" />
+                  <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Tarjeta de Crédito'"
+                    [src]="'assets/svg/icons/creditcard.svg'" />
+                  <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Tarjeta de Débito'"
+                    [src]="'assets/svg/icons/debitcard.svg'" />
+                  <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Transferencia'"
+                    [src]="'assets/svg/icons/transfercard.svg'" />
+                  <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Vale de compra'"
+                    [src]="'assets/svg/icons/valecard.svg'" />
+                  <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Mercado pago'"
+                    [src]="'assets/svg/icons/mpcard.svg'" />
+                </label>
+              </div>
             </ion-item>
+
 
             <!-- Opciones de acción de deslizamiento -->
             <ion-item-options side="end">
@@ -64,8 +81,7 @@
               </ion-item-option>
             </ion-item-options>
           </ion-item-sliding>
-        </div>  
-       </ion-item-divider>
+        </div>
 
       </div>
     </div>

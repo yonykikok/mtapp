@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header *ngIf="!modoComponent">
   <app-clasic-toolbar [ruta]="'/repuestos'" [title]="'Lista de baterias'"></app-clasic-toolbar>
 </ion-header>
 
@@ -41,7 +41,7 @@
       <ion-col *ngIf="camposSeleccionados.includes('modelo')">{{bateria.modelo|titlecase}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('codigo')">{{bateria.codigo|titlecase}}</ion-col>
       <ion-col
-        *ngIf="camposSeleccionados.includes('precio')">{{bateria.precio*precioDolarBlue|currency:'USD':'symbol':'1.0-0'
+        *ngIf="camposSeleccionados.includes('precio')">{{bateria.detallesFinancieros.precio*precioDolarBlue|currency:'USD':'symbol':'1.0-0'
         }}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('calidad')">{{bateria.calidad}}</ion-col>
     </ion-row>

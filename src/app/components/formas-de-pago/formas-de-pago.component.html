@@ -7,15 +7,16 @@
 
   <ion-card>
     <ion-toolbar color="dark">
-      <ion-title>
-        <ion-text color="danger" *ngIf="calcularTotalPagado()<venta.total; else pagoCompleto">
-          Falta pagar: {{(venta.total-calcularTotalPagado())|currency}}
-        </ion-text>
-        <ng-template #pagoCompleto>
-          <ion-text color="success"> PAGO COMPLETADO </ion-text>
-        </ng-template>
-      </ion-title>
-    </ion-toolbar>
+      <ng-container *ngIf="calcularBalanceDepago()!=0; else pagoCompleto">
+          <ion-text style="font-size: 1.3rem; font-weight: bold;" color="danger">
+              Falta pagar: <br>{{ calcularBalanceDepago() | currency }}
+          </ion-text>
+      </ng-container>
+      <ng-template #pagoCompleto>
+          <ion-text color="success">PAGO COMPLETADO</ion-text>
+      </ng-template>
+  </ion-toolbar>
+  
     <ion-card-content>
       <ion-list>
         <ion-grid fixed>

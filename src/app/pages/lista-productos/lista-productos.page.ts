@@ -21,6 +21,7 @@ import { roles } from 'src/app/services/info-compartida.service';
 import { FormAumentoPorcentualComponent } from 'src/app/components/forms/form-aumento-porcentual/form-aumento-porcentual.component';
 import { GeneradorDeCodigosDeBarraComponent } from 'src/app/components/generador-de-codigos-de-barra/generador-de-codigos-de-barra.component';
 import { ActualizadorDePrecioProductoComponent } from 'src/app/components/actualizador-de-precio-producto/actualizador-de-precio-producto.component';
+import { FormAgregarDescuentoProductoComponent } from 'src/app/components/form-agregar-descuento-producto/form-agregar-descuento-producto.component';
 
 export interface Producto {
   id: string,//sera puesto por firebase
@@ -29,7 +30,6 @@ export interface Producto {
   images?: string[],
   marca: string,
   coloresDisponibles?: { stock: number; color: string; denominacionColor: string; }[],
-  // cantidad: number,
   categoria: string,
   stockTotal: number,
   costo: number,
@@ -38,6 +38,37 @@ export interface Producto {
   margen?: number,
   financiamiento?: number,
   precio?: number;
+  descuento?: {
+    tipo: 'porcentaje' | 'valor';
+    cantidad: number;
+    fechaInicio?: number; // Fecha de inicio del descuento
+    fechaFin?: number;    // Fecha de finalización del descuento
+  };
+
+}
+export interface ProductoCarrito {
+  id: string,//sera puesto por firebase
+  checked: boolean,
+  cantidad: number,
+  codigo?: string,
+  imgUrlsRef?: string[],
+  images?: string[],
+  marca: string,
+  coloresDisponibles?: { stock: number; color: string; denominacionColor: string; }[],
+  stockTotal: number,
+  categoria: string,
+  costo: number,
+  iva?: number,
+  producto: string,
+  margen?: number,
+  financiamiento?: number,
+  precio: number;
+  descuento?: {
+    tipo: 'porcentaje' | 'valor';
+    cantidad: number;
+    fechaInicio?: number; // Fecha de inicio del descuento
+    fechaFin?: number;    // Fecha de finalización del descuento
+  };
 }
 
 
@@ -57,7 +88,7 @@ export class ListaProductosPage implements OnInit {
     margen: number
   };
   precioDolarBlue: number = 0;
-  productos: Producto[] = [];
+  productos: Producto[] | any[] = [];
   camposSeleccionados = ['producto', 'codigo', 'cantidad', 'precio'];
   productosAMostrar: Producto[] = [];
   cantidadPorPagina = 35; // Cantidad de productos a mostrar por página
@@ -91,7 +122,21 @@ export class ListaProductosPage implements OnInit {
     text: 'Cambiar Stock',
     icon: 'chevron-expand-outline',
     handler: async () => {
-      this.cambiarStockProducto(this.productoSeleccionado);
+      if (this.funcionesUtiles.roleMinimoNecesario(roles.ADMIN, this.loggedUser)) {
+        this.cambiarStockProducto(this.productoSeleccionado);
+      } else {
+        alert("No tienes permisos para esta acción.")
+      }
+    },
+  }, {
+    text: 'Agregar descuento',
+    icon: 'pricetag-outline',
+    handler: async () => {
+      if (this.funcionesUtiles.roleMinimoNecesario('OWNER', this.loggedUser)) {
+        this.mostrarPantallaGenerarDescuento(this.productoSeleccionado);
+      } else {
+        alert("No tienes permisos para esta acción.")
+      }
     },
   }, {
     text: 'Eliminar',
@@ -172,33 +217,6 @@ export class ListaProductosPage implements OnInit {
 
   ionViewWillEnter() {
 
-    // this.solicitarConfirmacion(null, {
-    //   "id": "DBB9mRoRgPrNFjFG2pVq",
-    //   "iva": 0,
-    //   "margen": 100,
-    //   "producto": "adaptador 1 macho iphone y dos hembra iphone",
-    //   "categoria": "Cables",
-    //   "images": [
-    //     "https://firebasestorage.googleapis.com/v0/b/multitask-web.appspot.com/o/productos%2F1725758645053?alt=media&token=52545d40-8068-4cab-b81d-e37a52da1902"
-    //   ],
-    //   "stockTotal": 13,
-    //   "codigo": "300968757635",
-    //   "imgUrlsRef": [
-    //     "productos/1725758645053"
-    //   ],
-    //   "marca": "lightning splitter",
-    //   "costo": 3.0291970802919708,
-    //   // "cantidad": 0,
-    //   "coloresDisponibles": [
-    //     {
-    //       "stock": 13,
-    //       "denominacionColor": "Negro",
-    //       "color": "#000000"
-    //     }
-    //   ],
-    //   "precio": 8964,
-    //   "financiamiento": 8
-    // })
     this.database.obtenerPorId(environment.TABLAS.cotizacion_dolar, 'dolarBlue').subscribe((res: any) => {
       this.precioDolarBlue = res.payload.data().price;
     });
@@ -208,8 +226,36 @@ export class ListaProductosPage implements OnInit {
       this.recargos = res.payload.data();
     });
 
-    // return;
+    let productosLocalStorage = this.obtenerListaDeProductosLocalStorage();
+    if (productosLocalStorage && productosLocalStorage.length > 0) {
+      console.log("USAMOS LISTA LOCAL");
+      this.productos = productosLocalStorage;
+      this.productosAMostrar = this.productos.slice(0, this.cantidadPorPagina);
+    } else {
+      this.cargarListaDeProductosDesdeFirebase();
+    }
+  }
+  obtenerListaDeProductosLocalStorage() {
+    const listaGuardada = localStorage.getItem('productos');
+    const fechaGuardada = localStorage.getItem('fechaCargaProductos');
+    const hoy = new Date().toDateString(); // Fecha actual en formato simplificado
+    if (listaGuardada && fechaGuardada === hoy) {
+      // Convierte el string a un array de productos y lo devuelve
+      return JSON.parse(listaGuardada);
+    } else {
+      return null;
+    }
+  }
+
+  ngOnInit() {
+
+  }
+
+
+  cargarListaDeProductosDesdeFirebase() {
     let subs = this.database.obtenerTodos(environment.TABLAS.productos).subscribe((docsProductosRef: any) => {
+      console.log("GASTANDO CONSULTAS!");
+
       subs.unsubscribe();
       if (docsProductosRef.length <= 0) return;
 
@@ -224,8 +270,6 @@ export class ListaProductosPage implements OnInit {
       this.productos = lista;
       this.productosAMostrar = this.productos.slice(0, this.cantidadPorPagina); // Inicialmente muestra solo los primeros productos
 
-      console.log(this.productos);
-
       this.productos.forEach((obj: any) => {
         Object.keys(obj).forEach(key => {
           if (obj[key] === "") {
@@ -233,12 +277,15 @@ export class ListaProductosPage implements OnInit {
           }
         });
       });
+
+
+      //actualizamos la lista local
+      const hoy = new Date().toDateString(); // Fecha actual en formato simplificado
+      localStorage.setItem('productos', JSON.stringify(this.productos));
+      localStorage.setItem('fechaCargaProductos', hoy);
     });
   }
 
-  ngOnInit() {
-
-  }
   async solicitarConfirmacion(e: any, producto: Producto) {
     e?.stopPropagation();
     let modal = await this.modalController.create({
@@ -321,6 +368,27 @@ export class ListaProductosPage implements OnInit {
     });
   }
 
+  filtrarProductosPorCriterio(filtro: 'sinImagen' | 'sinPrecio') {
+    if (filtro == 'sinImagen') {
+      this.productosAMostrar = this.productos.filter((producto: Producto) => {
+        if (!producto.images || producto.images.length <= 0) {
+          return producto;
+        }
+        return null;
+      })
+    }
+
+    if (filtro == 'sinPrecio') {
+      this.productosAMostrar = this.productos.filter((producto: Producto) => {
+        if (!producto.costo || !producto.precio) {
+          return producto
+        }
+        return null;
+      })
+    }
+
+  }
+
 
   setOpen(isOpen: boolean) {
     this.isActionSheetOpen = isOpen;
@@ -331,6 +399,17 @@ export class ListaProductosPage implements OnInit {
       this.actionSheetButtons = [...this.actionSheetButtonsOrigial];
     } else {
       this.actionSheetButtons = [{
+        text: 'Recargar lista de productos',
+        icon: 'reload-outline',
+        handler: async () => {
+
+          if (this.funcionesUtiles.roleMinimoNecesario(roles.EMPLEADO, this.loggedUser)) {
+            this.cargarListaDeProductosDesdeFirebase();
+          } else {
+            alert("No tienes permisos para esta acción.")
+          }
+        },
+      }, {
         text: 'Editar impuestos generales',
         icon: 'calculator-outline',
         handler: async () => {
@@ -381,7 +460,7 @@ export class ListaProductosPage implements OnInit {
     }
   }
 
-  cargarImagen(event: Event, producto: any) {
+  cargarImagen(event: Event, producto: Producto) {
     event.stopPropagation();
     const MAX_MEGABYTE = 0.5;
     let posicionDisponible = this.obtenerPosicionDisponibles(producto);
@@ -604,6 +683,25 @@ export class ListaProductosPage implements OnInit {
     modal.present();
 
   }
+  async mostrarPantallaGenerarDescuento(producto: Producto) {
+    let modal = await this.modalController.create({
+      component: FormAgregarDescuentoProductoComponent,
+      componentProps: {
+        producto,
+        precioDolarBlue: this.precioDolarBlue
+      }
+    });
+
+    modal.onDidDismiss().then((result) => {
+
+      if (result.role == 'Guardar') {
+        console.log(producto)
+        // this.database.actualizar(environment.TABLAS.productos, producto, producto.id)?.finally(() => { })
+      }
+    })
+    modal.present();
+
+  }
 
   actualizarImagen(event: Event, producto: any) {
     event.stopPropagation();
@@ -746,5 +844,93 @@ export class ListaProductosPage implements OnInit {
     // producto.costo = (productoForm.costo / this.precioDolarBlue) || 0,
 
   }
+
+
+  calcularPrecioConDescuento(producto: Producto): number {
+    if (!producto.precio || !producto.descuento) return producto.precio || 0;
+
+    const { descuento } = producto;
+    const hoy = new Date();
+    if (!descuento.fechaInicio || !descuento.fechaFin) return producto.precio || 0;
+
+    // Convertir las fechas de descuento a objetos Date
+    const fechaInicio = new Date(descuento.fechaInicio);
+    const fechaFin = new Date(descuento.fechaFin);
+
+    // Verificar si el descuento está dentro de la vigencia
+    if (hoy < fechaInicio || hoy > fechaFin) {
+      // Si el descuento no está vigente, devolver el precio original
+      return producto.precio;
+    }
+
+    let precioFinal = producto.precio;
+
+    // Aplicar el descuento si está vigente
+    if (descuento.tipo === 'porcentaje') {
+      precioFinal -= (producto.precio * descuento.cantidad) / 100;
+    } else if (descuento.tipo === 'valor') {
+      precioFinal -= descuento.cantidad;
+    }
+
+    // Verificar si el precio final está por debajo del costo
+    if (precioFinal < producto.costo) {
+      console.warn('El descuento aplicado deja el precio final por debajo del costo. Esto generaría una pérdida.');
+      // Retornamos el precio original si no queremos aplicar el descuento
+      return producto.precio;
+    }
+
+    return precioFinal;
+  }
+  // calcularPrecioConDescuento(producto: Producto): number {
+  //   if (!producto.precio || !producto.descuento) return producto.precio || 0;
+
+  //   const { descuento } = producto;
+  //   const hoy = new Date();
+
+  //   // Verificar si el descuento está dentro de la vigencia
+  //   console.log(hoy)
+  //   console.log(descuento.fechaInicio)
+  //   console.log(descuento.fechaFin)
+  //   if (
+  //     descuento.fechaInicio && descuento.fechaFin &&
+  //     (hoy < descuento.fechaInicio || hoy > descuento.fechaFin)
+  //   ) {
+  //     // Si el descuento no está vigente, devolver el precio original
+  //     return producto.precio;
+  //   }
+
+  //   let precioFinal = producto.precio;
+
+  //   // Aplicar el descuento si está vigente
+  //   if (descuento.tipo === 'porcentaje') {
+  //     precioFinal -= (producto.precio * descuento.cantidad) / 100;
+  //   } else if (descuento.tipo === 'valor') {
+  //     precioFinal -= descuento.cantidad;
+  //   }
+
+  //   return precioFinal;
+  // }
+
+  productoTieneDescuentoVigente(producto: Producto): boolean {
+    const hoy = Date.now(); // Obtener la fecha actual en milisegundos
+    const { descuento } = producto;
+
+    if (!descuento) {
+      return false;
+    }
+
+    const fechaInicio = descuento.fechaInicio;
+    const fechaFin = descuento.fechaFin;
+
+    // Verificar si las fechas están definidas y si el descuento está dentro del rango de vigencia
+    if (fechaInicio && fechaFin && (hoy < fechaInicio || hoy > fechaFin)) {
+      return false;
+    }
+
+    return true;
+  }
+
+
+
 
 }

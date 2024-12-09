@@ -1,11 +1,117 @@
 <ion-header>
-  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Lista de productos'" [mostrarOpciones]="true"
+  <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Lista de productos'"
+    [mostrarOpciones]="funcionesUtiles.roleMinimoNecesario(roles.EMPLEADO, this.loggedUser)"
     (opcionesClick)="mostrarOpciones()"></app-clasic-toolbar>
 </ion-header>
 <ion-content>
+  <div class="ion-text-center ion-margin" *ngIf="funcionesUtiles.roleMinimoNecesario(roles.EMPLEADO, this.loggedUser)">
+    <ion-chip class="no-radius" outline="true" (click)="filtrarProductosPorCriterio('sinImagen')">Productos sin
+      imagenes</ion-chip>
+    <ion-chip class="no-radius" outline="true" (click)="filtrarProductosPorCriterio('sinPrecio')"
+      *ngIf="funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)">
+      Productos sin precio
+    </ion-chip>
+  </div>
   <ion-searchbar animated="true" placeholder="Ej: Cargador" (ionInput)="filtrarProductos($event)"></ion-searchbar>
 
-  <ion-list>
+  <ion-list class="card-grid">
+    <ion-card
+      (click)="funcionesUtiles.roleMinimoNecesario(roles.EMPLEADO, this.loggedUser)? mostrarOpciones(producto):null"
+      *ngFor="let producto of productosAMostrar; let index = index" style="margin: 0.2rem;" class="card">
+      <!-- <ion-toolbar class="header">
+        <ion-text class="ion-text-center">
+          <b>{{ producto.producto | uppercase }}</b>
+        </ion-text>
+      </ion-toolbar> -->
+      <ion-card-content style="display: flex; align-items: center; flex-direction: column; padding: 0.5rem;">
+        <div class="flexColumn" style="align-items: center;margin-right: 0.5rem;">
+          <div>
+            <img style="max-height: 10rem;" *ngIf="producto.images && producto.images.length>0; else sinImagen"
+              [src]="producto.images[0]" (click)="mostrarImagenCompleta($event, producto.images[0])" />
+            <ion-chip *ngIf="!producto.stockTotal || producto.stockTotal <= 0" color="danger" class="no-radius"
+              style="position: absolute; background: black; right: 0;"><small class="ion-text-center"><b>SIN
+                  <br>STOCK</b></small></ion-chip>
+          </div>
+
+          <ion-chip
+            *ngIf="producto.images && producto.images.length>0 && funcionesUtiles.roleMinimoNecesario(roles.EMPLEADO, this.loggedUser)"
+            style="padding: 0.2rem;" color="tertiary" class="no-radius" (click)="actualizarImagen($event, producto)">
+            <small>Cambiar imagen</small>
+          </ion-chip>
+          <ng-template #sinImagen>
+            <ion-avatar>
+              <img [src]="'https://cdn-icons-png.flaticon.com/512/10608/10608883.png'" />
+            </ion-avatar>
+            <ion-chip color="secondary" class="no-radius"
+              (click)="funcionesUtiles.roleMinimoNecesario(roles.EMPLEADO, this.loggedUser)?cargarImagen($event, producto):null">
+              <small>Cargar imagen</small>
+            </ion-chip>
+          </ng-template>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: start; width: 100%;">
+          <ion-text *ngIf="producto.marca"><b> {{ producto.marca | titlecase }}</b></ion-text>
+          <ion-text> {{ producto.producto }} </ion-text>
+
+          <div>
+
+            <div
+              *ngIf="producto.descuento&&producto.precio && productoTieneDescuentoVigente(producto)  && producto.descuento.cantidad>0"
+              style=" display: flex;align-items: center;">
+              <ion-chip color="primary">
+                <ion-text>
+                  <b>-{{producto.descuento.cantidad}}
+                    {{ producto.descuento.tipo=='porcentaje'?'%':''}}
+                  </b>
+                </ion-text>
+              </ion-chip>
+              <ion-text class='precio-tachado'> {{ producto.precio| redondearPrecio: 'pesos' | currency }}</ion-text>
+            </div>
+
+            <ion-chip outline="true" [color]="mostrarCosto ? 'danger' : 'success'" class="ion-text-center no-radius"
+              (click)="mostrarCostoToggle($event)">
+              <!-- <ion-icon name="cash-outline"></ion-icon> -->
+              <ion-text *ngIf="producto.precio">
+                <b *ngIf="mostrarCosto"> {{ (producto.costo * precioDolarBlue) | redondearPrecio: 'pesos' | currency
+                  }}
+                  <small>
+                    ({{ producto.costo | redondearPrecio: 'dolares' | currency }})</small></b>
+                <b *ngIf="!mostrarCosto">{{ calcularPrecioConDescuento(producto) | redondearPrecio: 'pesos' | currency
+                  }}</b>
+              </ion-text>
+            </ion-chip>
+
+            <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)" style="padding-left: 0;"
+              (click)="actualizarPrecio($event,producto)">
+              <ion-icon class="ion-margin-start" name="create-outline"></ion-icon>
+            </ion-chip>
+          </div>
+          <ion-text><b>Stock: {{ producto.stockTotal?producto.stockTotal:0 }}</b></ion-text>
+        </div>
+      </ion-card-content>
+      <ion-footer style="position: absolute; bottom: 0;">
+        <ion-toolbar>
+          <ion-text *ngIf="producto.codigo; else agregarCodigoDeProducto"><b>Codigo:</b><br> {{ producto.codigo
+            }}</ion-text>
+          <ion-icon
+            (click)="funcionesUtiles.roleMinimoNecesario(roles.EMPLEADO, this.loggedUser)?solicitarConfirmacion($event, producto):null"
+            color="tertiary" name="barcode-outline"
+            style="position: absolute; right: 0.5rem; top: 0.5rem; font-size: 2rem;"></ion-icon>
+        </ion-toolbar>
+        <ng-template #agregarCodigoDeProducto>
+          <ion-button
+            (click)="funcionesUtiles.roleMinimoNecesario(roles.EMPLEADO, this.loggedUser)?agregarCodigoDeBarra($event, producto):null"
+            color="success" size="small">Agregar un
+            codigo de barras
+          </ion-button>
+          <ion-icon
+            (click)="funcionesUtiles.roleMinimoNecesario(roles.EMPLEADO, this.loggedUser)?solicitarConfirmacion($event, producto):null"
+            color="tertiary" name="barcode-outline"
+            style="position: absolute; right: 0.5rem; top: 0.5rem; font-size: 2rem;"></ion-icon>
+        </ng-template>
+      </ion-footer>
+    </ion-card>
+  </ion-list>
+  <!-- <ion-list>
     <ion-item *ngFor="let producto of productosAMostrar; let index = index">
       <ion-card style="width: 100%;" (click)="mostrarOpciones(producto)">
         <ion-toolbar class="header">
@@ -50,7 +156,8 @@
                   <b *ngIf="!mostrarCosto">{{ producto.precio | redondearPrecio: 'pesos' | currency }}</b>
                 </ion-text>
               </ion-chip>
-              <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)" style="padding-left: 0;" (click)="actualizarPrecio($event,producto)">
+              <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)"
+                style="padding-left: 0;" (click)="actualizarPrecio($event,producto)">
                 <ion-icon class="ion-margin-start" name="create-outline"></ion-icon>
               </ion-chip>
             </div>
@@ -73,9 +180,8 @@
         </ion-footer>
       </ion-card>
     </ion-item>
-  </ion-list>
+  </ion-list> -->
 
-  <!-- Infinite Scroll Component -->
   <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
     <ion-infinite-scroll-content loadingSpinner="bubbles"
       loadingText="Cargando más productos..."></ion-infinite-scroll-content>
@@ -86,14 +192,10 @@
     (didDismiss)="setOpen(false)"></ion-action-sheet>
 
 
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end"
+    *ngIf="funcionesUtiles.roleMinimoNecesario(roles.EMPLEADO, this.loggedUser)">
     <ion-fab-button (click)="mostrarFormulario()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-  <!-- <ion-fab slot="fixed" color="tertiary" vertical="bottom" horizontal="start">
-    <ion-fab-button (click)="mostrarFormulario()">
-      <ion-icon name="cart-outline"></ion-icon>
-    </ion-fab-button>
-  </ion-fab> -->
 </ion-content>

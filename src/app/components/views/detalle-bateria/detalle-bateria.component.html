@@ -24,10 +24,10 @@
         <b>Codigo: </b> {{clonRepuesto?.codigo}}
         <ion-icon slot="end" name="create-outline" (click)="mostrar('editCodigo')"></ion-icon>
       </ion-item>
-      <ion-item>
-        <b>Precio: </b> {{clonRepuesto.precio|currency:'USD':'symbol':'1.0-0'}} USD
+      <!-- <ion-item>
+        <b>Costo: </b> {{clonRepuesto.costo|currency:'USD':'symbol':'1.0-0'}} USD
         <ion-icon slot="end" name="create-outline" (click)="mostrar('editPrecio')"></ion-icon>
-      </ion-item>
+      </ion-item> -->
       <ion-item>
         <b>Calidad: </b> {{clonRepuesto.calidad}}
         <ion-icon slot="end" name="create-outline" (click)="mostrar('editCalidad')"></ion-icon>
@@ -38,7 +38,7 @@
 
 
       <!-- EDIT MARCA -->
-      <ion-item  *ngIf="editMarca" class="ion-margin">
+      <ion-item *ngIf="editMarca" class="ion-margin">
         <ion-select aria-label="Marca" placeholder="Seleccione la marca" [(ngModel)]="clonRepuesto.marca">
           <ion-select-option *ngFor="let marca of marcas" [value]="marca">{{marca}}</ion-select-option>
         </ion-select>
@@ -46,33 +46,37 @@
       <!-- FIN EDIT MARCA -->
 
       <!-- EDIT MODELO -->
-      <ion-item  *ngIf="editModelo" class="ion-margin">
+      <ion-item *ngIf="editModelo" class="ion-margin">
         <ion-input type="text" placeholder="Escriba el modelo" aria-label="Bateria" [(ngModel)]="clonRepuesto.modelo">
         </ion-input>
       </ion-item>
       <!-- FIN EDIT MODELO -->
 
       <!-- EDIT CODIGO -->
-      <ion-item  *ngIf="editCodigo" class="ion-margin">
+      <ion-item *ngIf="editCodigo" class="ion-margin">
         <ion-input type="text" placeholder="Escriba el codigo" aria-label="Bateria" [(ngModel)]="clonRepuesto.codigo">
         </ion-input>
       </ion-item>
       <!-- FIN EDIT CODIGO -->
 
       <!-- EDIT PRECIO -->
-      <ion-item  *ngIf="editPrecio" class="ion-margin">
+      <!-- <ion-item  *ngIf="editPrecio" class="ion-margin">
         <ion-input type="number" placeholder="precio en dolares" [(ngModel)]="clonRepuesto.precio"></ion-input>
-      </ion-item>
+      </ion-item> -->
       <!-- FIN EDIT PRECIO -->
 
       <!-- EDIT CALIDAD -->
-      <ion-item  *ngIf="editCalidad" class="ion-margin">
+      <ion-item *ngIf="editCalidad" class="ion-margin">
         <ion-select aria-label="Calidad" placeholder="Seleccione la calidad" [(ngModel)]="clonRepuesto.calidad">
           <ion-select-option *ngFor="let calidad of calidades" [value]="calidad">{{calidad}}</ion-select-option>
         </ion-select>
       </ion-item>
       <!-- FIN EDIT CALIDAD -->
 
+
+      <ion-button *ngIf="funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)" class="ion-margin"
+        expand="block" ion-stroked-ion-button color="tertiary" (click)="mostrarFormDetallesFinanciero()">Cambiar detalles
+        financieros</ion-button>
 
       <ion-button class="ion-margin" expand="block" ion-stroked-ion-button color="primary"
         (click)="showSaveDialog()">Guardar</ion-button>

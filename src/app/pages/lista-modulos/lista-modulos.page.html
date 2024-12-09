@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header *ngIf="!modoComponent">
   <app-clasic-toolbar [ruta]="'/repuestos'" [title]="'Lista de modulos'"></app-clasic-toolbar>
 </ion-header>
 
@@ -19,7 +19,6 @@
   </ion-item>
 
   <ion-searchbar show-clear-button="focus" placeholder="J7 prime" (ionInput)="handleInput($event)"></ion-searchbar>
-
   <ion-grid class="ion-text-center">
     <ion-row>
       <ion-col *ngIf="camposSeleccionados.includes('marca')"><b>Marca</b></ion-col>
@@ -27,15 +26,33 @@
       <ion-col *ngIf="camposSeleccionados.includes('precio')"><b>Precio</b></ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('calidad')"><b>Calidad</b></ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('tipo')"><b>Tipo</b></ion-col>
+      <ion-col *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)"><b>costo</b></ion-col>
     </ion-row>
     <ion-row *ngFor="let modulo of modulosAMostrar"
       (click)=" funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)?seleccionar(modulo):''">
       <ion-col *ngIf="camposSeleccionados.includes('marca')">{{modulo.marca|titlecase}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('modelo')">{{modulo.modelo|titlecase}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('precio')">
-        {{modulo.precio*precioDolarBlue|currency:'USD':'symbol':'1.0-0' }}</ion-col>
+
+        <ion-text class="texto-tachado">
+          {{modulo.precio*precioDolarBlue|currency:'USD':'symbol':'1.0-0' }}
+        </ion-text>
+        <br>
+        <small
+          *ngIf="modulo.detallesFinancieros.costo">{{modulo.detallesFinancieros.precio*precioDolarBlue|currency:'USD':'symbol':'1.0-0'
+          }}</small>
+      </ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('calidad')">{{modulo.calidad}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('tipo')">{{modulo.tipo}}</ion-col>
+      <ion-col *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)"
+        style="display: flex; flex-direction: column;">
+        <ion-input (ionInput)="actualizarDatosFinancieros(modulo)" fill="outline" mode="md"
+          (click)="$event.stopPropagation()" type="number" placeholder="costo"
+          [(ngModel)]="modulo.detallesFinancieros.costo"></ion-input>
+        <ion-button (click)="guardar($event,modulo)" size="small">
+          Guardar
+        </ion-button>
+      </ion-col>
     </ion-row>
   </ion-grid>
 

@@ -8,6 +8,7 @@ import { DetalleModuloComponent } from 'src/app/components/views/detalle-modulo/
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
+import { Modulo } from 'src/app/services/info-compartida.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 
@@ -17,6 +18,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./lista-modulos.page.scss'],
 })
 export class ListaModulosPage implements OnInit {
+  @Input() modoComponent: boolean = false;
   loggedUser!: User;
   camposSeleccionados = ['modelo', 'calidad', 'precio'];
   modulos: any[] = [];
@@ -42,16 +44,69 @@ export class ListaModulosPage implements OnInit {
     });
 
     let lista = [];
-    this.dataBase.obtenerTodos(environment.TABLAS.modulos).subscribe((docsModulosRef: any) => {
+    let subs = this.dataBase.obtenerTodos(environment.TABLAS.modulos).subscribe((docsModulosRef: any) => {
+      subs.unsubscribe();
       if (docsModulosRef.length <= 0) return;
       lista = docsModulosRef.map((element: any) => {
-        let auxElement = element.payload.doc.data();
+        let auxElement: Modulo = element.payload.doc.data();
         auxElement['id'] = element.payload.doc.id;
+        if (!auxElement.detallesFinancieros) {
+          auxElement.detallesFinancieros = {
+            colocacion: 14,
+            costo: 0,
+            margen: 4,
+            precio: 0 + 4 + 14,
+          }
+        }
         return auxElement;
       });
       lista = this.ordenarListaPor(lista, 'modelo', 'precio');
       this.modulos = lista;
       this.modulosAMostrar = [...this.modulos];
+
+      // let calidadesModulos = ['AAA', 'GenMedCalidad', 'GenBueno', 'Estandar', 'Original Oled', 'Original Certificado'];
+
+      // this.modulos.forEach((placa: any) => {
+
+      //   switch (placa.calidad) {
+      //     case 'AAA':
+      //       placa.detallesFinancieros = {
+      //         colocacion: 14,
+      //         costo: 0,
+      //         margen: 4,
+      //         precio: 0 + 4 + 14,
+      //       }
+      //       break;
+      //     case 'GenMedCalidad':
+      //     case 'GenBueno':
+      //     case 'Estandar':
+      //       placa.detallesFinancieros = {
+      //         colocacion: 14,
+      //         costo: 0,
+      //         margen: 4,
+      //         precio: 0 + 4 + 14,
+      //       }
+      //       break;
+      //     case 'Original Oled':
+      //       placa.detallesFinancieros = {
+      //         colocacion: 14,
+      //         costo: 0,
+      //         margen: 4,
+      //         precio: 0 + 4 + 14,
+      //       }
+      //       break;
+
+      //     default:
+      //       break;
+      //   }
+
+      //   let nuevaPlaca = placa;
+
+      //   console.log(placa)
+      //   // this.dataBase.actualizar(environment.TABLAS.modulos, nuevaPlaca, nuevaPlaca.id)?.then(() => {
+      //   //   console.log("ok")
+      //   // });
+      // });
     });
 
 
@@ -67,7 +122,9 @@ export class ListaModulosPage implements OnInit {
         component: DetalleModuloComponent,
         componentProps: {
           repuesto: modulo,
-          ruta: '/repuestos/lista-modulos'
+          ruta: '/repuestos/lista-modulos',
+          funcionesUtiles: this.funcionesUtiles,
+          loggedUser: this.loggedUser
         },
       })
 
@@ -141,4 +198,17 @@ export class ListaModulosPage implements OnInit {
 
   }
 
+  guardar(e: Event, modulo: Modulo) {
+    e.stopPropagation();
+    if (modulo.id) {
+      this.dataBase.actualizar(environment.TABLAS.modulos, modulo, modulo.id);
+    }
+
+  }
+  actualizarDatosFinancieros(modulo: Modulo) {
+    modulo.detallesFinancieros.precio = modulo.detallesFinancieros.costo + modulo.detallesFinancieros.colocacion + modulo.detallesFinancieros.margen;
+    console.log(modulo.detallesFinancieros.precio);
+
+
+  }
 }

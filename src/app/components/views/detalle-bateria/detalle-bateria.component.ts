@@ -2,9 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { AlertService } from 'src/app/services/alert.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
-import { InfoCompartidaService } from 'src/app/services/info-compartida.service';
+import { InfoCompartidaService, roles } from 'src/app/services/info-compartida.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
+import { Bateria } from '../../forms/form-bateria/form-bateria.component';
+import { User } from 'src/app/clases/user';
+import { ModalController } from '@ionic/angular';
+import { FormDetallesFinancierosComponent } from '../../form-detalles-financieros/form-detalles-financieros.component';
 
 
 @Component({
@@ -18,14 +22,16 @@ export class DetalleBateriaComponent implements OnInit {
   editMarca = false;
   editModelo = false;
   editCodigo = false;
-  editPrecio = false;
+  // editPrecio = false;
   editCalidad = false;
-  repuesto: any;
+  repuesto!: Bateria;
   clonRepuesto: any;
 
   marcas = this.infoConpatida.marcasModulos;
-  calidades = this.infoConpatida.calidadesBaterias;
-
+  calidades = [];
+  funcionesUtiles: any;
+  loggedUser!: User;
+  roles = roles;
 
 
 
@@ -35,14 +41,19 @@ export class DetalleBateriaComponent implements OnInit {
     private database: DataBaseService,
     private alertService: AlertService,
     private funcionesUtilesService: FuncionesUtilesService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private modalController: ModalController
   ) { }
 
   ngOnInit(): void {
+    this.database.obtenerPorId(environment.TABLAS.calidadesDeRepuestos, 'baterias').subscribe((res: any) => {
+      this.calidades = res.payload.data().calidades;
+      console.log(res.payload.data())
+    });
     this.clonRepuesto = this.funcionesUtilesService.clonarObjeto(this.repuesto);
   }
 
-  mostrar(campo: 'editMarca' | 'editModelo' | 'editCodigo' | 'editPrecio' | 'editCalidad') {
+  mostrar(campo: 'editMarca' | 'editModelo' | 'editCodigo' | 'editCalidad') {
     this.resetBanderas();
     this[campo] = true;
   }
@@ -50,7 +61,7 @@ export class DetalleBateriaComponent implements OnInit {
     this.editMarca = false;
     this.editModelo = false;
     this.editCodigo = false;
-    this.editPrecio = false;
+    // this.editPrecio = false;
     this.editCalidad = false;
   }
 
@@ -87,5 +98,24 @@ export class DetalleBateriaComponent implements OnInit {
 
   showSaveDialog() {
     this.alertService.alertConfirmacion('Confirmación', '¿Esta seguro de guardar los cambios?', 'Si, Guardar cambios', this.guardarCambios.bind(this))
+  }
+
+  async mostrarFormDetallesFinanciero() {
+    let modal = await this.modalController.create({
+      component: FormDetallesFinancierosComponent,
+      componentProps: {
+        producto: this.repuesto
+      }
+    })
+    modal.onDidDismiss().then(result => {
+
+      if (result && result.data && result.role == 'guardarCambios') {
+
+        this.database.actualizar(environment.TABLAS.baterias, result.data, result.data.id)?.finally(() => {
+          this.toastService.simpleMessage('Exito', 'Se actualizo con exito', ToastColor.success);
+        });
+      }
+    })
+    modal.present();
   }
 }

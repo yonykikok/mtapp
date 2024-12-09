@@ -7,7 +7,7 @@ import { boleta, boletaHistorialEstado } from 'src/app/pages/mis-reparaciones/mi
 import { AlertService } from 'src/app/services/alert.service';
 import { DataBaseService } from 'src/app/services/database.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
-import { reparacionShortMessage } from 'src/app/services/info-compartida.service';
+import { reparacionShortMessage, roles } from 'src/app/services/info-compartida.service';
 import { boleta_estados, listaDeEstadosBoletas, reparacionIconName } from 'src/app/services/info-compartida.service';
 import { SpinnerService } from 'src/app/services/spinner.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -399,7 +399,7 @@ export class DetalleReparacionComponent implements OnInit {
   }
 
   mostrarImagen(img: string) {
-    this.funcionesUtiles.mostrarImagenCompleta(img, this.actualizarImagen.bind(this, this.reparacion));
+    this.funcionesUtiles.mostrarImagenCompleta(img, this.actualizarImagen.bind(this, this.reparacion), this.funcionesUtiles.roleMinimoNecesario(roles.EMPLEADO, this.loggedUser));
   }
 
   async actualizarImagen(boleta: any, event?: Event) {///NO IMPLEMENTADO AUN ACA

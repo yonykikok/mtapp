@@ -11,6 +11,8 @@ import { environment } from 'src/environments/environment';
 import { boleta } from '../mis-reparaciones/mis-reparaciones.page';
 import { StorageService } from 'src/app/services/storage.service';
 import { roles } from 'src/app/services/info-compartida.service';
+import { Bateria } from 'src/app/components/forms/form-bateria/form-bateria.component';
+
 export interface EspecificacionesEquipo {
   marca: string;
   modelo: string;
@@ -42,10 +44,10 @@ export class DashboardPage implements OnInit {
   modulos: { titulo: string, color: string, ruta: string, role: Roles, img?: string }[] = [
     { titulo: 'Prototipo', color: '#222222', ruta: "/nuevo-libro-diario", role: roles.EMPLEADO, img: '/assets/svg/icons/librodiario.svg' },
     { titulo: 'Libro diario', color: '#dc70fd', ruta: "/libro-diario", role: roles.EMPLEADO, img: '/assets/svg/icons/librodiario.svg' },
-    { titulo: 'Reparaciones', color: 'rgb(79 132 211)', ruta: "/repuestos", role: roles.CLIENTE, img: '/assets/svg/icons/btnRepuestos.png' },
+    { titulo: 'Reparaciones', color: 'rgb(79 132 211)', ruta: "/reparaciones-new-version", role: roles.CLIENTE, img: '/assets/svg/icons/btnRepuestos.png' },
     { titulo: 'Pedidos', color: '#007bff', ruta: "/lista-pedidos", role: roles.EMPLEADO, img: '/assets/svg/icons/pedidos.svg' },
     { titulo: 'Historial', color: 'rgb(113 112 253)', ruta: "/historial-caja", role: roles.ADMIN, img: '/assets/svg/icons/historial.svg' },
-    { titulo: 'Lista productos', color: 'rgb(103 102 102)', ruta: "/lista-productos", role: roles.EMPLEADO, img: '/assets/svg/icons/articulos.png' },
+    { titulo: 'Lista productos', color: 'rgb(103 102 102)', ruta: "/lista-productos", role: roles.ST, img: '/assets/svg/icons/articulos.png' },
     { titulo: 'Stock Modulos', color: 'rgb(103 102 102)', ruta: "/stock-modulos", role: roles.EMPLEADO, img: '/assets/svg/icons/stock.svg' },
     { titulo: 'Boletas', color: 'rgb(149 157 126)', ruta: "/boletas", role: roles.EMPLEADO, img: '/assets/svg/icons/boletas.svg' },
     { titulo: 'Equipos', color: '#7fbdc7', ruta: "/equipos", role: roles.CLIENTE, img: '/assets/svg/icons/celulares.png' },
@@ -68,6 +70,49 @@ export class DashboardPage implements OnInit {
     private authService: AuthService) { }
 
   ngOnInit() {
+    // this.database.crearConCustomId(environment.TABLAS.calidadesDeRepuestos, 'baterias', {
+    //   calidades: [
+    //     "ORIGINAL",
+    //     "ORIGINAL CON CHIP",
+    //     "MARCA MECHANIC",
+    //     "MECHANIC",
+    //     "BUENA",
+    //     "FOXCONN",
+    //     "AMPSENTRIXX"
+    //   ]
+    // })
+
+    // let baterias: any = [...samsung, ...lg, ...motorola, ...huawei, ...apple, ...xiaomi];
+    // baterias = baterias.map((bateria: any) => {
+    //   // Separa la marca y modelo
+    //   const [marca, ...restoModelo] = bateria.modelo.split(" ");
+
+    //   // Agrega propiedades y elimina las que no necesitas
+    //   bateria.marca = marca;
+    //   bateria.modelo = restoModelo.join(" ");
+    //   bateria.costo = bateria.precio_unitario;
+
+    //   delete bateria.precio_total;
+    //   delete bateria.precio_unitario;
+
+    //   return bateria;
+    // });
+    // let contador = 1;
+    // baterias.forEach((bat: Bateria) => {
+    //   this.database.crear(environment.TABLAS.baterias, bat).then(res => {
+    //     contador++;
+    //   })
+    // });
+
+    // console.log(baterias);
+
+
+
+
+    // let calidades = baterias.map((producto: any) => producto.calidad)
+    //   .filter((calidad: any, index: any, array: any) => array.indexOf(calidad) === index);
+    // console.log(calidades)
+
     this.getCurrentUser();
     this.database.obtenerTodos('boletas').subscribe(documentListRef => {
 
@@ -150,5 +195,10 @@ export class DashboardPage implements OnInit {
     }).catch(err => {
       console.error(err)
     })
+  }
+
+  segmentChanged(algo:any){
+    console.log(algo)
+
   }
 }

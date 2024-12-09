@@ -9,3 +9,132 @@
 ion-title {
   font-family: Audiowide;
 }
+
+.why-choose-us {
+  --background: linear-gradient(135deg, #ffffff, #f3f9ff);
+  color: #004ba0;
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.section-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #0078d4;
+}
+
+.strengths-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 800px;
+}
+
+.strength-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: #e6f3ff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.strength-icon {
+  font-size: 2.5rem;
+  color: #0078d4;
+  margin-bottom: 0.5rem;
+}
+
+.strength-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.strength-description {
+  font-size: 1rem;
+  color: #004ba0;
+  text-align: center;
+}
+
+.main-services-modern {
+  --background: linear-gradient(135deg, #f9f9f9, #e3eefe);
+  color: #0a3d62;
+  padding: 2rem 1rem;
+  font-family: Arial, sans-serif;
+}
+
+.section-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.section-title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #1e6091;
+  margin-bottom: 1rem;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 900px;
+}
+
+.service-card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  padding: 1.5rem;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+}
+
+.service-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.icon-wrapper {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto 1rem auto;
+  background: linear-gradient(135deg, #1e6091, #38a3a5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.service-icon {
+  font-size: 2rem;
+  color: white;
+}
+
+.service-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1e6091;
+  margin-bottom: 0.5rem;
+}
+
+.service-description {
+  font-size: 1rem;
+  color: #3d5a80;
+}

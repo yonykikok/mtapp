@@ -23,7 +23,6 @@ ion-grid ion-row:nth-child(odd) {
     background-color: #f2f2f2; /* Color de fila para filas impares */
 }
 
-
 ion-row:first-child {
     border-bottom: 1px solid #ccc;
     height: 2.6rem;
@@ -35,12 +34,57 @@ ion-row:first-child {
     overflow-x: auto;
     white-space: nowrap;
     max-width: 100%;
-  }
-  
-  .scroll-container ion-col {
+}
+
+.scroll-container ion-col {
     display: inline-block;
     vertical-align: top;
     width: 200px; /* ajusta este valor según sea necesario */
     white-space: normal;
-  }
-  
+}
+
+.precio-tachado {
+    text-decoration: line-through;
+    color: #a0a0a0; /* Opcional: color gris para el precio tachado */
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Mínimo de 150px por tarjeta */
+    align-items: stretch; /* Asegura que todas las tarjetas se estiren para tener la misma altura */
+}
+
+@media (min-width: 600px) {
+    .card-grid {
+        gap: 16px; /* Espacio entre las tarjetas */
+        padding: 16px; /* Espacio interno opcional */
+        grid-template-columns: repeat(
+            auto-fill,
+            minmax(200px, 1fr)
+        ); /* Aumenta el tamaño mínimo en pantallas medianas */
+    }
+}
+
+@media (min-width: 1024px) {
+    .card-grid {
+        gap: 16px; /* Espacio entre las tarjetas */
+        padding: 16px; /* Espacio interno opcional */
+        grid-template-columns: repeat(
+            auto-fill,
+            minmax(250px, 1fr)
+        ); /* Aumenta el tamaño mínimo en pantallas grandes */
+    }
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    min-height: 28rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Opcional: sombra para un efecto visual */
+    border-radius: 8px; /* Opcional: bordes redondeados */
+    overflow: hidden; /* Evita que el contenido sobresalga */
+}
+
+.card ion-card-content {
+    flex-grow: 1; /* Hace que el contenido ocupe el espacio restante */
+}

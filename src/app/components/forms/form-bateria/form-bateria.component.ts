@@ -9,6 +9,22 @@ import { Observable } from 'rxjs';
 import { AlertService } from 'src/app/services/alert.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
+export interface Bateria {
+  id: string,
+  marca: string;
+  modelo: string;
+  codigo: string;
+  calidad: string;
+  detallesFinancieros: DetallesFinancieros;
+}
+
+export interface DetallesFinancieros {
+  costo: number;
+  precio: number;
+  margen: number;
+  colocacion: number;
+}
+
 @Component({
   selector: 'app-form-bateria',
   templateUrl: './form-bateria.component.html',
@@ -16,11 +32,17 @@ import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.servic
 })
 export class FormBateriaComponent implements OnInit {
 
-  @Input() nuevoBateria = {
+  @Input() nuevoBateria: Bateria = {
+    id: '',
     marca: '',
     modelo: '',
     codigo: '',
-    precio: '',
+    detallesFinancieros: {
+      colocacion: 0,
+      costo: 0,
+      margen: 0,
+      precio: 0,
+    },
     calidad: '',
   }
 
@@ -31,7 +53,7 @@ export class FormBateriaComponent implements OnInit {
 
   //parametros formulario
   marcas = this.infoConpatida.marcasModulos;
-  calidades = this.infoConpatida.calidadesBaterias;
+  calidades = [];
   //parametros formulario
 
   baterias: any[] = [];
@@ -41,7 +63,6 @@ export class FormBateriaComponent implements OnInit {
     marca: new FormControl('Samsung', Validators.required),
     modelo: new FormControl('', Validators.required),
     codigo: new FormControl('', Validators.required),
-    precio: new FormControl('', Validators.required),
     calidad: new FormControl('AAA', Validators.required)
   });
 
@@ -79,12 +100,18 @@ export class FormBateriaComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.dataBase.obtenerPorId(environment.TABLAS.calidadesDeRepuestos, 'baterias').subscribe((res: any) => {
+      this.calidades = res.payload.data().calidades;
+      console.log(res.payload.data())
+    });
     this.dataBase.obtenerPorId(environment.TABLAS.cotizacion_dolar, 'dolarBlue').subscribe((res: any) => {
-        this.precioDolarBlue = res.payload.data().price;
+      this.precioDolarBlue = res.payload.data().price;
     });
 
     this.cargarInputAutoCompletado();
+
   }
+
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
@@ -113,16 +140,22 @@ export class FormBateriaComponent implements OnInit {
     });
   }
 
-  obtenerObjetoBateria() {
-    const { marca, modelo, codigo, precio, calidad } = this.formBateria.value;
+  obtenerObjetoBateria(): Bateria {
+    const { marca, modelo, codigo, calidad } = this.formBateria.value;
 
 
     return {
       marca,
       modelo,
       codigo,
-      precio,
       calidad,
+      detallesFinancieros: {
+        colocacion: 0,
+        costo: 0,
+        margen: 0,
+        precio: 0,
+      },
+      id: ''
     }
   }
 

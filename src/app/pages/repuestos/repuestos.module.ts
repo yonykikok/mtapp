@@ -26,6 +26,7 @@ import { ListaDisplaysPageModule } from '../lista-displays/lista-displays.module
     ListaTactilesPageModule,
     ListaFlexDeCargaPageModule,
     ListaDisplaysPageModule
+  
   ],
   declarations: [RepuestosPage]
 })

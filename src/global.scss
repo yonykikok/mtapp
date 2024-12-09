@@ -92,8 +92,8 @@ ion-chip {
 ion-toolbar {
     text-align: center;
 }
-ion-modal{
-    --width:90vw;
+ion-modal {
+    --width: 90vw;
     --height: 90vh;
 }
 
@@ -106,4 +106,8 @@ ion-modal{
 
 .ion_item {
     --inner-padding-end: none !important;
+}
+.texto-tachado {
+    color: red;
+    text-decoration: line-through;
 }

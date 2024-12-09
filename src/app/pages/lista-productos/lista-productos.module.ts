@@ -11,6 +11,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
 import { FormImpuestosProductoComponent } from 'src/app/components/forms/form-impuestos-producto/form-impuestos-producto.component';
 import { FormAumentoPorcentualComponent } from 'src/app/components/forms/form-aumento-porcentual/form-aumento-porcentual.component';
 import { ActualizadorDePrecioProductoComponent } from 'src/app/components/actualizador-de-precio-producto/actualizador-de-precio-producto.component';
+import { FormAgregarDescuentoProductoComponent } from 'src/app/components/form-agregar-descuento-producto/form-agregar-descuento-producto.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { ActualizadorDePrecioProductoComponent } from 'src/app/components/actual
   ],
   declarations: [ListaProductosPage,
     FormImpuestosProductoComponent, FormAumentoPorcentualComponent,
-    ActualizadorDePrecioProductoComponent
+    ActualizadorDePrecioProductoComponent,
+    FormAgregarDescuentoProductoComponent
   ]
 })
 export class ListaProductosPageModule { }

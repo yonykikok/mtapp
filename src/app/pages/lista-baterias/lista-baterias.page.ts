@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/clases/user';
-import { FormBateriaComponent } from 'src/app/components/forms/form-bateria/form-bateria.component';
+import { Bateria, FormBateriaComponent } from 'src/app/components/forms/form-bateria/form-bateria.component';
 import { DetalleBateriaComponent } from 'src/app/components/views/detalle-bateria/detalle-bateria.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
@@ -16,11 +16,12 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./lista-baterias.page.scss'],
 })
 export class ListaBateriasPage implements OnInit {
+  @Input() modoComponent: boolean = false;
 
   loggedUser!: User;
   camposSeleccionados = ['modelo', 'calidad', 'precio'];
-  baterias: any = [];
-  bateriasAMostrar: any = [];
+  baterias: Bateria[] = [];
+  bateriasAMostrar: Bateria[] = [];
 
   precioDolarBlue: number = 0;
   mostrarFormModulo = true;
@@ -51,11 +52,27 @@ export class ListaBateriasPage implements OnInit {
       lista = this.ordenarListaPor(lista, 'modelo', 'precio');
       this.baterias = lista;
       this.bateriasAMostrar = [...this.baterias];
+      // this.ajustarbateria();
     });
 
 
   }
 
+  ajustarbateria() {
+    this.baterias.forEach((bateria:any) => {
+      bateria.detallesFinancieros =
+      {
+        costo: bateria.costo,
+        margen: 4,
+        colocacion: 8,
+        precio: bateria.costo + 4 + 8,
+      }
+      delete bateria.costo;
+      // this.dataBase.actualizar(environment.TABLAS.baterias,bateria,bateria.id);
+
+      console.log(bateria)
+    })
+  }
   ordenarListaPor(lista: any[], criterio: string, criterio2: string) {
     return lista.sort((a, b) => a[criterio].localeCompare(b[criterio]) || a[criterio2] - b[criterio2]);
   }
@@ -65,7 +82,9 @@ export class ListaBateriasPage implements OnInit {
       const modal = await this.modalController.create({
         component: DetalleBateriaComponent,
         componentProps: {
-          repuesto: bateria
+          repuesto: bateria,
+          funcionesUtiles:this.funcionesUtiles,
+          loggedUser:this.loggedUser,
         },
       })
 
@@ -100,8 +119,11 @@ export class ListaBateriasPage implements OnInit {
   }
   handleInput(event: any) {
     const query = event.target.value.toLowerCase();
-    this.bateriasAMostrar = this.baterias.filter((d: any) => d.modelo.toLowerCase().indexOf(query) > -1);
-  }
+    this.bateriasAMostrar = this.baterias.filter((d: any) =>
+        d.modelo.toLowerCase().includes(query) || d.codigo?.toLowerCase().includes(query)
+    );
+}
+
 
 
   async abrirFormModulo() {

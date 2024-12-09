@@ -9,15 +9,19 @@
   <h1 class="ion-text-center text2 ion-padding-top">Bienvenido</h1>
   <!-- <h6 class="text3 ion-text-center ion-padding-bottom">Por favor ingrese su documento</h6> -->
 
-  <form  class="ion-margin-top ion-padding-top">
-   
+  <form class="ion-margin-top ion-padding-top">
 
-    <ion-button expand="block" type="submit" class="ion-margin-top" color="danger" style="color: white;" (click)="onGoogleLogin()">
+
+    <ion-button expand="block" type="submit" class="ion-margin-top" color="danger" style="color: white;"
+      (click)="onGoogleLogin()">
       <ion-icon name="logo-google" slot="start" style="color: white;"></ion-icon>
       Ingresar con Google
     </ion-button>
+    <div class="ion-text-center ion-margin">
+      <a href="" [routerLink]="'/home'"><ion-text color="primary">Modo invitado</ion-text></a>
+    </div>
 
-    <p class="ion-text-center">Ayuda</p>
+    <!-- <p class="ion-text-center">Ayuda</p> -->
   </form>
 
 </ion-content>

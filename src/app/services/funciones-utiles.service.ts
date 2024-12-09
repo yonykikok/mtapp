@@ -70,7 +70,7 @@ export class FuncionesUtilesService {
 
 
 
-  async mostrarImagenCompleta(imagen: string, actualizarImagenMethod?: any) {
+  async mostrarImagenCompleta(imagen: string, actualizarImagenMethod?: any, mostrarOpciones?: boolean) {
     try {
       const modal = await this.modalController.create({
         component: VisualizadorDeImagenComponent,
@@ -78,7 +78,7 @@ export class FuncionesUtilesService {
           imagen,
           isModal: true,
           permitirGirarImagen: true,
-          mostrarOpcionesIcon: true,
+          mostrarOpcionesIcon: mostrarOpciones == false ? mostrarOpciones : true,//puede no tener esa variable
           actualizarImagenMethod
         },
       })

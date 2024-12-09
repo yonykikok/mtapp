@@ -19,6 +19,7 @@ import { DetalleBateriaComponent } from 'src/app/components/views/detalle-bateri
     ListaBateriasPageRoutingModule,
     SharedModule
   ],
-  declarations: [ListaBateriasPage, FormBateriaComponent,DetalleBateriaComponent]
+  declarations: [ListaBateriasPage, FormBateriaComponent,DetalleBateriaComponent],
+  exports: [ListaBateriasPage]
 })
 export class ListaBateriasPageModule { }

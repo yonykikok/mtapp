@@ -3,12 +3,19 @@
 </ion-header>
 
 <ion-content>
+
+  <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Acciones" [buttons]="actionSheetButtons"
+    (didDismiss)="setOpen(false)"></ion-action-sheet>
   <ion-card>
 
     <ion-card-header>
       <ion-card-title class="ion-text-center">
         <b> Informacion de modelo</b>
       </ion-card-title>
+      <ion-icon (click)="mostrarOpciones()" name="ellipsis-vertical-outline"
+        style="position: absolute; right: 1rem; top: 1rem;"
+        *ngIf="funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)" ion-stroked-ion-button
+        color="tertiary"></ion-icon>
     </ion-card-header>
 
     <ion-card-content>
@@ -17,7 +24,7 @@
         Modelo: {{clonRepuesto?.modelo}}
         <ion-icon slot="end" name="create-outline" (click)="mostrar('editModelo')"></ion-icon>
       </ion-item>
-      <ion-list >
+      <ion-list>
         <ion-item *ngIf="clonRepuesto && clonRepuesto.stock">
 
           Colores:
@@ -49,7 +56,7 @@
       <hr>
 
       <!-- EDIT MODELO -->
-      <ion-item  *ngIf="editModelo" class="ion-margin">
+      <ion-item *ngIf="editModelo" class="ion-margin">
         <ion-input type="text" placeholder="Escriba el modelo" aria-label="Modulo" [(ngModel)]="clonRepuesto.modelo">
         </ion-input>
       </ion-item>
@@ -62,7 +69,7 @@
       <!-- FIN EDIT PRECIO -->
 
       <!-- EDIT MARCA -->
-      <ion-item  *ngIf="editMarca" class="ion-margin">
+      <ion-item *ngIf="editMarca" class="ion-margin">
         <ion-select aria-label="Marca" placeholder="Seleccione la marca" [(ngModel)]="clonRepuesto.marca">
           <ion-select-option *ngFor="let marca of marcas" [value]="marca">{{marca}}</ion-select-option>
         </ion-select>
@@ -72,7 +79,7 @@
       <!-- EDIT STOCK -->
 
 
-      <ion-item  *ngIf="editStock" class="ion-margin">
+      <ion-item *ngIf="editStock" class="ion-margin">
         <ion-select slot="start" placeholder="Selecciona el color" [(ngModel)]="color">
           <ion-select-option *ngFor="let color of colores" [value]="color">{{color}}</ion-select-option>
         </ion-select>
@@ -97,7 +104,7 @@
       </div>
       <!-- FIN EDIT STOCK -->
       <!--  EDIT TIPO -->
-      <ion-item  *ngIf="editTipo" class="ion-margin">
+      <ion-item *ngIf="editTipo" class="ion-margin">
         <ion-select aria-label="Tipo" placeholder="Seleccione el tipo" [(ngModel)]="clonRepuesto.tipo">
           <ion-select-option *ngFor="let tipo of tipos" [value]="tipo">{{tipo}}</ion-select-option>
         </ion-select>
@@ -105,7 +112,7 @@
       <!--  FIN EDIT TIPO -->
 
       <!-- EDIT CALIDAD -->
-      <ion-item  *ngIf="editCalidad" class="ion-margin">
+      <ion-item *ngIf="editCalidad" class="ion-margin">
         <ion-select aria-label="Calidad" placeholder="Seleccione la calidad" [(ngModel)]="clonRepuesto.calidad">
           <ion-select-option *ngFor="let calidad of calidades" [value]="calidad">{{calidad}}</ion-select-option>
         </ion-select>

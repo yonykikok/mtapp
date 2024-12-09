@@ -19,9 +19,11 @@
         name="arrow-redo-outline"></ion-icon>
     </ion-chip>
   </div>
-  <ion-img [ngStyle]="{ 'transform': 'rotate(' + imagenGradosRotada + 'deg)' }" class="ion-margin" [src]="imagen"
+  <div class="flexCenterCenter">
+    <ion-img [ngStyle]="{ 'transform': 'rotate(' + imagenGradosRotada + 'deg)' }" style="max-width: 500px;" class="ion-margin" [src]="imagen"
     alt="equipo vendido"></ion-img>
-
+  </div>
+    
   <div class="flexCenterCenter" *ngIf="imagenesArray && imagenesArray.length>1">
     <ion-chip color="tertiary"  (click)="volver()"><ion-icon style="font-size: 1.5rem;" class="ion-margin-start ion-margin-end" name="chevron-back-circle-outline"></ion-icon></ion-chip>
     <ion-chip color="tertiary"  (click)="siguiente()"><ion-icon style="font-size: 1.5rem;" class="ion-margin-start ion-margin-end" name="chevron-forward-circle-outline"></ion-icon></ion-chip>

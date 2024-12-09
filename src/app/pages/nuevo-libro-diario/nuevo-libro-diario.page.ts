@@ -7,7 +7,6 @@ import { CarritoComponent } from 'src/app/components/carrito/carrito.component';
 import { FormActualizarItemLibroDiarioComponent } from 'src/app/components/forms/form-actualizar-item-libro-diario/form-actualizar-item-libro-diario.component';
 import { FormDetalleVentaComponent, MediosDePago } from 'src/app/components/forms/form-detalle-venta/form-detalle-venta.component';
 import { NuevoFormDetalleVentaComponent } from 'src/app/components/nuevo-form-detalle-venta/nuevo-form-detalle-venta.component';
-import { Carrito, FormasDePago, ItemCarrito, Pago, SelectorDeProductosComponent } from 'src/app/components/selector-de-productos/selector-de-productos.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataBaseService } from 'src/app/services/database.service';
@@ -15,9 +14,10 @@ import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.servic
 import { SpinnerService } from 'src/app/services/spinner.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
-import { Venta } from 'src/app/components/selector-de-productos/selector-de-productos.component';
 import { ProductosService } from 'src/app/services/productos.service';
 import { Producto } from '../lista-productos/lista-productos.page';
+import { DescontarPagoDeItemComponent } from 'src/app/components/descontar-pago-de-item/descontar-pago-de-item.component';
+import { Carrito, CarritosComponent, FormasDePago, Pago, Venta } from 'src/app/components/carritos/carritos.component';
 // import { Producto } from 'src/app/components/nueva-funcionalidad/nueva-funcionalidad.component';
 
 export class NuevoLibroDiario {
@@ -110,15 +110,28 @@ export class NuevoLibroDiarioPage implements OnInit {
     }
 
 
-    eliminarItemVenta(venta: Venta, indiceItemCarrito: number): void {
+
+    async eliminarItemVenta(venta: Venta, indiceItemCarrito: number) {
         // Verificar si el índice del item es válido
         if (indiceItemCarrito < 0 || indiceItemCarrito >= venta.carrito.items.length) {
             console.error('Índice del item no válido');
             return;
         }
+        let montoARestar = venta.carrito.items[indiceItemCarrito].precio * venta.carrito.items[indiceItemCarrito].cantidad;
+
+        let modal = await this.modalController.create({
+            component: DescontarPagoDeItemComponent,
+            componentProps: {
+                pagosActuales: venta.pagos,
+                totalADescontar: montoARestar
+            }
+        })
+        modal.present();
+        console.log(venta.pagos);//continuar de aca, descontar el item de los pagos seleccionados en el nuevo componente.
+        return;
 
         // Obtener el precio del item que será eliminado
-        let montoARestar = venta.carrito.items[indiceItemCarrito].precio * venta.carrito.items[indiceItemCarrito].cantidad;
+        montoARestar = venta.carrito.items[indiceItemCarrito].precio * venta.carrito.items[indiceItemCarrito].cantidad;
 
         // Eliminar el item del carrito
         venta.carrito.items.splice(indiceItemCarrito, 1);
@@ -144,8 +157,8 @@ export class NuevoLibroDiarioPage implements OnInit {
         if (venta.carrito.items.length <= 0) {
             this.eliminarVentaCompleta(venta)
         }
+        this.actualizarLibroDiario();
 
-        console.log(venta)
     }
 
     eliminarVentaCompleta(venta: Venta) {
@@ -360,17 +373,7 @@ export class NuevoLibroDiarioPage implements OnInit {
 
                 }
                 if (necesitaActualizar) {
-                    this.libroDiarioHoy.montoTotalEfectivo = this.obtenerMontoTotalPorMedioDePago(FormasDePago.EFECTIVO);//total en efectivo
-                    this.libroDiarioHoy.montoTotalTransferencia = this.obtenerMontoTotalPorMedioDePago(FormasDePago.TRANSFERENCIA);//total en efectivo
-                    this.libroDiarioHoy.montoTotalMercadoPago = this.obtenerMontoTotalPorMedioDePago(FormasDePago.MERCADO_PAGO);//total en efectivo
-                    this.libroDiarioHoy.montoTotalCredito = this.obtenerMontoTotalPorMedioDePago(FormasDePago.TARJETA_CREDITO);//total en efectivo
-                    this.libroDiarioHoy.montoTotalDebito = this.obtenerMontoTotalPorMedioDePago(FormasDePago.TARJETA_DEBITO);//total en efectivo
-                    this.libroDiarioHoy.montoTotalVale = this.obtenerMontoTotalPorMedioDePago(FormasDePago.VALE);//total en efectivo
-                    this.libroDiarioHoy.montoTotalNegativo = this.obtenerMontoTotalPorNegativo();//total negativo
-
-                    this.database.actualizar(environment.TABLAS.ingresosNuevoLibro, this.libroDiarioHoy, this.libroDiarioHoy.id)?.then(res => {
-                        this.toastService.simpleMessage('Exito', 'Se modifico la venta', ToastColor.success);
-                    });
+                    this.actualizarLibroDiario();
                 }
 
             })
@@ -380,7 +383,19 @@ export class NuevoLibroDiarioPage implements OnInit {
 
     }
 
+    actualizarLibroDiario() {
+        this.libroDiarioHoy.montoTotalEfectivo = this.obtenerMontoTotalPorMedioDePago(FormasDePago.EFECTIVO);//total en efectivo
+        this.libroDiarioHoy.montoTotalTransferencia = this.obtenerMontoTotalPorMedioDePago(FormasDePago.TRANSFERENCIA);//total en efectivo
+        this.libroDiarioHoy.montoTotalMercadoPago = this.obtenerMontoTotalPorMedioDePago(FormasDePago.MERCADO_PAGO);//total en efectivo
+        this.libroDiarioHoy.montoTotalCredito = this.obtenerMontoTotalPorMedioDePago(FormasDePago.TARJETA_CREDITO);//total en efectivo
+        this.libroDiarioHoy.montoTotalDebito = this.obtenerMontoTotalPorMedioDePago(FormasDePago.TARJETA_DEBITO);//total en efectivo
+        this.libroDiarioHoy.montoTotalVale = this.obtenerMontoTotalPorMedioDePago(FormasDePago.VALE);//total en efectivo
+        this.libroDiarioHoy.montoTotalNegativo = this.obtenerMontoTotalPorNegativo();//total negativo
 
+        this.database.actualizar(environment.TABLAS.ingresosNuevoLibro, this.libroDiarioHoy, this.libroDiarioHoy.id)?.then(res => {
+            this.toastService.simpleMessage('Exito', 'Se actualizo el libro diario', ToastColor.success);
+        });
+    }
     mostrarOpciones() {
         this.setOpen(true);
     }
@@ -388,7 +403,7 @@ export class NuevoLibroDiarioPage implements OnInit {
     async nuevoCarrito() {
         try {
             const modal = await this.modalController.create({
-                component: SelectorDeProductosComponent,
+                component: CarritosComponent,
                 componentProps: {
                     // productos: this.productos,
                     isModal: false

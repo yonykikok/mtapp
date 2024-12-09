@@ -19,6 +19,7 @@ import { FormModuloComponent } from 'src/app/components/forms/form-modulo/form-m
     ListaModulosPageRoutingModule,
     SharedModule,
   ],
-  declarations: [ListaModulosPage,DetalleModuloComponent,FormModuloComponent]
+  declarations: [ListaModulosPage, DetalleModuloComponent, FormModuloComponent],
+  exports: [ListaModulosPage]
 })
-export class ListaModulosPageModule {}
+export class ListaModulosPageModule { }
