@@ -53,7 +53,7 @@ export enum reparacionMessage {
   NO_REPARADO = 'El equipo no se pudo reparar',
   REPARADO = 'El equipo ya está reparado',
   PARA_NOTIFICAR = 'Reparación lista para notificar al cliente',
-  PARA_ENTREGAR = 'Reparación lista para entregar al cliente',
+  PARA_ENTREGAR = 'El equipo se encuetnra para entregar al cliente',
   RETIRADO = 'Reparación retirada por el cliente'
 }
 export enum reparacionBgColor {

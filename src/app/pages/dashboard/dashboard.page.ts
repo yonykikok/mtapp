@@ -42,21 +42,21 @@ export class DashboardPage implements OnInit {
     codigo: "7798113301765",
   }];
   modulos: { titulo: string, color: string, ruta: string, role: Roles, img?: string }[] = [
-    { titulo: 'Prototipo', color: '#222222', ruta: "/nuevo-libro-diario", role: roles.EMPLEADO, img: '/assets/svg/icons/librodiario.svg' },
-    { titulo: 'Libro diario', color: '#dc70fd', ruta: "/libro-diario", role: roles.EMPLEADO, img: '/assets/svg/icons/librodiario.svg' },
-    { titulo: 'Reparaciones', color: 'rgb(79 132 211)', ruta: "/reparaciones-new-version", role: roles.CLIENTE, img: '/assets/svg/icons/btnRepuestos.png' },
-    { titulo: 'Pedidos', color: '#007bff', ruta: "/lista-pedidos", role: roles.EMPLEADO, img: '/assets/svg/icons/pedidos.svg' },
-    { titulo: 'Historial', color: 'rgb(113 112 253)', ruta: "/historial-caja", role: roles.ADMIN, img: '/assets/svg/icons/historial.svg' },
-    { titulo: 'Lista productos', color: 'rgb(103 102 102)', ruta: "/lista-productos", role: roles.ST, img: '/assets/svg/icons/articulos.png' },
-    { titulo: 'Stock Modulos', color: 'rgb(103 102 102)', ruta: "/stock-modulos", role: roles.EMPLEADO, img: '/assets/svg/icons/stock.svg' },
-    { titulo: 'Boletas', color: 'rgb(149 157 126)', ruta: "/boletas", role: roles.EMPLEADO, img: '/assets/svg/icons/boletas.svg' },
-    { titulo: 'Equipos', color: '#7fbdc7', ruta: "/equipos", role: roles.CLIENTE, img: '/assets/svg/icons/celulares.png' },
-    { titulo: 'Trabajos', color: 'rgb(29 189 215)', ruta: "/servicios", role: roles.EMPLEADO, img: '/assets/svg/icons/servicios.svg' },
-    { titulo: 'Cuentas clientes', color: '#dc3545', ruta: "/cuentas-clientes", role: roles.ADMIN, img: '/assets/svg/icons/deudores2.svg' },
-    { titulo: 'Mis reparaciones', color: '#d34fb2', ruta: "/mis-reparaciones", role: roles.CLIENTE, img: '/assets/svg/icons/reparaciones.svg' },
-    { titulo: 'Trabajos tercerizados', color: 'rgb(141 205 119)', ruta: "/trabajos-tercerizados", role: roles.ADMIN, img: '/assets/svg/icons/delegar.svg' },
-    { titulo: 'Proveedores', color: 'rgb(149 57 126)', ruta: "/proveedores", role: roles.OWNER, img: '/assets/svg/icons/proveedores.svg' },
-    { titulo: 'Usuarios', color: 'rgb(149 57 126)', ruta: "/lista-de-usuarios", role: roles.OWNER, img: '/assets/svg/icons/usuarios.svg' },
+    { titulo: 'Prototipo', color: '#3a6686', ruta: "/nuevo-libro-diario", role: roles.EMPLEADO, img: '/assets/svg/icons/librodiario.svg' },
+    { titulo: 'Libro diario', color: '#3a6686', ruta: "/libro-diario", role: roles.EMPLEADO, img: '/assets/svg/icons/librodiario.svg' },
+    { titulo: 'Reparaciones', color: '#3a6686', ruta: "/reparaciones-new-version", role: roles.CLIENTE, img: '/assets/svg/icons/btnRepuestos.png' },
+    { titulo: 'Pedidos', color: '#3a6686', ruta: "/lista-pedidos", role: roles.EMPLEADO, img: '/assets/svg/icons/pedidos.svg' },
+    { titulo: 'Historial', color: '#3a6686', ruta: "/historial-caja", role: roles.ADMIN, img: '/assets/svg/icons/historial.svg' },
+    { titulo: 'Lista productos', color: '#3a6686', ruta: "/lista-productos", role: roles.ST, img: '/assets/svg/icons/articulos.png' },
+    { titulo: 'Stock Modulos', color: '#3a6686', ruta: "/stock-modulos", role: roles.EMPLEADO, img: '/assets/svg/icons/stock.svg' },
+    { titulo: 'Boletas', color: '#3a6686', ruta: "/boletas", role: roles.EMPLEADO, img: '/assets/svg/icons/boletas.svg' },
+    { titulo: 'Equipos', color: '#3a6686', ruta: "/equipos", role: roles.CLIENTE, img: '/assets/svg/icons/celulares.png' },
+    // { titulo: 'Trabajos', color: 'rgb(29 189 215)', ruta: "/servicios", role: roles.EMPLEADO, img: '/assets/svg/icons/servicios.svg' },
+    { titulo: 'Cuentas clientes', color: '#3a6686', ruta: "/cuentas-clientes", role: roles.ADMIN, img: '/assets/svg/icons/deudores2.svg' },
+    { titulo: 'Mis reparaciones', color: '#3a6686', ruta: "/mis-reparaciones", role: roles.CLIENTE, img: '/assets/svg/icons/reparaciones.svg' },
+    { titulo: 'Trabajos tercerizados', color: '#3a6686', ruta: "/trabajos-tercerizados", role: roles.EMPLEADO, img: '/assets/svg/icons/delegar.svg' },
+    { titulo: 'Proveedores', color: '#3a6686', ruta: "/proveedores", role: roles.OWNER, img: '/assets/svg/icons/proveedores.svg' },
+    { titulo: 'Usuarios', color: '#3a6686', ruta: "/lista-de-usuarios", role: roles.OWNER, img: '/assets/svg/icons/usuarios.svg' },
     // { titulo: 'Articulos', color: '#dc70fd', ruta: "/articulos", role: roles.EMPLEADO, img: '/assets/svg/icons/articulos.png' },
   ];
 
@@ -197,7 +197,7 @@ export class DashboardPage implements OnInit {
     })
   }
 
-  segmentChanged(algo:any){
+  segmentChanged(algo: any) {
     console.log(algo)
 
   }

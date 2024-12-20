@@ -1,18 +1,21 @@
-.container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 5px; /* Espacio entre los chips */
-}
+  .container {
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(120px, 1fr)
+    ); /* Ajusta 120px al ancho mínimo necesario para un chip */
+    gap: 5px; /* Espacio entre los chips */
+  }
 
 ion-chip {
   /* Estilos adicionales para tus chips */
-  height: 6rem;
+  height: auto;
   img {
-    position: absolute;
+    // position: absolute;
     max-height: 5rem;
     max-width: 7rem;
-    right: 0;
-    bottom: 0;
+    // right: 0;
+    // bottom: 0;
   }
 }
 
@@ -24,13 +27,12 @@ iframe {
 }
 .title {
   color: white;
-  position: absolute;
-  left: 0.5rem;
-  top: 1rem;
+  // position: absolute;
+  // left: 0.5rem;
+  // top: 1rem;
   z-index: 99999;
   text-shadow: 0px 0px 13px black;
 }
-
 
 //segment vertical
 .vertical-segment {

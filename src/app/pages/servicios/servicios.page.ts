@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { User } from 'src/app/clases/user';
 import { FormAltaServicioComponent } from 'src/app/components/forms/form-alta-servicio/form-alta-servicio.component';
@@ -16,6 +16,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./servicios.page.scss'],
 })
 export class ServiciosPage implements OnInit {
+  @Input() modoComponent: boolean = false;
   loggedUser!: User;
   listaServicios: Servicio[] = [];
   listaServiciosAMostrar: Servicio[] = [];

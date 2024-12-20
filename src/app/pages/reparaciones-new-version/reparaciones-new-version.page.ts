@@ -17,10 +17,11 @@ export class ReparacionesNewVersionPage implements OnInit {
 
   loggedUser!: User;
   modulos: { titulo: string, color: string, ruta: string, role: Roles, img: string }[] = [
-    { titulo: 'Modulos', color: 'rgb(132 231 155)', ruta: "modulos", role: 'CLIENTE', img: '/assets/svg/icons/modulos.png' },
-    { titulo: 'Baterias', color: 'rgb(248 214 111)', ruta: "baterias", role: 'CLIENTE', img: '/assets/svg/icons/baterias.png' },
-    { titulo: 'Flex de carga', color: 'rgb(233 145 211)', ruta: "flex", role: 'CLIENTE', img: '/assets/svg/icons/placaDeCarga.png' },
-    { titulo: 'Glass + Oca', color: 'rgb(116 146 235)', ruta: "glass", role: 'EMPLEADO', img: 'https://i.ebayimg.com/images/g/1AsAAOSw0tBk0~dZ/s-l1600.png' },
+    { titulo: 'Modulos', color: 'rgb(156 242 206);', ruta: "modulos", role: 'CLIENTE', img: '/assets/svg/icons/modulos.png' },
+    { titulo: 'Baterias', color: 'rgb(156 242 206);', ruta: "baterias", role: 'CLIENTE', img: '/assets/svg/icons/baterias.png' },
+    { titulo: 'Flex de carga', color: 'rgb(156 242 206);', ruta: "flex", role: 'CLIENTE', img: '/assets/svg/icons/placaDeCarga.png' },
+    { titulo: 'Glass + Oca', color: 'rgb(156 242 206);', ruta: "glass", role: 'EMPLEADO', img: 'https://i.ebayimg.com/images/g/1AsAAOSw0tBk0~dZ/s-l1600.png' },
+    { titulo: 'Servicios', color: 'rgb(156 242 206);', ruta: "servicios", role: 'EMPLEADO', img: '/assets/svg/icons/servicios.svg' },
 
 
 

@@ -13,6 +13,7 @@ import { ListaModulosPageModule } from '../lista-modulos/lista-modulos.module';
 import { ListaFlexDeCargaPageModule } from '../lista-flex-de-carga/lista-flex-de-carga.module';
 import { ListaBateriasPageModule } from '../lista-baterias/lista-baterias.module';
 import { ListaGlassPageModule } from '../lista-glass/lista-glass.module';
+import { ServiciosPageModule } from '../servicios/servicios.module';
 
 @NgModule({
   imports: [
@@ -26,6 +27,7 @@ import { ListaGlassPageModule } from '../lista-glass/lista-glass.module';
     ListaFlexDeCargaPageModule,
     ListaBateriasPageModule,
     ListaGlassPageModule,
+    ServiciosPageModule
   ],
   declarations: [ReparacionesNewVersionPage]
 })

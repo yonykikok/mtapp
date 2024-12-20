@@ -4,19 +4,21 @@
 
 <!-- *ngIf="loggedUser" -->
 <ion-content>
-  <ion-segment value="modulos" (ionChange)="segmentChanged($event)" style="overflow-x: scroll;">
-    <ion-segment-button *ngFor="let modulo of modulos" [value]="modulo.ruta"
-      [ngStyle]="{'background-color': modulo.color}" class="segment-button-with-img">
-      <img  *ngIf="modulo.img" [src]="modulo.img"
-        alt="{{modulo.titulo}}" />
-      <ion-text style="display: flex; text-wrap: auto;"><b>{{ modulo.titulo }}</b></ion-text>
-    </ion-segment-button>
-  </ion-segment>
 
   <!-- Contenedor dinámico -->
   <app-lista-modulos [modoComponent]="true" *ngIf="selectedSegment=='modulos'"></app-lista-modulos>
   <app-lista-baterias [modoComponent]="true" *ngIf="selectedSegment=='baterias'"></app-lista-baterias>
   <app-lista-flex-de-carga [modoComponent]="true" *ngIf="selectedSegment=='flex'"></app-lista-flex-de-carga>
   <app-lista-glass [modoComponent]="true" *ngIf="selectedSegment=='glass'"></app-lista-glass>
+  <app-servicios [modoComponent]="true" *ngIf="selectedSegment=='servicios'"></app-servicios>
   <!-- <div *ngSwitchDefault>Selecciona una opción para mostrar contenido</div> -->
 </ion-content>
+<ion-footer>
+  <ion-segment value="modulos" (ionChange)="segmentChanged($event)">
+    <ion-segment-button style="min-width: 80px;" *ngFor="let modulo of modulos" [value]="modulo.ruta"
+      [ngStyle]="{'background-color': modulo.color}" class="segment-button-with-img">
+      <img *ngIf="modulo.img" [src]="modulo.img" alt="{{modulo.titulo}}" style="margin: 0;" />
+      <ion-text style="display: flex; text-wrap: auto;"><b>{{ modulo.titulo }}</b></ion-text>
+    </ion-segment-button>
+  </ion-segment>
+</ion-footer>

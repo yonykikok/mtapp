@@ -2,22 +2,11 @@
   <ion-toolbar class="header">
     <ion-menu-button [id]="'home-menu'" slot="start"></ion-menu-button>
     <ion-title class="ion-text-center">
-      <!-- <b> Multitask </b>  -->
-
     </ion-title>
-    <!-- <ion-icon [routerLink]="['/notificaciones']" routerLinkActive="router-link-active" slot="end" name="notifications"
-      class="ion-margin" style="font-size: 130%;">
-    </ion-icon> -->
-
   </ion-toolbar>
 </ion-header>
 
-
-
-
 <ion-content>
-
-
 
   <ion-menu menuId="first-menu" contentId="main-content" style="position: fixed; margin-top: 3.5rem;">
 
@@ -73,7 +62,7 @@
 
   </div>
 
-  <img [src]="isMobile ? '/assets/images/bannermobile.png' : '/assets/images/banner.png'" alt="Banner">
+  <img [src]="viewportWidth<600 ? '/assets/images/bannermobile.png' : '/assets/images/banner.png'" alt="Banner">
   <div class="ion-text-center">
     <ion-text>
       <h2 class="section-title"> Localización y contacto</h2>
@@ -162,49 +151,6 @@
     </div>
   </div>
 
-
-  <!-- <div fullscreen="true" class="main-services">
-
-    <div class="section-wrapper">
-    
-      <h2 class="section-title">SERVICIOS PRINCIPALES</h2>
-  
-    
-      <div class="services-list">
-   
-        <div class="service-item">
-          <ion-icon name="phone-portrait-outline" class="service-icon"></ion-icon>
-          <h3 class="service-title">Cambio de Pantalla</h3>
-          <p class="service-description">Reemplazamos pantallas dañadas con piezas originales y de alta calidad.</p>
-        </div>
-  
-        <div class="service-item">
-          <ion-icon name="battery-charging-outline" class="service-icon"></ion-icon>
-          <h3 class="service-title">Reparación de Batería</h3>
-          <p class="service-description">Solucionamos problemas de batería para mejorar el rendimiento de tu dispositivo.</p>
-        </div>
-  
-        <div class="service-item">
-          <ion-icon name="bug-outline" class="service-icon"></ion-icon>
-          <h3 class="service-title">Solución de Problemas de Software</h3>
-          <p class="service-description">Eliminamos errores y mejoramos el rendimiento del sistema operativo.</p>
-        </div>
-  
-        <div class="service-item">
-          <ion-icon name="cloud-upload-outline" class="service-icon"></ion-icon>
-          <h3 class="service-title">Recuperación de Datos</h3>
-          <p class="service-description">Recuperamos archivos perdidos o eliminados de tu dispositivo.</p>
-        </div>
-  
-        <div class="service-item">
-          <ion-icon name="clipboard-outline" class="service-icon"></ion-icon>
-          <h3 class="service-title">Diagnósticos Gratuitos</h3>
-          <p class="service-description">Evaluamos tu dispositivo sin costo para identificar problemas.</p>
-        </div>
-      </div>
-    </div>
-  </div> -->
-
   <div fullscreen="true" class="main-services-modern">
     <div class="section-wrapper">
       <h2 class="section-title ion-text-center">SERVICIOS PRINCIPALES</h2>
@@ -253,12 +199,5 @@
       </div>
     </div>
   </div>
-
-
-
-  <!-- <ion-item-divider style="flex-direction: column;" class="ion-text-center ion-no-padding" color="light">
-
-    <app-form-consulta></app-form-consulta>
-  </ion-item-divider> -->
 
 </ion-content>

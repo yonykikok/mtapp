@@ -19,6 +19,8 @@ import { FormAltaServicioComponent } from 'src/app/components/forms/form-alta-se
     SharedModule
   ],
   declarations: [ServiciosPage,
-  FormAltaServicioComponent]
+    FormAltaServicioComponent],
+  exports: [ServiciosPage]
+
 })
 export class ServiciosPageModule { }

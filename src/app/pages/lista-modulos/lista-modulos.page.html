@@ -34,12 +34,12 @@
       <ion-col *ngIf="camposSeleccionados.includes('modelo')">{{modulo.modelo|titlecase}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('precio')">
 
-        <ion-text class="texto-tachado">
+        <ion-text [class]="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)?'texto-tachado':''">
           {{modulo.precio*precioDolarBlue|currency:'USD':'symbol':'1.0-0' }}
         </ion-text>
         <br>
         <small
-          *ngIf="modulo.detallesFinancieros.costo">{{modulo.detallesFinancieros.precio*precioDolarBlue|currency:'USD':'symbol':'1.0-0'
+          *ngIf="modulo.detallesFinancieros.costo && funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)">{{modulo.detallesFinancieros.precio*precioDolarBlue|currency:'USD':'symbol':'1.0-0'
           }}</small>
       </ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('calidad')">{{modulo.calidad}}</ion-col>

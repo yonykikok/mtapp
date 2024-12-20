@@ -47,10 +47,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
   },
   {
-    path: 'tienda',
-    loadChildren: () => import('./pages/tienda/tienda.module').then( m => m.TiendaPageModule)
-  },
-  {
     path: 'cuentas-clientes',
     loadChildren: () => import('./pages/deudores/cuentas-clientes.module').then( m => m.CuentasClientesModule)
   },
@@ -145,7 +141,8 @@ const routes: Routes = [
   {
     path: 'repuestos/lista-glasses',
     loadChildren: () => import('./pages/lista-glass/lista-glass.module').then( m => m.ListaGlassPageModule)
-  },  {
+  },
+  {
     path: 'lista-productos',
     loadChildren: () => import('./pages/lista-productos/lista-productos.module').then( m => m.ListaProductosPageModule)
   },

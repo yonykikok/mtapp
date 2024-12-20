@@ -4,30 +4,13 @@
 
 <ion-content *ngIf="loggedUser">
 
-  <!-- <div class="vertical-segment">
-    <ion-segment value="option1" (ionChange)="segmentChanged($event)">
-      <ion-segment-button value="option1">
-        <ion-label>Opción 1</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="option2">
-        <ion-label>Opción 2</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="option3">
-        <ion-label>Opción 3</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </div> -->
-
-
-
-  <!-- <app-nueva-funcionalidad></app-nueva-funcionalidad> -->
   <app-control-de-horas-trabajadas></app-control-de-horas-trabajadas>
   <div class="container">
     <ng-container *ngFor='let modulo of modulos'>
-      <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario(modulo.role,loggedUser)" class=" flexCenterCenter"
+      <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario(modulo.role,loggedUser)" class="flexCenterCenter flexColumn" style="justify-content: space-evenly;"
         [routerLink]="modulo.ruta" routerLinkActive="router-link-active" [ngStyle]="{'background-color':modulo.color}">
-        <ion-text class="ion-text-center title" style="color: white;"><b>{{modulo.titulo}}</b></ion-text>
         <img *ngIf="modulo.img" [src]="modulo.img" alt="">
+        <ion-text class="ion-text-center title" style="color: white;"><b>{{modulo.titulo}}</b></ion-text>
       </ion-chip>
     </ng-container>
 

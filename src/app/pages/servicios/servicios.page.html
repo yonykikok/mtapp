@@ -1,14 +1,13 @@
-<ion-header>
+<ion-header *ngIf="!modoComponent">
   <app-clasic-toolbar [ruta]="'/dashboard'" [title]="'Trabajos'"></app-clasic-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content >
   <ion-searchbar show-clear-button="focus" placeholder="J7 prime" (ionInput)="handleInput($event)"></ion-searchbar>
 
   <ion-grid class="ion-text-center">
     <ion-row class="ion_item">
       <ion-col><b>Trabajo</b></ion-col>
-      <!-- <ion-col><b>Tipo</b></ion-col> -->
       <ion-col><b>Precio</b></ion-col>
     </ion-row>
     <ion-row *ngFor="let servicio of listaServiciosAMostrar" (click)="mostrarDescripcion(servicio)">
@@ -20,7 +19,6 @@
 
         <ion-item class="ion_item" lines="none">
           <ion-col>{{servicio.nombre}}</ion-col>
-          <!-- <ion-col>{{servicio.tipo}}</ion-col> -->
           <ion-col style="display: flex; justify-content: end;"> <ion-text *ngIf="servicio.tipo=='rango'">{{servicio.desde|currency:'USD':'symbol':'1.0-0'}} -
             </ion-text>
             {{servicio.hasta|currency:'USD':'symbol':'1.0-0'}}</ion-col>

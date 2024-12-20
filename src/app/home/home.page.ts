@@ -25,6 +25,8 @@ export class HomePage implements OnInit {
   reparacionesAMostrar: any[] = [];
 
   isMobile: boolean = false;
+  viewportWidth!: number;
+
   constructor(private modalController: ModalController,
     public funcionesUtiles: FuncionesUtilesService,
     private authService: AuthService,
@@ -48,8 +50,8 @@ export class HomePage implements OnInit {
   }
 
   private checkViewport() {
-    const viewportWidth = window.innerWidth;
-    this.isMobile = viewportWidth <= 600 || this.platform.is('mobile') || this.platform.is('mobileweb');
+    this.viewportWidth = window.innerWidth;
+    // this.isMobile = this.platform.is('mobile') || this.platform.is('mobileweb');
   }
   salir() {
     this.authService.currentUser = null;

@@ -1,14 +1,66 @@
-<ion-item-sliding *ngIf="reparacion" (click)="mostrarDetalle()">
+<ion-card class="reparacion-card">
+  <ion-grid>
+    <ion-row>
+      <!-- Imagen del dispositivo -->
+      <ion-col size="4" class="image-container">
+        <ion-img [src]="reparacion.images[0]" alt="Imagen reparación"></ion-img>
+      </ion-col>
+
+      <!-- Información principal -->
+      <ion-col size="8" class="info-container">
+        <ion-card-header>
+          <ion-card-title>{{ reparacion.modelo }}</ion-card-title>
+          <ion-card-subtitle>Nro Boleta: {{ reparacion.nroBoleta }}</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+          <p><strong>Fecha:</strong> {{ reparacion.fechaAlta | date:'dd/MM/yyyy' }}</p>
+          <p><strong>Estado:</strong>
+            <span>
+              {{ reparacion.estado }}
+            </span>
+          </p>
+          <p> <strong>Descripción de estado:</strong>
+            <ion-text class="itemSlidding" [appEstadoReparacionColor]="reparacion.estado">
+              {{slidingConfig.stateMessage}}
+            </ion-text>
+          </p>
+          <p><strong>Teléfono:</strong> {{ reparacion.telefono }}</p>
+        </ion-card-content>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- Botones de acción -->
+  <ion-row class="ion-justify-content-end">
+    <ion-button color="primary" (click)="mostrarDetalle()">
+      Ver Detalles
+    </ion-button>
+  </ion-row>
+</ion-card>
+
+<!-- No hay datos -->
+<ng-template #noData>
+  <ion-text color="medium" class="ion-text-center">
+    <h2>No tienes reparaciones registradas</h2>
+  </ion-text>
+</ng-template>
+
+
+<!-- <ion-item-sliding *ngIf="reparacion" (click)="mostrarDetalle()">
   <ion-item>
-    <ion-icon [name]="slidingConfig.iconName" [appEstadoReparacionColor]="reparacion.estado"></ion-icon>
-    <ion-text class="itemSlidding" [appEstadoReparacionBgcolor]="reparacion.estado">
-      {{slidingConfig.stateMessage}}
-      <small class="smallFecha" style="position: absolute; right: 1.5rem; top: 1rem;">{{reparacion['fecha']|date}}
-      </small>
-      <small class="smallBoleta"
-        style="position: absolute; right: 1.5rem; bottom: 1rem;">({{reparacion.nroBoleta}})</small>
-      <small class="smallBoleta" style="position: absolute; right: 1.5rem; top: 1rem;">{{reparacion.modelo}}</small>
-    </ion-text>
+    <ion-card>
+      <ion-card-content>
+        <ion-icon [name]="slidingConfig.iconName" [appEstadoReparacionColor]="reparacion.estado"></ion-icon>
+        <ion-text class="itemSlidding" [appEstadoReparacionBgcolor]="reparacion.estado">
+          {{slidingConfig.stateMessage}}
+        </ion-text>
+        <small class="smallFecha" style="position: absolute; right: 1.5rem; top: 1rem;">{{reparacion['fecha']|date}}
+        </small>
+        <small class="smallBoleta">({{reparacion.nroBoleta}})</small>
+        <small class="smallBoleta" style="position: absolute; right: 1.5rem; top: 1rem;">{{reparacion.modelo}}</small>
+      </ion-card-content>
+    </ion-card>
   </ion-item>
   <ion-item-options>
     <ion-item-option *ngFor="let option of slidingOptions" [ngStyle]="{'background-color': option.bgColor}"
@@ -16,4 +68,4 @@
       {{option.text}}
     </ion-item-option>
   </ion-item-options>
-</ion-item-sliding>
+</ion-item-sliding> -->

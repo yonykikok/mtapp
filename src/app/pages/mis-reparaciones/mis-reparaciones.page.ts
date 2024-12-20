@@ -101,7 +101,14 @@ export class MisReparacionesPage implements OnInit, ViewWillEnter {
         boleta['id'] = element.id;
         return boleta;
       });
+      this.reparaciones.sort((a:any, b:any) => {
+        const dateA = a.fechaUltimoCambioDeEstado || a.fechaAlta;
+        const dateB = b.fechaUltimoCambioDeEstado || b.fechaAlta;
+        return dateB - dateA; // Orden descendente
+    });
+    
       this.reparacionesAMostrar = [...this.reparaciones];
+      console.log(this.reparacionesAMostrar)
 
     });
     // try {

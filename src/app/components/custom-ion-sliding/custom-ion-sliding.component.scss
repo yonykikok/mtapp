@@ -1,22 +1,51 @@
-.itemSlidding {
-    padding: 1.2rem 1rem 1rem 1rem;
-    margin-left: 1rem;
-    border-radius: 10px;
-    color: white;
-    background-color: lightskyblue;
-    text-wrap: wrap;
-}
-ion-icon {
-    font-size: 2rem;
-}
-
-small {
-    position: absolute;
-    right: 1.5rem;
-}
-.smallFecha {
-    top: 1rem;
-}
-.smallBoleta {
-    bottom: 1rem;
-}
+.reparacion-card {
+    border-radius: 12px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .reparacion-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .image-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  ion-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .info-container {
+    padding-left: 10px;
+  }
+  
+  .estado-pendiente {
+    color: orange;
+    font-weight: bold;
+  }
+  
+  .estado-completa {
+    color: green;
+    font-weight: bold;
+  }
+  
+  .estado-default {
+    color: gray;
+    font-weight: bold;
+  }
+  
+  ion-card-title {
+    font-size: 1.2em;
+  }
+  
+  ion-card-subtitle {
+    font-size: 0.9em;
+    color: #888;
+  }
+  

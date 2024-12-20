@@ -11,8 +11,14 @@
       placeholder="Ingrese numero de boleta" [(ngModel)]="textoABuscar" (ionChange)="buscarBoleta()"></ion-searchbar>
 
 
-    <app-custom-ion-sliding *ngFor="let reparacion of reparacionesAMostrar" [reparacion]="reparacion"
-      (mostrarDetalleEvent)="mostrarDetalle($event)"></app-custom-ion-sliding>
+      <div class="flexCenterCenter" style="flex-wrap: wrap; align-items: flex-start;">
+
+        <app-detalle-reparacion *ngFor="let reparacion of reparacionesAMostrar"  [loggedUser]="loggedUser" [reparacion]="reparacion" [ruta]="'/mis-reparaciones'">
+          
+        </app-detalle-reparacion>
+      </div>
+    <!-- <app-custom-ion-sliding *ngFor="let reparacion of reparacionesAMostrar" [reparacion]="reparacion"
+      (mostrarDetalleEvent)="mostrarDetalle($event)"></app-custom-ion-sliding> -->
   </div>
 
   <ng-template #sinReparaciones>

@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { User } from 'src/app/clases/user';
@@ -21,13 +21,13 @@ import { environment } from 'src/environments/environment';
 export class DetalleReparacionComponent implements OnInit {
   subiendoImagen: boolean = false;
   editarDetalle = false;
-  ruta: string = '';
+  @Input() ruta: string = '';
   mostrarHistorial = false;
   modoEditar = false;
-  reparacion!: boleta;
+  @Input() reparacion!: boleta;
   estadosPosibles: any[] = [];
   estadoSeleccionado?: any;
-  loggedUser!: User;
+  @Input() loggedUser!: User;
 
   imagenGradosRotada = 0;
   constructor(private alertController: AlertController,
