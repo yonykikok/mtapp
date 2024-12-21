@@ -161,7 +161,11 @@ const routes: Routes = [
   {
     path: 'dashboard-new-version',
     loadChildren: () => import('./pages/dashboard-new-version/dashboard-new-version.module').then( m => m.DashboardNewVersionPageModule)
+  },  {
+    path: 'historial-caja-new',
+    loadChildren: () => import('./pages/historial-caja-new/historial-caja-new.module').then( m => m.HistorialCajaNewPageModule)
   },
+
 
 
 

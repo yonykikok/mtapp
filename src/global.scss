@@ -72,6 +72,7 @@ ion-toolbar {
     align-items: center;
 }
 .customModal {
+    overflow: scroll;
     position: fixed;
     left: 0;
     top: 0;
@@ -93,7 +94,8 @@ ion-toolbar {
     text-align: center;
 }
 ion-modal {
-    --width: 90vw;
+    overflow: scroll;
+    --width: 100vw;
     --height: 90vh;
 }
 

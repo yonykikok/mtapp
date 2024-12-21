@@ -2,68 +2,68 @@
   <app-clasic-toolbar [ruta]="ruta" [title]="'Detalle reparacion'"></app-clasic-toolbar>
 </ion-header>
 <ion-content> -->
+<ion-content>
+  <div class="flexCenterCenter" style="overflow: scroll; max-width: 100%;">
+    <ion-card style="max-width: 600px; min-width: 360px;">
 
- <div class="flexCenterCenter">
-  <ion-card style="max-width: 600px; min-width: 360px;">
+      <ion-card-header [appEstadoReparacionBgcolor]="reparacion.estado">
+        <ion-card-title class="ion-text-center">
+          <label *ngIf="!modoEditar || reparacion.estado=='RETIRADO';else mostrarSelect"
+            style="display: block; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem;">
+            <ion-icon [name]="getIconName()" style=" margin-right: 0.5rem;"> </ion-icon>
+            {{ reparacion.estado | estadoReparacion:'short' }}
+            <ion-icon class="ion-margin-start" name="create-outline" (click)="modoEditar=true"
+              *ngIf="reparacion.estado!='RETIRADO' && ruta=='boletas'"></ion-icon>
+          </label>
 
-    <ion-card-header [appEstadoReparacionBgcolor]="reparacion.estado">
-      <ion-card-title class="ion-text-center">
-        <label *ngIf="!modoEditar || reparacion.estado=='RETIRADO';else mostrarSelect"
-          style="display: block; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem;">
-          <ion-icon [name]="getIconName()" style=" margin-right: 0.5rem;"> </ion-icon>
-          {{ reparacion.estado | estadoReparacion:'short' }}
-          <ion-icon class="ion-margin-start" name="create-outline" (click)="modoEditar=true"
-            *ngIf="reparacion.estado!='RETIRADO' && ruta=='boletas'"></ion-icon>
-        </label>
-
-        <ng-template #mostrarSelect>
-          <ion-item mode="md">
-            <ion-select label="Estado de la reparación" labelPlacement="floating" placeholder="Seleccione el estado"
-              [(ngModel)]="estadoSeleccionado" (ionChange)="cambiarEstado()">
-              <ion-select-option *ngFor="let estado of estadosPosibles"
-                [value]="estado.variable">{{estado.mensaje}}</ion-select-option>
-            </ion-select>
-          </ion-item>
-        </ng-template>
-      </ion-card-title>
-    </ion-card-header>
+          <ng-template #mostrarSelect>
+            <ion-item mode="md">
+              <ion-select label="Estado de la reparación" labelPlacement="floating" placeholder="Seleccione el estado"
+                [(ngModel)]="estadoSeleccionado" (ionChange)="cambiarEstado()">
+                <ion-select-option *ngFor="let estado of estadosPosibles"
+                  [value]="estado.variable">{{estado.mensaje}}</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ng-template>
+        </ion-card-title>
+      </ion-card-header>
 
 
-    <ion-card-content class="ion-text-center ion-no-padding">
+      <ion-card-content class="ion-text-center ion-no-padding">
 
-      <ion-chip class="ion-margin"> Boleta: ({{reparacion.nroBoleta}})</ion-chip>
+        <ion-chip class="ion-margin"> Boleta: ({{reparacion.nroBoleta}})</ion-chip>
 
-      <small style="position: absolute;top: 0.5rem;right: 0.5rem;"><b>{{reparacion.fechaAlta|date}}</b></small>
-      <ion-chip outline="true" class="flexColumn" style="justify-content: center; align-items: start;">
-        <label style="margin-bottom: 0.2rem;">
-          <b>DNI cliente: </b>{{reparacion.dniCliente}}
-          <ion-icon *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)" name="pencil-outline"
-            (click)="mostrarFormularioEditarinformacion('dni','dniCliente')"> </ion-icon>
-        </label>
-        <label style="margin-bottom: 0.2rem;">
-          <b>Telefono: </b>{{reparacion.telefono?reparacion.telefono:'NO TIENE'}}
-          <ion-icon *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)" name="pencil-outline"
-            (click)="mostrarFormularioEditarinformacion('telefono','telefono')"></ion-icon>
-        </label>
-        <label style="margin-bottom: 0.2rem;">
-          <b>Modelo: </b>{{(reparacion.modelo?reparacion.modelo:'NO TIENE')|uppercase}}
-          <ion-icon *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)" name="pencil-outline"
-            (click)="mostrarFormularioEditarinformacion('modelo','modelo')"></ion-icon>
-        </label>
+        <small style="position: absolute;top: 0.5rem;right: 0.5rem;"><b>{{reparacion.fechaAlta|date}}</b></small>
+        <ion-chip outline="true" class="flexColumn" style="justify-content: center; align-items: start;">
+          <label style="margin-bottom: 0.2rem;">
+            <b>DNI cliente: </b>{{reparacion.dniCliente}}
+            <ion-icon *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)" name="pencil-outline"
+              (click)="mostrarFormularioEditarinformacion('dni','dniCliente')"> </ion-icon>
+          </label>
+          <label style="margin-bottom: 0.2rem;">
+            <b>Telefono: </b>{{reparacion.telefono?reparacion.telefono:'NO TIENE'}}
+            <ion-icon *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)" name="pencil-outline"
+              (click)="mostrarFormularioEditarinformacion('telefono','telefono')"></ion-icon>
+          </label>
+          <label style="margin-bottom: 0.2rem;">
+            <b>Modelo: </b>{{(reparacion.modelo?reparacion.modelo:'NO TIENE')|uppercase}}
+            <ion-icon *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)" name="pencil-outline"
+              (click)="mostrarFormularioEditarinformacion('modelo','modelo')"></ion-icon>
+          </label>
 
-        <ion-chip color="success" class="ion-no-margin" style="position: absolute; right: 1rem; "
-          *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)&&reparacion.telefono">
-          <ion-icon (click)="solicitarConfirmacion($event,reparacion)" style=" font-size: 2rem; margin: 0;"
-            color="success" name="logo-whatsapp"></ion-icon>
+          <ion-chip color="success" class="ion-no-margin" style="position: absolute; right: 1rem; "
+            *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)&&reparacion.telefono">
+            <ion-icon (click)="solicitarConfirmacion($event,reparacion)" style=" font-size: 2rem; margin: 0;"
+              color="success" name="logo-whatsapp"></ion-icon>
+          </ion-chip>
         </ion-chip>
-      </ion-chip>
 
-      <ion-chip [appEstadoReparacionColor]="reparacion.estado" [appEstadoReparacionBorderColor]="reparacion.estado"
-        style="display: flex; justify-content: center; border-radius: 0;" class="ion-margin ion-text-center" outline>
-        {{reparacion.estado | estadoReparacion}}
-      </ion-chip>
+        <ion-chip [appEstadoReparacionColor]="reparacion.estado" [appEstadoReparacionBorderColor]="reparacion.estado"
+          style="display: flex; justify-content: center; border-radius: 0;" class="ion-margin ion-text-center" outline>
+          {{reparacion.estado | estadoReparacion}}
+        </ion-chip>
 
-      <!-- <div *ngIf="mostrarImgBoleta">
+        <!-- <div *ngIf="mostrarImgBoleta">
         <ion-img [ngStyle]="{ 'transform': 'rotate(' + imagenGradosRotada + 'deg)' }" class="ion-margin"
           [src]="reparacion.images[0]"></ion-img>
         <ion-chip color="primary">
@@ -76,82 +76,84 @@
         </ion-chip>
       </div> -->
 
-      <ion-button size="small" color="primary" mode="ios" class="ion-margin" expand="block"
-        (click)="mostrarImagen(reparacion.images[0])">
-        <ion-icon slot="start" name="image-outline"></ion-icon>
-        Ver boleta
-      </ion-button>
+        <ion-button size="small" color="primary" mode="ios" class="ion-margin" expand="block"
+          (click)="mostrarImagen(reparacion.images[0])">
+          <ion-icon slot="start" name="image-outline"></ion-icon>
+          Ver boleta
+        </ion-button>
 
 
 
-      <label class="flexColumn flexCenterCenter ion-margin ion-text-center "
-        *ngIf="reparacion.historial && reparacion.historial.length>0">Ver historial
-        <ion-toggle [(ngModel)]="mostrarHistorial"></ion-toggle>
-      </label>
+        <label class="flexColumn flexCenterCenter ion-margin ion-text-center "
+          *ngIf="reparacion.historial && reparacion.historial.length>0">Ver historial
+          <ion-toggle [(ngModel)]="mostrarHistorial"></ion-toggle>
+        </label>
 
 
-      <ion-accordion-group [multiple]="true" *ngIf="mostrarHistorial">
-        <ion-item-sliding *ngFor="let estado of reparacion.historial; let index =index">
-          <ion-item>
+        <ion-accordion-group [multiple]="true" *ngIf="mostrarHistorial">
+          <ion-item-sliding *ngFor="let estado of reparacion.historial; let index =index">
+            <ion-item>
 
-            <ion-accordion [value]="estado.fecha" [appEstadoReparacionBgcolor]="estado.estadoActual">
-              <ion-item slot="header" color="light">
-                <ion-text>{{obtenerMensajeDelEstado(estado.estadoActual)}}</ion-text>
-              </ion-item>
-              <div class="ion-padding" slot="content">
+              <ion-accordion [value]="estado.fecha" [appEstadoReparacionBgcolor]="estado.estadoActual">
+                <ion-item slot="header" color="light">
+                  <ion-text>{{obtenerMensajeDelEstado(estado.estadoActual)}}</ion-text>
+                </ion-item>
+                <div class="ion-padding" slot="content">
 
 
-                <small style="position: absolute; right: 1rem; top: 3rem;">{{estado.fecha|date:'dd/MM/yyyy hh:mm:ss'
-                  }}</small>
-                <ion-chip class="flexCenterCenter" style="background-color: white;">
-                  <label style="text-decoration: line-through; color: #ee8d8d; margin-right: 0.5rem;">
-                    {{obtenerMensajeDelEstado(estado.estadoAnterior)}}
-                  </label>
-                  <ion-icon name="arrow-forward-outline"></ion-icon>
-                  <b style="color: #8383eb; margin-left: 0.5rem;">
-                    {{obtenerMensajeDelEstado(estado.estadoActual)}}
-                  </b>
-                </ion-chip>
-                <p class="flexColumn flexCenterCenter " style="margin: 0.7rem;">
-                  <b>Cambio realizado por </b>
-                  <label> {{estado.modificadoPor.displayName}} </label>
-                </p>
-                <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario('ST',loggedUser)" style="background-color: white;"
-                  outline="true" color="tertiary" class="flexColumn flexCenterCenter">
-                  <b>Detalle <ion-icon *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)"
-                      style="position: absolute; right: 1rem; font-size: 1.2rem;" class="ion-margin-start"
-                      name="create-outline" (click)="mostrarEditarDetalle(estado)"></ion-icon></b>
-                  <p style="margin-top: 1rem;">{{estado.detalle}}</p>
-                </ion-chip>
-                <div class="ion-text-center">
-                  <div *ngIf="estado.images && estado.images.length>0" class="flexCenterCenter">
-                    <div class="flexColumn" style="align-items: center;"
-                      *ngFor="let imagen of estado.images; let index=index">
-                      <img (click)="mostrarImagen(imagen)" style="width: 40px;height: 40px;margin: 0.2rem;"
-                        [src]="imagen" alt="imagen de detalle">
-                      <ion-icon color="danger" name="trash-outline"
-                        (click)="confirmarEliminacionDeImagen(reparacion,estado,index)"></ion-icon>
+                  <small style="position: absolute; right: 1rem; top: 3rem;">{{estado.fecha|date:'dd/MM/yyyy hh:mm:ss'
+                    }}</small>
+                  <ion-chip class="flexCenterCenter" style="background-color: white;">
+                    <label style="text-decoration: line-through; color: #ee8d8d; margin-right: 0.5rem;">
+                      {{obtenerMensajeDelEstado(estado.estadoAnterior)}}
+                    </label>
+                    <ion-icon name="arrow-forward-outline"></ion-icon>
+                    <b style="color: #8383eb; margin-left: 0.5rem;">
+                      {{obtenerMensajeDelEstado(estado.estadoActual)}}
+                    </b>
+                  </ion-chip>
+                  <p class="flexColumn flexCenterCenter " style="margin: 0.7rem;">
+                    <b>Cambio realizado por </b>
+                    <label> {{estado.modificadoPor.displayName}} </label>
+                  </p>
+                  <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario('ST',loggedUser)"
+                    style="background-color: white;" outline="true" color="tertiary"
+                    class="flexColumn flexCenterCenter">
+                    <b>Detalle <ion-icon *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)"
+                        style="position: absolute; right: 1rem; font-size: 1.2rem;" class="ion-margin-start"
+                        name="create-outline" (click)="mostrarEditarDetalle(estado)"></ion-icon></b>
+                    <p style="margin-top: 1rem;">{{estado.detalle}}</p>
+                  </ion-chip>
+                  <div class="ion-text-center">
+                    <div *ngIf="estado.images && estado.images.length>0" class="flexCenterCenter">
+                      <div class="flexColumn" style="align-items: center;"
+                        *ngFor="let imagen of estado.images; let index=index">
+                        <img (click)="mostrarImagen(imagen)" style="width: 40px;height: 40px;margin: 0.2rem;"
+                          [src]="imagen" alt="imagen de detalle">
+                        <ion-icon color="danger" name="trash-outline"
+                          (click)="confirmarEliminacionDeImagen(reparacion,estado,index)"></ion-icon>
+                      </div>
                     </div>
+                    <ion-button [disabled]="subiendoImagen"
+                      *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser) &&(!estado.images ||estado.images.length<2)"
+                      size="small" color="secondary" (click)="agregarImagen(reparacion,estado)">Agregar
+                      imagen</ion-button>
                   </div>
-                  <ion-button [disabled]="subiendoImagen"
-                    *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser) &&(!estado.images ||estado.images.length<2)"
-                    size="small" color="secondary" (click)="agregarImagen(reparacion,estado)">Agregar
-                    imagen</ion-button>
+
                 </div>
+              </ion-accordion>
+            </ion-item>
 
-              </div>
-            </ion-accordion>
-          </ion-item>
+            <ion-item-options *ngIf="reparacion.historial&&index == reparacion.historial.length-1">
+              <ion-item-option color="danger" *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)"
+                (click)="solicitarConfirmacionEliminar(reparacion,estado)">Eliminar</ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-accordion-group>
 
-          <ion-item-options *ngIf="reparacion.historial&&index == reparacion.historial.length-1">
-            <ion-item-option color="danger" *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)"
-              (click)="solicitarConfirmacionEliminar(reparacion,estado)">Eliminar</ion-item-option>
-          </ion-item-options>
-        </ion-item-sliding>
-      </ion-accordion-group>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
-    </ion-card-content>
-  </ion-card>
- </div>
-
+</ion-content>
 <!-- </ion-content> -->

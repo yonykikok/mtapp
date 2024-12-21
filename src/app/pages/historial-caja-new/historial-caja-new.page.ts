@@ -15,11 +15,12 @@ import { roles } from 'src/app/services/info-compartida.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
 @Component({
-  selector: 'app-historial-caja',
-  templateUrl: './historial-caja.page.html',
-  styleUrls: ['./historial-caja.page.scss'],
+  selector: 'app-historial-caja-new',
+  templateUrl: './historial-caja-new.page.html',
+  styleUrls: ['./historial-caja-new.page.scss'],
 })
-export class HistorialCajaPage implements OnInit {
+export class HistorialCajaNewPage implements OnInit {
+
   buscarPorRangoDeFechas = false;
   maxFechaActual = new Date(new Date().getTime() + 86400000).toISOString().split('T')[0];
   isActionSheetOpen: boolean = false;
@@ -153,6 +154,7 @@ export class HistorialCajaPage implements OnInit {
   }
 
   async mostrarDialogLibroDiario(libroDiario: any) {
+    console.log(libroDiario)
     try {
       const modal = await this.modalController.create({
         component: DetalleVentasDelDiaComponent,
@@ -181,9 +183,10 @@ export class HistorialCajaPage implements OnInit {
 
     const idFecha = `${anio}-${mes}-${dia}`;
 
-    this.database.obtenerPorId(environment.TABLAS.ingresos, idFecha).subscribe(res => {
+    this.database.obtenerPorId(environment.TABLAS.ingresosNuevoLibro, idFecha).subscribe(res => {
       let libroDiarioDelDia: LibroDiario = res.payload.data() as LibroDiario;
       libroDiarioDelDia['id'] = res.payload.id;
+    console.log(libroDiarioDelDia)
       
       this.mostrarDialogLibroDiario(libroDiarioDelDia);
     })
@@ -318,7 +321,7 @@ export class HistorialCajaPage implements OnInit {
       dia.montoTotalTransferencia = this.obtenerMontoTotalPorMedioDePago(dia, MediosDePago.Transferencia);//total en efectivo
       dia.montoTotalMercadoPago = this.obtenerMontoTotalPorMedioDePago(dia, MediosDePago.MercadoPago);//total en efectivo
       dia.montoTotalNegativo = this.obtenerMontoTotalPorNegativo(dia);//total negativo
-      this.database.actualizar(environment.TABLAS.ingresos, dia, dia.id);
+      this.database.actualizar(environment.TABLAS.ingresosNuevoLibro, dia, dia.id);
 
     });
 
@@ -385,10 +388,10 @@ export class HistorialCajaPage implements OnInit {
             "cuadra": false,
             "fecha": fechaOriginal.getTime()
           }
-          let subscribe = this.database.obtenerPorId(environment.TABLAS.ingresos, dia.id).subscribe(res => {
+          let subscribe = this.database.obtenerPorId(environment.TABLAS.ingresosNuevoLibro, dia.id).subscribe(res => {
             subscribe.unsubscribe();
             if (!res.payload.exists) {
-              this.database.crearConCustomId(environment.TABLAS.ingresos, dia.id, dia).then(res => {
+              this.database.crearConCustomId(environment.TABLAS.ingresosNuevoLibro, dia.id, dia).then(res => {
                 this.toastService.simpleMessage('Listo', 'Se agrego el dia', ToastColor.success);
               })
             } else {
