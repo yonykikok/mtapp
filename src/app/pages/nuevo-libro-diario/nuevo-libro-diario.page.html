@@ -24,7 +24,7 @@
         <ion-item-divider class="ion-no-padding ion-text-center" style="flex-direction: column; --background:none">
           <h2 class="ion-no-margin">Monto total en caja</h2>
           <h2 class="ion-no-margin" *ngIf="libroDiarioHoy['montoTotalEfectivo']&&libroDiarioHoy['montoInicial']">
-            {{(libroDiarioHoy['montoTotalEfectivo']+libroDiarioHoy['montoInicial'])|currency}}
+            {{this.obtenerMontoTotalPorMedioDePago(formasDePago.EFECTIVO)+libroDiarioHoy['montoInicial']}}
           </h2>
         </ion-item-divider>
       </ng-template>
@@ -47,15 +47,18 @@
                 <ion-text [color]="!item.idProducto?'danger':''">{{ item.marca|titlecase }}</ion-text>
                 <ion-text color="tertiary">{{ item.descripcion|titlecase }} </ion-text>
                 <ion-text *ngIf="item.boleta">Boleta: ({{item.boleta}})</ion-text>
-                <ion-text [color]="item.precio>0?'success':'danger'">({{ item.cantidad }}) x
+
+                <ion-text [color]="item.precio>0?'success':'danger'">
+                  <ion-text *ngIf="item.cantidad>1">({{ item.cantidad }}) x </ion-text>
                   {{ item.precio|redondearPrecio:'pesos' | currency }}
-                  <small style="color: rgb(77, 77, 255);">(Total:
+                  <br>
+                  <small style="color: rgb(77, 77, 255);" *ngIf="item.cantidad>1">(Total:
                     {{(item.precio*item.cantidad)|redondearPrecio:'pesos'
                     | currency }})</small>
                 </ion-text>
 
               </div>
-              <div slot="end" style="min-width: 10rem;">
+              <div slot="end" style="min-width: 4rem;">
                 <label *ngFor="let pagoActual of venta.pagos">
                   <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Efectivo'"
                     [src]="'assets/svg/icons/cashcard.svg'" />

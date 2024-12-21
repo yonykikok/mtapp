@@ -52,7 +52,7 @@ export class CambiarStockProductoComponent implements OnInit {
       colorSeleccionado.stock = colorSeleccionado.stock - 1;
     } else {
       this.alertService.alertConfirmacion('Confirmacion', 'ya no puedes descontar stock, ¿quieres eliminarlo de los colores disponbiles?', 'Si', () => {
-        let indexABorrar = this.producto.coloresDisponibles?.findIndex((color:any) => color.denominacionColor == colorSeleccionado.denominacionColor);
+        let indexABorrar = this.producto.coloresDisponibles?.findIndex((color: any) => color.denominacionColor == colorSeleccionado.denominacionColor);
         if ((indexABorrar || indexABorrar == 0) && indexABorrar != -1) {
           console.log(indexABorrar)
           this.producto.coloresDisponibles?.splice(indexABorrar, 1);
@@ -65,12 +65,14 @@ export class CambiarStockProductoComponent implements OnInit {
     this.producto.stockTotal = this.producto.coloresDisponibles?.reduce((total: number, color: any) => {
       return total + color.stock;
     }, 0) || 0
-
+    console.log("stock total: --", this.producto.stockTotal)
     this.modalController.dismiss(this.producto, 'Guardar');
 
   }
 
   verSiHayCambios() {
+    console.log(this.producto)
+    console.log(this.productoOriginal)
     if (JSON.stringify(this.producto) != JSON.stringify(this.productoOriginal)) {
       return true;
     }

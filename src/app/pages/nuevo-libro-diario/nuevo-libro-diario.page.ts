@@ -45,6 +45,7 @@ export class NuevoLibroDiario {
     styleUrls: ['./nuevo-libro-diario.page.scss'],
 })
 export class NuevoLibroDiarioPage implements OnInit {
+    formasDePago=FormasDePago;
     productos: Producto[] = [];
     isActionSheetOpen = false;
     actionSheetButtons: any = [];
@@ -291,8 +292,10 @@ export class NuevoLibroDiarioPage implements OnInit {
                 if (pago.formaDePago === medioDePago) {
                     acumulador += pago.cantidad;
                 }
+                console.log(pago);
             });
         });
+        console.log(acumulador);
         return acumulador;
     }
 
