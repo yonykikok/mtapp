@@ -7,6 +7,8 @@ import { DataBaseService } from 'src/app/services/database.service';
 import { FormsValidatorsService } from 'src/app/services/forms-validators.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
+import { CargarCategoriaComponent } from '../../cargar-categoria/cargar-categoria.component';
+import { ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-form-pedido',
@@ -14,6 +16,8 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./form-pedido.component.scss'],
 })
 export class FormPedidoComponent implements OnInit {
+  categoria: any;
+  categoriasPedidos: any[] = [];
 
 
   clienteFormGroup = new FormGroup({
@@ -27,7 +31,7 @@ export class FormPedidoComponent implements OnInit {
   tipoDeRepuestoFiltrado: Observable<string[]> = new Observable<string[]>();
   // @Output() cerrarFormEvent = new EventEmitter<void>();
   formgroupPedido = new FormGroup({
-    tipo: new FormControl('', Validators.required),
+    tipo: new FormControl(''),//categoria
     modelo: new FormControl('', Validators.required),
     cantidad: new FormControl('', [Validators.required, Validators.min(1), this.formsValidatorsService.isInt]),
     detalle: new FormControl('', Validators.required),
@@ -44,10 +48,17 @@ export class FormPedidoComponent implements OnInit {
     private database: DataBaseService,
     private alertService: AlertService,
     private toastService: ToastService,
-    private formsValidatorsService: FormsValidatorsService
+    private formsValidatorsService: FormsValidatorsService,
+    private modalController: ModalController
   ) { }
 
   ngOnInit() {
+
+    this.database.obtenerPorId(environment.TABLAS.categoriasPedidos, 'categorias').subscribe((res: any) => {
+      console.log(res)
+      this.categoriasPedidos = res.payload.data().categorias;
+    });
+
     this.tipoDeRepuestoFiltrado = this.formgroupPedido.controls.tipo.valueChanges.pipe(
       startWith(null as unknown), // Convertir primero a 'unknown'
       map(value => this._filter(value as string)), // Luego convertir a 'string'
@@ -68,6 +79,7 @@ export class FormPedidoComponent implements OnInit {
   agregarPedido(pedido: any) {
     pedido['fecha'] = Date.now();
     console.log(pedido)
+    return;
     this.database.crear(environment.TABLAS.pedidos, pedido).then(res => {
       this.toastService.simpleMessage('Exito', 'Se agrego el pedido a la lista', ToastColor.success);
       this.resetForm();
@@ -87,4 +99,36 @@ export class FormPedidoComponent implements OnInit {
     this.pedidoPorCliente = false;
   }
 
+  async mostrarFormularioNuevaCategoria() {
+    let modal = await this.modalController.create({
+      component: CargarCategoriaComponent,
+      componentProps: {
+        isModal: true,
+        categoriasPedidos: this.categoriasPedidos
+      }
+    })
+
+
+    modal.onDidDismiss().then((result: any) => {
+      if (!result.data || !result.role) return;
+
+      if (result.role == 'create') {
+
+
+        this.categoria = result.data;
+        if (this.categoriasPedidos && this.categoriasPedidos.length > 0) {
+          this.categoriasPedidos.push(result.data);
+        } else {
+          this.categoriasPedidos = [result.data];
+        }
+
+        this.database.actualizar(environment.TABLAS.categoriasPedidos, { categorias: this.categoriasPedidos }, 'categorias')?.catch(res => {
+          this.toastService.simpleMessage("Categoria agregada", "Se agrego la categoria al listado.", ToastColor.success);
+        });
+      }
+
+
+    })
+    modal.present();
+  }
 }

@@ -6,11 +6,24 @@
   <ion-card class="mt-3">
     <form class="example-form" [formGroup]="formgroupPedido">
 
+
       <ion-item class="ion-margin">
+        <ion-select label="Categoria del producto" labelPlacement="floating"
+          placeholder="Seleccione o cree una categoria" [(ngModel)]="categoria" [ngModelOptions]="{standalone: true}">
+          <ion-select-option *ngFor="let categoria of categoriasPedidos"
+            [value]="categoria">{{categoria|titlecase}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <div class="flexCenterCenter">
+        <ion-button size="small" class="ion-margin" expand="block" (click)="mostrarFormularioNuevaCategoria()">Agregar
+          nueva categoria</ion-button>
+      </div>
+
+      <!-- <ion-item class="ion-margin">
         <ion-input label="Tipo de Repuesto" labelPlacement="floating" type="text"
           placeholder="Bateria, Modulo, Tactil, etc." formControlName="tipo">
         </ion-input>
-      </ion-item>
+      </ion-item> -->
 
       <ion-item class="ion-margin">
         <ion-input label="Modelo" labelPlacement="floating" type="text" placeholder="J7 prime" formControlName="modelo">
@@ -78,7 +91,7 @@
       </ion-item> -->
 
       <ion-button expand="block" color="primary" class="ion-margin" (click)="showConfirmDialog()"
-        [disabled]="!formgroupPedido.valid || (pedidoPorCliente && !clienteFormGroup.valid)">Agregar</ion-button>
+        [disabled]="!formgroupPedido.valid || (pedidoPorCliente && !clienteFormGroup.valid)||!categoria">Agregar</ion-button>
 
 
     </form>
