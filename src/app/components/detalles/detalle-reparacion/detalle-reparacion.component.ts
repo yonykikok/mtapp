@@ -19,6 +19,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./detalle-reparacion.component.scss'],
 })
 export class DetalleReparacionComponent implements OnInit {
+  isModal:boolean=true;
   subiendoImagen: boolean = false;
   editarDetalle = false;
   @Input() ruta: string = '';
@@ -43,6 +44,7 @@ export class DetalleReparacionComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.reparacion)
 
     this.getOpcionesEstadoDisponibles();
 

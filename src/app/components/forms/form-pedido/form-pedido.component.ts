@@ -16,7 +16,6 @@ import { ModalController } from '@ionic/angular';
   styleUrls: ['./form-pedido.component.scss'],
 })
 export class FormPedidoComponent implements OnInit {
-  categoria: any;
   categoriasPedidos: any[] = [];
 
 
@@ -31,6 +30,7 @@ export class FormPedidoComponent implements OnInit {
   tipoDeRepuestoFiltrado: Observable<string[]> = new Observable<string[]>();
   // @Output() cerrarFormEvent = new EventEmitter<void>();
   formgroupPedido = new FormGroup({
+    categoria: new FormControl('', Validators.required),//categoria
     tipo: new FormControl(''),//categoria
     modelo: new FormControl('', Validators.required),
     cantidad: new FormControl('', [Validators.required, Validators.min(1), this.formsValidatorsService.isInt]),
@@ -79,7 +79,6 @@ export class FormPedidoComponent implements OnInit {
   agregarPedido(pedido: any) {
     pedido['fecha'] = Date.now();
     console.log(pedido)
-    return;
     this.database.crear(environment.TABLAS.pedidos, pedido).then(res => {
       this.toastService.simpleMessage('Exito', 'Se agrego el pedido a la lista', ToastColor.success);
       this.resetForm();
@@ -115,13 +114,13 @@ export class FormPedidoComponent implements OnInit {
       if (result.role == 'create') {
 
 
-        this.categoria = result.data;
+        this.formgroupPedido.controls['categoria'].setValue(result.data);//cambiar por formulario.cmapo
         if (this.categoriasPedidos && this.categoriasPedidos.length > 0) {
           this.categoriasPedidos.push(result.data);
         } else {
           this.categoriasPedidos = [result.data];
         }
-
+        console.log({ categorias: this.categoriasPedidos })
         this.database.actualizar(environment.TABLAS.categoriasPedidos, { categorias: this.categoriasPedidos }, 'categorias')?.catch(res => {
           this.toastService.simpleMessage("Categoria agregada", "Se agrego la categoria al listado.", ToastColor.success);
         });

@@ -56,8 +56,6 @@ export class MisReparacionesPage implements OnInit, ViewWillEnter {
   }
   ionViewWillEnter(): void {
     this.getCurrentUser();
-
-
   }
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe((userRef: any) => {
@@ -75,7 +73,7 @@ export class MisReparacionesPage implements OnInit, ViewWillEnter {
           securityCode: usuario['securityCode'],
           dni: usuario['dni']
         };
-        
+
         this.obtenerReparaciones();
       })
     })
@@ -91,7 +89,7 @@ export class MisReparacionesPage implements OnInit, ViewWillEnter {
 
     console.log(this.loggedUser.dni)
     this.database.obtenerBoletaPorDni(environment.TABLAS.boletasReparacion, this.loggedUser.dni.toString()).then((res: any) => {
-      
+
       if (!res) {
         return;
       }
@@ -101,12 +99,12 @@ export class MisReparacionesPage implements OnInit, ViewWillEnter {
         boleta['id'] = element.id;
         return boleta;
       });
-      this.reparaciones.sort((a:any, b:any) => {
+      this.reparaciones.sort((a: any, b: any) => {
         const dateA = a.fechaUltimoCambioDeEstado || a.fechaAlta;
         const dateB = b.fechaUltimoCambioDeEstado || b.fechaAlta;
         return dateB - dateA; // Orden descendente
-    });
-    
+      });
+
       this.reparacionesAMostrar = [...this.reparaciones];
       console.log(this.reparacionesAMostrar)
 

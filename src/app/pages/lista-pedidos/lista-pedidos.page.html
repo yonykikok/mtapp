@@ -18,7 +18,7 @@
       <ion-col><b>Conseguido</b></ion-col>
     </ion-row>
     <ion-row *ngFor="let pedido of pedidosAMostrar" [appPrioridadPedido]="pedido" (click)="mostrarDetalle(pedido)">
-      <ion-col>{{pedido.tipo|titlecase}}</ion-col>
+      <ion-col>{{(pedido.tipo?pedido.tipo:pedido.categoria)|titlecase}}</ion-col>
       <ion-col>{{pedido.modelo|titlecase}}</ion-col>
       <ion-col style=" display: flex; justify-content: space-evenly; align-items: center;">
         <ion-button (click)="notificarPorWhatsapp($event,pedido)" color="success"

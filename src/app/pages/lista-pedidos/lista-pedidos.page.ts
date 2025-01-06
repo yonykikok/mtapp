@@ -264,7 +264,7 @@ export class ListaPedidosPage implements OnInit {
       texto = event;
     }
     const query = !texto ? "" : texto.toLowerCase();
-    this.pedidosAMostrar = this.pedidos[this.listaSeleccionada].filter((ped: Pedido) => ped.modelo.toLowerCase().indexOf(query) > -1 || ped.tipo.toLowerCase().indexOf(query) > -1);
+    this.pedidosAMostrar = this.pedidos[this.listaSeleccionada].filter((ped: Pedido) => ped.modelo.toLowerCase().indexOf(query) > -1 || ped.tipo?.toLowerCase().indexOf(query) > -1|| ped.categoria?.toLowerCase().indexOf(query) > -1);
     this.pedidosAMostrar?.sort(this.compare.bind(this))
 
   }

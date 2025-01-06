@@ -194,6 +194,7 @@ export interface Pedido {
   tipo: string;
   conseguido: boolean,
   nota: string,
+  categoria:string,
   [key: string]: any;
 
 }
