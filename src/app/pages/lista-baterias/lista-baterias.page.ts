@@ -120,7 +120,7 @@ export class ListaBateriasPage implements OnInit {
   handleInput(event: any) {
     const query = event.target.value.toLowerCase();
     this.bateriasAMostrar = this.baterias.filter((d: any) =>
-        d.modelo.toLowerCase().includes(query) || d.codigo?.toLowerCase().includes(query)
+      d.modelo.toLowerCase().includes(query) ||d.marca.toLowerCase().includes(query) || d.codigo?.toLowerCase().includes(query)
     );
 }
 

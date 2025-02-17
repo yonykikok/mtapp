@@ -29,7 +29,7 @@ export class FormModuloComponent implements OnInit {
       margen: 0,
       precio: 0
     },
-    precio: 0
+    // precio: 0
   }
 
   //auto complete
@@ -49,7 +49,7 @@ export class FormModuloComponent implements OnInit {
 
   formModulo: FormGroup = new FormGroup({
     modelo: new FormControl('', Validators.required),
-    precio: new FormControl('', Validators.required),
+    // precio: new FormControl('', Validators.required),
     cantidad: new FormControl(0, Validators.required),
     marca: new FormControl('Samsung', Validators.required),
     color: new FormControl('Blanco', Validators.required),
@@ -151,7 +151,7 @@ export class FormModuloComponent implements OnInit {
   }
 
   obtenerObjetoModulo() {
-    const { calidad, modelo, marca, tipo, precio } = this.formModulo.value;
+    const { calidad, modelo, marca, tipo } = this.formModulo.value;
     let { stock } = this.nuevoModulo;
     stock.length <= 0 ? stock = [{ color: 'Blanco', cantidad: 0 }] : null;
     let modulo: Modulo = {
@@ -159,7 +159,7 @@ export class FormModuloComponent implements OnInit {
       modelo,
       marca,
       tipo,
-      precio,
+      // precio,
       stock,
       detallesFinancieros: {
         colocacion: 0,

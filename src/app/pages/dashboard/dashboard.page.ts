@@ -201,4 +201,16 @@ export class DashboardPage implements OnInit {
     console.log(algo)
 
   }
+
+  manejarPatronCompletado(patron: number[]) {
+    console.log('Patrón ingresado:', patron);
+  }
+
+  manejarValidacion(esValido: boolean) {
+    if (esValido) {
+      console.log('Patrón correcto');
+    } else {
+      console.log('Patrón incorrecto');
+    }
+  }
 }

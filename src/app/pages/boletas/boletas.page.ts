@@ -24,6 +24,7 @@ export const enum OrderByDireccions {
   styleUrls: ['./boletas.page.scss'],
 })
 export class BoletasPage implements OnInit {
+  fechaSeleccionada: string;
   busquedaPorInput: boolean = true;
   estadoSeleccionado!: boleta_estados;
   camposSeleccionados = ['nroBoleta', 'dniCliente', 'estado'];
@@ -36,7 +37,19 @@ export class BoletasPage implements OnInit {
 
       });
     },
-  }, {
+  },
+  {
+    text: 'Buscar boletas modificadas por fecha',
+    icon: 'calendar-outline',
+    handler: async () => {
+      // Aquí puedes usar una lógica para seleccionar la fecha
+      const fechaSeleccionada = await this.mostrarSelectorDeFecha();
+      if (fechaSeleccionada) {
+        this.onFechaSeleccionada(fechaSeleccionada);
+      }
+    },
+  },
+  {
     text: 'Cancelar',
     role: 'cancel',
     icon: 'close',
@@ -62,6 +75,7 @@ export class BoletasPage implements OnInit {
     private toastService: ToastService,
     public funcionesUtiles: FuncionesUtilesService) {
     this.getCurrentUser();
+    this.fechaSeleccionada = new Date().toISOString();
 
   }
   ngOnInit(): void {//obtenemos las boletas modificadas del dia.
@@ -91,6 +105,65 @@ export class BoletasPage implements OnInit {
     //   })
     //   console.log(boletas);
     // })
+  }
+
+  async mostrarSelectorDeFecha(): Promise<string | null> {
+    return new Promise((resolve) => {
+      // Utilizamos un AlertController para simular el selector de fecha
+      const alert = document.createElement('ion-alert');
+      alert.header = 'Seleccionar fecha';
+      alert.inputs = [
+        {
+          name: 'fecha',
+          type: 'date', // Input tipo fecha
+          value: this.fechaSeleccionada || '', // Fecha previa seleccionada (si existe)
+        },
+      ];
+      alert.buttons = [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => resolve(null),
+        },
+        {
+          text: 'Aceptar',
+          handler: (data) => resolve(data.fecha),
+        },
+      ];
+
+      document.body.appendChild(alert);
+      alert.present();
+    });
+  }
+  onFechaSeleccionada(fechaSeleccionada: string) {
+    console.log('Fecha seleccionada:', fechaSeleccionada);
+
+    // Dividir manualmente para evitar problemas de zona horaria
+    const [year, month, day] = fechaSeleccionada.split('-').map(Number);
+    const fechaAjustada = new Date(year, month - 1, day); // Crear fecha ajustada
+
+    console.log('Fecha seleccionada ajustada:', fechaAjustada);
+
+    // Llamar al método para buscar boletas por fecha
+    this.traerBoletasPorFecha(fechaAjustada);
+  }
+
+
+  traerBoletasPorFecha(fechaSeleccionada: Date) {
+    this.dataBase.obtenerBoletasPorFechaDeModificacion(environment.TABLAS.boletasReparacion, fechaSeleccionada)
+      .then((res: any) => {
+        if (!res || res.length === 0) {
+          this.boletasAMostrar = [];
+          console.log('No hay boletas modificadas en la fecha seleccionada.');
+          return;
+        }
+
+        this.boletasAMostrar = res;
+        console.log('Boletas modificadas en la fecha:', this.boletasAMostrar);
+      })
+      .catch(err => {
+        console.error('Error al traer boletas por fecha:', err);
+      });
   }
 
   setOpen(isOpen: boolean) {

@@ -15,6 +15,7 @@ import { FormAgregarItemDeudaComponent } from 'src/app/components/forms/form-agr
 import { FormDeudorComponent } from 'src/app/components/forms/form-deudor/form-deudor.component';
 import { ClienteAcreedorComponent } from 'src/app/components/cliente-acreedor/cliente-acreedor.component';
 import { FormAcreedorComponent } from 'src/app/components/forms/form-acreedor/form-acreedor.component';
+import { HistorialCuentaClienteComponent } from 'src/app/components/historial-cuenta-cliente/historial-cuenta-cliente.component';
 
 @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import { FormAcreedorComponent } from 'src/app/components/forms/form-acreedor/fo
     FormAgregarPagoDeudaComponent,
     FormAgregarItemDeudaComponent,
     FormDeudorComponent,
-    ClienteAcreedorComponent, FormAcreedorComponent]
+    ClienteAcreedorComponent, FormAcreedorComponent,
+    HistorialCuentaClienteComponent]
 })
 export class CuentasClientesModule { }

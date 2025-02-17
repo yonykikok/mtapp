@@ -21,10 +21,28 @@ interface Pago {
   concepto: string,
   fecha: number
 }
+export interface Historial {
+  items: HistorialItem[]; // Lista de productos comprados
+  pagos: HistorialPago[]; // Lista de pagos realizados
+}
+
+export interface HistorialItem {
+  producto: string;       // Nombre del producto
+  fecha: number;          // Fecha del producto en formato timestamp
+  precio: number;         // Precio del producto
+}
+
+export interface HistorialPago {
+  concepto: string;       // Concepto del pago (efectivo, transferencia, etc.)
+  fecha: number;          // Fecha del pago en formato timestamp
+  monto: number;          // Monto del pago
+}
+
 export interface Deudor {
   telefono: string,
   apellido: string,
   fechaLimite: FechaLimite,
+  historial: Historial[],
   deudaTotal: number,
   dni: string,
   direccion: string,
@@ -87,7 +105,8 @@ export class CuentasClientesPage implements OnInit {
 
   ngOnInit(): void {
     //LISTA DEUDORES
-    this.database.obtenerTodos(environment.TABLAS.deudores).subscribe(deudoresListRef => {
+    let subs = this.database.obtenerTodos(environment.TABLAS.deudores).subscribe(deudoresListRef => {
+      subs.unsubscribe();
       this.listaClientes.deudores = deudoresListRef.map(deudorRef => {
         let deudor: Deudor = deudorRef.payload.doc.data() as Deudor;
         deudor['id'] = deudorRef.payload.doc.id;
@@ -95,6 +114,7 @@ export class CuentasClientesPage implements OnInit {
       });
       this.listaAMostrar = [...this.listaClientes.deudores];
       this.ordenarLista(this.listaAMostrar);
+      console.log(this.listaAMostrar)
 
       this.totalFiado = this.listaClientes.deudores.reduce((suma: number, deudor: any) => {
         return suma + (deudor.items.reduce((suma: number, item: any) => suma + item.precio, 0) - deudor.pagos.reduce((suma: number, pago: any) => suma + pago.monto, 0));

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ModalController } from '@ionic/angular';
+import { LoadingController, ModalController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { User } from 'src/app/clases/user';
 import { FormModuloComponent } from 'src/app/components/forms/form-modulo/form-modulo.component';
@@ -31,6 +31,7 @@ export class ListaModulosPage implements OnInit {
     private authService: AuthService,
     public funcionesUtiles: FuncionesUtilesService,
     private modalController: ModalController,
+    private loadingCtrl:LoadingController,
     private database: DataBaseService,
     private toastService: ToastService) {
 
@@ -62,54 +63,41 @@ export class ListaModulosPage implements OnInit {
       });
       lista = this.ordenarListaPor(lista, 'modelo', 'precio');
       this.modulos = lista;
+
+      this.modulos.map(mod => {
+        mod = this.ajustarPrecio(mod);
+      });
+      console.log(this.modulos)
+
       this.modulosAMostrar = [...this.modulos];
 
-      // let calidadesModulos = ['AAA', 'GenMedCalidad', 'GenBueno', 'Estandar', 'Original Oled', 'Original Certificado'];
 
-      // this.modulos.forEach((placa: any) => {
+      // this.modulos.forEach(mod=>{
+      //   this.dataBase.actualizar(environment.TABLAS.modulos, mod, mod.id)?.then(() => {
+      //     console.log("ok")
+      //   });
+      // })
 
-      //   switch (placa.calidad) {
-      //     case 'AAA':
-      //       placa.detallesFinancieros = {
-      //         colocacion: 14,
-      //         costo: 0,
-      //         margen: 4,
-      //         precio: 0 + 4 + 14,
-      //       }
-      //       break;
-      //     case 'GenMedCalidad':
-      //     case 'GenBueno':
-      //     case 'Estandar':
-      //       placa.detallesFinancieros = {
-      //         colocacion: 14,
-      //         costo: 0,
-      //         margen: 4,
-      //         precio: 0 + 4 + 14,
-      //       }
-      //       break;
-      //     case 'Original Oled':
-      //       placa.detallesFinancieros = {
-      //         colocacion: 14,
-      //         costo: 0,
-      //         margen: 4,
-      //         precio: 0 + 4 + 14,
-      //       }
-      //       break;
-
-      //     default:
-      //       break;
-      //   }
-
-      //   let nuevaPlaca = placa;
-
-      //   console.log(placa)
-      //   // this.dataBase.actualizar(environment.TABLAS.modulos, nuevaPlaca, nuevaPlaca.id)?.then(() => {
-      //   //   console.log("ok")
-      //   // });
-      // });
     });
 
 
+  }
+
+  ajustarPrecio(producto: any) {
+    const precioFinanciero = producto.detallesFinancieros.costo +
+      producto.detallesFinancieros.margen +
+      producto.detallesFinancieros.colocacion;
+
+    if (producto.precio > precioFinanciero) {
+      // Ajustar colocación para que el precio financiero sea igual al producto.precio
+      producto.detallesFinancieros.colocacion += (producto.precio - precioFinanciero);
+      producto.detallesFinancieros.precio = (producto.detallesFinancieros.costo + producto.detallesFinancieros.margen + producto.detallesFinancieros.colocacion);
+    } else if (producto.precio < precioFinanciero) {
+      // Ajustar producto.precio para que sea igual al precio financiero
+      producto.precio = precioFinanciero;
+    }
+
+    return producto;
   }
 
   ordenarListaPor(lista: any[], criterio: string, criterio2: string) {
@@ -198,12 +186,25 @@ export class ListaModulosPage implements OnInit {
 
   }
 
-  guardar(e: Event, modulo: Modulo) {
+  async guardar(e: Event, modulo: Modulo) {
     e.stopPropagation();
     if (modulo.id) {
-      this.dataBase.actualizar(environment.TABLAS.modulos, modulo, modulo.id);
+      const loading = await this.loadingCtrl.create({
+        message: 'Guardando...',
+        spinner: 'crescent', // Puedes cambiarlo a 'dots', 'bubbles', etc.
+      });
+    
+      await loading.present(); // Muestra el spinner
+    
+      try {
+        await this.dataBase.actualizar(environment.TABLAS.modulos, modulo, modulo.id);
+        this.toastService.simpleMessage('Guardado', 'Se actualizó el valor', ToastColor.success);
+      } catch (error) {
+        this.toastService.simpleMessage('Error', 'No se pudo actualizar', ToastColor.danger);
+      } finally {
+        await loading.dismiss(); // Oculta el spinner
+      }
     }
-
   }
   actualizarDatosFinancieros(modulo: Modulo) {
     modulo.detallesFinancieros.precio = modulo.detallesFinancieros.costo + modulo.detallesFinancieros.colocacion + modulo.detallesFinancieros.margen;

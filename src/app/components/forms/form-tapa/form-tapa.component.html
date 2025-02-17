@@ -1,0 +1,70 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'repuestos/lista-tapas'" [title]="'Agregar tapa'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card class="d-flex justify-content-center">
+
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">
+        <b>
+          Agregar Tapa
+        </b>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+
+      <form class="card p-3 m-3 col-lg-6" [formGroup]="formTapa">
+
+        <ion-item class="ion-margin">
+          <ion-input type="text" placeholder="Escriba el modelo" aria-label="Tapa" formControlName="modelo">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="ion-margin">
+          <ion-select aria-label="Marca" placeholder="Seleccione la marca" formControlName="marca">>
+            <ion-select-option *ngFor="let marca of marcas" [value]="marca">{{marca}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+
+        <ion-item class="ion-margin">
+          <ion-select aria-label="Calidad" placeholder="Seleccione la calidad" formControlName="calidad">>
+            <ion-select-option *ngFor="let calidad of calidades" [value]="calidad">{{calidad}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item class="ion-margin">
+          <ion-input type="number" placeholder="cantidad en stock" formControlName="stock"></ion-input>
+        </ion-item>
+
+        <ion-item class="ion-margin">
+          <ion-input type="text" placeholder="Ej: version 'M', version de 20 patas" aria-label="version"
+            formControlName="version">
+          </ion-input>
+        </ion-item>
+
+        <svg width="200" height="400" viewBox="0 0 200 400" xmlns="http://www.w3.org/2000/svg">
+          <rect id="iphone-back" x="10" y="10" width="180" height="380" rx="30" ry="30" stroke="#222" stroke-width="2"
+            [attr.fill]="selectedColor"></rect>
+
+          <!-- Módulo de cámaras con color más oscuro -->
+          <rect x="20" y="20" width="80" height="80" rx="20" ry="20" [attr.fill]="darkerColor"></rect>
+
+          <!-- Cámaras y sensores -->
+          <circle cx="42" cy="42" r="18" fill="white"></circle>
+          <circle cx="82" cy="38" r="9" fill="white"></circle>
+          <circle cx="40" cy="82" r="3" fill="white"></circle>
+          <circle cx="78" cy="78" r="18" fill="white"></circle>
+          <circle cx="100" cy="200" r="35" fill="white"></circle>
+        </svg>
+
+
+        <input type="color" [(ngModel)]="selectedColor" (ngModelChange)="updateDarkerColor()">
+
+        <ion-button type="submit" color="primary" expand="block" [disabled]="!formTapa.valid"
+          (click)="procesarAltaTapa()">Agregar</ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

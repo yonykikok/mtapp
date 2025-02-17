@@ -12,6 +12,7 @@ import { ModalController } from '@ionic/angular';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DOC_ORIENTATION, NgxImageCompressService } from 'ngx-image-compress';
 import { boleta } from 'src/app/pages/mis-reparaciones/mis-reparaciones.page';
+import { PatronDeBloqueoComponent } from '../../patron-de-bloqueo/patron-de-bloqueo.component';
 firebase.initializeApp(environment.firebaseConfig);
 
 
@@ -142,5 +143,15 @@ export class FormAltaReparacionComponent implements OnInit {
     )
   }
 
+  async mostrarPatronDeBloqueoComponent() {
+    let modal = await this.modalController.create({
+      component: PatronDeBloqueoComponent,
+      componentProps: {
+        patronPredefinido: [1, 2, 3],
+        soloLectura: false
+      }
+    })
+    modal.present();
+  }
 
 }

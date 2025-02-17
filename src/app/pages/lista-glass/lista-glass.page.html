@@ -18,7 +18,13 @@
   </ion-item>
 
   <ion-searchbar show-clear-button="focus" placeholder="J7 prime" (ionInput)="handleInput($event)"></ion-searchbar>
-
+  <div class="flexCenterCenter">
+    <ion-card color="dark">
+      <ion-card-content>
+        GLASS + OCA
+      </ion-card-content>
+    </ion-card>
+  </div>
   <ion-grid class="ion-text-center">
     <ion-row>
       <ion-col *ngIf="camposSeleccionados.includes('marca')"><b>Marca</b></ion-col>

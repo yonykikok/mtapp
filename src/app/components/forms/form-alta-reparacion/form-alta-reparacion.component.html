@@ -48,6 +48,11 @@
             formControlName="telefono"></ion-input>
         </ion-item>
 
+        <ion-button expand="block" size="small" class="ion-margin-top" color="secondary" (click)="mostrarPatronDeBloqueoComponent()"> 
+          <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+          Agregar patron de bloqueo
+        </ion-button>
+
         <ion-button expand="block" class="ion-margin-top" type="submit"
           [disabled]="!formAltaReparacion.valid|| !imgVistaPrevia">
           Generar reparacion

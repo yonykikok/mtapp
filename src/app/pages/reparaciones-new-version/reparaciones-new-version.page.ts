@@ -21,6 +21,7 @@ export class ReparacionesNewVersionPage implements OnInit {
     { titulo: 'Baterias', color: 'rgb(156 242 206);', ruta: "baterias", role: 'CLIENTE', img: '/assets/svg/icons/baterias.png' },
     { titulo: 'Flex de carga', color: 'rgb(156 242 206);', ruta: "flex", role: 'CLIENTE', img: '/assets/svg/icons/placaDeCarga.png' },
     { titulo: 'Glass + Oca', color: 'rgb(156 242 206);', ruta: "glass", role: 'EMPLEADO', img: 'https://i.ebayimg.com/images/g/1AsAAOSw0tBk0~dZ/s-l1600.png' },
+    { titulo: 'Tapas', color: 'rgb(156 242 206);', ruta: "tapas", role: 'EMPLEADO', img: 'https://spainelectro.com/11844-medium_default/pantalla-iphone-13-oled.jpg' },
     { titulo: 'Servicios', color: 'rgb(156 242 206);', ruta: "servicios", role: 'EMPLEADO', img: '/assets/svg/icons/servicios.svg' },
 
 

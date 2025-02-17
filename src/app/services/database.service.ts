@@ -158,43 +158,6 @@ export class DataBaseService {
     }
   }
 
-  // async paginatorNext(collection: string, interval: number, lastDoc) {
-  //   let collectionRef = this.firestore.collection(collection).ref;
-  //   try {
-  //     const respuesta = await collectionRef.
-  //       orderBy('title', 'asc').
-  //       limit(interval).
-  //       startAfter(lastDoc).
-  //       get();
-
-  //     if (respuesta.empty) return;
-
-
-  //     return respuesta.docs;
-
-  //   } catch (err) {
-  //     //console.error(err);
-  //   }
-  // }
-
-
-  // async paginatorPrevious(collection: string, interval: number, firstDoc) {
-  //   let collectionRef = this.firestore.collection(collection).ref;
-  //   try {
-  //     const respuesta = await collectionRef.
-  //       orderBy('title', 'desc').
-  //       limit(interval).
-  //       startAfter(firstDoc).
-  //       get();
-
-  //     if (respuesta.empty) return;
-  //     return respuesta.docs.reverse();
-
-  //   } catch (err) {
-  //     //console.error(err);
-  //   }
-  // }
-
   async getLibrosDiariosMensual(fechaInput: any) {
     let collectionRef = this.firestore.collection(environment.TABLAS.ingresos).ref;
 
@@ -290,6 +253,36 @@ export class DataBaseService {
     }
   }
 
+  async obtenerBoletasPorFechaDeModificacion(coleccion: string, fechaSeleccionada: Date) {
+    const collectionRef = this.firestore.collection(coleccion).ref;
+  
+    try {
+      // Convertimos la fecha seleccionada a rangos de inicio y fin del día
+      const inicioDelDia = new Date(fechaSeleccionada);
+      inicioDelDia.setHours(0, 0, 0, 0); // Inicio del día
+      const finDelDia = new Date(fechaSeleccionada);
+      finDelDia.setHours(23, 59, 59, 999); // Fin del día
+  
+      const inicioTimestamp = inicioDelDia.getTime();
+      const finTimestamp = finDelDia.getTime();
+  
+      // Consultamos en Firestore con un rango entre el inicio y fin del día
+      const respuesta = await collectionRef
+        .where('fechaUltimoCambioDeEstado', '>=', inicioTimestamp)
+        .where('fechaUltimoCambioDeEstado', '<=', finTimestamp)
+        .get();
+  
+      if (respuesta.empty) return null;
+  
+      // Retornamos los documentos mapeados
+      return respuesta.docs.map((doc:any) => ({ id: doc.id, ...doc.data() }));
+    } catch (err) {
+      console.error(`Error al obtener boletas por fecha: ${err}`);
+      throw err;
+    }
+  }
+  
+
   async obtenerBoletasDuplicadas(coleccion: any) {
     let collectionRef = this.firestore.collection(coleccion).ref;
     try {
@@ -318,6 +311,7 @@ export class DataBaseService {
         }
       });
 
+      console.log(boletasDuplicadas)
       return boletasDuplicadas;
 
     } catch (err) {
@@ -375,11 +369,6 @@ export class DataBaseService {
       return null;
     }
   }
-
-
-
-
-
 
 
   public obtenerUltimos60dias(coleccion: string): Observable<any[]> {

@@ -19,7 +19,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./detalle-reparacion.component.scss'],
 })
 export class DetalleReparacionComponent implements OnInit {
-  isModal:boolean=true;
+  @Input() isModal: boolean = true;
   subiendoImagen: boolean = false;
   editarDetalle = false;
   @Input() ruta: string = '';

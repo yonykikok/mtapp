@@ -1,0 +1,98 @@
+<ion-header>
+  <app-clasic-toolbar [ruta]="'/repuestos/lista-flex-de-carga'" [title]="'Detalle del flex'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Acciones" [buttons]="actionSheetButtons"
+    (didDismiss)="setOpen(false)"></ion-action-sheet>
+  <ion-card>
+
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">
+        <b> Informacion de modelo</b>
+      </ion-card-title>
+      <ion-icon (click)="mostrarOpciones()" name="ellipsis-vertical-outline" style="position: absolute; right: 1rem; top: 1rem;"
+        *ngIf="funcionesUtiles.roleMinimoNecesario(roles.OWNER, this.loggedUser)" ion-stroked-ion-button
+        color="tertiary"></ion-icon>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item class="ion-text-center">
+        <b>Marca: </b> {{clonRepuesto.marca}}
+        <ion-icon slot="end" name="create-outline" (click)="mostrar('editMarca')"></ion-icon>
+      </ion-item>
+      <ion-item class="ion-text-center">
+        <b>Modelo: </b> {{clonRepuesto.modelo}}
+        <ion-icon slot="end" name="create-outline" (click)="mostrar('editModelo')"></ion-icon>
+      </ion-item>
+      <!-- <ion-item>
+        <b>Precio: </b> {{clonRepuesto.precio|currency:'USD':'symbol':'1.0-0'}} USD
+        <ion-icon slot="end" name="create-outline" (click)="mostrar('editPrecio')"></ion-icon>
+      </ion-item> -->
+      <ion-item>
+        <b>Calidad: </b> {{clonRepuesto.calidad}}
+        <ion-icon slot="end" name="create-outline" (click)="mostrar('editCalidad')"></ion-icon>
+      </ion-item>
+      <ion-item>
+        <b>Stock: </b> {{clonRepuesto.stock}}
+        <ion-icon slot="end" name="create-outline" (click)="mostrar('editStock')"></ion-icon>
+      </ion-item>
+      <ion-item>
+        <b>Version: </b> {{clonRepuesto.version}}
+        <ion-icon slot="end" name="create-outline" (click)="mostrar('editVersion')"></ion-icon>
+      </ion-item>
+
+      <hr>
+
+
+
+      <!-- EDIT MARCA -->
+      <ion-item *ngIf="editMarca" class="ion-margin">
+        <ion-select aria-label="Calidades" placeholder="Seleccione la calidad" [(ngModel)]="clonRepuesto.marca">
+          <ion-select-option *ngFor="let marca of marcas" [value]="marca">{{marca}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <!-- FIN EDIT MARCA -->
+
+      <!-- EDIT MODELO -->
+      <ion-item *ngIf="editModelo" class="ion-margin">
+        <ion-input type="text" placeholder="Escriba el modelo" aria-label="Modulo" [(ngModel)]="clonRepuesto.modelo">
+        </ion-input>
+      </ion-item>
+      <!-- FIN EDIT MODELO -->
+
+      <!-- EDIT PRECIO -->
+      <!-- <ion-item *ngIf="editPrecio" class="ion-margin">
+        <ion-input type="number" placeholder="precio en dolares" [(ngModel)]="clonRepuesto.precio"></ion-input>
+      </ion-item> -->
+      <!-- FIN EDIT PRECIO -->
+
+      <!-- EDIT CALIDAD -->
+      <ion-item *ngIf="editCalidad" class="ion-margin">
+        <ion-select aria-label="Calidad" placeholder="Seleccione la calidad" [(ngModel)]="clonRepuesto.calidad">
+          <ion-select-option *ngFor="let calidad of calidades" [value]="calidad">{{calidad}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <!-- FIN EDIT CALIDAD -->
+      <!-- EDIT STOCK -->
+      <ion-item *ngIf="editStock" class="ion-margin">
+        <ion-input type="number" placeholder="Cantidad en stock" [(ngModel)]="clonRepuesto.stock"></ion-input>
+      </ion-item>
+      <!-- FIN EDIT STOCK -->
+      <!-- EDIT VERSION -->
+      <ion-item *ngIf="editVersion" class="ion-margin">
+        <ion-input type="text" placeholder="Ej: version 'M', version de 20 patas" aria-label="version"
+          [(ngModel)]="clonRepuesto.version">
+        </ion-input>
+      </ion-item>
+      <!-- FIN EDIT VERSION -->
+
+      <ion-button class="ion-margin" expand="block" ion-stroked-ion-button color="primary"
+        (click)="showSaveDialog()">Guardar</ion-button>
+      <ion-button class="ion-margin" expand="block" ion-stroked-ion-button color="danger"
+        (click)="showDeleteDialog()">Borrar
+        <ion-icon slot="end" name="trash-outline"></ion-icon></ion-button>
+
+    </ion-card-content>
+  </ion-card>
+</ion-content>

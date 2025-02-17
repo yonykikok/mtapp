@@ -165,6 +165,10 @@ const routes: Routes = [
     path: 'historial-caja-new',
     loadChildren: () => import('./pages/historial-caja-new/historial-caja-new.module').then( m => m.HistorialCajaNewPageModule)
   },
+  {
+    path: 'lista-tapas',
+    loadChildren: () => import('./pages/lista-tapas/lista-tapas.module').then( m => m.ListaTapasPageModule)
+  },
 
 
 

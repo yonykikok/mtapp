@@ -13,7 +13,7 @@
 
       <div class="flexCenterCenter" style="flex-wrap: wrap; align-items: flex-start;">
 
-        <app-detalle-reparacion *ngFor="let reparacion of reparacionesAMostrar"  [loggedUser]="loggedUser" [reparacion]="reparacion" [ruta]="'/mis-reparaciones'">
+        <app-detalle-reparacion *ngFor="let reparacion of reparacionesAMostrar"  [loggedUser]="loggedUser" [reparacion]="reparacion" [ruta]="'/mis-reparaciones'" [isModal]="false">
           
         </app-detalle-reparacion>
       </div>

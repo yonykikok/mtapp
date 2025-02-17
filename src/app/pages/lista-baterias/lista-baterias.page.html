@@ -27,6 +27,13 @@
 
   <ion-searchbar show-clear-button="focus" placeholder="A20s" (ionInput)="handleInput($event)"></ion-searchbar>
 
+  <div class="flexCenterCenter">
+    <ion-card color="dark">
+      <ion-card-content>
+        BATERIAS
+      </ion-card-content>
+    </ion-card>
+  </div>
   <ion-grid class="ion-text-center">
     <ion-row>
       <ion-col *ngIf="camposSeleccionados.includes('marca')"><b>Marca</b></ion-col>

@@ -1,9 +1,9 @@
-<ion-header  *ngIf="!modoComponent">
-  <app-clasic-toolbar [ruta]="'/repuestos'" [title]="'Lista de flexDeCargas'"></app-clasic-toolbar>
+<ion-header *ngIf="!modoComponent">
+  <app-clasic-toolbar [ruta]="'/repuestos'" [title]="'Lista de tapas'"></app-clasic-toolbar>
 </ion-header>
 
 
-<ion-content *ngIf="flexDeCargas && loggedUser">
+<ion-content *ngIf="tapas && loggedUser">
   <app-precio-dolar [loggedUser]="loggedUser"
     *ngIf="loggedUser && funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)"></app-precio-dolar>
 
@@ -27,18 +27,18 @@
   </ion-item>
 
   <ion-searchbar show-clear-button="focus" placeholder="A20s" (ionInput)="handleInput($event)"></ion-searchbar>
+
+  <!-- <div class="ion-text-center">
+    <ion-chip color="tertiary" class="no-radius" (click)="mostrarImagenCompleta()">Ver diferencias entre
+      calidades</ion-chip>
+  </div> -->
   <div class="flexCenterCenter">
     <ion-card color="dark">
       <ion-card-content>
-        FLEX DE CARGA
+        TAPAS
       </ion-card-content>
     </ion-card>
   </div>
-  <div class="ion-text-center">
-    <ion-chip color="tertiary" class="no-radius" (click)="mostrarImagenCompleta()">Ver diferencias entre
-      calidades</ion-chip>
-  </div>
-  
   <ion-grid class="ion-text-center">
     <ion-row>
       <ion-col *ngIf="camposSeleccionados.includes('marca')"><b>Marca</b></ion-col>
@@ -51,33 +51,33 @@
       <ion-col *ngIf="camposSeleccionados.includes('stock')"><b>Stock</b></ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('version')"><b>Version</b></ion-col>
     </ion-row>
-    <ion-row *ngFor="let flexDeCarga of flexDeCargasAMostrar">
+    <ion-row *ngFor="let tapa of tapasAMostrar">
       <ion-item-sliding>
         <ion-item class="ion_item" lines="none"
-          (click)="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)? seleccionar(flexDeCarga):''">
-          <ion-col *ngIf="camposSeleccionados.includes('marca')">{{flexDeCarga.marca | titlecase}}</ion-col>
-          <ion-col *ngIf="camposSeleccionados.includes('modelo')">{{flexDeCarga.modelo | titlecase}}
-            <div *ngIf="flexDeCarga.version">
-              <ion-text color="danger"> Version: "{{flexDeCarga.version | titlecase}}"</ion-text>
+          (click)="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)? seleccionar(tapa):''">
+          <ion-col *ngIf="camposSeleccionados.includes('marca')">{{tapa.marca | titlecase}}</ion-col>
+          <ion-col *ngIf="camposSeleccionados.includes('modelo')">{{tapa.modelo | titlecase}}
+            <div *ngIf="tapa.version">
+              <ion-text color="danger"> Version: "{{tapa.version | titlecase}}"</ion-text>
             </div>
           </ion-col>
           <!--  -->
           <ion-col *ngIf=" camposSeleccionados.includes('precio')">
 
-            {{(flexDeCarga.detallesFinancieros?
+            {{(tapa.detallesFinancieros?
             mostrarPrecioSinColocacion
-            ?(flexDeCarga.detallesFinancieros.precio-flexDeCarga.detallesFinancieros.colocacion)
-            :flexDeCarga.detallesFinancieros.precio
+            ?(tapa.detallesFinancieros.precio-tapa.detallesFinancieros.colocacion)
+            :tapa.detallesFinancieros.precio
             :0) * precioDolarBlue | currency:
             'USD':'symbol':'1.0-0' }}
           </ion-col>
-          <ion-col *ngIf="camposSeleccionados.includes('calidad')">{{flexDeCarga.calidad}}</ion-col>
+          <ion-col *ngIf="camposSeleccionados.includes('calidad')">{{tapa.calidad}}</ion-col>
           <ion-col *ngIf="camposSeleccionados.includes('stock')"
-            (click)="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)? seleccionarStock($event, flexDeCarga):''">{{flexDeCarga.stock}}</ion-col>
-          <ion-col *ngIf="camposSeleccionados.includes('version')">{{flexDeCarga.version}}</ion-col>
+            (click)="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)? seleccionarStock($event, tapa):''">{{tapa.stock}}</ion-col>
+          <ion-col *ngIf="camposSeleccionados.includes('version')">{{tapa.version}}</ion-col>
         </ion-item>
         <ion-item-options side="end" *ngIf="funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)">
-          <ion-item-option color="danger" (click)="eliminarFlexDeCarga(flexDeCarga)">
+          <ion-item-option color="danger" (click)="eliminarTapa(tapa)">
             Eliminar
           </ion-item-option>
         </ion-item-options>
@@ -98,7 +98,6 @@
 </ion-content>
 <!-- FORM MODIFICAR STOCK RAPIDO -->
 <app-modificador-de-stock-rapido *ngIf="showStockDialog" (actualizarStockEvent)="actualizarModuloEnFirebase($event)"
-  (cerrarModificadorEvent)="showStockDialog=false;"
-  [stockEditable]="placaDeCargaSeleccionada.stock?placaDeCargaSeleccionada.stock:0">
+  (cerrarModificadorEvent)="showStockDialog=false;" [stockEditable]="tapaSeleccionada.stock?tapaSeleccionada.stock:0">
 </app-modificador-de-stock-rapido>
 <!-- FIN FORM MODIFICAR STOCK RAPIDO -->

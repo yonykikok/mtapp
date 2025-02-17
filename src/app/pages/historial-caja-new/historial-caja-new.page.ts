@@ -186,8 +186,8 @@ export class HistorialCajaNewPage implements OnInit {
     this.database.obtenerPorId(environment.TABLAS.ingresosNuevoLibro, idFecha).subscribe(res => {
       let libroDiarioDelDia: LibroDiario = res.payload.data() as LibroDiario;
       libroDiarioDelDia['id'] = res.payload.id;
-    console.log(libroDiarioDelDia)
-      
+      console.log(libroDiarioDelDia)
+
       this.mostrarDialogLibroDiario(libroDiarioDelDia);
     })
   }
@@ -243,7 +243,7 @@ export class HistorialCajaNewPage implements OnInit {
           return 0;
         }
       });
-      
+
       mostrarBuscador ? this.mostrarBuscadorPorTexto() : null;
     })
 
@@ -291,7 +291,7 @@ export class HistorialCajaNewPage implements OnInit {
   }
 
   async mostrarBuscadorPorTexto() {
-    
+
     try {
       const modal = await this.modalController.create({
         component: BusquedaPorTextoComponent,
@@ -405,8 +405,6 @@ export class HistorialCajaNewPage implements OnInit {
     }
 
   }
-
-
 
 }
 

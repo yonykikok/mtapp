@@ -12,6 +12,7 @@ import { VerificationCodeComponent } from '../verification-code/verification-cod
 import { User } from 'src/app/clases/user';
 import { Deudor } from 'src/app/pages/deudores/cuentas-clientes.page';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
+import { HistorialCuentaClienteComponent } from '../historial-cuenta-cliente/historial-cuenta-cliente.component';
 
 @Component({
   selector: 'app-deuda-cliente',
@@ -213,12 +214,22 @@ export class DeudaClienteComponent {
   solicitarConfirmacion(event: any, deudor: Deudor) {
     event.stopPropagation();
     this.alertService.alertConfirmacion('Confirmación', '¿Quiere enviarle un mensaje al cliente en este momento?', 'Si', () => {
-      this.abrirWhatsApp(deudor,'')
+      this.abrirWhatsApp(deudor, '')
     });
   }
 
   abrirWhatsApp(deudor: Deudor, mensaje: string) {
     const url = `https://api.whatsapp.com/send?phone=+54${deudor.telefono}&text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_system');
+  }
+
+  async mostrarHistorialCliente(deudor: Deudor) {
+    let modal = await this.modalController.create({
+      component: HistorialCuentaClienteComponent,
+      componentProps: {
+        cliente: deudor
+      }
+    })
+    modal.present();
   }
 }

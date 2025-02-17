@@ -161,7 +161,7 @@ export interface Modulo {
   // color: string;
   tipo: string;
   calidad: string;
-  precio:number,
+  // precio:number,
   stock: any[]
 }
 export interface StockModulo {
@@ -227,6 +227,7 @@ export class InfoCompartidaService {
   calidadesModulos = ['AAA', 'GenMedCalidad', 'GenBueno', 'Estandar', 'Original Oled', 'Original Certificado'];
   calidadesModulosProveedores = ['AAA', 'Incell', 'GenBueno', 'Oled', 'Original'];
   calidadesFlexDecarga = ['AAA', 'Mechanic', 'Original', 'Original Certificado'];
+  calidadesTapas = ['Estandar','Premium', 'Original', 'Original Certificada'];
   coloresModulos = ['Blanco', 'Negro', 'Gris', 'Dorado', 'Celeste'];
   tiposModulos = ['Simple', 'C/M'];
 

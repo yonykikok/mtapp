@@ -1,0 +1,12 @@
+<ion-header>
+  <app-clasic-toolbar [isModal]="true"  [title]="'Patrones'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content>
+  <div style="display: flex; align-items: center; flex-direction: column;">
+    <ion-chip>{{patronPredefinido}}</ion-chip>
+    <canvas #patronCanvas class="canvas" (touchstart)="iniciarDibujo($event)"
+      (touchmove)="manejarMovimientoTactil($event)" (touchend)="detenerDibujo()"></canvas>
+    <ion-button (click)="dibujarCuadriculaPatron()">Reiniciar</ion-button>
+  </div>
+</ion-content>

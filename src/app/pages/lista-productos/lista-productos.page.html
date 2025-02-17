@@ -15,7 +15,7 @@
   <ion-searchbar animated="true" placeholder="Ej: Cargador" (ionInput)="filtrarProductos($event)"></ion-searchbar>
 
   <ion-list class="card-grid">
-    <ion-card
+    <ion-card [disabled]="!producto.stockTotal || producto.stockTotal <= 0"
       (click)="funcionesUtiles.roleMinimoNecesario(roles.EMPLEADO, this.loggedUser)? mostrarOpciones(producto):null"
       *ngFor="let producto of productosAMostrar; let index = index" style="margin: 0.2rem;" class="card">
       <!-- <ion-toolbar class="header">
@@ -85,7 +85,7 @@
               <ion-icon class="ion-margin-start" name="create-outline"></ion-icon>
             </ion-chip>
           </div>
-          <ion-text><b>Stock: {{ producto.stockTotal?producto.stockTotal:0 }}</b></ion-text>
+          <!-- <ion-text><b>Stock: {{ producto.stockTotal?producto.stockTotal:0 }}</b></ion-text> -->
         </div>
       </ion-card-content>
       <ion-footer style="position: absolute; bottom: 0;">
