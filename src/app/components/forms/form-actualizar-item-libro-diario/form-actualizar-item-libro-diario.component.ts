@@ -17,7 +17,9 @@ export class FormActualizarItemLibroDiarioComponent implements OnInit {
   constructor(private alertService: AlertService,
     private modalController: ModalController) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    console.log(this.item)
+  }
   mostrarConfirmacion() {
     this.alertService.alertConfirmacion('Confirmación', '¿Seguro que quiere hacer este cambio?', 'Si', () => {
       this.modalController.dismiss(this.item, 'confirmarActualizacion');

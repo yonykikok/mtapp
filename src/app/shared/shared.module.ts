@@ -22,6 +22,7 @@ import { RedondearPrecioPipe } from 'src/app/redondear-precio.pipe';
 import { SelectorDeProductosComponent } from '../components/selector-de-productos/selector-de-productos.component';
 import { ModificadorDeStockRapidoComponent } from '../components/modificador-de-stock-rapido/modificador-de-stock-rapido.component';
 import { FormDetallesFinancierosComponent } from '../components/form-detalles-financieros/form-detalles-financieros.component';
+import { PatronDeBloqueoComponent } from '../components/patron-de-bloqueo/patron-de-bloqueo.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { FormDetallesFinancierosComponent } from '../components/form-detalles-fi
     RedondearPrecioPipe,
     SelectorDeProductosComponent,
     ModificadorDeStockRapidoComponent,
-    FormDetallesFinancierosComponent
+    FormDetallesFinancierosComponent,
+    PatronDeBloqueoComponent
 
   ],
   imports: [
@@ -75,9 +77,8 @@ import { FormDetallesFinancierosComponent } from '../components/form-detalles-fi
     RedondearPrecioPipe,
     SelectorDeProductosComponent,
     ModificadorDeStockRapidoComponent,
-    FormDetallesFinancierosComponent
-
-
+    FormDetallesFinancierosComponent,
+    PatronDeBloqueoComponent
   ]
 })
 export class SharedModule {

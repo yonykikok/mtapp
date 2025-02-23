@@ -18,7 +18,8 @@ export interface Venta {
   carrito: Carrito; // El carrito confirmado para la venta
   total: number; // Total de la venta
   pagos: Pago[]; // Lista de pagos realizados
-  fecha: Date; // Fecha de la venta
+  fecha: any; // Fecha de la venta
+  expand?:boolean,//se usa para expandir el carrito y mostrar detalle en vistas.
   cuentaSaldada: boolean
 }
 

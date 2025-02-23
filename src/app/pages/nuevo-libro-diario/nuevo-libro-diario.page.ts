@@ -5,7 +5,7 @@ import { User } from 'src/app/clases/user';
 import { AperturaDeCajaComponent } from 'src/app/components/apertura-de-caja/apertura-de-caja.component';
 import { CarritoComponent } from 'src/app/components/carrito/carrito.component';
 import { FormActualizarItemLibroDiarioComponent } from 'src/app/components/forms/form-actualizar-item-libro-diario/form-actualizar-item-libro-diario.component';
-import { FormDetalleVentaComponent, MediosDePago } from 'src/app/components/forms/form-detalle-venta/form-detalle-venta.component';
+import { FormDetalleVentaComponent, MedioDePago, MediosDePago } from 'src/app/components/forms/form-detalle-venta/form-detalle-venta.component';
 import { NuevoFormDetalleVentaComponent } from 'src/app/components/nuevo-form-detalle-venta/nuevo-form-detalle-venta.component';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -45,7 +45,9 @@ export class NuevoLibroDiario {
     styleUrls: ['./nuevo-libro-diario.page.scss'],
 })
 export class NuevoLibroDiarioPage implements OnInit {
-    formasDePago=FormasDePago;
+    mostrarMensajeDeCierreDeCaja: boolean = false;
+    mostrarDetalleDeCaja: boolean = false;
+    formasDePago = FormasDePago;
     productos: Producto[] = [];
     isActionSheetOpen = false;
     actionSheetButtons: any = [];
@@ -107,9 +109,9 @@ export class NuevoLibroDiarioPage implements OnInit {
                 this.libroDiarioHoy['id'] = res.payload.id;
             }
 
+            console.log(this.libroDiarioHoy)
         });
     }
-
 
 
     async eliminarItemVenta(venta: Venta, indiceItemCarrito: number) {
@@ -120,16 +122,16 @@ export class NuevoLibroDiarioPage implements OnInit {
         }
         let montoARestar = venta.carrito.items[indiceItemCarrito].precio * venta.carrito.items[indiceItemCarrito].cantidad;
 
-        let modal = await this.modalController.create({
-            component: DescontarPagoDeItemComponent,
-            componentProps: {
-                pagosActuales: venta.pagos,
-                totalADescontar: montoARestar
-            }
-        })
-        modal.present();
+        // let modal = await this.modalController.create({
+        //     component: DescontarPagoDeItemComponent,
+        //     componentProps: {
+        //         pagosActuales: venta.pagos,
+        //         totalADescontar: montoARestar
+        //     }
+        // })
+        // modal.present();
         console.log(venta.pagos);//continuar de aca, descontar el item de los pagos seleccionados en el nuevo componente.
-        return;
+        // return;
 
         // Obtener el precio del item que será eliminado
         montoARestar = venta.carrito.items[indiceItemCarrito].precio * venta.carrito.items[indiceItemCarrito].cantidad;
@@ -157,13 +159,15 @@ export class NuevoLibroDiarioPage implements OnInit {
         venta.total = totalCarrito;
         if (venta.carrito.items.length <= 0) {
             this.eliminarVentaCompleta(venta)
+        } else {
+            this.actualizarLibroDiario();
         }
-        this.actualizarLibroDiario();
 
     }
 
     eliminarVentaCompleta(venta: Venta) {
         this.libroDiarioHoy.ventas.splice(this.libroDiarioHoy.ventas.findIndex(vent => vent.id == venta.id), 1);
+        this.actualizarLibroDiario();
     }
 
 
@@ -292,7 +296,7 @@ export class NuevoLibroDiarioPage implements OnInit {
                 if (pago.formaDePago === medioDePago) {
                     acumulador += pago.cantidad;
                 }
-                console.log(pago);
+                // console.log(pago);
             });
         });
         console.log(acumulador);
@@ -310,6 +314,7 @@ export class NuevoLibroDiarioPage implements OnInit {
     }
 
     comprobar() {
+        this.mostrarMensajeDeCierreDeCaja = true;
         if (this.libroDiarioHoy.montoTotalEfectivo && this.libroDiarioHoy.montoInicial && this.montoDeCaja) {
 
             this.resultadoDeCaja = (this.libroDiarioHoy.montoTotalEfectivo + this.libroDiarioHoy.montoInicial) - this.montoDeCaja;
@@ -333,7 +338,7 @@ export class NuevoLibroDiarioPage implements OnInit {
                 fechaString: new Date().toLocaleString(),
                 mensaje,
                 usuario: this.loggedUser.displayName || '',
-                resultadoDeCaja: this.montoDeCaja - (this.libroDiarioHoy.montoTotalEfectivo + this.libroDiarioHoy.montoInicial),
+                resultadoDeCaja: this.resultadoDeCaja,
             });
 
             this.database.actualizar(environment.TABLAS.ingresosNuevoLibro, this.libroDiarioHoy, this.libroDiarioHoy.id);
@@ -349,6 +354,7 @@ export class NuevoLibroDiarioPage implements OnInit {
 
 
     async mostrarModalEditarVenta(venta: any) {
+        console.log(venta)
         try {
             const modal = await this.modalController.create({
                 component: FormActualizarItemLibroDiarioComponent,
@@ -493,5 +499,30 @@ export class NuevoLibroDiarioPage implements OnInit {
             return await modal.present();
         } catch (err) {
         }
+    }
+
+    toggleExpand(id: string) {
+        this.libroDiarioHoy.ventas = this.libroDiarioHoy.ventas.map(v => v.id === id ? { ...v, expand: !v.expand } : v);
+    }
+    getTotalEfectivo(): number {
+        return this.libroDiarioHoy.ventas.reduce((total, venta) => {
+            const totalEfectivo = venta.pagos
+                .filter(pago => pago.formaDePago === 'Efectivo')
+                .reduce((sum, pago) => sum + pago.cantidad, 0);
+            return total + totalEfectivo;
+        }, 0);
+    }
+    getTotalPagosDigitales(): number {
+        return this.libroDiarioHoy.ventas.reduce((total, venta) => {
+            const totalPagoDigitales = venta.pagos
+                .filter(pago => pago.formaDePago != 'Efectivo')
+                .reduce((sum, pago) => sum + pago.cantidad, 0);
+            return total + totalPagoDigitales;
+        }, 0);
+    }
+
+    cambiarTipoDePago(pagoActual: Pago) {
+        console.log(pagoActual);
+        this.alertService.alertSinAccion('Proximamente', 'Podra cambiar el medio de pago desde aquí', 'OK');
     }
 }

@@ -1,12 +1,34 @@
-<ion-header>
-  <app-clasic-toolbar [isModal]="true"  [title]="'Patrones'"></app-clasic-toolbar>
+<ion-header *ngIf="!soloLectura">
+  <app-clasic-toolbar [isModal]="true" [title]="'Patrones'"></app-clasic-toolbar>
 </ion-header>
 
-<ion-content>
-  <div style="display: flex; align-items: center; flex-direction: column;">
-    <ion-chip>{{patronPredefinido}}</ion-chip>
-    <canvas #patronCanvas class="canvas" (touchstart)="iniciarDibujo($event)"
-      (touchmove)="manejarMovimientoTactil($event)" (touchend)="detenerDibujo()"></canvas>
-    <ion-button (click)="dibujarCuadriculaPatron()">Reiniciar</ion-button>
+<ion-content class="ion-padding" style="min-height: 30rem;">
+  <div class="container" style="display: flex; flex-direction: column; align-items: center;">
+
+    <!-- Patrón predefinido (si aplica) -->
+    <!-- <ion-chip>{{ patronPredefinido }}</ion-chip> -->
+
+    <!-- Opciones agregadas -->
+    <div *ngIf="opcionesPatron.length > 0" class="pattern-options">
+      <ng-container *ngFor="let opcion of opcionesPatron; index as i">
+        <div *ngIf="opcion && opcion.length>0" class="pattern-option" (click)="dibujarPatronSeleccionado(opcion)">
+          <span>Opción {{ i + 1 }}: <ion-text color="tertiary">{{ opcion }}</ion-text></span>
+          <!-- Botón para borrar la opción -->
+          <ion-icon *ngIf="!soloLectura" name="trash" color="danger" (click)="borrarPatron(i)"></ion-icon>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Canvas -->
+    <canvas #patronCanvas [class]="'canvas'" (touchstart)="iniciarDibujo($event)"
+      (touchmove)="manejarMovimientoTactil($event)" (touchend)="detenerDibujo()">
+    </canvas>
+
+    <!-- Grupo de botones -->
+    <div class="button-group" *ngIf="!soloLectura">
+      <ion-button color="medium" (click)="dibujarCuadriculaPatron()">Reiniciar</ion-button>
+      <ion-button color="secondary" (click)="agregarPatron()">Agregar opción</ion-button>
+    </div>
+    <ion-button *ngIf="!soloLectura" color="primary" expand="block" (click)="guardarPatrones()">Guardar</ion-button>
   </div>
 </ion-content>

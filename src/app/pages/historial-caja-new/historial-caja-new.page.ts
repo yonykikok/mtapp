@@ -220,6 +220,7 @@ export class HistorialCajaNewPage implements OnInit {
   }
 
   mostrarMesCompleto(mostrarBuscador: boolean) {
+    console.log("ENTRA");
     if (!this.intervaloSeleccionado) {
       this.intervaloSeleccionado = { dias: [] };
     }
@@ -230,6 +231,7 @@ export class HistorialCajaNewPage implements OnInit {
         dia['id'] = diaRef.id;
         return dia
       });
+      console.log(this.intervaloSeleccionado)
       this.intervaloSeleccionado['montoTotalMensualEfectivo'] = this.getMontoTotalMensual(MediosDePago.Efectivo, this.intervaloSeleccionado);
       this.intervaloSeleccionado['montoTotalMensualTransferencia'] = this.getMontoTotalMensual(MediosDePago.Transferencia, this.intervaloSeleccionado);
       this.intervaloSeleccionado['montoTotalMensualMercadoPago'] = this.getMontoTotalMensual(MediosDePago.MercadoPago, this.intervaloSeleccionado);
@@ -244,6 +246,7 @@ export class HistorialCajaNewPage implements OnInit {
         }
       });
 
+      console.log(this.intervaloSeleccionado)
       mostrarBuscador ? this.mostrarBuscadorPorTexto() : null;
     })
 

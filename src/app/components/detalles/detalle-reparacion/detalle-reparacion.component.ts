@@ -1,6 +1,6 @@
 
 import { Component, Input, OnInit } from '@angular/core';
-import { ActionSheetController, AlertController } from '@ionic/angular';
+import { ActionSheetController, AlertController, ModalController } from '@ionic/angular';
 import { NgxImageCompressService } from 'ngx-image-compress';
 import { User } from 'src/app/clases/user';
 import { boleta, boletaHistorialEstado } from 'src/app/pages/mis-reparaciones/mis-reparaciones.page';
@@ -13,17 +13,19 @@ import { SpinnerService } from 'src/app/services/spinner.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
 import { environment } from 'src/environments/environment';
+import { PatronDeBloqueoComponent } from '../../patron-de-bloqueo/patron-de-bloqueo.component';
 @Component({
   selector: 'app-detalle-reparacion',
   templateUrl: './detalle-reparacion.component.html',
   styleUrls: ['./detalle-reparacion.component.scss'],
 })
 export class DetalleReparacionComponent implements OnInit {
+  nuevasClavesDetextoIngresadas: string = '';
+  opcionDeBloqueoSeleccionado: 'patron' | 'codigoTexto' = 'codigoTexto';
   @Input() isModal: boolean = true;
   subiendoImagen: boolean = false;
   editarDetalle = false;
   @Input() ruta: string = '';
-  mostrarHistorial = false;
   modoEditar = false;
   @Input() reparacion!: boleta;
   estadosPosibles: any[] = [];
@@ -34,6 +36,7 @@ export class DetalleReparacionComponent implements OnInit {
   constructor(private alertController: AlertController,
     private alertService: AlertService,
     private actionSheetController: ActionSheetController,
+    private modalController: ModalController,
     private database: DataBaseService,
     private imageCompress: NgxImageCompressService,
     private toastService: ToastService,
@@ -50,6 +53,7 @@ export class DetalleReparacionComponent implements OnInit {
 
 
   }
+
 
   getOpcionesEstadoDisponibles(): void {
 
@@ -399,6 +403,41 @@ export class DetalleReparacionComponent implements OnInit {
     return posicionesDiponibles[0];
 
   }
+  async modificarPatrones(reparacion: boleta) {
+    let modal = await this.modalController.create({
+      component: PatronDeBloqueoComponent,
+      componentProps: {
+        soloLectura: false,
+        opcionesPatron:
+          [
+            reparacion.opcionesDeBloqueo?.opcionesPatron?.uno || [],
+            reparacion.opcionesDeBloqueo?.opcionesPatron?.dos || [],
+            reparacion.opcionesDeBloqueo?.opcionesPatron?.tres || []
+          ]
+      }
+    })
+    modal.onDidDismiss().then(result => {
+      if (result.role == 'guardarPatrones') {
+        console.log(result.data);
+        console.log(reparacion);
+        if (!reparacion.opcionesDeBloqueo) {
+          reparacion.opcionesDeBloqueo = {
+            textoNumero: this.nuevasClavesDetextoIngresadas,
+            opcionesPatron: { ...this.reparacion?.opcionesDeBloqueo?.opcionesPatron }
+          }
+        }
+        result.data[0] ? reparacion.opcionesDeBloqueo.opcionesPatron.uno = result.data[0] : delete reparacion.opcionesDeBloqueo.opcionesPatron.uno;
+        result.data[1] ? reparacion.opcionesDeBloqueo.opcionesPatron.dos = result.data[1] : delete reparacion.opcionesDeBloqueo.opcionesPatron.dos;
+        result.data[2] ? reparacion.opcionesDeBloqueo.opcionesPatron.tres = result.data[2] : delete reparacion.opcionesDeBloqueo.opcionesPatron.tres;
+        if (reparacion.id) {
+          this.database.actualizar(environment.TABLAS.boletasReparacion, reparacion, reparacion.id)?.then(res => {
+            this.toastService.simpleMessage('Actualizado', 'Se guardaron los cambios', ToastColor.success);
+          })
+        }
+      }
+    })
+    modal.present();
+  }
 
   mostrarImagen(img: string) {
     this.funcionesUtiles.mostrarImagenCompleta(img, this.actualizarImagen.bind(this, this.reparacion), this.funcionesUtiles.roleMinimoNecesario(roles.EMPLEADO, this.loggedUser));
@@ -490,5 +529,21 @@ export class DetalleReparacionComponent implements OnInit {
           });
         }
       );
+  }
+
+  guardarClavesTexto() {
+    this.reparacion.opcionesDeBloqueo = {
+      textoNumero: this.nuevasClavesDetextoIngresadas,
+      opcionesPatron: { ...this.reparacion?.opcionesDeBloqueo?.opcionesPatron }
+    }
+    if (this.reparacion.id) {
+      this.database.actualizar(environment.TABLAS.boletasReparacion, this.reparacion, this.reparacion.id)?.then((res: any) => {
+        this.toastService.simpleMessage('Exito', 'Se actualizo las posibles claves', ToastColor.success);
+      }).catch(err => {
+        this.toastService.simpleMessage('Error', 'No se pudo actualizar la clave texto', ToastColor.danger);
+      }).finally(() => {
+        this.spinnerService.stopLoading();
+      });
+    }
   }
 }

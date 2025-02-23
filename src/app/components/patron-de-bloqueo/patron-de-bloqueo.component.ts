@@ -1,4 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { ToastColor, ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-patron-de-bloqueo',
@@ -6,7 +8,6 @@ import { Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, 
   styleUrls: ['./patron-de-bloqueo.component.scss'],
 })
 export class PatronDeBloqueoComponent implements OnInit {
-
 
   @Input() soloLectura: boolean = true;
   @Input() patronPredefinido: number[] = [];
@@ -19,10 +20,18 @@ export class PatronDeBloqueoComponent implements OnInit {
   puntos = Array.from({ length: 9 }, (_, i) => ({ x: 0, y: 0, id: i + 1 }));
   dibujando = false;
 
-  constructor(private renderer: Renderer2) { }
+  // Propiedad para almacenar las opciones de patrón
+  @Input() opcionesPatron: number[][] = [];
+
+  constructor(private renderer: Renderer2,
+    private toastService: ToastService,
+    private modalController: ModalController
+  ) { }
 
   ngAfterViewInit() {
+    console.log(this.opcionesPatron)
     setTimeout(() => {
+      console.log(this.opcionesPatron)
       this.inicializarCanvas();
       if (this.patronPredefinido.length > 0) {
         this.patron = [...this.patronPredefinido]; // Copia el patrón
@@ -30,8 +39,10 @@ export class PatronDeBloqueoComponent implements OnInit {
       }
     }, 400);
   }
-  ngOnInit() { }
-
+  ngOnInit() {
+    this.opcionesPatron = this.opcionesPatron.filter(pat => pat.length > 0);
+    console.log(this.opcionesPatron)
+  }
 
   private inicializarCanvas() {
     const canvas = this.referenciaCanvas.nativeElement;
@@ -58,9 +69,7 @@ export class PatronDeBloqueoComponent implements OnInit {
     });
   }
 
-
   dibujarCuadriculaPatron() {
-
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
     this.puntos.forEach(punto => {
@@ -104,9 +113,8 @@ export class PatronDeBloqueoComponent implements OnInit {
     });
   }
 
-
-
   iniciarDibujo(event: TouchEvent) {
+    if (this.soloLectura) return;
     this.dibujando = true;
     this.patron = [];
     this.manejarMovimientoTactil(event);
@@ -131,11 +139,11 @@ export class PatronDeBloqueoComponent implements OnInit {
   }
 
   detenerDibujo() {
+    if (this.soloLectura) return;
     this.dibujando = false;
     this.patronCompletado.emit(this.patron);
-    this.patronPredefinido = [...this.patron]
+    this.patronPredefinido = [...this.patron];
   }
-
 
   dibujarPatron() {
     this.dibujarCuadriculaPatron();
@@ -158,4 +166,33 @@ export class PatronDeBloqueoComponent implements OnInit {
     this.ctx.closePath();
   }
 
+  // Método para agregar la opción del patrón actual
+  agregarPatron() {
+    if (this.patron.length === 0) return; // No se agrega si el patrón está vacío
+    if (this.opcionesPatron.length < 3) {
+      this.opcionesPatron.push([...this.patron]); // Guarda una copia del patrón actual
+      console.log('Opciones de patrón:', this.opcionesPatron);
+      // Reinicia el patrón para que el usuario pueda ingresar otra opción
+      this.patron = [];
+      this.dibujarCuadriculaPatron();
+    } else {
+      console.log("Ya se han agregado 3 opciones de patrón.");
+      this.toastService.simpleMessage('Maximo alcanzado', 'Maximo 3 patrones', ToastColor.primary);
+    }
+  }
+
+  // Método para borrar una opción de patrón por su índice
+  borrarPatron(index: number) {
+    if (index >= 0 && index < this.opcionesPatron.length) {
+      this.opcionesPatron.splice(index, 1);
+      console.log('Opciones de patrón actualizadas:', this.opcionesPatron);
+    }
+  }
+  dibujarPatronSeleccionado(opcion: number[]) {
+    this.patron = [...opcion]; // Copia el patrón seleccionado
+    this.dibujarPatron(); // Redibuja el patrón en el canvas
+  }
+  guardarPatrones() {
+    this.modalController.dismiss(this.opcionesPatron, 'guardarPatrones');
+  }
 }

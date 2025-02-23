@@ -2,6 +2,172 @@
   <app-clasic-toolbar (opcionesClick)="mostrarOpciones()" [mostrarOpciones]="true" [ruta]="'/dashboard'"
     [title]="'Nuevo libro diario'"></app-clasic-toolbar>
 </ion-header>
+
+<ion-content class="ion-padding-bottom">
+  <!-- Monto acumulado en efectivo -->
+  <ion-card class="total-efectivo-card">
+    <ion-item lines="none">
+      <ion-icon name="cash-outline" slot="start" color="success"></ion-icon>
+      <ion-icon (click)="mostrarDetalleDeCaja=!mostrarDetalleDeCaja"
+        [name]="mostrarDetalleDeCaja?'eye-off-outline':'eye-outline'" slot="end"
+        [color]="mostrarDetalleDeCaja?'danger':'secondary'"
+        *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)"></ion-icon>
+      <ion-label>
+        <h2>Ingresos en Efectivo</h2>
+        <p class="total-monto">Caja Inicial: ${{ libroDiarioHoy.montoInicial | number:'1.2-2' }}</p>
+        <p class="total-monto" *ngIf="mostrarDetalleDeCaja">Monto Total en caja: ${{
+          getTotalEfectivo()+ libroDiarioHoy.montoInicial | number:'1.2-2' }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+  <ion-card class="total-efectivo-card" *ngIf="mostrarDetalleDeCaja">
+    <ion-item lines="none">
+      <ion-icon name="cash-outline" slot="start" color="primary"></ion-icon>
+      <ion-label>
+        <h2>Ingresos en Digitales</h2>
+        <p class="total-monto">Total: ${{
+          getTotalPagosDigitales() | number:'1.2-2' }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+  <div class="ion-margin-bottom ion-padding-bottom">
+    <ion-item-sliding *ngFor="let venta of libroDiarioHoy.ventas; let indiceItemCarrito=index">
+      <ion-item>
+
+        <ion-card style="width: 100%;" class="venta-card">
+          <ion-item lines="none">
+            <!-- <ion-icon name="calendar-outline" slot="start" color="primary"></ion-icon> -->
+            <div slot="start" style="min-width: 3rem;">
+              <label *ngFor="let pagoActual of venta.pagos" (click)="cambiarTipoDePago(pagoActual)">
+                <img style="max-width: 3rem;" *ngIf="pagoActual.formaDePago=='Efectivo'"
+                  [src]="'assets/svg/icons/cashcard.svg'" />
+                <img style="max-width: 3rem;" *ngIf="pagoActual.formaDePago=='Tarjeta de Crédito'"
+                  [src]="'assets/svg/icons/creditcard.svg'" />
+                <img style="max-width: 3rem;" *ngIf="pagoActual.formaDePago=='Tarjeta de Débito'"
+                  [src]="'assets/svg/icons/debitcard.svg'" />
+                <img style="max-width: 3rem;" *ngIf="pagoActual.formaDePago=='Transferencia'"
+                  [src]="'assets/svg/icons/transfercard.svg'" />
+                <img style="max-width: 3rem;" *ngIf="pagoActual.formaDePago=='Vale de compra'"
+                  [src]="'assets/svg/icons/valecard.svg'" />
+                <img style="max-width: 3rem;" *ngIf="pagoActual.formaDePago=='Mercado pago'"
+                  [src]="'assets/svg/icons/mpcard.svg'" />
+              </label>
+            </div>
+            <ion-label>
+              <h2 class="ion-text-end">{{ venta.fecha.seconds * 1000 | date:'HH:mm' }}</h2>
+              <p>
+                <strong>Total:</strong>
+                <span [ngClass]="{'saldo-negativo': venta.total < 0}">
+                  ${{ venta.total }}
+                  <ion-icon *ngIf="venta.total < 0" name="alert-circle-outline" color="danger"></ion-icon>
+                </span>
+              </p>
+
+              <p *ngFor="let pago of venta.pagos">
+                <ion-icon [name]="pago.formaDePago === 'Efectivo' ? 'cash-outline' : 'card-outline'"
+                  [color]="pago.formaDePago === 'Efectivo' ? 'success' : 'primary'">
+                </ion-icon>
+
+                <strong>{{ pago.formaDePago }}:</strong>
+                <span [ngClass]="{'saldo-negativo': pago.cantidad < 0}">
+                  (${{ pago.cantidad }})
+                  <!-- <ion-badge *ngIf="pago.cantidad < 0" color="danger">Salida</ion-badge> -->
+                </span>
+              </p>
+            </ion-label>
+            <ion-icon (click)="toggleExpand(venta.id)" [name]="venta.expand ? 'chevron-up' : 'chevron-down'"
+              size="large"></ion-icon>
+          </ion-item>
+
+          <ion-list *ngIf="venta.expand" class="detalle-venta">
+            <ion-item *ngFor="let item of venta.carrito.items">
+              <ion-thumbnail slot="start" *ngIf="item.images.length">
+                <img [src]="item.images[0]" />
+              </ion-thumbnail>
+              <ion-label>
+                <h3>{{ item.descripcion }}</h3>
+                <p>Cantidad: {{ item.cantidad }} | Precio: ${{ item.precio }}</p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-card>
+
+      </ion-item>
+
+
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="eliminarVentaCompleta(venta)">
+          Eliminar
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed" (click)="mostrarModalCierreDeCaja=true">
+    <ion-fab-button color="tertiary">
+      <ion-icon name="newspaper-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="success" (click)="nuevoCarrito()">
+      <ion-icon name="cart"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+
+  <div class="modal-overlay" (click)="mostrarModalCierreDeCaja=false" *ngIf="mostrarModalCierreDeCaja">
+    <ion-card class="modal-card" (click)="detenerPropagacion($event)">
+      <ion-card-header>
+        <ion-card-title class="modal-title">Cierre de caja</ion-card-title>
+        <ion-card-subtitle>Ingrese el monto to tal en la caja</ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-input fill="outline" mode="md" labelPlacement="floating" label="Monto de caja" type="number"
+          placeholder="Ingrese el monto total" [(ngModel)]="montoDeCaja" [ngModelOptions]="{standalone: true}">
+        </ion-input>
+
+        <!-- Mensajes de validación -->
+        <div *ngIf="mostrarMensajeDeCierreDeCaja" class="validacion-container">
+          <ion-chip *ngIf="resultadoDeCaja > 0" color="danger">
+            <ion-icon name="alert-circle-outline"></ion-icon>
+            <ion-label> Falta dinero en caja </ion-label>
+          </ion-chip>
+
+          <ion-chip *ngIf="resultadoDeCaja < 0" color="primary">
+            <ion-icon name="information-circle-outline"></ion-icon>
+            <ion-label> Hay dinero de más </ion-label>
+          </ion-chip>
+
+          <ion-chip *ngIf="resultadoDeCaja === 0" color="success">
+            <ion-icon name="checkmark-circle-outline"></ion-icon>
+            <ion-label> Cierre perfecto! </ion-label>
+          </ion-chip>
+        </div>
+
+        <p *ngIf="resultadoDeCaja !== 0" class="resultado-caja">
+          Diferencia: <strong>{{ resultadoDeCaja | currency }}</strong>
+        </p>
+
+        <!-- Botones -->
+        <div class="botones-container">
+          <ion-button expand="block" color="warning" (click)="mostrarModalCierreDeCaja=false">
+            Cancelar
+          </ion-button>
+          <ion-button expand="block" color="primary" (click)="comprobar()">
+            Comprobar
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+</ion-content>
+
+<!-- <ion-header>
+  <app-clasic-toolbar (opcionesClick)="mostrarOpciones()" [mostrarOpciones]="true" [ruta]="'/dashboard'"
+    [title]="'Nuevo libro diario'"></app-clasic-toolbar>
+</ion-header>
 <ion-content *ngIf="loggedUser">
   <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Actions" [buttons]="actionSheetButtons"
     (didDismiss)="setOpen(false)"></ion-action-sheet>
@@ -77,7 +243,6 @@
             </ion-item>
 
 
-            <!-- Opciones de acción de deslizamiento -->
             <ion-item-options side="end">
               <ion-item-option color="danger" (click)="eliminarItemVenta(venta,indiceItemCarrito)">
                 Eliminar
@@ -92,7 +257,6 @@
 
 
 
-    <!-- modal cierre de caja -->
     <div (click)="mostrarModalCierreDeCaja=false" *ngIf="mostrarModalCierreDeCaja">
 
       <ion-card style="padding: 2rem;" (click)="detenerPropagacion($event)">
@@ -130,7 +294,6 @@
         </ion-card-content>
       </ion-card>
     </div>
-    <!-- fin modal cierre de caja -->
 
   </div>
 
@@ -142,4 +305,4 @@
     </ion-fab-button>
   </ion-fab>
 
-</ion-content>
+</ion-content> -->

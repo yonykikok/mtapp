@@ -48,7 +48,14 @@
             formControlName="telefono"></ion-input>
         </ion-item>
 
-        <ion-button expand="block" size="small" class="ion-margin-top" color="secondary" (click)="mostrarPatronDeBloqueoComponent()"> 
+        <ion-item class="ion-activated">
+          <ion-icon slot="end" name="lock-closed-outline"> </ion-icon>
+          <ion-input label="codigo de desbloqueo" labelPlacement="floating" type="number"
+            placeholder="Ej:123456, lanus2025" formControlName="textoNumero"></ion-input>
+        </ion-item>
+
+        <ion-button expand="block" size="small" class="ion-margin-top" color="secondary"
+          (click)="mostrarPatronDeBloqueoComponent()">
           <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
           Agregar patron de bloqueo
         </ion-button>

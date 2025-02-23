@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertService } from 'src/app/services/alert.service';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Camera, CameraDirection, CameraResultType, CameraSource } from '@capacitor/camera';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/storage';
 import { environment } from 'src/environments/environment';
@@ -25,13 +25,14 @@ export class FormAltaReparacionComponent implements OnInit {
   ruta: string = '';
   storageRef = firebase.app().storage().ref();
   imgVistaPrevia!: string;
-
+  opcionesPatron: { uno: number[], dos: number[], tres: number[], } = { uno: [], dos: [], tres: [] };
 
   formAltaReparacion = new FormGroup({
     dniCliente: new FormControl('', [Validators.required]),
     nroBoleta: new FormControl('', [Validators.required]),
     telefono: new FormControl('', [Validators.required]),
     modelo: new FormControl('', [Validators.required]),
+    textoNumero: new FormControl(''),
   })
 
   constructor(private alertService: AlertService,
@@ -55,7 +56,8 @@ export class FormAltaReparacionComponent implements OnInit {
         promptLabelCancel: 'Cancelar',
         promptLabelPicture: 'Sacar una Foto con la Cámara',
         promptLabelPhoto: 'Seleccionar desde Galería',
-        resultType: CameraResultType.DataUrl
+        resultType: CameraResultType.DataUrl,
+        direction: CameraDirection.Rear,
       });
       //console.log(image)
       if (!image || !image.dataUrl) return;
@@ -88,7 +90,7 @@ export class FormAltaReparacionComponent implements OnInit {
 
 
   mostrarConfirmacion() {
-    let { dniCliente, nroBoleta, telefono, modelo } = this.formAltaReparacion.value;
+    let { dniCliente, nroBoleta, telefono, modelo, textoNumero } = this.formAltaReparacion.value;
     let hoy = new Date(Date.now());
 
     const months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
@@ -124,9 +126,13 @@ export class FormAltaReparacionComponent implements OnInit {
             fechaAlta: new Date().getTime(),
             estado: boleta_estados.PENDIENTE,
             telefono: telefono.toString(),
-            fechaId: `${month}${year}`
+            fechaId: `${month}${year}`,
+            opcionesDeBloqueo: {
+              opcionesPatron: this.opcionesPatron,
+              textoNumero: textoNumero || ''
+            }
           }
-          //console.log(boleta)
+          console.log(boleta)
           this.database.crear(environment.TABLAS.boletasReparacion, boleta).then(res => {
             this.toastService.simpleMessage("Exito!", "Se genero la boleta correctamente", ToastColor.success);
             this.spinnerService.stopLoading();
@@ -134,6 +140,7 @@ export class FormAltaReparacionComponent implements OnInit {
           });
 
         }).catch(err => {
+          console.error(err);
           this.spinnerService.stopLoading();
         })
 
@@ -147,8 +154,12 @@ export class FormAltaReparacionComponent implements OnInit {
     let modal = await this.modalController.create({
       component: PatronDeBloqueoComponent,
       componentProps: {
-        patronPredefinido: [1, 2, 3],
         soloLectura: false
+      }
+    })
+    modal.onDidDismiss().then(result => {
+      if (result.role == 'guardarPatrones') {
+        this.opcionesPatron = { uno: result.data[0], dos: result.data[1], tres: result.data[2] };
       }
     })
     modal.present();

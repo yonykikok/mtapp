@@ -32,6 +32,11 @@
 
         <ion-chip class="ion-margin"> Boleta: ({{reparacion.nroBoleta}})</ion-chip>
 
+        <ion-chip [appEstadoReparacionColor]="reparacion.estado" [appEstadoReparacionBorderColor]="reparacion.estado"
+          style="display: flex; justify-content: center; border-radius: 0;" class="ion-margin ion-text-center" outline>
+          {{reparacion.estado | estadoReparacion}}
+        </ion-chip>
+
         <small style="position: absolute;top: 0.5rem;right: 0.5rem;"><b>{{reparacion.fechaAlta|date}}</b></small>
         <ion-chip outline="true" class="flexColumn" style="justify-content: center; align-items: start;">
           <label style="margin-bottom: 0.2rem;">
@@ -57,98 +62,134 @@
           </ion-chip>
         </ion-chip>
 
-        <ion-chip [appEstadoReparacionColor]="reparacion.estado" [appEstadoReparacionBorderColor]="reparacion.estado"
-          style="display: flex; justify-content: center; border-radius: 0;" class="ion-margin ion-text-center" outline>
-          {{reparacion.estado | estadoReparacion}}
-        </ion-chip>
 
-        <!-- <div *ngIf="mostrarImgBoleta">
-        <ion-img [ngStyle]="{ 'transform': 'rotate(' + imagenGradosRotada + 'deg)' }" class="ion-margin"
-          [src]="reparacion.images[0]"></ion-img>
-        <ion-chip color="primary">
-          <ion-icon style="font-size: 1.5rem;" class="ion-margin-start ion-margin-end" (click)="girarImagen(-90)"
-            name="arrow-undo-outline"></ion-icon>
-        </ion-chip>
-        <ion-chip color="primary">
-          <ion-icon style="font-size: 1.5rem;" class="ion-margin-start ion-margin-end" (click)="girarImagen(90)"
-            name="arrow-redo-outline"></ion-icon>
-        </ion-chip>
-      </div> -->
+        <div>
+          <br>
+          <ion-text class="ion-margin"><b>Desbloqueo de pantalla</b></ion-text>
 
-        <ion-button size="small" color="primary" mode="ios" class="ion-margin" expand="block"
-          (click)="mostrarImagen(reparacion.images[0])">
-          <ion-icon slot="start" name="image-outline"></ion-icon>
-          Ver boleta
+          <ion-segment [(ngModel)]="opcionDeBloqueoSeleccionado">
+            <ion-segment-button value="codigoTexto">
+              <ion-label>Código Texto</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="patron">
+              <ion-label>Patrón</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+
+          <!-- Ejemplo de contenido condicional -->
+          <div [ngSwitch]="opcionDeBloqueoSeleccionado">
+            <ng-container *ngSwitchCase="'codigoTexto'">
+              <br>
+              <div *ngIf="reparacion?.opcionesDeBloqueo?.textoNumero; else inputTexto">
+                <ion-chip outline="true" color="tertiary">
+                  <ion-text>{{reparacion.opcionesDeBloqueo.textoNumero}}</ion-text>
+                </ion-chip>
+                <ion-icon name="pencil-outline" color="primary"
+                  (click)="nuevasClavesDetextoIngresadas=reparacion.opcionesDeBloqueo.textoNumero"
+                  (click)="reparacion.opcionesDeBloqueo.textoNumero=''">Cambiar</ion-icon>
+              </div>
+              <ng-template #inputTexto>
+                <div class="ion-padding">
+                  <ion-input fill="outline" label="Posibles claves" labelPlacement="floating" mode="md" type="text"
+                    placeholder="Escriba las posibles claves." [(ngModel)]="nuevasClavesDetextoIngresadas"></ion-input>
+                  <ion-button size="small"
+                    (click)="reparacion.opcionesDeBloqueo.textoNumero=nuevasClavesDetextoIngresadas"
+                    color="medium">Cancelar</ion-button>
+                  <ion-button size="small" (click)="guardarClavesTexto()">Guardar</ion-button>
+                </div>
+              </ng-template>
+            </ng-container>
+            <ng-container *ngSwitchCase="'patron'">
+              <ion-button (click)="modificarPatrones(reparacion)">Modificar patrones</ion-button>
+
+              <app-patron-de-bloqueo [soloLectura]="true" *ngIf="reparacion?.opcionesDeBloqueo?.opcionesPatron?.uno"
+                [patronPredefinido]="reparacion.opcionesDeBloqueo.opcionesPatron.uno||[]" [opcionesPatron]="[
+              reparacion.opcionesDeBloqueo.opcionesPatron.uno||[],
+              reparacion.opcionesDeBloqueo.opcionesPatron.dos||[],
+              reparacion.opcionesDeBloqueo.opcionesPatron.tres||[]
+            ]"></app-patron-de-bloqueo>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+              <p>Seleccione una opción.</p>
+            </ng-container>
+          </div>
+
+        </div>
+
+        <ion-button style="position: absolute;top: 0;left: 0;height: 3rem;width: 3rem;" size="small" color="primary"
+          mode="ios" class="ion-margin" expand="block" (click)="mostrarImagen(reparacion.images[0])">
+          <ion-icon style="font-size: 2rem;" name="image-outline"></ion-icon>
         </ion-button>
 
 
+        <div *ngIf="reparacion.historial && reparacion.historial.length>0">
 
-        <label class="flexColumn flexCenterCenter ion-margin ion-text-center "
-          *ngIf="reparacion.historial && reparacion.historial.length>0">Ver historial
-          <ion-toggle [(ngModel)]="mostrarHistorial"></ion-toggle>
-        </label>
+          <ion-toolbar>
+            <ion-title>Historial de reparación</ion-title>
+          </ion-toolbar>
+
+          <ion-accordion-group [multiple]="true">
+            <ion-item-sliding *ngFor="let estado of reparacion.historial; let index =index">
+              <ion-item>
+
+                <ion-accordion [value]="estado.fecha" [appEstadoReparacionBgcolor]="estado.estadoActual">
+                  <ion-item slot="header" color="light">
+                    <ion-text>{{obtenerMensajeDelEstado(estado.estadoActual)}}</ion-text>
+                  </ion-item>
+                  <div class="ion-padding" slot="content">
 
 
-        <ion-accordion-group [multiple]="true" *ngIf="mostrarHistorial">
-          <ion-item-sliding *ngFor="let estado of reparacion.historial; let index =index">
-            <ion-item>
-
-              <ion-accordion [value]="estado.fecha" [appEstadoReparacionBgcolor]="estado.estadoActual">
-                <ion-item slot="header" color="light">
-                  <ion-text>{{obtenerMensajeDelEstado(estado.estadoActual)}}</ion-text>
-                </ion-item>
-                <div class="ion-padding" slot="content">
-
-
-                  <small style="position: absolute; right: 1rem; top: 3rem;">{{estado.fecha|date:'dd/MM/yyyy hh:mm:ss'
-                    }}</small>
-                  <ion-chip class="flexCenterCenter" style="background-color: white;">
-                    <label style="text-decoration: line-through; color: #ee8d8d; margin-right: 0.5rem;">
-                      {{obtenerMensajeDelEstado(estado.estadoAnterior)}}
-                    </label>
-                    <ion-icon name="arrow-forward-outline"></ion-icon>
-                    <b style="color: #8383eb; margin-left: 0.5rem;">
-                      {{obtenerMensajeDelEstado(estado.estadoActual)}}
-                    </b>
-                  </ion-chip>
-                  <p class="flexColumn flexCenterCenter " style="margin: 0.7rem;">
-                    <b>Cambio realizado por </b>
-                    <label> {{estado.modificadoPor.displayName}} </label>
-                  </p>
-                  <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario('ST',loggedUser)"
-                    style="background-color: white;" outline="true" color="tertiary"
-                    class="flexColumn flexCenterCenter">
-                    <b>Detalle <ion-icon *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)"
-                        style="position: absolute; right: 1rem; font-size: 1.2rem;" class="ion-margin-start"
-                        name="create-outline" (click)="mostrarEditarDetalle(estado)"></ion-icon></b>
-                    <p style="margin-top: 1rem;">{{estado.detalle}}</p>
-                  </ion-chip>
-                  <div class="ion-text-center">
-                    <div *ngIf="estado.images && estado.images.length>0" class="flexCenterCenter">
-                      <div class="flexColumn" style="align-items: center;"
-                        *ngFor="let imagen of estado.images; let index=index">
-                        <img (click)="mostrarImagen(imagen)" style="width: 40px;height: 40px;margin: 0.2rem;"
-                          [src]="imagen" alt="imagen de detalle">
-                        <ion-icon color="danger" name="trash-outline"
-                          (click)="confirmarEliminacionDeImagen(reparacion,estado,index)"></ion-icon>
+                    <small style="position: absolute; right: 1rem; top: 3rem;">{{estado.fecha|date:'dd/MM/yyyy hh:mm:ss'
+                      }}</small>
+                    <ion-chip class="flexCenterCenter" style="background-color: white;">
+                      <label style="text-decoration: line-through; color: #ee8d8d; margin-right: 0.5rem;">
+                        {{obtenerMensajeDelEstado(estado.estadoAnterior)}}
+                      </label>
+                      <ion-icon name="arrow-forward-outline"></ion-icon>
+                      <b style="color: #8383eb; margin-left: 0.5rem;">
+                        {{obtenerMensajeDelEstado(estado.estadoActual)}}
+                      </b>
+                    </ion-chip>
+                    <p class="flexColumn flexCenterCenter " style="margin: 0.7rem;">
+                      <b>Cambio realizado por </b>
+                      <label> {{estado.modificadoPor.displayName}} </label>
+                    </p>
+                    <ion-chip *ngIf="funcionesUtiles.roleMinimoNecesario('ST',loggedUser)"
+                      style="background-color: white;" outline="true" color="tertiary"
+                      class="flexColumn flexCenterCenter">
+                      <b>Detalle <ion-icon *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)"
+                          style="position: absolute; right: 1rem; font-size: 1.2rem;" class="ion-margin-start"
+                          name="create-outline" (click)="mostrarEditarDetalle(estado)"></ion-icon></b>
+                      <p style="margin-top: 1rem;">{{estado.detalle}}</p>
+                    </ion-chip>
+                    <div class="ion-text-center">
+                      <div *ngIf="estado.images && estado.images.length>0" class="flexCenterCenter">
+                        <div class="flexColumn" style="align-items: center;"
+                          *ngFor="let imagen of estado.images; let index=index">
+                          <img (click)="mostrarImagen(imagen)" style="width: 40px;height: 40px;margin: 0.2rem;"
+                            [src]="imagen" alt="imagen de detalle">
+                          <ion-icon color="danger" name="trash-outline"
+                            (click)="confirmarEliminacionDeImagen(reparacion,estado,index)"></ion-icon>
+                        </div>
                       </div>
+                      <ion-button [disabled]="subiendoImagen"
+                        *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser) &&(!estado.images ||estado.images.length<2)"
+                        size="small" color="secondary" (click)="agregarImagen(reparacion,estado)">Agregar
+                        imagen</ion-button>
                     </div>
-                    <ion-button [disabled]="subiendoImagen"
-                      *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser) &&(!estado.images ||estado.images.length<2)"
-                      size="small" color="secondary" (click)="agregarImagen(reparacion,estado)">Agregar
-                      imagen</ion-button>
+
                   </div>
+                </ion-accordion>
+              </ion-item>
 
-                </div>
-              </ion-accordion>
-            </ion-item>
+              <ion-item-options *ngIf="reparacion.historial&&index == reparacion.historial.length-1">
+                <ion-item-option color="danger" *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)"
+                  (click)="solicitarConfirmacionEliminar(reparacion,estado)">Eliminar</ion-item-option>
+              </ion-item-options>
+            </ion-item-sliding>
+          </ion-accordion-group>
+        </div>
 
-            <ion-item-options *ngIf="reparacion.historial&&index == reparacion.historial.length-1">
-              <ion-item-option color="danger" *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)"
-                (click)="solicitarConfirmacionEliminar(reparacion,estado)">Eliminar</ion-item-option>
-            </ion-item-options>
-          </ion-item-sliding>
-        </ion-accordion-group>
 
       </ion-card-content>
     </ion-card>

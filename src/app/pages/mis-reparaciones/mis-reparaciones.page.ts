@@ -33,6 +33,14 @@ export interface boleta {
   nroBoleta: string,
   telefono: string,
   fechaUltimoCambioDeEstado?: number,
+  opcionesDeBloqueo: {
+    opcionesPatron: {
+      uno?: number[],
+      dos?: number[],
+      tres?: number[],
+    },
+    textoNumero: string
+  }
   [key: string]: any;
 }
 @Component({
