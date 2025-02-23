@@ -40,6 +40,9 @@ export class CustomIonSlidingComponent implements OnInit {
     ESPERADO_RESPUESTA: {
       text: 'Esperando respuesta', bgColor: reparacionBgColor.ESPERADO_RESPUESTA, click: (reparacion: boleta) => { console.log("Esperando respuesta"); }
     },
+    ACEPTADO_PARA_COMPRA: {
+      text: 'Aceptado para la compra', bgColor: reparacionBgColor.ACEPTADO_PARA_COMPRA, click: (reparacion: boleta) => { console.log("Aceptado para la compra"); }
+    },
     PAUSADO: {
       text: 'Pausado', bgColor: reparacionBgColor.PAUSADO, click: (reparacion: boleta) => { console.log("Pausado"); }
     },
@@ -74,7 +77,6 @@ export class CustomIonSlidingComponent implements OnInit {
     }
     console.log(this.reparacion.estado)
     this.reparacion.estado = this.reparacion.estado.toUpperCase() as boleta_estados;
-    console.log(this.slidingOptionsByState[this.reparacion.estado])
     this.slidingOptions.push(this.slidingOptionsByState[this.reparacion.estado]);
 
 

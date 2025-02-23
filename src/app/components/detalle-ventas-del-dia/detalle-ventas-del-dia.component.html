@@ -1,4 +1,249 @@
 <ion-header>
+  <app-clasic-toolbar [mostrarOpciones]="false" [ruta]="'/historial-caja-new'"
+    [title]="'Nuevo libro diario'"></app-clasic-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding-bottom">
+  <!-- Monto acumulado en efectivo -->
+  <ion-card class="total-efectivo-card">
+    <ion-item lines="none">
+      <ion-icon name="cash-outline" slot="start" color="success"></ion-icon>
+      <ion-label>
+        <h2>Ingresos en Efectivo</h2>
+        <p class="total-monto">Caja Inicial: ${{ libroDiario.montoInicial | number:'1.2-2' }}</p>
+        <p class="total-monto">Monto Total en caja: ${{
+          getTotalEfectivo()+ libroDiario.montoInicial | number:'1.2-2' }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+  <ion-card class="total-efectivo-card">
+    <ion-item lines="none">
+      <ion-icon name="cash-outline" slot="start" color="primary"></ion-icon>
+      <ion-label>
+        <h2>Ingresos en Digitales</h2>
+        <p class="total-monto">Total: ${{
+          getTotalPagosDigitales() | number:'1.2-2' }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+  <div class="ion-margin-bottom ion-padding-bottom">
+    <ion-item-sliding *ngFor="let venta of libroDiario.ventas; let indiceItemCarrito=index">
+      <ion-item>
+
+        <ion-card style="width: 100%;" class="venta-card">
+          <ion-item lines="none">
+            <div slot="start" style="min-width: 3rem;">
+              <label *ngFor="let pagoActual of venta.pagos">
+                <img style="max-width: 3rem;" *ngIf="pagoActual.formaDePago=='Efectivo'"
+                  [src]="'assets/svg/icons/cashcard.svg'" />
+                <img style="max-width: 3rem;" *ngIf="pagoActual.formaDePago=='Tarjeta de Crédito'"
+                  [src]="'assets/svg/icons/creditcard.svg'" />
+                <img style="max-width: 3rem;" *ngIf="pagoActual.formaDePago=='Tarjeta de Débito'"
+                  [src]="'assets/svg/icons/debitcard.svg'" />
+                <img style="max-width: 3rem;" *ngIf="pagoActual.formaDePago=='Transferencia'"
+                  [src]="'assets/svg/icons/transfercard.svg'" />
+                <img style="max-width: 3rem;" *ngIf="pagoActual.formaDePago=='Vale de compra'"
+                  [src]="'assets/svg/icons/valecard.svg'" />
+                <img style="max-width: 3rem;" *ngIf="pagoActual.formaDePago=='Mercado pago'"
+                  [src]="'assets/svg/icons/mpcard.svg'" />
+              </label>
+            </div>
+            <ion-label>
+              <h2 class="ion-text-end" style="position: absolute; right: 3.2rem;">{{ venta.fecha.seconds * 1000 | date:'HH:mm' }}</h2>
+              <p>
+                <strong>Total:</strong>
+                <span [ngClass]="{'saldo-negativo': venta.total < 0}">
+                  ${{ venta.total }}
+                  <ion-icon *ngIf="venta.total < 0" name="alert-circle-outline" color="danger"></ion-icon>
+                </span>
+              </p>
+
+              <p *ngFor="let pago of venta.pagos" style="display: flex; align-items: center;">
+                <ion-icon [name]="pago.formaDePago === 'Efectivo' ? 'cash-outline' : 'card-outline'"
+                  [color]="pago.formaDePago === 'Efectivo' ? 'success' : 'primary'" style="margin-right: 0.5rem;">
+                </ion-icon>
+
+                <strong>{{ pago.formaDePago }}: </strong>
+                <span [ngClass]="{'saldo-negativo': pago.cantidad < 0}">
+                  (${{ pago.cantidad }})
+                </span>
+              </p>
+            </ion-label>
+            <ion-icon (click)="toggleExpand(venta.id)" [name]="venta.expand ? 'chevron-up' : 'chevron-down'"
+              size="large"></ion-icon>
+          </ion-item>
+
+          <ion-list *ngIf="venta.expand" class="detalle-venta">
+            <ion-item *ngFor="let item of venta.carrito.items">
+              <ion-thumbnail slot="start" *ngIf="item.images.length">
+                <img [src]="item.images[0]" />
+              </ion-thumbnail>
+              <ion-label>
+                <h3>{{ item.descripcion }}</h3>
+                <p>Cantidad: {{ item.cantidad }} | Precio: ${{ item.precio }}</p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-card>
+
+      </ion-item>
+
+
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="eliminarVentaCompleta(venta)">
+          Eliminar
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </div>
+
+
+</ion-content>
+
+<!-- <ion-header>
+  <app-clasic-toolbar (opcionesClick)="mostrarOpciones()" [mostrarOpciones]="true" [ruta]="'/dashboard'"
+    [title]="'Nuevo libro diario'"></app-clasic-toolbar>
+</ion-header>
+<ion-content *ngIf="loggedUser">
+  <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Actions" [buttons]="actionSheetButtons"
+    (didDismiss)="setOpen(false)"></ion-action-sheet>
+  <div style="text-align: center; margin-bottom: 4rem;">
+    <div
+      *ngIf=" libroDiario && libroDiario.montoInicial && libroDiario.montoInicial>=0;else ingresarMontoInicial ">
+
+      <ion-toggle [(ngModel)]="mostrarMontoInicial"
+        *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)"></ion-toggle>
+
+
+      <ion-item-divider class="ion-no-padding ion-text-center" style="flex-direction: column;">
+        <h2 class="ion-no-margin" *ngIf="mostrarMontoInicial;else mostrarMontoTotal">Monto inicial:
+          {{libroDiario.montoInicial|currency}}
+        </h2>
+
+      </ion-item-divider>
+
+      <ng-template #mostrarMontoTotal>
+        <ion-item-divider class="ion-no-padding ion-text-center" style="flex-direction: column; --background:none">
+          <h2 class="ion-no-margin">Monto total en caja</h2>
+          <h2 class="ion-no-margin" *ngIf="libroDiario['montoTotalEfectivo']&&libroDiario['montoInicial']">
+            {{this.obtenerMontoTotalPorMedioDePago(formasDePago.EFECTIVO)+libroDiario['montoInicial']}}
+          </h2>
+        </ion-item-divider>
+      </ng-template>
+
+    </div>
+    <ng-template #ingresarMontoInicial>
+      <ion-button class="ion-margin" expand="block" (click)="mostrarModalAbrirCaja()">Abrir caja</ion-button>
+    </ng-template>
+
+    <div class="ion-no-padding" *ngIf="libroDiario&&libroDiario.ventas">
+      <div *ngFor="let venta of libroDiario.ventas">
+        <div *ngIf="venta.carrito && venta.carrito.items">
+          <ion-item-sliding *ngFor="let item of venta.carrito.items; let indiceItemCarrito=index">
+            <ion-item
+              (click)="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)?mostrarModalEditarVenta(item):''">
+              <ion-avatar *ngIf="item.images && item.images.length>0" class="ion-margin-end">
+                <img [src]="item.images[0]" />
+              </ion-avatar>
+              <div class="flexColumn">
+                <ion-text [color]="!item.idProducto?'danger':''">{{ item.marca|titlecase }}</ion-text>
+                <ion-text color="tertiary">{{ item.descripcion|titlecase }} </ion-text>
+                <ion-text *ngIf="item.boleta">Boleta: ({{item.boleta}})</ion-text>
+
+                <ion-text [color]="item.precio>0?'success':'danger'">
+                  <ion-text *ngIf="item.cantidad>1">({{ item.cantidad }}) x </ion-text>
+                  {{ item.precio|redondearPrecio:'pesos' | currency }}
+                  <br>
+                  <small style="color: rgb(77, 77, 255);" *ngIf="item.cantidad>1">(Total:
+                    {{(item.precio*item.cantidad)|redondearPrecio:'pesos'
+                    | currency }})</small>
+                </ion-text>
+
+              </div>
+              <div slot="end" style="min-width: 4rem;">
+                <label *ngFor="let pagoActual of venta.pagos">
+                  <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Efectivo'"
+                    [src]="'assets/svg/icons/cashcard.svg'" />
+                  <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Tarjeta de Crédito'"
+                    [src]="'assets/svg/icons/creditcard.svg'" />
+                  <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Tarjeta de Débito'"
+                    [src]="'assets/svg/icons/debitcard.svg'" />
+                  <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Transferencia'"
+                    [src]="'assets/svg/icons/transfercard.svg'" />
+                  <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Vale de compra'"
+                    [src]="'assets/svg/icons/valecard.svg'" />
+                  <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Mercado pago'"
+                    [src]="'assets/svg/icons/mpcard.svg'" />
+                </label>
+              </div>
+            </ion-item>
+
+
+            <ion-item-options side="end">
+              <ion-item-option color="danger" (click)="eliminarItemVenta(venta,indiceItemCarrito)">
+                Eliminar
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        </div>
+
+      </div>
+    </div>
+
+
+
+
+    <div (click)="mostrarModalCierreDeCaja=false" *ngIf="mostrarModalCierreDeCaja">
+
+      <ion-card style="padding: 2rem;" (click)="detenerPropagacion($event)">
+        <ion-card-title style="margin: 1rem;">Cierre de caja</ion-card-title>
+        <ion-card-subtitle>Ingrese el monto que hay en la caja</ion-card-subtitle>
+        <ion-card-content class="ion-no-padding">
+          <ion-item class="ion-margin-bottom">
+            <ion-input labelPlacement="floating" label="Monto de caja" type="number"
+              placeholder="Ingrese el monto total" [(ngModel)]="montoDeCaja"
+              [ngModelOptions]="{standalone: true}"></ion-input>
+          </ion-item>
+
+          <ion-chip *ngIf="this.resultadoDeCaja>0;" color="danger">
+            Algo esta mal:
+            <br>(falta plata en la caja)
+          </ion-chip>
+
+          <ion-chip *ngIf="this.resultadoDeCaja<0;" color="primary">
+            Algo esta mal:
+            <br>(hay de mas en la caja)
+          </ion-chip>
+
+          <ion-chip *ngIf="this.resultadoDeCaja===0" color="success">Excelente!
+            <br> Cerro perfecto!
+          </ion-chip>
+
+          <p *ngIf="this.resultadoDeCaja!=0">{{this.resultadoDeCaja|currency}}</p>
+
+          <ion-item-divider class="ion-no-padding" sticky="--background:none;">
+            <ion-button expand="block" class="ion-margin-top ion-margin-bottom" color="warning"
+              (click)="mostrarModalCierreDeCaja=false;">Cancelar</ion-button>
+            <ion-button expand="block" class="ion-margin-top ion-margin-bottom" color="primary"
+              (click)="comprobar()">Comprobar</ion-button>
+          </ion-item-divider>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+  </div>
+
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="start" (click)="nuevoCarrito()"
+    *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser) && libroDiario &&libroDiario.montoInicial &&libroDiario.montoInicial>0">
+    <ion-fab-button>
+      <ion-icon name="cart"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content> -->
+
+<!-- <ion-header>
   <app-clasic-toolbar [ruta]="'/historial-caja'" [title]="'Ventas del dia'" (opcionesClick)="mostrarOpciones()" [mostrarOpciones]="true"> </app-clasic-toolbar>
 
 </ion-header>
@@ -82,4 +327,4 @@
       <label style="margin: 0;"> {{item.boleta?'('+item.boleta+')':''}}</label>
     </ion-chip>
   </div>
-</ion-content>
+</ion-content> -->

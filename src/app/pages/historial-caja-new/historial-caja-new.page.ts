@@ -20,7 +20,6 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./historial-caja-new.page.scss'],
 })
 export class HistorialCajaNewPage implements OnInit {
-
   buscarPorRangoDeFechas = false;
   maxFechaActual = new Date(new Date().getTime() + 86400000).toISOString().split('T')[0];
   isActionSheetOpen: boolean = false;
@@ -112,6 +111,7 @@ export class HistorialCajaNewPage implements OnInit {
     if (!this.fechaSeleccionada) return;
     return new Date(this.fechaSeleccionada).toLocaleString();
   }
+  
   applyFilter() {
     //TODO: continuar desde aqui.
     //tenemos coincidencias por texto y/o boleta falta generar una vista para estos items.
@@ -154,7 +154,6 @@ export class HistorialCajaNewPage implements OnInit {
   }
 
   async mostrarDialogLibroDiario(libroDiario: any) {
-    console.log(libroDiario)
     try {
       const modal = await this.modalController.create({
         component: DetalleVentasDelDiaComponent,
@@ -186,8 +185,7 @@ export class HistorialCajaNewPage implements OnInit {
     this.database.obtenerPorId(environment.TABLAS.ingresosNuevoLibro, idFecha).subscribe(res => {
       let libroDiarioDelDia: LibroDiario = res.payload.data() as LibroDiario;
       libroDiarioDelDia['id'] = res.payload.id;
-      console.log(libroDiarioDelDia)
-
+      
       this.mostrarDialogLibroDiario(libroDiarioDelDia);
     })
   }
@@ -220,7 +218,6 @@ export class HistorialCajaNewPage implements OnInit {
   }
 
   mostrarMesCompleto(mostrarBuscador: boolean) {
-    console.log("ENTRA");
     if (!this.intervaloSeleccionado) {
       this.intervaloSeleccionado = { dias: [] };
     }
@@ -231,7 +228,6 @@ export class HistorialCajaNewPage implements OnInit {
         dia['id'] = diaRef.id;
         return dia
       });
-      console.log(this.intervaloSeleccionado)
       this.intervaloSeleccionado['montoTotalMensualEfectivo'] = this.getMontoTotalMensual(MediosDePago.Efectivo, this.intervaloSeleccionado);
       this.intervaloSeleccionado['montoTotalMensualTransferencia'] = this.getMontoTotalMensual(MediosDePago.Transferencia, this.intervaloSeleccionado);
       this.intervaloSeleccionado['montoTotalMensualMercadoPago'] = this.getMontoTotalMensual(MediosDePago.MercadoPago, this.intervaloSeleccionado);
@@ -245,8 +241,7 @@ export class HistorialCajaNewPage implements OnInit {
           return 0;
         }
       });
-
-      console.log(this.intervaloSeleccionado)
+      
       mostrarBuscador ? this.mostrarBuscadorPorTexto() : null;
     })
 
@@ -294,7 +289,7 @@ export class HistorialCajaNewPage implements OnInit {
   }
 
   async mostrarBuscadorPorTexto() {
-
+    
     try {
       const modal = await this.modalController.create({
         component: BusquedaPorTextoComponent,
@@ -315,25 +310,6 @@ export class HistorialCajaNewPage implements OnInit {
   }
 
 
-  //TEMPORAL
-  reajustarMes(mes: any) { //metodo de reajuste montos diarios y totales
-    let copia = this.funcionesUtiles.clonarObjeto(mes);
-
-    mes.dias.forEach((dia: LibroDiario) => {
-      dia.montoTotalEfectivo = this.obtenerMontoTotalPorMedioDePago(dia, MediosDePago.Efectivo);//total en efectivo
-      dia.montoTotalTransferencia = this.obtenerMontoTotalPorMedioDePago(dia, MediosDePago.Transferencia);//total en efectivo
-      dia.montoTotalMercadoPago = this.obtenerMontoTotalPorMedioDePago(dia, MediosDePago.MercadoPago);//total en efectivo
-      dia.montoTotalNegativo = this.obtenerMontoTotalPorNegativo(dia);//total negativo
-      this.database.actualizar(environment.TABLAS.ingresosNuevoLibro, dia, dia.id);
-
-    });
-
-    mes['montoTotalMensualEfectivo'] = this.getMontoTotalMensual(MediosDePago.Efectivo, mes);
-    mes['montoTotalMensualTransferencia'] = this.getMontoTotalMensual(MediosDePago.Transferencia, mes);
-    mes['montoTotalMensualMercadoPago'] = this.getMontoTotalMensual(MediosDePago.MercadoPago, mes);
-    mes['montoNegativoTotalMensualEfectivo'] = this.getMontoTotalMensualNegativo(mes);
-
-  }
   obtenerMontoTotalPorNegativo(libroDiarioHoy: any) {
     let acumuladorNegativo = 0;
     libroDiarioHoy.ventas.forEach((venta: any) => {
@@ -408,6 +384,8 @@ export class HistorialCajaNewPage implements OnInit {
     }
 
   }
+
+
 
 }
 

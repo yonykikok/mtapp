@@ -58,19 +58,18 @@ export class DetalleReparacionComponent implements OnInit {
   getOpcionesEstadoDisponibles(): void {
 
     const opcionesPorEstado: { [key: string]: string[] } = {
-
       [boleta_estados.PENDIENTE]: [boleta_estados.EN_REVISION, boleta_estados.CANCELADO_POR_EL_USUARIO, boleta_estados.EN_PROCESO],
       [boleta_estados.EN_REVISION]: [boleta_estados.PARA_NOTIFICAR, boleta_estados.CANCELADO_POR_EL_USUARIO, boleta_estados.PAUSADO],
       [boleta_estados.CANCELADO_POR_EL_USUARIO]: [boleta_estados.PENDIENTE, boleta_estados.PARA_ENTREGAR],
       [boleta_estados.EN_PROCESO]: [boleta_estados.PAUSADO, boleta_estados.CANCELADO_POR_EL_USUARIO, boleta_estados.NO_REPARADO, boleta_estados.REPARADO, boleta_estados.PARA_NOTIFICAR],
-      [boleta_estados.ESPERADO_RESPUESTA]: [boleta_estados.PAUSADO, boleta_estados.CANCELADO_POR_EL_USUARIO, boleta_estados.EN_PROCESO],
+      [boleta_estados.ESPERADO_RESPUESTA]: [boleta_estados.PAUSADO, boleta_estados.CANCELADO_POR_EL_USUARIO, boleta_estados.EN_PROCESO, boleta_estados.ACEPTADO_PARA_COMPRA],
       [boleta_estados.PAUSADO]: [boleta_estados.EN_PROCESO, boleta_estados.CANCELADO_POR_EL_USUARIO],
       [boleta_estados.NO_REPARADO]: [boleta_estados.PARA_NOTIFICAR],
       [boleta_estados.REPARADO]: [boleta_estados.PARA_NOTIFICAR],
       [boleta_estados.PARA_NOTIFICAR]: [boleta_estados.ESPERADO_RESPUESTA, boleta_estados.PARA_ENTREGAR],
       [boleta_estados.PARA_ENTREGAR]: [boleta_estados.RETIRADO, boleta_estados.PENDIENTE],
+      [boleta_estados.ACEPTADO_PARA_COMPRA]: [boleta_estados.PARA_ENTREGAR],
       [boleta_estados.RETIRADO]: [],
-
     };
 
     const estadosCoincidentes = listaDeEstadosBoletas.filter((estado) => {
@@ -80,6 +79,7 @@ export class DetalleReparacionComponent implements OnInit {
       }
       return retorno;
     });
+    console.log(estadosCoincidentes)
 
 
     this.estadosPosibles = estadosCoincidentes || [];

@@ -128,7 +128,11 @@ export class FormAltaReparacionComponent implements OnInit {
             telefono: telefono.toString(),
             fechaId: `${month}${year}`,
             opcionesDeBloqueo: {
-              opcionesPatron: this.opcionesPatron,
+              opcionesPatron: {
+                uno: this.opcionesPatron.uno ? this.opcionesPatron.uno : [],
+                dos: this.opcionesPatron.dos ? this.opcionesPatron.dos : [],
+                tres: this.opcionesPatron.tres ? this.opcionesPatron.tres : [],
+              },
               textoNumero: textoNumero || ''
             }
           }

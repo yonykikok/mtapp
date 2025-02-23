@@ -12,6 +12,7 @@ import { ProductosService } from 'src/app/services/productos.service';
 import { Producto, ProductoCarrito } from 'src/app/pages/lista-productos/lista-productos.page';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { SelectorDeProductosComponent } from '../selector-de-productos/selector-de-productos.component';
+import { ItemReparacionModalComponent } from '../item-reparacion-modal/item-reparacion-modal.component';
 
 export interface Venta {
   id: string; // ID único para la venta
@@ -19,7 +20,7 @@ export interface Venta {
   total: number; // Total de la venta
   pagos: Pago[]; // Lista de pagos realizados
   fecha: any; // Fecha de la venta
-  expand?:boolean,//se usa para expandir el carrito y mostrar detalle en vistas.
+  expand?: boolean,//se usa para expandir el carrito y mostrar detalle en vistas.
   cuentaSaldada: boolean
 }
 
@@ -492,6 +493,52 @@ export class CarritosComponent implements OnInit {
   }
 
 
+  async mostrarFlujoReparacion() {
+
+    try {
+      const modal = await this.modalController.create({
+        component: ItemReparacionModalComponent,
+        componentProps: {
+          isModal: false,
+          productos: this.productos
+        },
+      })
+      this.modalAbierto = true;
+
+      modal.onDidDismiss().then((result: any) => {
+        this.modalAbierto = false;
+        if (!result.data || !result.role) return;
+
+
+        if (result.role == 'agregarAlCarrito') {
+          console.log("--", result)
+          return;
+          const carrito = this.carritos.find(c => c.id === this.idCarritoSeleccionado);
+          if (carrito) {
+            result.data.forEach((item: ItemFueraDelSistema) => {
+              let itemCarrito: ItemCarrito = {
+                descripcion: item.descripcion,
+                precio: item.precio,
+                boleta: item.boleta,
+                cantidad: item.cantidad,
+                codigo: '',
+                costo: 0,
+                idProducto: '',
+                images: [],
+                marca: '',
+              }
+              // carrito.items.push(itemCarrito);
+            });
+          }
+          this.updateLocalStorage();
+          console.log('agregar al carrito de venta', result.data);
+        }
+
+      })
+      return await modal.present();
+    } catch (err) {
+    }
+  }
   async openDialog() {
 
     try {

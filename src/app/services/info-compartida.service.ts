@@ -7,6 +7,7 @@ export const listaDeEstadosBoletas = [
   { variable: 'CANCELADO_POR_EL_USUARIO', mensaje: 'Cancelado por el usuario' },
   { variable: 'EN_PROCESO', mensaje: 'En proceso' },
   { variable: 'ESPERADO_RESPUESTA', mensaje: 'Esperado respuesta' },
+  { variable: 'ACEPTADO_PARA_COMPRA', mensaje: 'Valor de compra aceptado' },
   { variable: 'PAUSADO', mensaje: 'Pausado' },
   { variable: 'NO_REPARADO', mensaje: 'No reparado' },
   { variable: 'REPARADO', mensaje: 'Reparado' },
@@ -22,6 +23,7 @@ export enum boleta_estados {
   CANCELADO_POR_EL_USUARIO = 'CANCELADO_POR_EL_USUARIO', // El usuario cancela por X motivo.
   EN_PROCESO = 'EN_PROCESO', // Se comenzó la reparación.
   ESPERADO_RESPUESTA = 'ESPERADO_RESPUESTA', // Se notificó y esperamos respuesta.
+  ACEPTADO_PARA_COMPRA = 'ACEPTADO_PARA_COMPRA', // Se acepto el valor de tazacion.
   PAUSADO = 'PAUSADO', // Se pausó por falta de repuesto o algún motivo.
   NO_REPARADO = 'NO_REPARADO', // No se pudo reparar o no vamos a repararlo por X motivo.
   REPARADO = 'REPARADO', // Se finalizó la reparación.
@@ -35,6 +37,7 @@ export enum reparacionShortMessage {
   CANCELADO_POR_EL_USUARIO = 'Cancelado por el usuario',
   EN_PROCESO = 'En proceso',
   ESPERADO_RESPUESTA = 'Esperado respuesta',
+  ACEPTADO_PARA_COMPRA = 'Valor de compra aceptado',
   PAUSADO = 'Pausado',
   NO_REPARADO = 'No reparado',
   REPARADO = 'Reparado',
@@ -49,6 +52,7 @@ export enum reparacionMessage {
   CANCELADO_POR_EL_USUARIO = 'Reparación cancelada por el cliente',
   EN_PROCESO = 'El equipo está en proceso de reparación',
   ESPERADO_RESPUESTA = 'Los técnicos están esperando respuesta del cliente',
+  ACEPTADO_PARA_COMPRA = 'El cliente acepto el valor de compra',
   PAUSADO = 'Se tuvo que pausar la reparación',
   NO_REPARADO = 'El equipo no se pudo reparar',
   REPARADO = 'El equipo ya está reparado',
@@ -62,6 +66,7 @@ export enum reparacionBgColor {
   CANCELADO_POR_EL_USUARIO = "#6C757D",
   EN_PROCESO = "#28A745",
   ESPERADO_RESPUESTA = "#BA55D3",
+  ACEPTADO_PARA_COMPRA = "#228B22",
   PAUSADO = "#6C757D",
   NO_REPARADO = "#DC3545",
   REPARADO = "#228B22",
@@ -74,6 +79,7 @@ export enum reparacionIconName {
   EN_REVISION = 'search',
   CANCELADO_POR_EL_USUARIO = 'close',
   EN_PROCESO = 'construct',
+  ACEPTADO_PARA_COMPRA = 'checkmark',
   ESPERADO_RESPUESTA = 'chatbubbles',
   PAUSADO = 'pause',
   NO_REPARADO = 'warning',

@@ -78,7 +78,7 @@ export class DataBaseService {
       return;
     }
   }
-  async getUserByRole(role:string) {
+  async getUserByRole(role: string) {
     let collectionRef = this.firestore.collection(environment.TABLAS.users).ref;
     try {
 
@@ -159,7 +159,7 @@ export class DataBaseService {
   }
 
   async getLibrosDiariosMensual(fechaInput: any) {
-    let collectionRef = this.firestore.collection(environment.TABLAS.ingresos).ref;
+    let collectionRef = this.firestore.collection(environment.TABLAS.ingresosNuevoLibro).ref;
 
     try {
       const fecha = new Date(fechaInput);
@@ -181,7 +181,7 @@ export class DataBaseService {
   }
 
   async getLibrosDiariosEnIntervalo(fechaInicio: any, fechaFin: any) {
-    let collectionRef = this.firestore.collection(environment.TABLAS.ingresos).ref;
+    let collectionRef = this.firestore.collection(environment.TABLAS.ingresosNuevoLibro).ref;
 
     try {
       const inicio = new Date(fechaInicio);
@@ -255,33 +255,33 @@ export class DataBaseService {
 
   async obtenerBoletasPorFechaDeModificacion(coleccion: string, fechaSeleccionada: Date) {
     const collectionRef = this.firestore.collection(coleccion).ref;
-  
+
     try {
       // Convertimos la fecha seleccionada a rangos de inicio y fin del día
       const inicioDelDia = new Date(fechaSeleccionada);
       inicioDelDia.setHours(0, 0, 0, 0); // Inicio del día
       const finDelDia = new Date(fechaSeleccionada);
       finDelDia.setHours(23, 59, 59, 999); // Fin del día
-  
+
       const inicioTimestamp = inicioDelDia.getTime();
       const finTimestamp = finDelDia.getTime();
-  
+
       // Consultamos en Firestore con un rango entre el inicio y fin del día
       const respuesta = await collectionRef
         .where('fechaUltimoCambioDeEstado', '>=', inicioTimestamp)
         .where('fechaUltimoCambioDeEstado', '<=', finTimestamp)
         .get();
-  
+
       if (respuesta.empty) return null;
-  
+
       // Retornamos los documentos mapeados
-      return respuesta.docs.map((doc:any) => ({ id: doc.id, ...doc.data() }));
+      return respuesta.docs.map((doc: any) => ({ id: doc.id, ...doc.data() }));
     } catch (err) {
       console.error(`Error al obtener boletas por fecha: ${err}`);
       throw err;
     }
   }
-  
+
 
   async obtenerBoletasDuplicadas(coleccion: any) {
     let collectionRef = this.firestore.collection(coleccion).ref;
