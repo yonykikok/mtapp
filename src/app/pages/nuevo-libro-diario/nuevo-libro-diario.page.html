@@ -1,9 +1,13 @@
 <ion-header>
-  <app-clasic-toolbar (opcionesClick)="mostrarOpciones()" [mostrarOpciones]="true" [ruta]="'/dashboard'"
-    [title]="'Nuevo libro diario'"></app-clasic-toolbar>
+  <app-clasic-toolbar (opcionesClick)="mostrarOpciones()"
+    [mostrarOpciones]="this.funcionesUtiles.roleMinimoNecesario('EMPLEADO', this.loggedUser)?true:false"
+    [ruta]="'/dashboard'" [title]="'Nuevo libro diario'"></app-clasic-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding-bottom">
+  <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Acciones" [buttons]="actionSheetButtons"
+    (didDismiss)="setOpen(false)"></ion-action-sheet>
+
   <!-- Monto acumulado en efectivo -->
   <ion-card class="total-efectivo-card">
     <ion-item lines="none">
@@ -103,12 +107,12 @@
     </ion-item-sliding>
   </div>
 
-  <ion-fab vertical="bottom" horizontal="start" slot="fixed" (click)="mostrarModalCierreDeCaja=true">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="mostrarModalCierreDeCaja=true">
     <ion-fab-button color="tertiary">
       <ion-icon name="newspaper-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
     <ion-fab-button color="success" (click)="nuevoCarrito()">
       <ion-icon name="cart"></ion-icon>
     </ion-fab-button>
@@ -163,146 +167,3 @@
   </div>
 
 </ion-content>
-
-<!-- <ion-header>
-  <app-clasic-toolbar (opcionesClick)="mostrarOpciones()" [mostrarOpciones]="true" [ruta]="'/dashboard'"
-    [title]="'Nuevo libro diario'"></app-clasic-toolbar>
-</ion-header>
-<ion-content *ngIf="loggedUser">
-  <ion-action-sheet mode="ios" [isOpen]="isActionSheetOpen" header="Actions" [buttons]="actionSheetButtons"
-    (didDismiss)="setOpen(false)"></ion-action-sheet>
-  <div style="text-align: center; margin-bottom: 4rem;">
-    <div
-      *ngIf=" libroDiarioHoy && libroDiarioHoy.montoInicial && libroDiarioHoy.montoInicial>=0;else ingresarMontoInicial ">
-
-      <ion-toggle [(ngModel)]="mostrarMontoInicial"
-        *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)"></ion-toggle>
-
-
-      <ion-item-divider class="ion-no-padding ion-text-center" style="flex-direction: column;">
-        <h2 class="ion-no-margin" *ngIf="mostrarMontoInicial;else mostrarMontoTotal">Monto inicial:
-          {{libroDiarioHoy.montoInicial|currency}}
-        </h2>
-
-      </ion-item-divider>
-
-      <ng-template #mostrarMontoTotal>
-        <ion-item-divider class="ion-no-padding ion-text-center" style="flex-direction: column; --background:none">
-          <h2 class="ion-no-margin">Monto total en caja</h2>
-          <h2 class="ion-no-margin" *ngIf="libroDiarioHoy['montoTotalEfectivo']&&libroDiarioHoy['montoInicial']">
-            {{this.obtenerMontoTotalPorMedioDePago(formasDePago.EFECTIVO)+libroDiarioHoy['montoInicial']}}
-          </h2>
-        </ion-item-divider>
-      </ng-template>
-
-    </div>
-    <ng-template #ingresarMontoInicial>
-      <ion-button class="ion-margin" expand="block" (click)="mostrarModalAbrirCaja()">Abrir caja</ion-button>
-    </ng-template>
-
-    <div class="ion-no-padding" *ngIf="libroDiarioHoy&&libroDiarioHoy.ventas">
-      <div *ngFor="let venta of libroDiarioHoy.ventas">
-        <div *ngIf="venta.carrito && venta.carrito.items">
-          <ion-item-sliding *ngFor="let item of venta.carrito.items; let indiceItemCarrito=index">
-            <ion-item
-              (click)="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser)?mostrarModalEditarVenta(item):''">
-              <ion-avatar *ngIf="item.images && item.images.length>0" class="ion-margin-end">
-                <img [src]="item.images[0]" />
-              </ion-avatar>
-              <div class="flexColumn">
-                <ion-text [color]="!item.idProducto?'danger':''">{{ item.marca|titlecase }}</ion-text>
-                <ion-text color="tertiary">{{ item.descripcion|titlecase }} </ion-text>
-                <ion-text *ngIf="item.boleta">Boleta: ({{item.boleta}})</ion-text>
-
-                <ion-text [color]="item.precio>0?'success':'danger'">
-                  <ion-text *ngIf="item.cantidad>1">({{ item.cantidad }}) x </ion-text>
-                  {{ item.precio|redondearPrecio:'pesos' | currency }}
-                  <br>
-                  <small style="color: rgb(77, 77, 255);" *ngIf="item.cantidad>1">(Total:
-                    {{(item.precio*item.cantidad)|redondearPrecio:'pesos'
-                    | currency }})</small>
-                </ion-text>
-
-              </div>
-              <div slot="end" style="min-width: 4rem;">
-                <label *ngFor="let pagoActual of venta.pagos">
-                  <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Efectivo'"
-                    [src]="'assets/svg/icons/cashcard.svg'" />
-                  <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Tarjeta de Crédito'"
-                    [src]="'assets/svg/icons/creditcard.svg'" />
-                  <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Tarjeta de Débito'"
-                    [src]="'assets/svg/icons/debitcard.svg'" />
-                  <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Transferencia'"
-                    [src]="'assets/svg/icons/transfercard.svg'" />
-                  <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Vale de compra'"
-                    [src]="'assets/svg/icons/valecard.svg'" />
-                  <img style="max-width: 4rem;" *ngIf="pagoActual.formaDePago=='Mercado pago'"
-                    [src]="'assets/svg/icons/mpcard.svg'" />
-                </label>
-              </div>
-            </ion-item>
-
-
-            <ion-item-options side="end">
-              <ion-item-option color="danger" (click)="eliminarItemVenta(venta,indiceItemCarrito)">
-                Eliminar
-              </ion-item-option>
-            </ion-item-options>
-          </ion-item-sliding>
-        </div>
-
-      </div>
-    </div>
-
-
-
-
-    <div (click)="mostrarModalCierreDeCaja=false" *ngIf="mostrarModalCierreDeCaja">
-
-      <ion-card style="padding: 2rem;" (click)="detenerPropagacion($event)">
-        <ion-card-title style="margin: 1rem;">Cierre de caja</ion-card-title>
-        <ion-card-subtitle>Ingrese el monto que hay en la caja</ion-card-subtitle>
-        <ion-card-content class="ion-no-padding">
-          <ion-item class="ion-margin-bottom">
-            <ion-input labelPlacement="floating" label="Monto de caja" type="number"
-              placeholder="Ingrese el monto total" [(ngModel)]="montoDeCaja"
-              [ngModelOptions]="{standalone: true}"></ion-input>
-          </ion-item>
-
-          <ion-chip *ngIf="this.resultadoDeCaja>0;" color="danger">
-            Algo esta mal:
-            <br>(falta plata en la caja)
-          </ion-chip>
-
-          <ion-chip *ngIf="this.resultadoDeCaja<0;" color="primary">
-            Algo esta mal:
-            <br>(hay de mas en la caja)
-          </ion-chip>
-
-          <ion-chip *ngIf="this.resultadoDeCaja===0" color="success">Excelente!
-            <br> Cerro perfecto!
-          </ion-chip>
-
-          <p *ngIf="this.resultadoDeCaja!=0">{{this.resultadoDeCaja|currency}}</p>
-
-          <ion-item-divider class="ion-no-padding" sticky="--background:none;">
-            <ion-button expand="block" class="ion-margin-top ion-margin-bottom" color="warning"
-              (click)="mostrarModalCierreDeCaja=false;">Cancelar</ion-button>
-            <ion-button expand="block" class="ion-margin-top ion-margin-bottom" color="primary"
-              (click)="comprobar()">Comprobar</ion-button>
-          </ion-item-divider>
-        </ion-card-content>
-      </ion-card>
-    </div>
-
-  </div>
-
-
-  <ion-fab slot="fixed" vertical="bottom" horizontal="start" (click)="nuevoCarrito()"
-    *ngIf="funcionesUtiles.roleMinimoNecesario('EMPLEADO',loggedUser) && libroDiarioHoy &&libroDiarioHoy.montoInicial &&libroDiarioHoy.montoInicial>0">
-    <ion-fab-button>
-      <ion-icon name="cart"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-
-</ion-content> -->

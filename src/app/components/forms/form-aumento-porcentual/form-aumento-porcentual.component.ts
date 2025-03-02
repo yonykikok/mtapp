@@ -15,7 +15,7 @@ import { Producto } from 'src/app/pages/lista-productos/lista-productos.page';
 export class FormAumentoPorcentualComponent implements OnInit {
   productos!: Producto[];
   aumentoForm = new FormGroup({
-    porcentajeDeAumento: new FormControl(0, [Validators.required]),
+    porcentajeDeAumento: new FormControl(null, [Validators.required]),
   })
 
   constructor(private database: DataBaseService,

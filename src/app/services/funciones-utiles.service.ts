@@ -8,6 +8,7 @@ import { VisualizadorDeImagenComponent } from '../components/views/visualizador-
 import { ModalController } from '@ionic/angular';
 import { ToastColor, ToastService } from './toast.service';
 import JsBarcode from 'jsbarcode';
+import { Producto } from '../pages/lista-productos/lista-productos.page';
 
 @Injectable({
   providedIn: 'root'
@@ -110,4 +111,59 @@ export class FuncionesUtilesService {
     });
   }
 
+  productoTieneDescuentoVigente(producto: Producto): boolean {
+    const hoy = new Date(); // Obtener la fecha actual
+    const { descuento } = producto;
+
+    if (!descuento || !descuento.fechaInicio || !descuento.fechaFin) {
+      return false; // Si no hay descuento, devolver false
+    }
+
+    const fechaInicio = new Date(descuento.fechaInicio); // Convertir la fecha de inicio a Date
+    const fechaFin = new Date(descuento.fechaFin); // Convertir la fecha de fin a Date
+
+    // Verificar si las fechas están definidas y si el descuento está dentro del rango de vigencia
+    if (fechaInicio && fechaFin && (hoy < fechaInicio || hoy > fechaFin)) {
+      return false; // Si la fecha actual está fuera del rango de fechas del descuento
+    }
+
+    return true; // Si el descuento está vigente
+  }
+
+  calcularPrecioConDescuento(producto: Producto): number {
+    if (!producto.precio || !producto.descuento) return producto.precio || 0;
+    if (!this.productoTieneDescuentoVigente(producto)) return producto.precio || 0;
+
+    const { descuento } = producto;
+    const hoy = new Date();
+    if (!descuento.fechaInicio || !descuento.fechaFin) return producto.precio || 0;
+
+    // Convertir las fechas de descuento a objetos Date
+    const fechaInicio = new Date(descuento.fechaInicio);
+    const fechaFin = new Date(descuento.fechaFin);
+
+    // Verificar si el descuento está dentro de la vigencia
+    if (hoy < fechaInicio || hoy > fechaFin) {
+      // Si el descuento no está vigente, devolver el precio original
+      return producto.precio;
+    }
+
+    let precioFinal = producto.precio;
+
+    // Aplicar el descuento si está vigente
+    if (descuento.tipo === 'porcentaje') {
+      precioFinal -= (producto.precio * descuento.cantidad) / 100;
+    } else if (descuento.tipo === 'valor') {
+      precioFinal -= descuento.cantidad;
+    }
+
+    // Verificar si el precio final está por debajo del costo
+    if (precioFinal < producto.costo) {
+      console.warn('El descuento aplicado deja el precio final por debajo del costo. Esto generaría una pérdida.');
+      // Retornamos el precio original si no queremos aplicar el descuento
+      return producto.precio;
+    }
+
+    return precioFinal;
+  }
 }

@@ -125,6 +125,7 @@ export interface EquipoEspecificaciones {
   almacenamiento: number
 }
 export interface EquipoDisponible {
+  currentIndex?: number,
   reserva?: ReservaEquipo;
   dni?: string;
   accesorios: string[];
@@ -200,7 +201,7 @@ export interface Pedido {
   tipo: string;
   conseguido: boolean,
   nota: string,
-  categoria:string,
+  categoria: string,
   [key: string]: any;
 
 }
@@ -233,7 +234,7 @@ export class InfoCompartidaService {
   calidadesModulos = ['AAA', 'GenMedCalidad', 'GenBueno', 'Estandar', 'Original Oled', 'Original Certificado'];
   calidadesModulosProveedores = ['AAA', 'Incell', 'GenBueno', 'Oled', 'Original'];
   calidadesFlexDecarga = ['AAA', 'Mechanic', 'Original', 'Original Certificado'];
-  calidadesTapas = ['Estandar','Premium', 'Original', 'Original Certificada'];
+  calidadesTapas = ['Estandar', 'Premium', 'Original', 'Original Certificada'];
   coloresModulos = ['Blanco', 'Negro', 'Gris', 'Dorado', 'Celeste'];
   tiposModulos = ['Simple', 'C/M'];
 

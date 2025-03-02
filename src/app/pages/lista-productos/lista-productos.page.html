@@ -53,9 +53,11 @@
           <ion-text> {{ producto.producto }} </ion-text>
 
           <div>
-
+            <!-- {{funcionesUtiles.productoTieneDescuentoVigente(producto) }} -->
+            <!-- {{producto?.descuento?.fechaInicio}} <br> -->
+            <!-- {{producto?.descuento?.fechaFin}} -->
             <div
-              *ngIf="producto.descuento&&producto.precio && productoTieneDescuentoVigente(producto)  && producto.descuento.cantidad>0"
+              *ngIf="producto.descuento&&producto.precio && funcionesUtiles.productoTieneDescuentoVigente(producto)  && producto.descuento.cantidad>0"
               style=" display: flex;align-items: center;">
               <ion-chip color="primary">
                 <ion-text>
@@ -75,8 +77,9 @@
                   }}
                   <small>
                     ({{ producto.costo | redondearPrecio: 'dolares' | currency }})</small></b>
-                <b *ngIf="!mostrarCosto">{{ calcularPrecioConDescuento(producto) | redondearPrecio: 'pesos' | currency
-                  }}</b>Guardar
+                <b *ngIf="!mostrarCosto">
+                  {{ this.funcionesUtiles.calcularPrecioConDescuento(producto) | redondearPrecio: 'pesos' |
+                  currency}}</b>Guardar
               </ion-text>
             </ion-chip>
 

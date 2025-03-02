@@ -1,0 +1,140 @@
+.carteleria-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background: linear-gradient(135deg, #1e1e2e, #3a3a5e);
+    color: white;
+    text-align: center;
+}
+
+.producto-card {
+    background: #fff;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    text-align: center;
+    padding: 20px;
+}
+
+.producto-img-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f8f8f8;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.producto-imagen {
+    width: 100%;
+    max-height: 250px;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+.producto-info {
+    padding: 15px;
+}
+
+.producto-nombre {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.precio-container {
+    margin-top: 10px;
+}
+
+.descuento-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.descuento-chip {
+    font-size: 1rem;
+}
+
+.precio-tachado {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 1.2rem;
+}
+
+.precio-descuento {
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+.precio-normal {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+}
+
+// .carteleria-container {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     height: 100%;
+//     background: linear-gradient(135deg, #1e1e2e, #3a3a5e);
+//     color: white;
+//     text-align: center;
+//   }
+
+//   .producto {
+//     background: rgba(255, 255, 255, 0.1);
+//     padding: 20px;
+//     border-radius: 15px;
+//     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+//     backdrop-filter: blur(10px);
+//     max-width: 80%;
+//   }
+
+//   .producto-imagen {
+//     width: 100%;
+//     max-height: 250px;
+//     object-fit: contain;
+//     border-radius: 10px;
+//   }
+
+//   .producto-nombre {
+//     margin-top: 10px;
+//     font-size: 1.5rem;
+//     font-weight: bold;
+//   }
+
+//   .precio-container {
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     margin-top: 10px;
+//   }
+
+//   .precio-tachado {
+//     text-decoration: line-through;
+//     color: #ff6b6b;
+//     font-size: 1.2rem;
+//   }
+
+//   .precio-descuento {
+//     color: #4caf50;
+//     font-size: 1.5rem;
+//     font-weight: bold;
+//   }
+
+//   .precio-normal {
+//     font-size: 1.5rem;
+//     font-weight: bold;
+//     color: #ffd700;
+//   }
+
+//   .descuento-chip {
+//     margin-bottom: 5px;
+//   }

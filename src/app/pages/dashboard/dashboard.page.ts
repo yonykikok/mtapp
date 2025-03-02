@@ -42,7 +42,7 @@ export class DashboardPage implements OnInit {
     codigo: "7798113301765",
   }];
   modulos: { titulo: string, color: string, ruta: string, role: Roles, img?: string }[] = [
-    { titulo: 'Prototipo', color: '#3a6686', ruta: "/nuevo-libro-diario", role: roles.EMPLEADO, img: '/assets/svg/icons/librodiario.svg' },
+    { titulo: 'Libro diario', color: '#3a6686', ruta: "/nuevo-libro-diario", role: roles.EMPLEADO, img: '/assets/svg/icons/librodiario.svg' },
     // { titulo: 'Libro diario', color: '#3a6686', ruta: "/libro-diario", role: roles.EMPLEADO, img: '/assets/svg/icons/librodiario.svg' },
     { titulo: 'Reparaciones', color: '#3a6686', ruta: "/reparaciones-new-version", role: roles.CLIENTE, img: '/assets/svg/icons/btnRepuestos.png' },
     { titulo: 'Pedidos', color: '#3a6686', ruta: "/lista-pedidos", role: roles.EMPLEADO, img: '/assets/svg/icons/pedidos.svg' },
@@ -57,6 +57,7 @@ export class DashboardPage implements OnInit {
     { titulo: 'Trabajos tercerizados', color: '#3a6686', ruta: "/trabajos-tercerizados", role: roles.EMPLEADO, img: '/assets/svg/icons/delegar.svg' },
     { titulo: 'Proveedores', color: '#3a6686', ruta: "/proveedores", role: roles.OWNER, img: '/assets/svg/icons/proveedores.svg' },
     { titulo: 'Usuarios', color: '#3a6686', ruta: "/lista-de-usuarios", role: roles.OWNER, img: '/assets/svg/icons/usuarios.svg' },
+    { titulo: 'Banner publicitario', color: '#3a6686', ruta: "/carteleria-digital", role: roles.OWNER, img: 'https://cdn-icons-png.flaticon.com/512/2721/2721511.png' },
     // { titulo: 'Articulos', color: '#dc70fd', ruta: "/articulos", role: roles.EMPLEADO, img: '/assets/svg/icons/articulos.png' },
   ];
 

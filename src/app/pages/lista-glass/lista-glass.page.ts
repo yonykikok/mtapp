@@ -78,7 +78,7 @@ export class ListaGlassPage implements OnInit {
         component: DetalleGlassComponent,
         componentProps: {
           repuesto: glass,
-          ruta: '/repuestos/lista-glasses',
+          ruta: '/reparaciones-new-version',
           glassesCargados: this.funcionesUtiles.clonarObjeto(this.glasses),
           precioDolarBlue: this.precioDolarBlue
         },

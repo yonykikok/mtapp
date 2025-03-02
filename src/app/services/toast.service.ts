@@ -36,18 +36,22 @@ export class ToastService {
 
 
 
-  async simpleMessage(header:string, message:string, color: ToastColor) {
+  async simpleMessage(header: string, message: string, color: ToastColor) {
+    let duration = 2000;
+    
+    color == ToastColor.danger ? duration = 5000 : null;
+
     const toast = await this.toastController.create({
       header,
       message,
       mode: 'ios',
-      duration: 5000,
+      duration,
       color
     });
     await toast.present();
   }
 
-  async customAlert(header:string, message:string, duration:number, color: ToastColor, position: ToastPosition, icon?: ToastIcon) {
+  async customAlert(header: string, message: string, duration: number, color: ToastColor, position: ToastPosition, icon?: ToastIcon) {
     const toast = await this.toastController.create({
       header,
       message,

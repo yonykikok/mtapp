@@ -6,3 +6,84 @@ ion-grid{
 ion-text{
     font-family: Surfer ;
 }
+
+.install-banner {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffffff;
+  color: #333;
+  padding: 15px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  animation: fadeIn 0.4s ease-in-out;
+  width: 95%;
+  max-width: 450px;
+  flex-direction: column;
+} 
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.app-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+}
+
+.text-content h3 {
+  font-size: 16px;
+  margin: 0;
+  font-weight: 600;
+}
+
+.text-content p {
+  font-size: 14px;
+  margin: 5px 0 0;
+  color: #555;
+}
+
+.banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.install-btn {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.install-btn:hover {
+  background: #0056b3;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #777;
+}
+
+.close-btn:hover {
+  color: #333;
+}

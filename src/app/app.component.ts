@@ -12,6 +12,9 @@ import { FuncionesUtilesService } from './services/funciones-utiles.service';
 })
 export class AppComponent implements OnInit {
   userLogged;
+  deferredPrompt: any;
+  showBanner: boolean = false;
+  isIOS: boolean = false;
   constructor(private authService: AuthService,
     private database: DataBaseService,
     public funcionesUtiles: FuncionesUtilesService) {
@@ -54,8 +57,47 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     // this.agregarALaDBDiasNoCargados();
     this.getCurrentUser();
+
+
+    this.instalarAppPWA();
   }
 
+  instalarAppPWA() {
+    // Detectar si es iOS
+    this.isIOS = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+
+    // Manejar evento de instalación en Android/Chrome
+    window.addEventListener('beforeinstallprompt', (event: any) => {
+      event.preventDefault();
+      this.deferredPrompt = event;
+      this.showBanner = true; // Muestra el banner en Android
+    });
+
+    // Si es iOS, mostrar el banner con instrucciones
+    if (this.isIOS) {
+      this.showBanner = true;
+    }
+  }
+
+
+  installApp() {
+    if (this.deferredPrompt) {
+      this.deferredPrompt.prompt();
+      this.deferredPrompt.userChoice.then((choiceResult: any) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('Usuario aceptó la instalación');
+        } else {
+          console.log('Usuario rechazó la instalación');
+        }
+        this.deferredPrompt = null;
+        this.showBanner = false;
+      });
+    }
+  }
+
+  closeBanner() {
+    this.showBanner = false;
+  }
 
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe((userRef: any) => {
@@ -135,4 +177,5 @@ export class AppComponent implements OnInit {
       })
     })
   }
+
 }

@@ -60,6 +60,12 @@ export interface ItemCarrito {
   codigo: string,
   images: string[],
   boleta?: number | null,
+  descuento?:{
+    tipo: 'porcentaje' | 'valor';
+    cantidad: number;
+    fechaInicio?: number; // Fecha de inicio del descuento
+    fechaFin?: number;    // Fecha de finalización del descuento
+  }
 }
 export interface ItemFueraDelSistema { precio: number, boleta: number | null, descripcion: string, cantidad: number, precioTotal?: number }
 @Component({
@@ -88,9 +94,9 @@ export class CarritosComponent implements OnInit {
   constructor(private modalController: ModalController,
     private alertController: AlertController,
     private alertService: AlertService,
-    private funcionesUtilesService: FuncionesUtilesService,
+    public funcionesUtilesService: FuncionesUtilesService,
     private dataBase: DataBaseService,
-    private productosService: ProductosService
+    private productosService: ProductosService,
   ) { }
   ngOnInit() {
     this.codigoDeBarras = '';
@@ -654,30 +660,35 @@ export class CarritosComponent implements OnInit {
         this.modalAbierto = false;
         if (!result.data || !result.role) return;
 
-        let producto: Producto = result.data;
+        if (result.role == 'productoSeleccionado') {
 
-        if (producto && this.idCarritoSeleccionado) {
-          producto = this.funcionesUtilesService.clonarObjeto(producto);
-          const carrito = this.carritos.find(c => c.id === this.idCarritoSeleccionado);
-          if (carrito) {
-            const itemEnCarrito = carrito.items.find(item => item.idProducto === producto.id);
-            if (itemEnCarrito) {
-              itemEnCarrito.cantidad++;
-            } else {
-              carrito.items.push({
-                idProducto: producto.id,
-                marca: producto.marca,
-                descripcion: producto.producto,
-                costo: this.redondearPrecioPesos((producto.costo * this.precioDolarBlue)),
-                precio: producto.precio ? this.redondearPrecioPesos(producto.precio) : 0,
-                cantidad: 1,
-                codigo: producto.codigo ? producto.codigo : '',
-                images: producto.images ? producto.images : []
-              });
+          let producto: Producto = result.data;
+
+          if (producto && this.idCarritoSeleccionado) {
+            producto = this.funcionesUtilesService.clonarObjeto(producto);
+            const carrito = this.carritos.find(c => c.id === this.idCarritoSeleccionado);
+            if (carrito) {
+              const itemEnCarrito = carrito.items.find(item => item.idProducto === producto.id);
+              if (itemEnCarrito) {
+                itemEnCarrito.cantidad++;
+              } else {
+                carrito.items.push({
+                  idProducto: producto.id,
+                  marca: producto.marca,
+                  descripcion: producto.producto,
+                  costo: this.redondearPrecioPesos((producto.costo * this.precioDolarBlue)),
+                  precio: producto.precio ? this.redondearPrecioPesos(this.funcionesUtilesService.calcularPrecioConDescuento(producto)) : 0,
+                  cantidad: 1,
+                  codigo: producto.codigo ? producto.codigo : '',
+                  images: producto.images ? producto.images : [],
+                  descuento: result.data.descuento || null
+                });
+              }
+              this.itemsCarritoSeleccionado = carrito.items;
+              this.updateLocalStorage();
             }
-            this.itemsCarritoSeleccionado = carrito.items;
-            this.updateLocalStorage();
           }
+
         }
 
       })
@@ -685,7 +696,64 @@ export class CarritosComponent implements OnInit {
     } catch (err) {
     }
   }
+
+
+  // productoTieneDescuentoVigente(producto: Producto): boolean {
+  //   const hoy = Date.now(); // Obtener la fecha actual en milisegundos
+  //   const { descuento } = producto;
+
+  //   if (!descuento) {
+  //     return false;
+  //   }
+
+  //   const fechaInicio = descuento.fechaInicio;
+  //   const fechaFin = descuento.fechaFin;
+
+  //   // Verificar si las fechas están definidas y si el descuento está dentro del rango de vigencia
+  //   if (fechaInicio && fechaFin && (hoy < fechaInicio || hoy > fechaFin)) {
+  //     return false;
+  //   }
+
+  //   return true;
+  // }
+  // calcularPrecioConDescuento(producto: Producto): number {
+  //   if (!producto.precio || !producto.descuento) return producto.precio || 0;
+  //   if (!this.productoTieneDescuentoVigente(producto)) return producto.precio || 0;
+
+  //   const { descuento } = producto;
+  //   const hoy = new Date();
+  //   if (!descuento.fechaInicio || !descuento.fechaFin) return producto.precio || 0;
+
+  //   // Convertir las fechas de descuento a objetos Date
+  //   const fechaInicio = new Date(descuento.fechaInicio);
+  //   const fechaFin = new Date(descuento.fechaFin);
+
+  //   // Verificar si el descuento está dentro de la vigencia
+  //   if (hoy < fechaInicio || hoy > fechaFin) {
+  //     // Si el descuento no está vigente, devolver el precio original
+  //     return producto.precio;
+  //   }
+
+  //   let precioFinal = producto.precio;
+
+  //   // Aplicar el descuento si está vigente
+  //   if (descuento.tipo === 'porcentaje') {
+  //     precioFinal -= (producto.precio * descuento.cantidad) / 100;
+  //   } else if (descuento.tipo === 'valor') {
+  //     precioFinal -= descuento.cantidad;
+  //   }
+
+  //   // Verificar si el precio final está por debajo del costo
+  //   if (precioFinal < producto.costo) {
+  //     console.warn('El descuento aplicado deja el precio final por debajo del costo. Esto generaría una pérdida.');
+  //     // Retornamos el precio original si no queremos aplicar el descuento
+  //     return producto.precio;
+  //   }
+
+  //   return precioFinal;
+  // }
 }
+
 
 
 

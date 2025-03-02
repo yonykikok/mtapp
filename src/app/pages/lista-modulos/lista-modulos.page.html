@@ -1,8 +1,3 @@
-<ion-header *ngIf="!modoComponent">
-  <app-clasic-toolbar [ruta]="'/repuestos'" [title]="'Lista de modulos'"></app-clasic-toolbar>
-</ion-header>
-
-
 <ion-content *ngIf="modulos">
   <app-precio-dolar [loggedUser]="loggedUser"
     *ngIf="loggedUser && funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)"></app-precio-dolar>
@@ -33,7 +28,7 @@
       <ion-col *ngIf="camposSeleccionados.includes('precio')"><b>Precio</b></ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('calidad')"><b>Calidad</b></ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('tipo')"><b>Tipo</b></ion-col>
-      <ion-col *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)"><b>costo</b></ion-col>
+      <ion-col *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser) && mostrarCosto"><b>costo</b></ion-col>
     </ion-row>
     <ion-row *ngFor="let modulo of modulosAMostrar"
       (click)=" funcionesUtiles.roleMinimoNecesario('ADMIN',loggedUser)?seleccionar(modulo):''">
@@ -51,7 +46,7 @@
       </ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('calidad')">{{modulo.calidad}}</ion-col>
       <ion-col *ngIf="camposSeleccionados.includes('tipo')">{{modulo.tipo}}</ion-col>
-      <ion-col *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser)"
+      <ion-col *ngIf="funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser) && mostrarCosto"
         style="display: flex; flex-direction: column;">
         <!-- {{modulo.detallesFinancieros.colocacion}} -->
         <ion-input (ionInput)="actualizarDatosFinancieros(modulo)" fill="outline" mode="md"

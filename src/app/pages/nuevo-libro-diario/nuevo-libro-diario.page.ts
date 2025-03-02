@@ -50,7 +50,20 @@ export class NuevoLibroDiarioPage implements OnInit {
     formasDePago = FormasDePago;
     productos: Producto[] = [];
     isActionSheetOpen = false;
-    actionSheetButtons: any = [];
+    actionSheetButtons: any = [{
+        text: 'Cambiar caja inicial',
+        icon: 'calculator-outline',
+        handler: async () => {
+            if (this.funcionesUtiles.roleMinimoNecesario('EMPLEADO', this.loggedUser)) {
+                this.mostrarModalAbrirCaja();
+            }
+        }
+    }, {
+        text: 'Cancelar',
+        role: 'cancel',
+        icon: 'close',
+        handler: () => { },
+    }];
 
     montoInicialOriginal: number = 0;
     mostrarModalCierreDeCaja = false;

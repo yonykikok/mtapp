@@ -10,15 +10,15 @@ import { ModalController } from '@ionic/angular';
 export class FormDetallesFinancierosComponent implements OnInit {
   producto: any;
   detallesFinancierosForm: FormGroup = new FormGroup({
-    costo: new FormControl(0, [Validators.required, Validators.min(0)]),
-    precio: new FormControl(0, [Validators.required, Validators.min(0)]),
-    margen: new FormControl(0, [Validators.required, Validators.min(0)]),
-    colocacion: new FormControl(0, [Validators.required, Validators.min(0)]),
+    costo: new FormControl(null, [Validators.required, Validators.min(0)]),
+    precio: new FormControl(null, [Validators.required, Validators.min(0)]),
+    margen: new FormControl(null, [Validators.required, Validators.min(0)]),
+    colocacion: new FormControl(null, [Validators.required, Validators.min(0)]),
   })
   constructor(private modalController: ModalController) { }
 
   ngOnInit() {
-    if(this.producto.detallesFinancieros){
+    if (this.producto.detallesFinancieros) {
       this.detallesFinancierosForm.patchValue({
         costo: this.producto.detallesFinancieros.costo,
         precio: this.producto.detallesFinancieros.precio,

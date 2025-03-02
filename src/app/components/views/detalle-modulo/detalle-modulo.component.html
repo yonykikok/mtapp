@@ -39,10 +39,10 @@
 
 
         </ion-item>
-        <ion-item>
+        <!-- <ion-item>
           Precio: {{clonRepuesto.precio|currency:'USD':'symbol':'1.0-0'}} USD
           <ion-icon slot="end" name="create-outline" (click)="mostrar('editPrecio')"></ion-icon>
-        </ion-item>
+        </ion-item> -->
         <ion-item>
           Tipo: {{clonRepuesto.tipo}}
           <ion-icon slot="end" name="create-outline" (click)="mostrar('editTipo')"></ion-icon>
@@ -63,9 +63,9 @@
       <!-- FIN EDIT MODELO -->
 
       <!-- EDIT PRECIO -->
-      <ion-item  *ngIf="editPrecio" class="ion-margin">
+      <!-- <ion-item  *ngIf="editPrecio" class="ion-margin">
         <ion-input type="number" placeholder="precio en dolares" [(ngModel)]="clonRepuesto.precio"></ion-input>
-      </ion-item>
+      </ion-item> -->
       <!-- FIN EDIT PRECIO -->
 
       <!-- EDIT MARCA -->

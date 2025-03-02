@@ -1,6 +1,5 @@
 <ion-card class="ion-text-center"
   *ngIf="loggedUser && funcionesUtiles.roleMinimoNecesario('OWNER',loggedUser) && mostrarPrecioDolar; else otroPerfil">
-
   <ion-card-header>
     <ion-card-title>{{ "Precio del dolar: " + (precioDolarBlue|currency) }}
 
@@ -13,7 +12,6 @@
         [(ngModel)]="precioDolarBlueIngresado" placeholder="Ingrese precio de personalizado"></ion-input>
     </ion-item>
     <ion-item-divider *ngIf="editarPrecio">
-      <!-- <ion-button color="warning" (click)="restablecerPrecioDolarBlue()">Restablecer</ion-button> -->
       <ion-button color="primary" (click)="aplicarCambio()">Aplicar cambio</ion-button>
     </ion-item-divider>
   </ion-card-content>

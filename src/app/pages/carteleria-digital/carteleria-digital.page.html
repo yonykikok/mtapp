@@ -1,0 +1,70 @@
+<ion-content [fullscreen]="true">
+  <ion-icon [routerLink]="['/dashboard']" routerLinkActive="router-link-active"  style="position: absolute; top: 0.5rem; left: 0.5rem; font-size: 2rem; opacity: 0.1;"  name="arrow-back" color="light"></ion-icon>
+  <div class="carteleria-container" *ngIf="productos.length">
+    <div class="producto-card" *ngIf="productos[currentIndex]">
+      <div class="producto-img-container">
+        <img class="producto-imagen" [src]="productos[currentIndex].images[0]" alt="Imagen del producto">
+      </div>
+
+      <div class="producto-info">
+        <h2 class="producto-nombre">{{ productos[currentIndex].producto | titlecase }}</h2>
+
+        <div class="precio-container">
+          <ng-container
+            *ngIf="productos[currentIndex].descuento && funcionesUtiles.productoTieneDescuentoVigente(productos[currentIndex]) && productos[currentIndex].descuento.cantidad > 0; else precioNormal">
+            <div class="descuento-container">
+              <span class="precio-tachado">{{ productos[currentIndex].precio | redondearPrecio: 'pesos' | currency
+                }}
+                <ion-chip color="primary" class="descuento-chip">
+                  <ion-text>
+                    <b>-{{ productos[currentIndex].descuento.cantidad }}{{ productos[currentIndex].descuento.tipo ==
+                      'porcentaje' ? '%' : '' }}</b>
+                  </ion-text>
+                </ion-chip></span>
+
+              <ion-text color="success">
+                <span class="precio-descuento">{{ funcionesUtiles.calcularPrecioConDescuento(productos[currentIndex]) |
+                  redondearPrecio: 'pesos' | currency }}</span>
+              </ion-text>
+            </div>
+          </ng-container>
+          <ng-template #precioNormal>
+            <span class="precio-normal">{{ productos[currentIndex].precio | redondearPrecio: 'pesos' | currency
+              }}</span>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+
+<!-- <ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Cartelería Digital</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="carteleria-container" *ngIf="productos.length">
+    <div class="producto" *ngIf="productos[currentIndex]" style="width: 90%; ">
+      <img class="producto-imagen" [src]="productos[currentIndex].images[0]" alt="Imagen del producto">
+      <h2 class="producto-nombre">{{ productos[currentIndex].producto | titlecase }}</h2>
+
+      <div class="precio-container">
+        <ng-container *ngIf="productos[currentIndex].descuento && funcionesUtiles.productoTieneDescuentoVigente(productos[currentIndex]) && productos[currentIndex].descuento.cantidad > 0; else precioNormal">
+          <ion-chip color="primary" class="descuento-chip">
+            <ion-text>
+              <b>-{{ productos[currentIndex].descuento.cantidad }}{{ productos[currentIndex].descuento.tipo == 'porcentaje' ? '%' : '' }}</b>
+            </ion-text>
+          </ion-chip>
+          <ion-text class="precio-tachado">{{ productos[currentIndex].precio | redondearPrecio: 'pesos' | currency }}</ion-text>
+          <ion-text class="precio-descuento">{{ funcionesUtiles.calcularPrecioConDescuento(productos[currentIndex]) | redondearPrecio: 'pesos' | currency }}</ion-text>
+        </ng-container>
+        <ng-template #precioNormal>
+          <ion-text class="precio-normal">{{ productos[currentIndex].precio | redondearPrecio: 'pesos' | currency }}</ion-text>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</ion-content> -->

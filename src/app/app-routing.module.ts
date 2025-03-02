@@ -58,26 +58,6 @@ const routes: Routes = [
     path: 'dashboard',
     loadChildren: () => import('./pages/dashboard/dashboard.module').then( m => m.DashboardPageModule),canActivate:[EsClienteGuard]
   },
-  // {
-  //   path: 'lista-modulos',
-  //   loadChildren: () => import('./pages/lista-modulos/lista-modulos.module').then( m => m.ListaModulosPageModule)
-  // },
-  // {
-  //   path: 'lista-tactiles',
-  //   loadChildren: () => import('./pages/lista-tactiles/lista-tactiles.module').then( m => m.ListaTactilesPageModule)
-  // },
-  // {
-  //   path: 'lista-baterias',
-  //   loadChildren: () => import('./pages/lista-baterias/lista-baterias.module').then( m => m.ListaBateriasPageModule)
-  // },
-  // {
-  //   path: 'lista-displays',
-  //   loadChildren: () => import('./pages/lista-displays/lista-displays.module').then( m => m.ListaDisplaysPageModule)
-  // },
-  // {
-  //   path: 'lista-flex-de-carga',
-  //   loadChildren: () => import('./pages/lista-flex-de-carga/lista-flex-de-carga.module').then( m => m.ListaFlexDeCargaPageModule)
-  // },
   {
     path: 'lista-pedidos',
     loadChildren: () => import('./pages/lista-pedidos/lista-pedidos.module').then( m => m.ListaPedidosPageModule)
@@ -161,7 +141,8 @@ const routes: Routes = [
   {
     path: 'dashboard-new-version',
     loadChildren: () => import('./pages/dashboard-new-version/dashboard-new-version.module').then( m => m.DashboardNewVersionPageModule)
-  },  {
+  },
+  {
     path: 'historial-caja-new',
     loadChildren: () => import('./pages/historial-caja-new/historial-caja-new.module').then( m => m.HistorialCajaNewPageModule)
   },
@@ -169,15 +150,14 @@ const routes: Routes = [
     path: 'lista-tapas',
     loadChildren: () => import('./pages/lista-tapas/lista-tapas.module').then( m => m.ListaTapasPageModule)
   },
+  {
+    path: 'carteleria-digital',
+    loadChildren: () => import('./pages/carteleria-digital/carteleria-digital.module').then( m => m.CarteleriaDigitalPageModule)
+  },  {
+    path: 'equipos-disponibles-new',
+    loadChildren: () => import('./pages/equipos-disponibles-new/equipos-disponibles-new.module').then( m => m.EquiposDisponiblesNewPageModule)
+  },
 
-
-
-
-
-
-
-
- 
 
 
 ];

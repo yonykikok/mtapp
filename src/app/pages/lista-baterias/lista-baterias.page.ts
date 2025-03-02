@@ -59,7 +59,7 @@ export class ListaBateriasPage implements OnInit {
   }
 
   ajustarbateria() {
-    this.baterias.forEach((bateria:any) => {
+    this.baterias.forEach((bateria: any) => {
       bateria.detallesFinancieros =
       {
         costo: bateria.costo,
@@ -83,8 +83,9 @@ export class ListaBateriasPage implements OnInit {
         component: DetalleBateriaComponent,
         componentProps: {
           repuesto: bateria,
-          funcionesUtiles:this.funcionesUtiles,
-          loggedUser:this.loggedUser,
+          funcionesUtiles: this.funcionesUtiles,
+          ruta: '/reparaciones-new-version',
+          loggedUser: this.loggedUser,
         },
       })
 
@@ -120,9 +121,9 @@ export class ListaBateriasPage implements OnInit {
   handleInput(event: any) {
     const query = event.target.value.toLowerCase();
     this.bateriasAMostrar = this.baterias.filter((d: any) =>
-      d.modelo.toLowerCase().includes(query) ||d.marca.toLowerCase().includes(query) || d.codigo?.toLowerCase().includes(query)
+      d.modelo.toLowerCase().includes(query) || d.marca.toLowerCase().includes(query) || d.codigo?.toLowerCase().includes(query)
     );
-}
+  }
 
 
 

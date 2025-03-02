@@ -154,7 +154,8 @@ export class ListaProductosPage implements OnInit {
     icon: 'close',
     handler: () => { },
   }];
-  constructor(public funcionesUtiles: FuncionesUtilesService,
+  constructor(
+    public funcionesUtiles: FuncionesUtilesService,
     private imageCompress: NgxImageCompressService,
     private storageService: StorageService,
     private authService: AuthService,
@@ -228,7 +229,7 @@ export class ListaProductosPage implements OnInit {
 
     let productosLocalStorage = this.obtenerListaDeProductosLocalStorage();
     if (productosLocalStorage && productosLocalStorage.length > 0) {
-      console.log("USAMOS LISTA LOCAL");
+      console.log("USAMOS LISTA LOCAL",productosLocalStorage);
       this.productos = productosLocalStorage;
       this.productosAMostrar = this.productos.slice(0, this.cantidadPorPagina);
     } else {
@@ -694,9 +695,12 @@ export class ListaProductosPage implements OnInit {
 
     modal.onDidDismiss().then((result) => {
 
-      if (result.role == 'Guardar') {
+      console.log(result)
+      if (result.role == 'guardarDescuento') {
+        producto.descuento = result.data;
+
         console.log(producto)
-        // this.database.actualizar(environment.TABLAS.productos, producto, producto.id)?.finally(() => { })
+        this.database.actualizar(environment.TABLAS.productos, producto, producto.id)?.finally(() => { this.toastService.simpleMessage('Descuento agregado', '', ToastColor.success) })
       }
     })
     modal.present();
@@ -846,55 +850,20 @@ export class ListaProductosPage implements OnInit {
   }
 
 
-  calcularPrecioConDescuento(producto: Producto): number {
-    if (!producto.precio || !producto.descuento) return producto.precio || 0;
-
-    const { descuento } = producto;
-    const hoy = new Date();
-    if (!descuento.fechaInicio || !descuento.fechaFin) return producto.precio || 0;
-
-    // Convertir las fechas de descuento a objetos Date
-    const fechaInicio = new Date(descuento.fechaInicio);
-    const fechaFin = new Date(descuento.fechaFin);
-
-    // Verificar si el descuento está dentro de la vigencia
-    if (hoy < fechaInicio || hoy > fechaFin) {
-      // Si el descuento no está vigente, devolver el precio original
-      return producto.precio;
-    }
-
-    let precioFinal = producto.precio;
-
-    // Aplicar el descuento si está vigente
-    if (descuento.tipo === 'porcentaje') {
-      precioFinal -= (producto.precio * descuento.cantidad) / 100;
-    } else if (descuento.tipo === 'valor') {
-      precioFinal -= descuento.cantidad;
-    }
-
-    // Verificar si el precio final está por debajo del costo
-    if (precioFinal < producto.costo) {
-      console.warn('El descuento aplicado deja el precio final por debajo del costo. Esto generaría una pérdida.');
-      // Retornamos el precio original si no queremos aplicar el descuento
-      return producto.precio;
-    }
-
-    return precioFinal;
-  }
   // calcularPrecioConDescuento(producto: Producto): number {
   //   if (!producto.precio || !producto.descuento) return producto.precio || 0;
+  //   if (!this.productoTieneDescuentoVigente(producto)) return producto.precio || 0;
 
   //   const { descuento } = producto;
   //   const hoy = new Date();
+  //   if (!descuento.fechaInicio || !descuento.fechaFin) return producto.precio || 0;
+
+  //   // Convertir las fechas de descuento a objetos Date
+  //   const fechaInicio = new Date(descuento.fechaInicio);
+  //   const fechaFin = new Date(descuento.fechaFin);
 
   //   // Verificar si el descuento está dentro de la vigencia
-  //   console.log(hoy)
-  //   console.log(descuento.fechaInicio)
-  //   console.log(descuento.fechaFin)
-  //   if (
-  //     descuento.fechaInicio && descuento.fechaFin &&
-  //     (hoy < descuento.fechaInicio || hoy > descuento.fechaFin)
-  //   ) {
+  //   if (hoy < fechaInicio || hoy > fechaFin) {
   //     // Si el descuento no está vigente, devolver el precio original
   //     return producto.precio;
   //   }
@@ -908,27 +877,34 @@ export class ListaProductosPage implements OnInit {
   //     precioFinal -= descuento.cantidad;
   //   }
 
+  //   // Verificar si el precio final está por debajo del costo
+  //   if (precioFinal < producto.costo) {
+  //     console.warn('El descuento aplicado deja el precio final por debajo del costo. Esto generaría una pérdida.');
+  //     // Retornamos el precio original si no queremos aplicar el descuento
+  //     return producto.precio;
+  //   }
+
   //   return precioFinal;
   // }
 
-  productoTieneDescuentoVigente(producto: Producto): boolean {
-    const hoy = Date.now(); // Obtener la fecha actual en milisegundos
-    const { descuento } = producto;
+  // productoTieneDescuentoVigente(producto: Producto): boolean {
+  //   const hoy = Date.now(); // Obtener la fecha actual en milisegundos
+  //   const { descuento } = producto;
 
-    if (!descuento) {
-      return false;
-    }
+  //   if (!descuento) {
+  //     return false;
+  //   }
 
-    const fechaInicio = descuento.fechaInicio;
-    const fechaFin = descuento.fechaFin;
+  //   const fechaInicio = descuento.fechaInicio;
+  //   const fechaFin = descuento.fechaFin;
 
-    // Verificar si las fechas están definidas y si el descuento está dentro del rango de vigencia
-    if (fechaInicio && fechaFin && (hoy < fechaInicio || hoy > fechaFin)) {
-      return false;
-    }
+  //   // Verificar si las fechas están definidas y si el descuento está dentro del rango de vigencia
+  //   if (fechaInicio && fechaFin && (hoy < fechaInicio || hoy > fechaFin)) {
+  //     return false;
+  //   }
 
-    return true;
-  }
+  //   return true;
+  // }
 
 
 

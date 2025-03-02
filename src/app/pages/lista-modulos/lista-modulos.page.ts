@@ -18,6 +18,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./lista-modulos.page.scss'],
 })
 export class ListaModulosPage implements OnInit {
+  mostrarCosto:boolean=false;
   @Input() modoComponent: boolean = false;
   loggedUser!: User;
   camposSeleccionados = ['modelo', 'calidad', 'precio'];
@@ -110,7 +111,7 @@ export class ListaModulosPage implements OnInit {
         component: DetalleModuloComponent,
         componentProps: {
           repuesto: modulo,
-          ruta: '/repuestos/lista-modulos',
+          ruta: '/reparaciones-new-version',
           funcionesUtiles: this.funcionesUtiles,
           loggedUser: this.loggedUser
         },

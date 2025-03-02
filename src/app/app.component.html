@@ -1,3 +1,30 @@
 <ion-app>
-  <ion-router-outlet ></ion-router-outlet>
+  <ion-router-outlet></ion-router-outlet>
+  <div *ngIf="showBanner&& !isIOS" class="install-banner">
+    <div class="banner-content">
+      <img src="assets/images/logo.svg" alt="App Icon" class="app-icon">
+
+      <div class="text-content">
+        <h3>¡Instala nuestra App!</h3>
+        <p>Accede más rápido y mejora tu experiencia.</p>
+      </div>
+    </div>
+
+    <!-- Banner para Android/Chrome -->
+    <div *ngIf="!isIOS" class="banner-actions">
+      <button class="install-btn" (click)="installApp()">Instalar</button>
+    </div>
+
+    <!-- Banner con instrucciones para iOS -->
+    <!-- <div *ngIf="isIOS" class="banner-actions">
+      <p class="ios-instructions">
+        📲 En Safari, toca <strong>Compartir</strong> (<span class="share-icon">📤</span>) y luego <strong>Agregar a la
+          pantalla de inicio</strong>.
+      </p>
+    </div> -->
+
+    <button class="close-btn" (click)="closeBanner()">✕</button>
+  </div>
+
+
 </ion-app>

@@ -45,7 +45,7 @@ import { PatronDeBloqueoComponent } from '../components/patron-de-bloqueo/patron
     SelectorDeProductosComponent,
     ModificadorDeStockRapidoComponent,
     FormDetallesFinancierosComponent,
-    PatronDeBloqueoComponent
+    PatronDeBloqueoComponent,
 
   ],
   imports: [

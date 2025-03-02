@@ -1,0 +1,80 @@
+.historial-container {
+    --background: #f8f9fa;
+  }
+  
+  /* 🟢 Tarjeta de Cliente */
+  .cliente-card {
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .cliente-card ion-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    color: #007bff;
+  }
+  
+  /* 🟢 Historial de Compras */
+  .historial-list {
+    margin-top: 10px;
+  }
+  
+  /* 🔹 Encabezado de cada compra */
+  .historial-header {
+    background: #007bff;
+    color: white;
+    border-radius: 8px;
+    margin-bottom: 5px;
+  }
+  
+  .historial-header h3 {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .historial-header .fecha {
+    font-size: 14px;
+    color: #e3f2fd;
+  }
+  
+  /* 🔹 Secciones dentro del historial */
+  .historial-content {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .section-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #333;
+  }
+  
+  /* 🛍️ Estilos de Productos y Pagos */
+  .item-card, .pago-card {
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 8px;
+    margin: 5px 0;
+    transition: transform 0.2s;
+  }
+  
+  .item-card:hover, .pago-card:hover {
+    transform: scale(1.02);
+  }
+  
+  .item-card h3, .pago-card h3 {
+    font-size: 15px;
+    font-weight: bold;
+  }
+  
+  .item-card p, .pago-card p {
+    font-size: 14px;
+    color: #555;
+  }
+  

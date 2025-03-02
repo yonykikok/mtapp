@@ -1,4 +1,7 @@
 <ion-content>
+    <ion-header>
+        <app-clasic-toolbar [ruta]="'/nuevo-libro-diario'" [title]="'Selector de productos'"></app-clasic-toolbar>
+    </ion-header>
 
     <ion-searchbar animated="true" placeholder="Ej: Cargador" (ionInput)="filtrarProductos($event)"></ion-searchbar>
 
@@ -12,9 +15,29 @@
             <div class="flexColumn">
                 <ion-text color="primary">{{producto.marca|titlecase}}</ion-text>
                 <ion-text color="dark">{{producto.producto}}</ion-text>
-                <ion-text color="success" *ngIf="producto.precio">
-                    {{ producto.precio| redondearPrecio: 'pesos' | currency }}
-                </ion-text>
+                <div *ngIf="producto.descuento&&producto.precio && funcionesUtiles.productoTieneDescuentoVigente(producto)  && producto.descuento.cantidad>0;else productoSinDescuento"
+                    style=" display: flex;align-items: center;">
+                    <ion-chip color="primary">
+                        <ion-text>
+                            <b>-{{producto.descuento.cantidad}}
+                                {{ producto.descuento.tipo=='porcentaje'?'%':''}}
+                            </b>
+                        </ion-text>
+                    </ion-chip>
+                    <br>
+                    <ion-chip outline="true" [color]="'success'" class="ion-text-center no-radius">
+                        <!-- <ion-icon name="cash-outline"></ion-icon> -->
+                        <ion-text *ngIf="producto.precio">
+                            <b>{{ funcionesUtiles.calcularPrecioConDescuento(producto) | redondearPrecio: 'pesos' | currency }}</b>
+                        </ion-text>
+                    </ion-chip>
+                </div>
+
+                <ng-template #productoSinDescuento>
+                    <ion-text color="success" *ngIf="producto.precio">
+                        {{ producto.precio| redondearPrecio: 'pesos' | currency }}
+                    </ion-text>
+                </ng-template>
                 <ion-text color="dark">{{producto.codigo}}</ion-text>
             </div>
         </ion-item>

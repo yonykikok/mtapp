@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { ModalController } from '@ionic/angular';
 import { Producto } from 'src/app/pages/lista-productos/lista-productos.page';
 import { FuncionesUtilesService } from 'src/app/services/funciones-utiles.service';
 import { ToastColor, ToastService } from 'src/app/services/toast.service';
@@ -39,7 +40,8 @@ export class FormAgregarDescuentoProductoComponent implements OnInit {
 
 
   constructor(private toastService: ToastService,
-    private funcionesUtiles:FuncionesUtilesService
+    private modalController: ModalController,
+    private funcionesUtiles: FuncionesUtilesService
   ) {
     const fechaInicio = new Date();
     const fechaFin = new Date();
@@ -51,7 +53,7 @@ export class FormAgregarDescuentoProductoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.productoEditable=this.funcionesUtiles.clonarObjeto(this.producto);
+    this.productoEditable = this.funcionesUtiles.clonarObjeto(this.producto);
     // Escuchar cambios en todo el formulario
     this.descuentoForm.valueChanges.subscribe((changes) => {
       console.log("Cambios en el formulario:", changes);
@@ -72,7 +74,8 @@ export class FormAgregarDescuentoProductoComponent implements OnInit {
     if (this.descuentoForm.valid) {
       const descuentoData = this.descuentoForm.value;
       console.log('Datos del descuento:', descuentoData);
-      this.producto.descuento=descuentoData;
+      this.producto.descuento = descuentoData;
+      this.modalController.dismiss(descuentoData, 'guardarDescuento');
       // Aquí puedes llamar a un servicio para guardar el descuento en tu base de datos
     } else {
       console.log('Formulario no válido');
@@ -82,35 +85,35 @@ export class FormAgregarDescuentoProductoComponent implements OnInit {
 
   // calcularPrecioConDescuento(producto: Producto): number {
   //   if (!producto.precio || !producto.descuento) return producto.precio || 0;
-  
+
   //   const { descuento } = producto;
   //   const hoy = Date.now(); // Obtener la fecha actual en milisegundos
-  
+
   //   // Asegurarse de que las fechas de inicio y fin existen
   //   if (!descuento.fechaInicio || !descuento.fechaFin) return producto.precio || 0;
-  
+
   //   // Verificar si el descuento está dentro de la vigencia
   //   const fechaInicio = descuento.fechaInicio;
   //   const fechaFin = descuento.fechaFin;
-  
+
   //   if (hoy < fechaInicio || hoy > fechaFin) {
   //     // Si el descuento no está vigente, devolver el precio original
   //     return producto.precio;
   //   }
-  
+
   //   let precioFinal = producto.precio;
-  
+
   //   // Aplicar el descuento si está vigente
   //   if (descuento.tipo === 'porcentaje') {
   //     precioFinal -= (producto.precio * descuento.cantidad) / 100;
   //   } else if (descuento.tipo === 'valor') {
   //     precioFinal -= descuento.cantidad;
   //   }
-  
+
   //   // Calcular la ganancia con el descuento aplicado
   //   const costoTotal = producto.costo * this.precioDolarBlue;
   //   const gananciaConDescuento = precioFinal - costoTotal;
-  
+
   //   // Verificar si el precio final está por debajo del costo
   //   if (gananciaConDescuento < 0) {
   //     this.mostrarAlertDePerdida = true;
@@ -120,11 +123,11 @@ export class FormAgregarDescuentoProductoComponent implements OnInit {
   //   } else {
   //     this.mostrarAlertDePerdida = false;
   //   }
-  
+
   //   console.log(`Ganancia con descuento aplicado: ${gananciaConDescuento}`);
   //   return precioFinal;
   // }
-  
+
   calcularPrecioConDescuento(producto: Producto): number {
     if (!producto.precio || !producto.descuento) return producto.precio || 0;
 
@@ -139,17 +142,17 @@ export class FormAgregarDescuentoProductoComponent implements OnInit {
     const fechaFin = descuento.fechaFin;
 
     if (hoy < fechaInicio || hoy > fechaFin) {
-        // Si el descuento no está vigente, devolver el precio original
-        return producto.precio;
+      // Si el descuento no está vigente, devolver el precio original
+      return producto.precio;
     }
 
     let precioFinal = producto.precio;
 
     // Aplicar el descuento si está vigente
     if (descuento.tipo === 'porcentaje') {
-        precioFinal -= (producto.precio * descuento.cantidad) / 100;
+      precioFinal -= (producto.precio * descuento.cantidad) / 100;
     } else if (descuento.tipo === 'valor') {
-        precioFinal -= descuento.cantidad;
+      precioFinal -= descuento.cantidad;
     }
 
     // Calcular el costo total
@@ -160,11 +163,11 @@ export class FormAgregarDescuentoProductoComponent implements OnInit {
 
     // Verificar si el precio final cumple con el mínimo de ganancia del 30%
     if (precioFinal < precioMinimoConGanancia) {
-        this.mostrarAlertDePerdida = true;
-        console.warn('El descuento aplicado no permite un margen de ganancia del 30%.');
-        return producto.precio; // Retornar el precio original
+      this.mostrarAlertDePerdida = true;
+      console.warn('El descuento aplicado no esta dentro del margen aceptado.');
+      return producto.precio; // Retornar el precio original
     } else {
-        this.mostrarAlertDePerdida = false;
+      this.mostrarAlertDePerdida = false;
     }
 
     // Calcular la ganancia con el descuento aplicado
@@ -172,7 +175,7 @@ export class FormAgregarDescuentoProductoComponent implements OnInit {
     console.log(`Ganancia con descuento aplicado: ${gananciaConDescuento}`);
 
     return precioFinal;
-}
+  }
 
-  
+
 }
